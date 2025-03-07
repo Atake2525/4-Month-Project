@@ -137,5 +137,8 @@ private:
 	float shininess;
 	bool modelEnableLighting;
 
+	float farClip;
+	float fov;
+
 	bool Finished = false;
 };

@@ -24,11 +24,19 @@ public:
 	const Vector3& GetRotate() const { return transform.rotate; }
 	// Getter(Translate)
 	const Vector3& GetTranslate() const { return transform.translate; }
+	// Getter(farClipDistance)
+	const float& GetFarClipDistance() const { return farClipDistance; }
+	// Getter(fovY)
+	const float& GetfovY() const { return fovY; }
 
 	// Setter(Rotate)
 	void SetRotate(const Vector3& rotate) { transform.rotate = rotate; }
 	// Setter(Translate)
 	void SetTranslate(const Vector3& translate) { transform.translate = translate; }
+	// Setter(farClipDistance)
+	void SetFarClipDistance(const float& farClip) { farClipDistance = farClip; }
+	// Setter(fovY)
+	void SetFovY(const float& fov) { fovY = fov; }
 
 private:
 	Transform transform;

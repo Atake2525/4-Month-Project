@@ -32,6 +32,7 @@ struct DirectionalLight
     float32_t4 color; //!< ライトの色
     float32_t3 direction; //!< ライトの向き
     float intensity; //!< 輝度
+    float32_t3 specularColor;
 };
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b2);
 
@@ -41,6 +42,7 @@ struct PointLight {
     float intensity; //!< 輝度
     float radius; //!< ライトの届く最大距離
     float dacay; //!< 減衰率
+    float32_t3 specularColor;
 };
 ConstantBuffer<PointLight> gPointLight : register(b3);
 
@@ -53,6 +55,7 @@ struct SpotLight {
     float32_t dacay; //!< 減衰率
     float32_t cosAngle; //!< スポットライトの余弦
     float32_t cosFalloffStart; // falloffが開始される角度
+    float32_t3 specularColor;
 };
 ConstantBuffer<SpotLight> gSpotLight : register(b4);
 
@@ -114,21 +117,21 @@ PixelShaderOutput main(VertexShaderOutput input)
         float32_t3 diffuseDirectionalLight = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
         
         // 鏡面反射                                                                                      ↓ 物体の鏡面反射の色。ここでは白にしている materialで設定できたりすると良い
-        float32_t3 specularDirectionalLight = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * gMaterial.specularColor;
+        float32_t3 specularDirectionalLight = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * gDirectionalLight.specularColor;
         
         // PointLight
         // 拡散反射
         float32_t3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity * factor;
         
         // 鏡面反射                                                                                      ↓ 物体の鏡面反射の色。ここでは白にしている materialで設定できたりすると良い
-        float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * specularPowPointLight * gMaterial.specularColor;
+        float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * specularPowPointLight * gPointLight.specularColor;
         
         // SpotLight
          // 拡散反射
         float32_t3 diffuseSpotLight = gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cosSpotLight * gSpotLight.intensity * falloffFactor * attenuationFactor;
         
         // 鏡面反射                                                                                      ↓ 物体の鏡面反射の色。ここでは白にしている materialで設定できたりすると良い
-        float32_t3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * attenuationFactor * falloffFactor * gMaterial.specularColor * specularPow;
+        float32_t3 specularSpotLight = gSpotLight.color.rgb * gSpotLight.intensity * attenuationFactor * falloffFactor * gSpotLight.specularColor * specularPow;
         
         // 拡散反射 + 鏡面反射
         output.color.rgb = diffuseDirectionalLight + specularDirectionalLight + diffusePointLight + specularPointLight + diffuseSpotLight + specularSpotLight;

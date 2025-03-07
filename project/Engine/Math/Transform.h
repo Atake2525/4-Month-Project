@@ -12,6 +12,7 @@ struct DirectionalLight {
 	Vector4 color;     //!< ライトの色
 	Vector3 direction; //!< ライトの向き
 	float intensity;   //!< 輝度
+	Vector3 specularColor;
 	float padding[2];
 };
 
@@ -21,6 +22,8 @@ struct PointLight {
 	float intensity;  //!< 輝度
 	float radius;     //!< ライトの届く最大距離
 	float dacay;      //!< 減衰率
+	Vector3 specularColor;
+	float padding[2];
 };
 
 struct SpotLight {
@@ -32,6 +35,7 @@ struct SpotLight {
 	float dacay;           //!< 減衰率
 	float cosAngle;        //!< スポットライトの余弦
 	float cosFalloffStart; // falloffが開始される角度
+	Vector3 specularColor;
 	float padding[2];
 };
 

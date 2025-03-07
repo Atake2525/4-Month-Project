@@ -3,7 +3,6 @@
 #include "DirectXBase.h"
 #include "Logger.h"
 #include "StringUtility.h"
-#include "DirectXBase.h"
 
 using namespace Logger;
 using namespace StringUtility;

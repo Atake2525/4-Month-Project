@@ -25,7 +25,7 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	/// <param name="worldPos">CameraPosition</param>
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource);
+	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced);
 
 	void SetModel(const std::string& filePath);
 
@@ -97,7 +97,7 @@ public:
 	// Getter(EnableLighting)
 	const bool& GetEnableLighting() const;
 	// Getter(specularColor)
-	const Vector3& GetSpecularColor() const;
+	//const Vector3& GetSpecularColor() const;
 	// Getter(shininess)
 	const float& GetShininess() const;
 
@@ -118,7 +118,7 @@ public:
 	// Setter(EnableLighting)
 	void SetEnableLighting(const bool& enableLighting);
 	// Setter(specularColor)
-	void SetSpecularColor(const Vector3& specularColor);
+	//void SetSpecularColor(const Vector3& specularColor);
 	// Setter(shininess)
 	void SetShininess(const float& shininess);
 
