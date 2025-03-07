@@ -1,5 +1,6 @@
 ﻿#include "kMath.h"
 
+
 const Vector3 operator*(const Vector3& v, const float f) { 
 	Vector3 result;
 	result.x = v.x * f;
@@ -38,7 +39,14 @@ Vector3 operator-(Vector3 v1, const Vector3& v2) {
 	return result;
 }
 
-
+Vector3 Cross(Vector3 v1, Vector3 v2)
+{
+	Vector3 result = { 0 };
+	result.x = ((v1.y * v2.z) - (v1.z * v2.y));
+	result.y = ((v1.z * v2.x) - (v1.x * v2.z));
+	result.z = ((v1.x * v2.y) - (v1.y * v2.x));
+	return result;
+}
 
 //単位行列の作成
 Matrix4x4 MakeIdentity4x4() {
@@ -296,8 +304,13 @@ Vector3 Normalize(const Vector3& v) {
 	ans.y = v.y / sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 	ans.z = v.z / sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 	return ans;
-};
+}
 
+//内積
+float Dot(const Vector3& v1, const Vector3& v2)
+{
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+};
 
 // 1, 透視投影行列
 Matrix4x4 MakePrespectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {

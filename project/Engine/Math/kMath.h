@@ -10,6 +10,12 @@
 #include <math.h>
 #include <numbers>
 
+struct OBB {
+	Vector3 center;
+	Vector3 orientations[3];
+	Vector3 size;
+};
+
 const Vector3 operator*(const Vector3& v, const float f);
 
 Vector3& operator+=(Vector3& v1, const Vector3& v2);
@@ -19,6 +25,9 @@ Vector3& operator-=(Vector3& v1, const Vector3& v2);
 Vector3 operator+(Vector3 v1, const Vector3& v2);
 
 Vector3 operator-(Vector3 v1, const Vector3& v2);
+
+//クロス算
+Vector3 Cross(Vector3 v1, Vector3 v2);
 
 //単位行列の作成
 Matrix4x4 MakeIdentity4x4();
@@ -62,6 +71,8 @@ Matrix4x4 Inverse(const Matrix4x4& m);
 // 正規化
 Vector3 Normalize(const Vector3& v);
 
+// 内積
+float Dot(const Vector3& v1, const Vector3& v2);
 
 // 1, 透視投影行列
 Matrix4x4 MakePrespectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
