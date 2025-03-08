@@ -331,16 +331,6 @@ void DebugMode::Update() {
 	if (input->PushKey(DIK_E)) {
 		cameraTransform.rotate.z += 0.01f;
 	}
-	//mousePos3.x / 100000.0f;
-	//mousePos3.y / 100000.0f;
-	mousePos3.z = mousePos3.y;
-	mousePos3.y = mousePos3.x;
-	mousePos3.x = mousePos3.z;
-	mousePos3.z = 0.0f;
-	mousePos3 = SwapRadian(mousePos3) / 10.0f;
-	cameraTransform.rotate += mousePos3;
-
-	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
 
 	if (input->TriggerKey(DIK_0)) {
 		// 音声再生
@@ -349,10 +339,22 @@ void DebugMode::Update() {
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;
 	}
-	if (input->TriggerKey(DIK_F12)) {
-		//winApp->Update();
+	if (input->TriggerKey(DIK_LCONTROL)) {
+		showCursor = !showCursor;
+		input->ShowMouseCursor(showCursor);
 	}
 
+	if (!showCursor)
+	{
+		mousePos3.z = mousePos3.y;
+		mousePos3.y = mousePos3.x;
+		mousePos3.x = mousePos3.z;
+		mousePos3.z = 0.0f;
+		mousePos3 = SwapRadian(mousePos3) / 10.0f;
+		cameraTransform.rotate += mousePos3;
+	}
+
+	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
 #endif // _DEBUG
 
 }

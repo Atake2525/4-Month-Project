@@ -71,6 +71,8 @@ public:
 
 	Vector3& GetMousePos3();
 
+	void ShowMouseCursor(bool flag);
+
 private:
 	// キーボードデバイス
 	ComPtr<IDirectInputDevice8> keyboard;
@@ -89,4 +91,6 @@ private:
 	DIMOUSESTATE mouseState;
 	// 前回の全マウスの状態
 	DIMOUSESTATE mouseStatePre;
+	// マウスカーソル表示
+	bool showCursor = false;
 };
