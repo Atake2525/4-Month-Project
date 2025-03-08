@@ -6,7 +6,21 @@ using namespace Microsoft::WRL;
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
+// ---- 説明 ---- //
+// 
+// -- 操作説明 --
+// ・視点に向かってWASD操作
+// ・マウスと十字キーで視点を移動
+// ・Q,Eで視点の回転Zを変更
+// ・LCONTROLでマウスカーソルを出す
+// ・ESCAPEでゲーム終了
+// 
+// 
+// -------------- //
+
 void DebugMode::Initialize() {
+
+	// 初期化処理(統一)
 
 	FrameWork::Initialize();
 
@@ -38,30 +52,44 @@ void DebugMode::Initialize() {
 	input = new Input();
 	input->Initialize(winApp);
 
+	// ここまでの初期化は必須
+
+	// デバッグ用、Modelをワイヤーフレーム表示にする
+	WireFrameObjectBase::GetInstance()->Initialize(directxBase);
+	WireFrameObjectBase::GetInstance()->SetDefaultCamera(camera);
+
 #pragma endregion 基盤システムの初期化
 
+	// テクスチャのロード DataはTextureManagerに保管される
 	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 	TextureManager::GetInstance()->LoadTexture("Resources/monsterBall.png");
+
+	// モデルのロード
+	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
+	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
+
+	// サウンドのロード soundData1にDataが返される
+	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+
+	// Spriteの初期化
 	sprite = new Sprite();
+	// 使用するSpriteを
 	sprite->Initialize("Resources/uvChecker.png");
 	sprite->SetScale(Vector2{ 200.0f, 200.0f });
 
-	//uint32_t textureIndexSphere = TextureManager::GetInstance()->GetTextureIndexByFilePath("Resources/monsterBall.png");
-	//uint32_t textureIndexUv = TextureManager::GetInstance()->GetTextureIndexByFilePath("Resources/uvChecker.png");
-
-	//ModelManager::GetInstance()->LoadModel("Resources", "terrain.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources", "box.obj", true);
-	// ModelManager::GetInstance()->LoadModel("Resources", "axis.obj");
-	// ModelManager::GetInstance()->LoadModel("Resources", "bunny.obj");
-	// ModelManager::GetInstance()->LoadModel("Resources", "teapot.obj");
-
-	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
-
+	// object3dの初期化(KamataEngineで言うところのModel)
 	object3d = new Object3d();
 	object3d->Initialize();
-
+	// Modelを指定する
 	object3d->SetModel("box.obj");
 
+	grid = new Object3d();
+	grid->Initialize();
+	grid->SetModel("Grid.obj");
+
+	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
 
 	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
@@ -103,21 +131,9 @@ void DebugMode::Initialize() {
 		{0.0f, 0.0f,   0.0f}
 	};
 
-	Transform cameraTransform{
-		{1.0f,  1.0f, 1.0f  },
-		{0.36f, 0.0f, 0.0f  },
-		{0.0f,  6.0f, -19.0f}
-	};
+	// ImGuiメンバ変数の初期化
 
-	// Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kClientWidth), float(WinApp::kClientHeight), 0.1f, 100.0f);
-
-	// カメラ用のリソースを作成 Phong Reflection Model
-	cameraResource = directxBase->CreateBufferResource(sizeof(CameraForGPU));
-	// 書き込むためのアドレスを取得
-	cameraResource->Map(0, nullptr, reinterpret_cast<void**>(&cameraData));
-
-	cameraData->worldPosition = cameraTransform.translate;
-
+	// Sprite
 	position = sprite->GetPosition();
 	rotation = sprite->GetRotation();
 	scale = sprite->GetScale();
@@ -128,12 +144,14 @@ void DebugMode::Initialize() {
 	textureLeftTop = sprite->GetTextureLeftTop();
 	textureSize = sprite->GetTextureSize();
 
+	// Model
 	modelTransform = object3d->GetTransform();
 	modelTransform.rotate = object3d->GetRotateInDegree();
 	modelColor = object3d->GetColor();
 	modelEnableLighting = object3d->GetEnableLighting();
-	//specularColor = object3d->GetSpecularColor();
 	shininess = object3d->GetShininess();
+
+	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
 }
@@ -280,10 +298,13 @@ void DebugMode::Update() {
 
 	pointLightData->dacay = std::clamp(pointLightData->dacay, 1.0f, 10.0f);
 
-	//object3d->SetSpecularColor(specularColor);
+	// Shininessの変更関数
 	object3d->SetShininess(shininess);
 
+	// FarClip(描画距離を変更するための関数)
 	camera->SetFarClipDistance(farClip);
+
+	// FovY(視野角を変更するための関数)
 	camera->SetFovY(fov);
 
 	mousePos2 = input->GetMousePos2();
@@ -357,12 +378,7 @@ void DebugMode::Update() {
 	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
 #endif // _DEBUG
 
-}
-
-void DebugMode::Draw() {
-	// ImGuiの内部コマンドを生成する
-	ImGui::Render();
-
+	// 更新処理
 	camera->SetRotate(cameraTransform.rotate);
 	camera->SetTranslate(cameraTransform.translate);
 	camera->Update();
@@ -374,25 +390,37 @@ void DebugMode::Draw() {
 	sprite->SetTextureSize(textureSize);
 	sprite->Update();
 
-	object3d->SetDirectionalLight(directionalLightData);
-	object3d->SetPointLight(pointLightData);
-	object3d->SetSpotLight(spotLightData);
-
 	object3d->SetTransform(modelTransform);
 	object3d->SetRotateInDegree(modelTransform.rotate);
 	object3d->SetColor(modelColor);
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
 
+	grid->Update();
+}
+
+void DebugMode::Draw() {
+	// ImGuiの内部コマンドを生成する
+	ImGui::Render();
+
+	// 描画前処理(この後にDrawしないといけない
 	directxBase->PreDraw();
 
+	// 共通描画設定(SpriteのDrawに必要)
 	SpriteBase::GetInstance()->ShaderDraw();
 
 	sprite->Draw();
 
+	// 共通描画設定(ModelのDrawに必要)
 	Object3dBase::GetInstance()->ShaderDraw();
 
-	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	// モデルの描画(各ライトを入れないといけない)
+	//object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+	// ここから下でDrawしたModelはグリッド表示される
+	WireFrameObjectBase::GetInstance()->ShaderDraw();
+
+	grid->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());
@@ -403,6 +431,7 @@ void DebugMode::Draw() {
 }
 
 void DebugMode::Finalize() {
+	// 終了処理(今までと変わらない
 	winApp->Finalize();
 	delete winApp;
 
@@ -428,7 +457,11 @@ void DebugMode::Finalize() {
 
 	delete object3d;
 
+	delete grid;
+
 	delete input;
+
+	WireFrameObjectBase::GetInstance()->Finalize();
 
 	FrameWork::Finalize();
 }

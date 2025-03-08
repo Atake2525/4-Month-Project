@@ -39,12 +39,12 @@ void Object3d::Initialize() {
 	directionalLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
 	directionalLightData->direction = {0.0f, -1.0f, 0.0f};
 	directionalLightData->intensity = 0.0f;
-	//directionalLightData->specularColor = { 1.0f, 1.0f, 1.0f };
+	directionalLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// 点光源にデータを書き込む
 	pointLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
 	pointLightData->position = {0.0f, 2.0f, 0.0f};
-	pointLightData->intensity = 1.0f;
+	pointLightData->intensity = 0.0f;
 	pointLightData->radius = 5.0f;
 	pointLightData->dacay = 5.0f;
 	pointLightData->specularColor = { 1.0f, 1.0f, 1.0f };

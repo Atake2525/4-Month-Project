@@ -67,10 +67,17 @@ public:
 	/// <param name="mouseNumer">2 = マウスホイール押し込み</param>
 	bool ReturnMouse(int mouseNumber);
 
+	// マウスの移動量を取得(Vector2)
 	Vector2& GetMousePos2();
 
+	// マウスの移動量を取得(Vector3)
 	Vector3& GetMousePos3();
 
+	/// <summary>
+	/// マウスカーソルの表示変更
+	/// </summary>
+	/// <param name="">True  = 表示</param>
+	/// <param name="">False = 非表示</param>
 	void ShowMouseCursor(bool flag);
 
 private:

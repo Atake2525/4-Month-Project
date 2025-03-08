@@ -10,6 +10,9 @@ class Camera {
 public:
 	Camera();
 
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
 	// Getter

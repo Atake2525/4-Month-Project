@@ -36,6 +36,7 @@
 #include "Camera.h"
 #include "Audio.h"
 #include "FrameWork.h"
+#include "WireFrameObjectBase.h"
 
 
 #include "algorithm"
@@ -68,8 +69,12 @@ public:
 	// ループ終了
 	bool RoopOut() override { return Finished; }
 
+	// ↑までシーンの作成に必須
+
 private:
 	D3DResourceLeakChecker d3dResourceLeakChecker;
+
+	// メンバ変数宣言
 
 #pragma region 基盤システム
 
@@ -85,7 +90,12 @@ private:
 
 	Object3d* object3d = nullptr;
 
+	// グリッド
+	Object3d* grid = nullptr;
+
 	Input* input = nullptr;
+
+	// ライトデータの宣言
 
 	DirectionalLight* directionalLightData = nullptr;
 
@@ -107,11 +117,13 @@ private:
 		{0.0f,  6.0f, -19.0f}
 	};
 
-	// マテリアルにデータを書き込む
+	// カメラ
 	CameraForGPU* cameraData = nullptr;
 
+	// サウンド
 	SoundData soundData1;
 
+	// ライトリソース宣言
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource;
@@ -121,6 +133,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource;
 
 
+	// ImGuiで使用する変数の宣言
 	Vector2 position;
 	float rotation;
 	Vector2 scale;
