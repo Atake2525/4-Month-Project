@@ -87,25 +87,25 @@ private:
 
 	Input* input = nullptr;
 
-	DirectionalLight* directionalLightData = nullptr;	
+	DirectionalLight* directionalLightData = nullptr;
 
 
 	PointLight* pointLightData = nullptr;
-	
+
 	SpotLight* spotLightData = nullptr;
 
 	// Transform変数を作る
 	Transform transform{
-	    {1.0f, 1.0f,   1.0f},
-        {0.0f, -1.58f, 0.0f},
-        {0.0f, 0.0f,   0.0f}
-    };
+		{1.0f, 1.0f,   1.0f},
+		{0.0f, -1.58f, 0.0f},
+		{0.0f, 0.0f,   0.0f}
+	};
 
 	Transform cameraTransform{
-	    {1.0f,  1.0f, 1.0f  },
-        {0.36f, 0.0f, 0.0f  },
-        {0.0f,  6.0f, -19.0f}
-    };
+		{1.0f,  1.0f, 1.0f  },
+		{0.36f, 0.0f, 0.0f  },
+		{0.0f,  6.0f, -19.0f}
+	};
 
 	// マテリアルにデータを書き込む
 	CameraForGPU* cameraData = nullptr;
@@ -119,7 +119,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource;
-	
+
 
 	Vector2 position;
 	float rotation;
@@ -137,5 +137,11 @@ private:
 	float shininess;
 	bool modelEnableLighting;
 
+	float farClip;
+	float fov;
+
 	bool Finished = false;
+
+	Vector2 mousePos2;
+	Vector3 mousePos3;
 };

@@ -52,7 +52,7 @@ public:
 	// Getter(EnableLighting)
 	const bool& GetEnableLighting() const { return materialData->enableLighting; }
 	// Getter(SpecularColor)
-	const Vector3& GetSpecularColor() const { return materialData->specularColor; }
+	//const Vector3& GetSpecularColor() const { return materialData->specularColor; }
 	// Getter(Shininess)
 	const float& GetShininess() const { return materialData->shininess; }
 
@@ -61,7 +61,7 @@ public:
 	// Setter(EnableLighting)
 	void SetEnableLighting(const bool& enableLighting) { materialData->enableLighting = enableLighting; }
 	// Setter(SpecularColor)
-	void SetSpecularColor(const Vector3& specularColor) { materialData->specularColor = specularColor; }
+	//void SetSpecularColor(const Vector3& specularColor) { materialData->specularColor = specularColor; }
 	// Setter(Shininess)
 	void SetShininess(const float& shininess) { materialData->shininess = shininess; }
 

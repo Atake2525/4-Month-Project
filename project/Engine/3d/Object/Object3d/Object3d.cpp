@@ -39,13 +39,15 @@ void Object3d::Initialize() {
 	directionalLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
 	directionalLightData->direction = {0.0f, -1.0f, 0.0f};
 	directionalLightData->intensity = 0.0f;
+	//directionalLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// 点光源にデータを書き込む
 	pointLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
 	pointLightData->position = {0.0f, 2.0f, 0.0f};
-	pointLightData->intensity = 0.0f;
+	pointLightData->intensity = 1.0f;
 	pointLightData->radius = 5.0f;
 	pointLightData->dacay = 5.0f;
+	pointLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// スポットライトにデータを書き込む
 	spotLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -56,6 +58,7 @@ void Object3d::Initialize() {
 	spotLightData->dacay = 2.0f;
 	spotLightData->cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 	spotLightData->cosFalloffStart = std::cos(std::numbers::pi_v<float> / 2.6f);
+	//spotLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// cosFalloffStartがcosAngleより下にならないように調整
 	spotLightData->cosFalloffStart = max(spotLightData->cosFalloffStart, spotLightData->cosAngle);
@@ -92,7 +95,7 @@ void Object3d::Update() {
 	transformationMatrix->World = worldMatrix;
 }
 
-void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced) {
+void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {
 	
 	if (model_) {
 		model_->SetIA();
@@ -102,7 +105,7 @@ void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResou
 
 	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(5, pointLightResourced->GetGPUVirtualAddress());
 
-	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(6, spotLightResource->GetGPUVirtualAddress());
+	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(6, spotLightResourced->GetGPUVirtualAddress());
 
 	// wvp用のCBufferの場所を設定
 	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource->GetGPUVirtualAddress());
@@ -188,17 +191,17 @@ void Object3d::SetTransform(const Vector3& translate, const Vector3& scale, cons
 	transform.rotate = rotate;
 }
 
-const Vector3& Object3d::GetSpecularColor() const { 
-	return model_->GetSpecularColor();
-}
+//const Vector3& Object3d::GetSpecularColor() const { 
+//	return model_->GetSpecularColor();
+//}
 
 const float& Object3d::GetShininess() const { 
 	return model_->GetShininess();
 }
 
-void Object3d::SetSpecularColor(const Vector3& specularColor) {
-	model_->SetSpecularColor(specularColor); 
-}
+//void Object3d::SetSpecularColor(const Vector3& specularColor) {
+//	model_->SetSpecularColor(specularColor); 
+//}
 
 void Object3d::SetShininess(const float& shininess) { 
 	model_->SetShininess(shininess);

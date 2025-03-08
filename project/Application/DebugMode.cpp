@@ -3,8 +3,8 @@
 using namespace Microsoft::WRL;
 
 #include "externels/imgui/imgui.h"
- #include "externels/imgui/imgui_impl_dx12.h"
- #include "externels/imgui/imgui_impl_win32.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
 
 void DebugMode::Initialize() {
 
@@ -19,8 +19,8 @@ void DebugMode::Initialize() {
 	directxBase->Initialize(winApp);
 
 	camera = new Camera();
-	camera->SetRotate({0.36f, 0.0f, 0.0f});
-	camera->SetTranslate({0.0f, 6.0f, -19.0f});
+	camera->SetRotate({ 0.36f, 0.0f, 0.0f });
+	camera->SetTranslate({ 0.0f, 6.0f, -19.0f });
 
 	SpriteBase::GetInstance()->Initialize(directxBase);
 
@@ -33,77 +33,81 @@ void DebugMode::Initialize() {
 
 	ModelManager::GetInstance()->Initialize(directxBase);
 
+	Audio::GetInstance()->Initialize();
+
+	input = new Input();
+	input->Initialize(winApp);
+
 #pragma endregion 基盤システムの初期化
 
 	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 	TextureManager::GetInstance()->LoadTexture("Resources/monsterBall.png");
 	sprite = new Sprite();
 	sprite->Initialize("Resources/uvChecker.png");
-	sprite->SetScale(Vector2{200.0f, 200.0f});
+	sprite->SetScale(Vector2{ 200.0f, 200.0f });
 
 	//uint32_t textureIndexSphere = TextureManager::GetInstance()->GetTextureIndexByFilePath("Resources/monsterBall.png");
 	//uint32_t textureIndexUv = TextureManager::GetInstance()->GetTextureIndexByFilePath("Resources/uvChecker.png");
 
-	ModelManager::GetInstance()->LoadModel("Resources", "terrain.obj", true);
+	//ModelManager::GetInstance()->LoadModel("Resources", "terrain.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources", "box.obj", true);
 	// ModelManager::GetInstance()->LoadModel("Resources", "axis.obj");
 	// ModelManager::GetInstance()->LoadModel("Resources", "bunny.obj");
 	// ModelManager::GetInstance()->LoadModel("Resources", "teapot.obj");
-
-	Audio::GetInstance()->Initialize();
 
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
 	object3d = new Object3d();
 	object3d->Initialize();
 
-	object3d->SetModel("terrain.obj");
-
-	input = new Input();
-	input->Initialize(winApp);
+	object3d->SetModel("box.obj");
 
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
 
 	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
 
-	directionalLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
-	directionalLightData->direction = {0.0f, -1.0f, 0.0f};
+	directionalLightData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	directionalLightData->direction = { 0.0f, -1.0f, 0.0f };
 	directionalLightData->intensity = 1.0f;
+	directionalLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	pointLightResource = directxBase->CreateBufferResource(sizeof(PointLight));
 
 	pointLightResource->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData));
 
-	pointLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
-	pointLightData->position = {0.0f, 2.0f, 0.0f};
+	pointLightData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	pointLightData->position = { 0.0f, 2.0f, 0.0f };
 	pointLightData->intensity = 0.0f;
 	pointLightData->radius = 5.0f;
 	pointLightData->dacay = 5.0f;
+	pointLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	spotLightResource = directxBase->CreateBufferResource(sizeof(SpotLight));
 
 	spotLightResource->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData));
 
-	spotLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
-	spotLightData->position = {2.0f, 1.25f, 0.0f};
+	spotLightData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	spotLightData->position = { 2.0f, 1.25f, 0.0f };
 	spotLightData->distance = 7.0f;
-	spotLightData->direction = Normalize({-1.0f, -1.0f, 0.0f});
+	spotLightData->direction = Normalize({ -1.0f, -1.0f, 0.0f });
 	spotLightData->intensity = 0.0f;
 	spotLightData->dacay = 2.0f;
 	spotLightData->cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
 	spotLightData->cosFalloffStart = std::cos(std::numbers::pi_v<float> / 2.6f);
+	spotLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// Transform変数を作る
 	Transform transform{
-	    {1.0f, 1.0f,   1.0f},
-        {0.0f, -1.58f, 0.0f},
-        {0.0f, 0.0f,   0.0f}
-    };
+		{1.0f, 1.0f,   1.0f},
+		{0.0f, -1.58f, 0.0f},
+		{0.0f, 0.0f,   0.0f}
+	};
 
 	Transform cameraTransform{
-	    {1.0f,  1.0f, 1.0f  },
-        {0.36f, 0.0f, 0.0f  },
-        {0.0f,  6.0f, -19.0f}
-    };
+		{1.0f,  1.0f, 1.0f  },
+		{0.36f, 0.0f, 0.0f  },
+		{0.0f,  6.0f, -19.0f}
+	};
 
 	// Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kClientWidth), float(WinApp::kClientHeight), 0.1f, 100.0f);
 
@@ -128,8 +132,10 @@ void DebugMode::Initialize() {
 	modelTransform.rotate = object3d->GetRotateInDegree();
 	modelColor = object3d->GetColor();
 	modelEnableLighting = object3d->GetEnableLighting();
-	specularColor = object3d->GetSpecularColor();
+	//specularColor = object3d->GetSpecularColor();
 	shininess = object3d->GetShininess();
+	farClip = camera->GetFarClipDistance();
+	fov = camera->GetfovY();
 }
 
 void DebugMode::Update() {
@@ -224,20 +230,23 @@ void DebugMode::Update() {
 		ImGui::DragFloat("Shininess", &shininess, 0.1f);
 		if (ImGui::TreeNode("DirectionalLight")) {
 			ImGui::ColorEdit4("Color", &directionalLightData->color.x);
+			ImGui::ColorEdit3("SpecularColor", &directionalLightData->specularColor.x);
 			ImGui::SliderFloat3("Direction", &directionalLightData->direction.x, 1.0f, -1.0f);
 			ImGui::DragFloat("Insensity", &directionalLightData->intensity, 1.0f);
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("PointLight")) {
 			ImGui::ColorEdit4("Color", &pointLightData->color.x);
+			ImGui::ColorEdit3("SpecularColor", &pointLightData->specularColor.x);
 			ImGui::DragFloat3("Positoin", &pointLightData->position.x, 0.1f);
 			ImGui::SliderFloat("radius", &pointLightData->radius, 0.0f, 100.0f);
-			ImGui::SliderFloat("dacay", &pointLightData->dacay, 1.0f, 100.0f);
+			ImGui::SliderFloat("dacay", &pointLightData->dacay, 1.0f, 10.0f);
 			ImGui::DragFloat("Insensity", &pointLightData->intensity, 1.0f);
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("SpotLight")) {
 			ImGui::ColorEdit4("Color", &spotLightData->color.x);
+			ImGui::ColorEdit3("SpecularColor", &spotLightData->specularColor.x);
 			ImGui::DragFloat3("Positoin", &spotLightData->position.x, 0.1f);
 			ImGui::DragFloat3("Direction", &spotLightData->direction.x, 0.1f);
 			ImGui::DragFloat("cosAngle", &spotLightData->cosAngle, 0.01f);
@@ -257,15 +266,28 @@ void DebugMode::Update() {
 
 	ImGui::DragFloat3("Rotate", &cameraTransform.rotate.x, 0.01f);
 	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
+	ImGui::DragFloat("FarClip", &farClip, 1.0f);
+	ImGui::DragFloat("Fov", &fov, 0.01f);
+	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
+	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
 
 	ImGui::End();
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
 
-	std::clamp(pointLightData->dacay, 1.0f, 10.0f);
+	// cosFalloffStartがcosAngleより下にならないように調整
+	spotLightData->cosFalloffStart = max(spotLightData->cosFalloffStart, spotLightData->cosAngle);
 
-	object3d->SetSpecularColor(specularColor);
+	pointLightData->dacay = std::clamp(pointLightData->dacay, 1.0f, 10.0f);
+
+	//object3d->SetSpecularColor(specularColor);
 	object3d->SetShininess(shininess);
+
+	camera->SetFarClipDistance(farClip);
+	camera->SetFovY(fov);
+
+	mousePos2 = input->GetMousePos2();
+	mousePos3 = input->GetMousePos3();
 
 #ifdef _DEBUG
 	const float speed = 0.7f;
@@ -277,7 +299,7 @@ void DebugMode::Update() {
 	if (input->PushKey(DIK_S)) {
 		cameraTransform.translate -= velocity;
 	}
-	velocity = {speed, 0.0f, 0.0f};
+	velocity = { speed, 0.0f, 0.0f };
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
 	if (input->PushKey(DIK_A)) {
 		cameraTransform.translate -= velocity;
@@ -309,6 +331,14 @@ void DebugMode::Update() {
 	if (input->PushKey(DIK_E)) {
 		cameraTransform.rotate.z += 0.01f;
 	}
+	//mousePos3.x / 100000.0f;
+	//mousePos3.y / 100000.0f;
+	mousePos3.z = mousePos3.y;
+	mousePos3.y = mousePos3.x;
+	mousePos3.x = mousePos3.z;
+	mousePos3.z = 0.0f;
+	mousePos3 = SwapRadian(mousePos3) / 10.0f;
+	cameraTransform.rotate += mousePos3;
 
 	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
 
@@ -360,7 +390,7 @@ void DebugMode::Draw() {
 
 	Object3dBase::GetInstance()->ShaderDraw();
 
-	object3d->Draw(directionalLightResource, pointLightResource);
+	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());
