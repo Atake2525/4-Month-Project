@@ -142,6 +142,8 @@ private:
 
 	bool Finished = false;
 
+	bool showCursor = false;
+
 	Vector2 mousePos2;
 	Vector3 mousePos3;
 };

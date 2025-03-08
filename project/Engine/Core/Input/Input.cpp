@@ -17,7 +17,7 @@ void Input::Initialize(WinApp* winApp) {
 	result = keyboard->SetDataFormat(&c_dfDIKeyboard);
 	assert(SUCCEEDED(result));
 	// 排他制御レベルセット
-	result = keyboard->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE | DISCL_NOWINKEY);
+	result = keyboard->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
 	// DorectxInputのインスタンス生成 マウス
@@ -31,8 +31,16 @@ void Input::Initialize(WinApp* winApp) {
 	result = mouse->SetDataFormat(&c_dfDIMouse);
 	assert(SUCCEEDED(result));
 	// 排他制御レベルセット
-	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	assert(SUCCEEDED(result));
+}
+
+void Input::ShowMouseCursor(bool flag) {
+	if (flag)
+	{
+		mouse->Unacquire();
+	}
+	showCursor = flag;
 }
 
 void Input::Update() {
@@ -45,13 +53,16 @@ void Input::Update() {
 	// 全キーの入力情報を取得する
 	result = keyboard->GetDeviceState(sizeof(keys), keys);
 
-	mouseStatePre = mouseState;
-	// マウスの状態の取得
-	result = mouse->Acquire();
-	// ポーリング開始
-	result = mouse->Poll();
-	// 全ボタンの入力情報を取得する
-	result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	if (!showCursor)
+	{
+		mouseStatePre = mouseState;
+		// マウスの状態の取得
+		result = mouse->Acquire();
+		// ポーリング開始
+		result = mouse->Poll();
+		// 全ボタンの入力情報を取得する
+		result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	}
 
 }
 
