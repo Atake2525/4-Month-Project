@@ -73,6 +73,8 @@ void DebugMode::Initialize() {
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
+	OutputDebugStringA("Hello,DirectX!\n");
+
 	// Spriteの初期化
 	sprite = new Sprite();
 	// 使用するSpriteを
