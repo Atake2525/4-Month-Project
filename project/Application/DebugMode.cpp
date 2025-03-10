@@ -66,9 +66,9 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model", "stage.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model", "block.obj");
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -83,11 +83,11 @@ void DebugMode::Initialize() {
 	object3d = new Object3d();
 	object3d->Initialize();
 	// Modelを指定する
-	object3d->SetModel("box.obj");
+	object3d->SetModel("stage.obj");
 
 	grid = new Object3d();
 	grid->Initialize();
-	grid->SetModel("Grid.obj");
+	grid->SetModel("block.obj");
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -415,7 +415,7 @@ void DebugMode::Draw() {
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	// モデルの描画(各ライトを入れないといけない)
-	//object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();

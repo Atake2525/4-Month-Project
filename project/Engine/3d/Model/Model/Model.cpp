@@ -72,6 +72,10 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 			// 連結してファイルパスにする
 			materialData.textureFilePath = directoryPath + "/" + textureFilename;
 		}
+		else
+		{
+			materialData.textureFilePath = "Resources/Debug/white1x1.png";
+		}
 	}
 	// 4, MaterialDataを返す
 	return materialData;
