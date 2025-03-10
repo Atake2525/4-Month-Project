@@ -88,6 +88,10 @@ void DebugMode::Initialize() {
 	grid->Initialize();
 	grid->SetModel("block.obj");
 
+	playerModel = new Object3d();
+	playerModel->Initialize();
+	playerModel->SetModel("Player.obj");
+
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
 
@@ -149,6 +153,9 @@ void DebugMode::Initialize() {
 	modelColor = object3d->GetColor();
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
+
+	player = new Player();
+	player->Initialize(playerModel, camera, winApp);
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -396,6 +403,8 @@ void DebugMode::Update() {
 	object3d->Update();
 
 	grid->Update();
+
+	player->Update();
 }
 
 void DebugMode::Draw() {
@@ -415,6 +424,8 @@ void DebugMode::Draw() {
 
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();

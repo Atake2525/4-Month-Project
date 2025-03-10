@@ -38,6 +38,7 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 
+#include "Player.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -93,8 +94,13 @@ private:
 	// グリッド
 	Object3d* grid = nullptr;
 
+	//プレイヤー
+	Object3d* playerModel = nullptr;
+
 	Input* input = nullptr;
 
+
+	Player* player = nullptr;
 	// ライトデータの宣言
 
 	DirectionalLight* directionalLightData = nullptr;
