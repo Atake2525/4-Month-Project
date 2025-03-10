@@ -72,6 +72,11 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 			// 連結してファイルパスにする
 			materialData.textureFilePath = directoryPath + "/" + textureFilename;
 		}
+		else
+		{
+			// map_Kdが存在しなかったらwhite1x1をテクスチャとして使用する
+			materialData.textureFilePath = "Resources/Debug/white1x1.png";
+		}
 	}
 	// 4, MaterialDataを返す
 	return materialData;
