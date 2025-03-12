@@ -9,6 +9,11 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "WinApp.h"
+#include "kMath.h"
+
+#include "externels/imgui/imgui.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
 
 class PlayerS {
 public: // メンバ関数
@@ -26,7 +31,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Object3d* object3d, Camera* camera, WinApp* winApp);
+	void Initialize(Object3d* object3d, Camera* camera, Input* input);
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -53,5 +58,7 @@ private: // メンバ変数
 	bool modelEnableLighting_;
 
 	float shininess_;
+
+
 };
 

@@ -155,7 +155,7 @@ void DebugMode::Initialize() {
 	shininess = object3d->GetShininess();
 
 	player = new PlayerS();
-	player->Initialize(playerModel, camera, winApp);
+	player->Initialize(playerModel, camera, input);
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -334,6 +334,7 @@ void DebugMode::Update() {
 	if (input->PushKey(DIK_D)) {
 		cameraTransform.translate += velocity;
 	}
+	*/
 	if (input->PushKey(DIK_SPACE)) {
 		cameraTransform.translate.y += 1.0f;
 	}
@@ -363,7 +364,7 @@ void DebugMode::Update() {
 		// 音声再生
 		Audio::GetInstance()->SoundPlayWave(soundData1);
 	}
-	*/
+
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;
 	}

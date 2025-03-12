@@ -10,14 +10,14 @@ PlayerS::~PlayerS()
 
 }
 
-void PlayerS::Initialize(Object3d* object3d, Camera* camera, WinApp* winApp)
+void PlayerS::Initialize(Object3d* object3d, Camera* camera, Input* input)
 {
 	camera_ = camera;
 
 	object3d_ = object3d;
 
 	input_ = new Input();
-	input_->Initialize(winApp);
+	input_ = input;
 
 	// Model
 	modelTransform_ = object3d_->GetTransform();
@@ -30,18 +30,29 @@ void PlayerS::Initialize(Object3d* object3d, Camera* camera, WinApp* winApp)
 
 void PlayerS::Update()
 {
-	if (input_->PushKey(DIK_LEFT)) {
-		modelTransform_.translate.y -= 0.03f;
+	//modelTransform_.translate += {0.0f, 0.0f, 1.0f};
+
+#ifdef _DEBUG
+
+	const float speed = 0.5f;
+	Vector3 velocity(0.0f, 0.0f, speed);
+	if (input_->PushKey(DIK_W)) {
+		modelTransform_.translate += velocity;
 	}
-	if (input_->PushKey(DIK_RIGHT)) {
-		modelTransform_.translate.y += 0.03f;
+	if (input_->PushKey(DIK_S)) {
+		modelTransform_.translate -= velocity;
 	}
-	if (input_->PushKey(DIK_UP)) {
-		modelTransform_.translate.x -= 0.03f;
+
+	velocity = { speed, 0.0f, 0.0f };
+
+	if (input_->PushKey(DIK_A)) {
+		modelTransform_.translate -= velocity;
 	}
-	if (input_->PushKey(DIK_DOWN)) {
-		modelTransform_.translate.x += 0.03f;
+	if (input_->PushKey(DIK_D)) {
+		modelTransform_.translate += velocity;
 	}
+
+#endif // _DEBUG
 
 	object3d_->SetTransform(modelTransform_);
 	object3d_->SetRotateInDegree(modelTransform_.rotate);
