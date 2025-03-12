@@ -19,6 +19,8 @@ struct FormatChunk {
 	WAVEFORMATEX fmt;  // 波形フォーマット
 };
 
+const uint32_t Audio::maxSourceVoiceCount = 16;
+
 Audio* Audio::instance = nullptr;
 
 
@@ -98,6 +100,8 @@ SoundData Audio::SoundLoadWave(const char* filename) {
 	char* pBuffer = new char[data.size];
 	file.read(pBuffer, data.size);
 
+	int time = data.size / format.fmt.nAvgBytesPerSec;
+
 	// Waveファイルを閉じる
 	file.close();
 
@@ -108,6 +112,7 @@ SoundData Audio::SoundLoadWave(const char* filename) {
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
 	soundData.bufferSize = data.size;
 	soundData.filename = filename;
+	soundData.playTime = time;
 
 	return soundData;
 }
@@ -131,7 +136,7 @@ void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
 	result = pSourceVoice->SetVolume(volume);
 	result = pSourceVoice->Start();
-	AudioList list = { pSourceVoice, soundData };
+	AudioList list = { pSourceVoice, soundData, 0 };
 	audioList.push_back(list);
 }
 
@@ -149,14 +154,39 @@ void Audio::SoundStopWaveAll() {
 // 音声停止
 void Audio::SoundStopWave(const SoundData& soundData) {
 	// listに登録されているaudioSourceの中から指定されたsoundDataのfilenameに一致するもの全てを音声停止して一致するものをlistからremoveする
+	uint32_t index = 0;
+	uint32_t eraseList[maxSourceVoiceCount] = { 0 };
+	uint32_t eraseNum = 0;
 	for (AudioList list : audioList)
 	{
 		if (list.soundData.filename == soundData.filename)
 		{
 			list.sourceVoice->Stop();
+			list.sourceVoice->DestroyVoice();
+			eraseList[eraseNum] = index;
+			eraseNum++;
 		}
-		audioList.erase(list.soundData);
+		index++;
 	}
+	for (uint32_t i = 0; i < eraseNum; i++)
+	{
+		audioList.erase(audioList.begin() + eraseList[i]);
+		eraseList[i + 1] -= i + 1;
+	}
+}
+
+void Audio::Update() {
+	uint32_t index = 0;
+	for (AudioList list : audioList)
+	{
+		list.time++;
+		if (list.time / 60 >= list.soundData.playTime)
+		{ // 再生時間ごとに削除 前から再生時間が過ぎたら削除
+			audioList.erase(audioList.begin() + index);
+		}
+		index++;
+	}
+	
 }
 
 // 音声データ解放
