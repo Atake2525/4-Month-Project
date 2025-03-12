@@ -25,7 +25,7 @@ struct AudioList
 {
 	IXAudio2SourceVoice* sourceVoice;
 	SoundData soundData;
-	int time;
+	int startFrameTime;
 };
 
 class Audio {

@@ -1,6 +1,10 @@
 #include "Audio.h"
 #include <cassert>
 
+#include "externels/imgui/imgui.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
+
 // チャンクヘッダ
 struct ChunkHeader {
 	char id[4];   // チャンク毎のID
@@ -136,7 +140,7 @@ void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
 	result = pSourceVoice->SetVolume(volume);
 	result = pSourceVoice->Start();
-	AudioList list = { pSourceVoice, soundData, 0 };
+	AudioList list = { pSourceVoice, soundData, frameTime };
 	audioList.push_back(list);
 }
 
@@ -176,17 +180,24 @@ void Audio::SoundStopWave(const SoundData& soundData) {
 }
 
 void Audio::Update() {
+	// audioListのサイズが0なら早期return
+	if (audioList.size() == 0) { 
+		frameTime = 0;
+		return;
+	}
 	uint32_t index = 0;
 	for (AudioList list : audioList)
 	{
-		list.time++;
-		if (list.time / 60 >= list.soundData.playTime)
+		if (frameTime >= list.soundData.playTime * 60 + list.startFrameTime)
 		{ // 再生時間ごとに削除 前から再生時間が過ぎたら削除
+			list.sourceVoice->Stop();
+			list.sourceVoice->DestroyVoice();
 			audioList.erase(audioList.begin() + index);
+			break;
 		}
 		index++;
 	}
-	
+	frameTime++;
 }
 
 // 音声データ解放
