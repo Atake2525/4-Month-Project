@@ -10,7 +10,7 @@
 
 void Model::Initialize(std::string directoryPath, std::string filename, bool enableLighting) {
 	// モデル読み込み
-	modelData = LoadObjFile(directoryPath, filename);
+	modelData = LoadModelFile(directoryPath, filename);
 
 	// Resourceの作成
 	CreateVertexResource();
@@ -87,7 +87,7 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 }
 
 // マルチスレッド化予定
-ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
+ModelData Model::LoadModelFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData;            // 構築するModelData
 	Assimp::Importer importer;
 	std::string filePath = directoryPath + "/" + filename;

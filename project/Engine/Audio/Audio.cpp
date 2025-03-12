@@ -140,23 +140,24 @@ void Audio::SoundStopWaveAll() {
 	// listに登録されているaudioSourceの全てを音声停止してlistをclearする
 	for (AudioList list : audioList)
 	{
-		list.audioSource->Stop();
+		list.sourceVoice->Stop();
+		list.sourceVoice->DestroyVoice();
 	}
 	audioList.clear();
 }
 
 // 音声停止
-//void Audio::SoundStopWave(const SoundData& soundData) {
-//	// listに登録されているaudioSourceの中から指定されたsoundDataのfilenameに一致するもの全てを音声停止して一致するものをlistからremoveする
-//	for (AudioList list : audioList)
-//	{
-//		if (list.soundData.filename == soundData.filename)
-//		{
-//			list.audioSource->Stop();
-//		}
-//		audioList.remove(list);
-//	}
-//}
+void Audio::SoundStopWave(const SoundData& soundData) {
+	// listに登録されているaudioSourceの中から指定されたsoundDataのfilenameに一致するもの全てを音声停止して一致するものをlistからremoveする
+	for (AudioList list : audioList)
+	{
+		if (list.soundData.filename == soundData.filename)
+		{
+			list.sourceVoice->Stop();
+		}
+		audioList.erase(list.soundData);
+	}
+}
 
 // 音声データ解放
 void Audio::SoundUnload(SoundData* soundData) {

@@ -375,6 +375,7 @@ void DebugMode::Update() {
 		mousePos3.y = mousePos3.x;
 		mousePos3.x = mousePos3.z;
 		mousePos3.z = 0.0f;
+		// 実際に反映されるcameraRotateはRadianなので出力されたmousePos3をDegreeとしてRadianに計算しなおす
 		mousePos3 = SwapRadian(mousePos3) / 10.0f;
 		cameraTransform.rotate += mousePos3;
 	}

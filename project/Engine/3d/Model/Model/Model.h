@@ -86,7 +86,7 @@ private:
 	// .mtlファイルの読み取り
 	static MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& fileName);
 	// .objファイルの読み取り
-	static ModelData LoadObjFile(const std::string& directoryPath, const std::string& fileName);
+	static ModelData LoadModelFile(const std::string& directoryPath, const std::string& fileName);
 
 	// VertexResourceを作成する
 	void CreateVertexResource();

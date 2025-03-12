@@ -1,7 +1,7 @@
 #include <xaudio2.h>
 #include <fstream>
 #include <wrl.h>
-#include <list>
+#include <vector>
 
 #pragma once
 
@@ -17,6 +17,12 @@ struct SoundData {
 	unsigned int bufferSize;
 	// ファイルの名前
 	const char* filename;
+};
+
+struct AudioList
+{
+	IXAudio2SourceVoice* sourceVoice;
+	SoundData soundData;
 };
 
 class Audio {
@@ -52,22 +58,16 @@ public:
 	void SoundStopWaveAll();
 
 	// 音声停止
-	//void SoundStopWave(const SoundData& soundData);
+	void SoundStopWave(const SoundData& soundData);
 
 	// 音声データ解放
 	void SoundUnload(SoundData* soundData);
 
 private:
 
-	struct AudioList
-	{
-		IXAudio2SourceVoice* audioSource;
-		SoundData soundData;
-	};
-
 	// audio test
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice;
 
-	std::list<AudioList> audioList;
+	std::vector<AudioList> audioList;
 };

@@ -93,6 +93,10 @@ Vector3 SwapDegree(Vector3 radian);
 
 Vector3 SwapRadian(Vector3 degree);
 
+Vector2 SwapDegree(Vector2 radian);
+
+Vector2 SwapRadian(Vector2 degree);
+
 float SwapDegree(float radian);
 
 float SwapRadian(float degree);
