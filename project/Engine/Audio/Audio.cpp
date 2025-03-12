@@ -107,12 +107,13 @@ SoundData Audio::SoundLoadWave(const char* filename) {
 	soundData.wfex = format.fmt;
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
 	soundData.bufferSize = data.size;
+	soundData.filename = filename;
 
 	return soundData;
 }
 
 // 音声再生
-void Audio::SoundPlayWave(const SoundData& soundData) {
+void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
 	HRESULT result;
 
 	// 波形フォーマットをもとにSourceVoiceの生成
@@ -128,8 +129,34 @@ void Audio::SoundPlayWave(const SoundData& soundData) {
 
 	// 波形データの再生
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
+	result = pSourceVoice->SetVolume(volume);
 	result = pSourceVoice->Start();
+	AudioList list = { pSourceVoice, soundData };
+	audioList.push_back(list);
 }
+
+// 全ての音声停止
+void Audio::SoundStopWaveAll() {
+	// listに登録されているaudioSourceの全てを音声停止してlistをclearする
+	for (AudioList list : audioList)
+	{
+		list.audioSource->Stop();
+	}
+	audioList.clear();
+}
+
+// 音声停止
+//void Audio::SoundStopWave(const SoundData& soundData) {
+//	// listに登録されているaudioSourceの中から指定されたsoundDataのfilenameに一致するもの全てを音声停止して一致するものをlistからremoveする
+//	for (AudioList list : audioList)
+//	{
+//		if (list.soundData.filename == soundData.filename)
+//		{
+//			list.audioSource->Stop();
+//		}
+//		audioList.remove(list);
+//	}
+//}
 
 // 音声データ解放
 void Audio::SoundUnload(SoundData* soundData) {

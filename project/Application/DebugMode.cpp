@@ -66,8 +66,9 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "stage.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "block.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Button.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -86,7 +87,7 @@ void DebugMode::Initialize() {
 
 	grid = new Object3d();
 	grid->Initialize();
-	grid->SetModel("block.obj");
+	grid->SetModel("Grid.obj");
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -354,7 +355,11 @@ void DebugMode::Update() {
 
 	if (input->TriggerKey(DIK_0)) {
 		// 音声再生
-		Audio::GetInstance()->SoundPlayWave(soundData1);
+		Audio::GetInstance()->SoundPlayWave(soundData1, 1.0f);
+	}
+	if (input->TriggerKey(DIK_9)) {
+		// 音声停止
+		Audio::GetInstance()->SoundStopWaveAll();
 	}
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;
