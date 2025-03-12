@@ -142,6 +142,8 @@ void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
 	result = pSourceVoice->Start();
 	AudioList list = { pSourceVoice, soundData, frameTime };
 	audioList.push_back(list);
+	// 指定したsourceVoiceよりも多くpush_backしたらassert
+	assert(audioList.size() < maxSourceVoiceCount);
 }
 
 // 全ての音声停止
