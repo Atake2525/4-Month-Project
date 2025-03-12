@@ -363,6 +363,7 @@ void DebugMode::Update() {
 		// 音声再生
 		Audio::GetInstance()->SoundPlayWave(soundData1);
 	}
+	*/
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;
 	}
@@ -382,7 +383,7 @@ void DebugMode::Update() {
 	}
 
 	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
-	*/
+
 #endif // _DEBUG
 
 	// 更新処理
@@ -470,7 +471,11 @@ void DebugMode::Finalize() {
 
 	delete grid;
 
+	delete playerModel;
+
 	delete input;
+
+	delete player;
 
 	WireFrameObjectBase::GetInstance()->Finalize();
 
