@@ -66,7 +66,7 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Button.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 
@@ -83,7 +83,7 @@ void DebugMode::Initialize() {
 	object3d = new Object3d();
 	object3d->Initialize();
 	// Modelを指定する
-	object3d->SetModel("Button.obj");
+	object3d->SetModel("stage.obj");
 
 	grid = new Object3d();
 	grid->Initialize();
@@ -355,7 +355,11 @@ void DebugMode::Update() {
 
 	if (input->TriggerKey(DIK_0)) {
 		// 音声再生
-		Audio::GetInstance()->SoundPlayWave(soundData1);
+		Audio::GetInstance()->SoundPlayWave(soundData1, 1.0f);
+	}
+	if (input->TriggerKey(DIK_9)) {
+		// 音声停止
+		Audio::GetInstance()->SoundStopWaveAll();
 	}
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;

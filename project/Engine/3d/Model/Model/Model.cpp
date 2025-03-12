@@ -91,7 +91,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	ModelData modelData;            // 構築するModelData
 	Assimp::Importer importer;
 	std::string filePath = directoryPath + "/" + filename;
-	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
 	assert(scene->HasMeshes()); // メッシュが無いのは対応しない
 
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex)
@@ -103,6 +103,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
 		{
 			aiFace& face = mesh->mFaces[faceIndex];
+			
 			assert(face.mNumIndices == 3); // 3角形のみサポート
 			// ここからFaceの中身(Vertex)の解析を行っていく
 			for (uint32_t element = 0; element < face.mNumIndices; ++element)
