@@ -72,6 +72,7 @@ void DebugMode::Initialize() {
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+	soundData2 = Audio::GetInstance()->SoundLoadWave("Resources/fanfare.wav");
 
 	// Spriteの初期化
 	sprite = new Sprite();
@@ -353,11 +354,23 @@ void DebugMode::Update() {
 		cameraTransform.rotate.z += 0.01f;
 	}
 
-	if (input->TriggerKey(DIK_0)) {
+	if (input->TriggerKey(DIK_1)) {
 		// 音声再生
 		Audio::GetInstance()->SoundPlayWave(soundData1, 1.0f);
 	}
+	if (input->TriggerKey(DIK_2)) {
+		// 音声再生
+		Audio::GetInstance()->SoundPlayWave(soundData2, 1.0f);
+	}
+	if (input->TriggerKey(DIK_8)) {
+		// 音声停止
+		Audio::GetInstance()->SoundStopWave(soundData1);
+	}
 	if (input->TriggerKey(DIK_9)) {
+		// 音声停止
+		Audio::GetInstance()->SoundStopWave(soundData2);
+	}
+	if (input->TriggerKey(DIK_0)) {
 		// 音声停止
 		Audio::GetInstance()->SoundStopWaveAll();
 	}
@@ -375,6 +388,7 @@ void DebugMode::Update() {
 		mousePos3.y = mousePos3.x;
 		mousePos3.x = mousePos3.z;
 		mousePos3.z = 0.0f;
+		// 実際に反映されるcameraRotateはRadianなので出力されたmousePos3をDegreeとしてRadianに計算しなおす
 		mousePos3 = SwapRadian(mousePos3) / 10.0f;
 		cameraTransform.rotate += mousePos3;
 	}
@@ -401,6 +415,8 @@ void DebugMode::Update() {
 	object3d->Update();
 
 	grid->Update();
+
+	Audio::GetInstance()->Update();
 }
 
 void DebugMode::Draw() {

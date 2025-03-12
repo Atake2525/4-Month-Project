@@ -1,6 +1,10 @@
 #include "Audio.h"
 #include <cassert>
 
+#include "externels/imgui/imgui.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
+
 // チャンクヘッダ
 struct ChunkHeader {
 	char id[4];   // チャンク毎のID
@@ -18,6 +22,8 @@ struct FormatChunk {
 	ChunkHeader chunk; // "fmt"
 	WAVEFORMATEX fmt;  // 波形フォーマット
 };
+
+const uint32_t Audio::maxSourceVoiceCount = 16;
 
 Audio* Audio::instance = nullptr;
 
@@ -98,6 +104,8 @@ SoundData Audio::SoundLoadWave(const char* filename) {
 	char* pBuffer = new char[data.size];
 	file.read(pBuffer, data.size);
 
+	int time = data.size / format.fmt.nAvgBytesPerSec;
+
 	// Waveファイルを閉じる
 	file.close();
 
@@ -108,6 +116,7 @@ SoundData Audio::SoundLoadWave(const char* filename) {
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
 	soundData.bufferSize = data.size;
 	soundData.filename = filename;
+	soundData.playTime = time;
 
 	return soundData;
 }
@@ -131,7 +140,7 @@ void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
 	result = pSourceVoice->SetVolume(volume);
 	result = pSourceVoice->Start();
-	AudioList list = { pSourceVoice, soundData };
+	AudioList list = { pSourceVoice, soundData, frameTime };
 	audioList.push_back(list);
 }
 
@@ -140,23 +149,56 @@ void Audio::SoundStopWaveAll() {
 	// listに登録されているaudioSourceの全てを音声停止してlistをclearする
 	for (AudioList list : audioList)
 	{
-		list.audioSource->Stop();
+		list.sourceVoice->Stop();
+		list.sourceVoice->DestroyVoice();
 	}
 	audioList.clear();
 }
 
 // 音声停止
-//void Audio::SoundStopWave(const SoundData& soundData) {
-//	// listに登録されているaudioSourceの中から指定されたsoundDataのfilenameに一致するもの全てを音声停止して一致するものをlistからremoveする
-//	for (AudioList list : audioList)
-//	{
-//		if (list.soundData.filename == soundData.filename)
-//		{
-//			list.audioSource->Stop();
-//		}
-//		audioList.remove(list);
-//	}
-//}
+void Audio::SoundStopWave(const SoundData& soundData) {
+	// listに登録されているaudioSourceの中から指定されたsoundDataのfilenameに一致するもの全てを音声停止して一致するものをlistからremoveする
+	uint32_t index = 0;
+	uint32_t eraseList[maxSourceVoiceCount] = { 0 };
+	uint32_t eraseNum = 0;
+	for (AudioList list : audioList)
+	{
+		if (list.soundData.filename == soundData.filename)
+		{
+			list.sourceVoice->Stop();
+			list.sourceVoice->DestroyVoice();
+			eraseList[eraseNum] = index;
+			eraseNum++;
+		}
+		index++;
+	}
+	for (uint32_t i = 0; i < eraseNum; i++)
+	{
+		audioList.erase(audioList.begin() + eraseList[i]);
+		eraseList[i + 1] -= i + 1;
+	}
+}
+
+void Audio::Update() {
+	// audioListのサイズが0なら早期return
+	if (audioList.size() == 0) { 
+		frameTime = 0;
+		return;
+	}
+	uint32_t index = 0;
+	for (AudioList list : audioList)
+	{
+		if (frameTime >= list.soundData.playTime * 60 + list.startFrameTime)
+		{ // 再生時間ごとに削除 前から再生時間が過ぎたら削除
+			list.sourceVoice->Stop();
+			list.sourceVoice->DestroyVoice();
+			audioList.erase(audioList.begin() + index);
+			break;
+		}
+		index++;
+	}
+	frameTime++;
+}
 
 // 音声データ解放
 void Audio::SoundUnload(SoundData* soundData) {
