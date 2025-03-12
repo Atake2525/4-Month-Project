@@ -131,7 +131,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Core\WinApp\WinApp.cpp" />
     <ClCompile Include="Application\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
@@ -168,7 +168,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Core\WinApp\WinApp.h" />
     <ClInclude Include="Application\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerS.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externels\imgui\LICENSE.txt" />

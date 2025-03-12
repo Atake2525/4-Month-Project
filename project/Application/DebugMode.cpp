@@ -68,7 +68,7 @@ void DebugMode::Initialize() {
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "stage.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "block.obj");
-
+	ModelManager::GetInstance()->LoadModel("Resources/Model", "Player.obj", true);
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
@@ -154,7 +154,7 @@ void DebugMode::Initialize() {
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
 
-	player = new Player();
+	player = new PlayerS();
 	player->Initialize(playerModel, camera, winApp);
 
 	// Camera
@@ -317,7 +317,7 @@ void DebugMode::Update() {
 	mousePos3 = input->GetMousePos3();
 
 #ifdef _DEBUG
-	const float speed = 0.7f;
+	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
 	if (input->PushKey(DIK_W)) {
@@ -382,6 +382,7 @@ void DebugMode::Update() {
 	}
 
 	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
+	*/
 #endif // _DEBUG
 
 	// 更新処理

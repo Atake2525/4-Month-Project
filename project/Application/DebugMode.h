@@ -38,7 +38,7 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 
-#include "Player.h"
+#include "PlayerS.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -100,7 +100,7 @@ private:
 	Input* input = nullptr;
 
 
-	Player* player = nullptr;
+	PlayerS* player = nullptr;
 	// ライトデータの宣言
 
 	DirectionalLight* directionalLightData = nullptr;
