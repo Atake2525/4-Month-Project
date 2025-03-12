@@ -52,6 +52,10 @@ void PlayerS::Update()
 		modelTransform_.translate += velocity;
 	}
 
+	if (input_->PushKey(DIK_SPACE)) {
+		modelTransform_.
+	}
+
 #endif // _DEBUG
 
 	object3d_->SetTransform(modelTransform_);
