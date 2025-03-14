@@ -92,6 +92,12 @@ const Vector3 operator/(const Vector3& v1, const float f) {
 	return result;
 }
 
+const Vector3 operator-(const Vector3& v1) {
+	Vector3 v;
+	v -= v1;
+	return v;
+}
+
 
 
 //単位行列の作成
@@ -128,6 +134,15 @@ Matrix3x3 Multiply3x3(const Matrix3x3& m1, const Matrix3x3& m2) {
 			ans.m[a][b] = m1.m[a][0] * m2.m[0][b] + m1.m[a][1] * m2.m[1][b] + m1.m[a][2] * m2.m[2][b];
 		}
 	}
+	return ans;
+};
+
+// クロス積
+Vector3 Cross(const Vector3& v1, const Vector3& v2) {
+	Vector3 ans;
+	ans.x = v1.y * v2.z - v1.z * v2.y;
+	ans.y = v1.z * v2.x - v1.x * v2.z;
+	ans.z = v1.x * v2.y - v1.y * v2.x;
 	return ans;
 };
 
@@ -417,6 +432,11 @@ float SwapDegree(float radian) {
 
 float SwapRadian(float degree) {
 	float result = degree * (float(M_PI) / 180.0f);
+	return result;
+}
+
+float Length(const Vector3& v) {
+	float result = sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 	return result;
 }
 
