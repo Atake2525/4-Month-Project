@@ -35,7 +35,6 @@ void PlayerS::Update()
 {
 	//modelTransform_.translate += {0.0f, 0.0f, 1.0f};
 
-#ifdef _DEBUG
 
 	const float speed = 0.5f;
 	Vector3 velocity(0.0f, 0.0f, speed);
@@ -63,7 +62,6 @@ void PlayerS::Update()
 		modelTransform_.
 	}*/
 
-#endif // _DEBUG
 
 	object3d_->SetTransform(modelTransform_);
 	object3d_->SetRotateInDegree(modelTransform_.rotate);
