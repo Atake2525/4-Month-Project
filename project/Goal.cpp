@@ -1,43 +1,37 @@
-#include "Goal.h"
+ï»¿#include "Goal.h"
 #include "kMath.h"
 
-void Goal::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position)
+using namespace Microsoft::WRL;
+
+void Goal::Initialize(Model* model, const Vector3& position)
 {
+    GoalModel_ = model;  // å¤–éƒ¨ã‹ã‚‰æ¸¡ã•ã‚ŒãŸãƒ¢ãƒ‡ãƒ«ã‚’ä½¿ã†
+    position_ = position;
 
-
-	position_ = position;
-	model_ = new Model("goal.obj");  // objƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
-	Vector3(10.0f, 0.0f, 5.0f);
-
+    // ãƒ¢ãƒ‡ãƒ«ã®èª­ã¿è¾¼ã¿ã¯ã“ã“ã§ã¯ä¸è¦
+    // ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj"); ã¯å‰Šé™¤
 }
 
 void Goal::Update()
 {
-	//ƒS[ƒ‹‚Ì“®‚«‚âƒAƒjƒ[ƒVƒ‡ƒ“
-	if (//ƒS[ƒ‹‚É“–‚½‚Á‚½‚ç){
-		StartEffect = ture;
+    // ã‚´ãƒ¼ãƒ«ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚„å‹•ä½œå‡¦ç†
 }
 
 void Goal::Draw()
 {
-	// 3Dƒ‚ƒfƒ‹‚ğ•`‰æ
-	model_->Draw(worldTransform_, *viewProjection_);
-
+    if (GoalModel_) {
+        // ä½ç½®ã‚’è€ƒæ…®ã—ãŸæç”»
+        GoalModel_->Draw(position_);
+    }
 }
 
 void Goal::GoalEffect()
 {
+    // ã‚´ãƒ¼ãƒ«æ™‚ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå‡¦ç†
 }
 
-AABB Goal::GetAABB() {
-	Vector3 worldPos = GetworldPosition();
-
-	AABB aabb;
-
-	aabb.min = { worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f };
-	aabb.max = { worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f };
-
-	return aabb;
+void Goal::OnCollision(const Player* player)
+{
+    (void)player;
+    isFinished_ = true;  // ã‚´ãƒ¼ãƒ«ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 }
-
-void Goal::OnCollision(const Player* player) { (void)player; }

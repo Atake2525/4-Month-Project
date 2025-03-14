@@ -1,35 +1,45 @@
-#pragma once
-#include <AABB.h> //Œã‚Å’Ç‰Á
+ï»¿#pragma once
+//#include <AABB.h> //å¾Œã§è¿½åŠ 
 #include "Vector3.h" 
+
 #include "Model.h" 
 #include <Object3d.h>
 
-class Player;//Œã‚Å’Ç‰Á
+#include <ModelManager.h>
+
+#include <algorithm>
+#include <numbers>
+
+class Player;//å¾Œã§è¿½åŠ 
 
 class Goal
 {
 public:
-	// ‰Šú‰»
-	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
-	// XV
+	// åˆæœŸåŒ–
+	void Initialize(Model* model,const Vector3& position); //Camera* viewProjection, 
+	// æ›´æ–°
 	void Update();
-	//•`‰æ
+	//æç”»
 	void Draw();
 
-	//“–‚½‚è”»’è
+	//å½“ãŸã‚Šåˆ¤å®š
 	void OnCollision(const Player* player);
-	//“–‚½‚è”»’è
-	AABB GetAABB();
+	//å½“ãŸã‚Šåˆ¤å®š
+	//AABB GetAABB();
 
-	//ƒGƒtƒFƒNƒg
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	void GoalEffect();
 
 private:
-	// ƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
-	WorldTransform worldTransform_;
-	Vector3 position_;  // ƒS[ƒ‹‚ÌˆÊ’u
-	Model* model_ = nullptr;      // objƒ‚ƒfƒ‹ƒf[ƒ^
 
+	Vector3 position_;  // ã‚´ãƒ¼ãƒ«ã®ä½ç½®
+	//Camera* viewProjection_ = nullptr;
+	Model* GoalModel_ = nullptr;      // objãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ³ãƒ‰ãƒ«
+	uint32_t textureHandle_ = 0u;
+
+	// çµ‚äº†ãƒ•ãƒ©ã‚°
+	bool isFinished_ = false;
 
 };
 
