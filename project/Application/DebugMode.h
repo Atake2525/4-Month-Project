@@ -32,7 +32,7 @@
 #include "ModelBase.h"
 #include "Model.h"
 #include "ModelManager.h"
-#include "Transform.h"
+#include "WorldTransform.h"
 #include "Camera.h"
 #include "Audio.h"
 #include "FrameWork.h"

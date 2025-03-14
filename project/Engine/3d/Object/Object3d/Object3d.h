@@ -6,7 +6,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"
-#include "Transform.h"
+#include "WorldTransform.h"
 #include "Light.h"
 
 #pragma once
@@ -42,9 +42,7 @@ public: // メンバ関数
 
 private:
 
-	Transform transform;
-
-	Transform parent;
+	WorldTransform transform;
 
 	Camera* camera = nullptr;
 
@@ -78,13 +76,13 @@ private:
 public:
 
 	// Getter(Transform)
-	const Transform& GetTransform() const { return transform; }
+	const Transform& GetTransform() const { return transform.GetTransform(); }
 	// Getter(Translate)
-	const Vector3& GetTranslate() const { return transform.translate; }
+	const Vector3& GetTranslate() const { return transform.GetTranslate(); }
 	// Getter(Scale)
-	const Vector3& GetScale() const { return transform.scale; }
+	const Vector3& GetScale() const { return transform.GetScale(); }
 	// Getter(Rotate)
-	const Vector3& GetRotate() const { return transform.rotate; }
+	const Vector3& GetRotate() const { return transform.GetRotate(); }
 	// Getter(Rotate Degree)
 	const Vector3& GetRotateInDegree() const;
 	// Gettre(Color)
@@ -97,15 +95,15 @@ public:
 	const float& GetShininess() const;
 
 	// Setter(Transform)
-	void SetTransform(const Transform& transform) { this->transform = transform; }
+	void SetTransform(const Transform& transform) { this->transform.SetTransform(transform); }
 	// Setter(Transform, pos,scale,rotate)
 	void SetTransform(const Vector3& translate, const Vector3& scale, const Vector3& rotate);
 	// Setter(Translate)
-	void SetTranslate(const Vector3& translate) { transform.translate = translate; }
+	void SetTranslate(const Vector3& translate) { transform.SetTranslate(translate); }
 	// Setter(Scale)
-	void SetScale(const Vector3& scale) { transform.scale = scale; }
+	void SetScale(const Vector3& scale) { transform.SetScale(scale); }
 	// Setter(Rotate)
-	void SetRotate(const Vector3& rotate) { transform.rotate = rotate; }
+	void SetRotate(const Vector3& rotate) { transform.SetRotate(rotate); }
 	// Setter(Rotate Degree)
 	void SetRotateInDegree(const Vector3& rotate);
 	// Setter(Color)
@@ -120,8 +118,6 @@ public:
 
 private:
 
-	// TransformationMatrixResourceを作る
-	void CreateTransformationMatrixResrouce();
 	// LightResourceを作る
 	void CreateLightResource();
 	// DirectionalLightResourceを作る

@@ -2,7 +2,7 @@
 #include <wrl.h>
 #include "WinApp.h"
 #include "kMath.h"
-#include "Transform.h"
+#include "WorldTransform.h"
 #include <string>
 
 #pragma once
@@ -69,6 +69,11 @@ private:
 
 private:
 
+	struct TransformationMatrix {
+		Matrix4x4 WVP;
+		Matrix4x4 World;
+	};
+
 	// バッファリソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 	// バッファリソース内のデータを指すポインタ
@@ -84,7 +89,10 @@ private:
 	// バッファリソース内のデータを指すポインタ
 	Material* materialData = nullptr;
 
-	
+	// TransformationMatrix
+	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource;
+	TransformationMatrix* transformationMatrixData;
+
 	// 頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW indexbufferView;

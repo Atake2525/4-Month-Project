@@ -131,7 +131,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\2d\Sprite\Sprite.cpp" />
     <ClCompile Include="Engine\BlackBox\Log\StringUtility.cpp" />
     <ClCompile Include="Engine\LoadManager\TextureManager\TextureManager.cpp" />
-    <ClCompile Include="Engine\Math\Transform.cpp" />
+    <ClCompile Include="Engine\Math\WorldTransform.cpp" />
     <ClCompile Include="Engine\Core\WinApp\WinApp.cpp" />
     <ClCompile Include="Application\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
@@ -163,7 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\2d\Sprite\Sprite.h" />
     <ClInclude Include="Engine\BlackBox\Log\StringUtility.h" />
     <ClInclude Include="Engine\LoadManager\TextureManager\TextureManager.h" />
-    <ClInclude Include="Engine\Math\Transform.h" />
+    <ClInclude Include="Engine\Math\WorldTransform.h" />
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Math\Vector4.h" />

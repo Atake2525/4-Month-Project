@@ -16,7 +16,6 @@ using namespace Microsoft::WRL;
 void Object3d::Initialize() { 
 
 	//// Resourceの作成
-	CreateTransformationMatrixResrouce();
 	CreateLightResource();
 	CreateCameraResource();
 
@@ -57,11 +56,8 @@ void Object3d::Initialize() {
 	// cosFalloffStartがcosAngleより下にならないように調整
 	spotLightData->cosFalloffStart = max(spotLightData->cosFalloffStart, spotLightData->cosAngle);
 
-	transform = {
-	    {1.0f, 1.0f, 1.0f},
-        {0.0f, 0.0f, 0.0f},
-        {0.0f, 0.0f, 0.0f}
-    };
+	transform.Initialize(Object3dBase::GetInstance()->GetDxBase());
+
 
 	cameraData->worldPosition = {1.0f, 1.0f, 1.0f};
 
@@ -69,23 +65,7 @@ void Object3d::Initialize() {
 }
 
 void Object3d::Update() {
-
-	//cameraTransform = camerad;
-
-	// 3DのTransform処理
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-
-	//Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
-	Matrix4x4 worldViewProjectionMatrix;
-	if (camera) {
-		const Matrix4x4& viewProjectionMatrix = camera->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-	} else {
-		worldViewProjectionMatrix = worldMatrix;
-	}
-	//Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	//Matrix4x4 projectionMatrix = MakePrespectiveFovMatrix(0.45f, float(WinApp::kClientWidth) / float(WinApp::kClientHeight), 0.1f, 100.0f);
-	//Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	transform.UpdateMatrix(camera);
 }
 
 void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {
@@ -101,7 +81,7 @@ void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResou
 	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(6, spotLightResourced->GetGPUVirtualAddress());
 
 	// wvp用のCBufferの場所を設定
-	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource->GetGPUVirtualAddress());
+	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transform.GetTransformationMatrixResource()->GetGPUVirtualAddress());
 
 	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(3, cameraResource->GetGPUVirtualAddress());
 
@@ -109,10 +89,6 @@ void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResou
 	if (model_) {
 		model_->Draw();
 	}
-}
-
-void Object3d::CreateTransformationMatrixResrouce() { 
-	transformationMatrixResource = Object3dBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(TransformationMatrix)); 
 }
 
 void Object3d::CreateLightResource() {
@@ -171,17 +147,17 @@ void Object3d::SetEnableLighting(const bool& enableLighting) {
 }
 
 const Vector3& Object3d::GetRotateInDegree() const { 
-	return SwapDegree(transform.rotate);
+	return SwapDegree(transform.GetTransform().rotate);
 }
 
 void Object3d::SetRotateInDegree(const Vector3& rotate) { 
-	transform.rotate = SwapRadian(rotate);
+	Vector3 rot = SwapRadian(rotate);
+	transform.SetRotate(rot);
 }
 
 void Object3d::SetTransform(const Vector3& translate, const Vector3& scale, const Vector3& rotate) {
-	transform.translate = translate;
-	transform.scale = scale;
-	transform.rotate = rotate;
+	Transform t = { scale, rotate, translate };
+	transform.SetTransform(t);
 }
 
 //const Vector3& Object3d::GetSpecularColor() const { 

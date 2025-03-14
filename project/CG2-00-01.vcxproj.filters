@@ -138,7 +138,7 @@
     <ClCompile Include="Engine\3d\Model\Model\Model.cpp">
       <Filter>Engine\3d\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Math\Transform.cpp">
+    <ClCompile Include="Engine\Math\WorldTransform.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3d\Camera\Camera.cpp">
@@ -245,7 +245,7 @@
     <ClInclude Include="Engine\3d\Model\ModelBase\ModelBase.h">
       <Filter>Engine\3d\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Math\Transform.h">
+    <ClInclude Include="Engine\Math\WorldTransform.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3d\Camera\Camera.h">
