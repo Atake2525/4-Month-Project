@@ -43,6 +43,8 @@ public: // メンバ関数
 	/// </summary>
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightData, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightData);
 
+	Camera* GetCamera();
+
 private: // メンバ変数
 
 	Transform modelTransform_;

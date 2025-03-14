@@ -38,6 +38,7 @@ void PlayerS::Update()
 	Vector3 velocity(0.0f, 0.0f, speed);
 	if (input_->PushKey(DIK_W)) {
 		modelTransform_.translate += velocity;
+
 	}
 	if (input_->PushKey(DIK_S)) {
 		modelTransform_.translate -= velocity;
@@ -52,9 +53,9 @@ void PlayerS::Update()
 		modelTransform_.translate += velocity;
 	}
 
-	if (input_->PushKey(DIK_SPACE)) {
+	/*if (input_->PushKey(DIK_SPACE)) {
 		modelTransform_.
-	}
+	}*/
 
 #endif // _DEBUG
 
@@ -69,3 +70,11 @@ void PlayerS::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, 
 {
 	object3d_->Draw(directionalLightData, pointLightData, spotLightData);
 }
+
+Camera* PlayerS::GetCamera()
+{
+
+	return camera_;
+}
+
+
