@@ -388,8 +388,10 @@ void DebugMode::Update() {
 #endif // _DEBUG
 
 	// 更新処理
-	camera->SetRotate(cameraTransform.rotate);
-	camera->SetTranslate(cameraTransform.translate);
+
+	//camera->SetRotate(cameraTransform.rotate);
+	//camera->SetTranslate(cameraTransform.translate);
+	camera = player->GetCamera();
 	camera->Update();
 
 	sprite->SetStatus(position, rotation, scale, color);

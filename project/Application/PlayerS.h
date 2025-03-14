@@ -61,6 +61,6 @@ private: // メンバ変数
 
 	float shininess_;
 
-
+	Transform cameraTransform_;
 };
 

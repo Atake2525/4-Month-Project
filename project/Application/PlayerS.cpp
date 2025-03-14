@@ -19,6 +19,9 @@ void PlayerS::Initialize(Object3d* object3d, Camera* camera, Input* input)
 	input_ = new Input();
 	input_ = input;
 
+	//camera
+	cameraTransform_.translate = camera->GetTranslate();
+	cameraTransform_.rotate = camera->GetRotate();
 	// Model
 	modelTransform_ = object3d_->GetTransform();
 	modelTransform_.rotate = object3d_->GetRotateInDegree();
@@ -38,19 +41,22 @@ void PlayerS::Update()
 	Vector3 velocity(0.0f, 0.0f, speed);
 	if (input_->PushKey(DIK_W)) {
 		modelTransform_.translate += velocity;
-
+		cameraTransform_.translate += velocity;
 	}
 	if (input_->PushKey(DIK_S)) {
 		modelTransform_.translate -= velocity;
+		cameraTransform_.translate -= velocity;
 	}
 
 	velocity = { speed, 0.0f, 0.0f };
 
 	if (input_->PushKey(DIK_A)) {
 		modelTransform_.translate -= velocity;
+		cameraTransform_.translate -= velocity;
 	}
 	if (input_->PushKey(DIK_D)) {
 		modelTransform_.translate += velocity;
+		cameraTransform_.translate += velocity;
 	}
 
 	/*if (input_->PushKey(DIK_SPACE)) {
@@ -64,6 +70,9 @@ void PlayerS::Update()
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
 	object3d_->Update();
+
+	camera_->SetTranslate(cameraTransform_.translate);
+	camera_->SetRotate(cameraTransform_.rotate);
 }
 
 void PlayerS::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightData, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightData)
@@ -73,7 +82,6 @@ void PlayerS::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, 
 
 Camera* PlayerS::GetCamera()
 {
-
 	return camera_;
 }
 
