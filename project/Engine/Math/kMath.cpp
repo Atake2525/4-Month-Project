@@ -133,32 +133,15 @@ Matrix3x3 Multiply3x3(const Matrix3x3& m1, const Matrix3x3& m2) {
 
 //2次元アフィン変換行列
 Matrix3x3 MakeAffineMatrix3x3(const Vector2& scale, const Vector2& rotate, const Vector2& translate) {
-	Matrix3x3 S = { 0 };
-	Matrix3x3 R = { 0 };
-	Matrix3x3 T = { 0 };
 	Matrix3x3 ans = { 0 };
 
-	S.m[0][0] = scale.x;
-	S.m[1][1] = scale.y;
-	S.m[2][2] = 1;
-
-	R.m[0][0] = std::cos(rotate.x);
-	R.m[1][0] = -std::sin(rotate.y);
-	R.m[0][1] = std::sin(rotate.x);
-	R.m[1][1] = std::cos(rotate.y);
-
-	T.m[0][0] = 1;
-	T.m[1][1] = 1;
-	T.m[2][2] = 1;
-	T.m[2][0] = translate.x;
-	T.m[2][1] = translate.y;
-
-	ans.m[0][0] = S.m[0][0] * R.m[0][0];
-	ans.m[0][1] = S.m[0][1] * R.m[0][1];
-	ans.m[1][0] = S.m[1][0] * R.m[1][0];
-	ans.m[1][1] = S.m[1][1] * R.m[1][1];
-	ans.m[2][0] = T.m[2][0];
-	ans.m[2][1] = T.m[2][1];
+	
+	ans.m[0][0] = scale.x * std::cos(rotate.x);
+	ans.m[0][1] = std::sin(rotate.x);
+	ans.m[1][0] = -std::sin(rotate.y);
+	ans.m[1][1] = scale.y * std::cos(rotate.y);
+	ans.m[2][0] = translate.x;
+	ans.m[2][1] = translate.y;
 	ans.m[2][2] = 1;
 
 	return ans;

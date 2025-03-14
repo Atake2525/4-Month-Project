@@ -20,8 +20,6 @@ void Object3d::Initialize() {
 	CreateLightResource();
 	CreateCameraResource();
 
-	// 書き込むためのアドレスを取得
-	transformationMatrixResource->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrix));
 	// 平行光源リソースに書き込むためのアドレスを取得
 	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
 	// 点光源リソースに書き込むためのアドレスを取得
@@ -30,10 +28,6 @@ void Object3d::Initialize() {
 	spotLightResource->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData));
 	// 書き込むためのアドレスを取得
 	cameraResource->Map(0, nullptr, reinterpret_cast<void**>(&cameraData));
-
-	// 単位行列を書き込んでおく
-	transformationMatrix->WVP = MakeIdentity4x4();
-	transformationMatrix->World = MakeIdentity4x4();
 
 	// 平行光源にデータを書き込む
 	directionalLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -80,6 +74,7 @@ void Object3d::Update() {
 
 	// 3DのTransform処理
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+
 	//Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 	if (camera) {
@@ -91,8 +86,6 @@ void Object3d::Update() {
 	//Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 	//Matrix4x4 projectionMatrix = MakePrespectiveFovMatrix(0.45f, float(WinApp::kClientWidth) / float(WinApp::kClientHeight), 0.1f, 100.0f);
 	//Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-	transformationMatrix->WVP = worldViewProjectionMatrix;
-	transformationMatrix->World = worldMatrix;
 }
 
 void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {
@@ -206,3 +199,9 @@ const float& Object3d::GetShininess() const {
 void Object3d::SetShininess(const float& shininess) { 
 	model_->SetShininess(shininess);
 }
+
+//void Object3d::SetParent(Transform& parent) {
+//	this->parent.translate = parent.translate;
+//	this->parent.rotate = parent.rotate;
+//	this->parent.scale = parent.scale;
+//}

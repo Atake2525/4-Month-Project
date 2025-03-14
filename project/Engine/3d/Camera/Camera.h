@@ -27,6 +27,8 @@ public:
 	const Vector3& GetRotate() const { return transform.rotate; }
 	// Getter(Translate)
 	const Vector3& GetTranslate() const { return transform.translate; }
+	// Getter(Transform)
+	const Transform& GetTransform() const { return transform; }
 	// Getter(farClipDistance)
 	const float& GetFarClipDistance() const { return farClipDistance; }
 	// Getter(fovY)
@@ -41,6 +43,8 @@ public:
 	// Setter(fovY)
 	void SetFovY(const float& fov) { fovY = fov; }
 
+	//void SetParent(Transform& parent);
+
 private:
 	Transform transform;
 	Matrix4x4 worldMatrix;
@@ -53,4 +57,6 @@ private:
 	float farClipDistance;
 
 	Matrix4x4 viewProjectionMatrix;
+
+	Transform parent;
 };

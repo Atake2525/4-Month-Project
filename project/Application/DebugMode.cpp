@@ -85,6 +85,7 @@ void DebugMode::Initialize() {
 	object3d->Initialize();
 	// Modelを指定する
 	object3d->SetModel("stage.obj");
+	//object3d->SetParent();
 
 	grid = new Object3d();
 	grid->Initialize();
@@ -126,11 +127,9 @@ void DebugMode::Initialize() {
 	spotLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// Transform変数を作る
-	Transform transform{
-		{1.0f, 1.0f,   1.0f},
-		{0.0f, -1.58f, 0.0f},
-		{0.0f, 0.0f,   0.0f}
-	};
+	transform.scale = { 1.0f, 1.0f, 1.0f };
+	transform.rotate = { 0.36f, 0.0f, 0.0f };
+	transform.translate = { 0.0f,  6.0f, -19.0f };
 
 	// ImGuiメンバ変数の初期化
 

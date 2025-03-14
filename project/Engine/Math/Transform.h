@@ -1,42 +1,58 @@
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Matrix4x4.h"
+#include <wrl.h>
+#include <d3d12.h>
 
 #pragma once
+
 struct Transform {
 	Vector3 scale;
 	Vector3 rotate;
 	Vector3 translate;
 };
 
-struct DirectionalLight {
-	Vector4 color;     //!< ライトの色
-	Vector3 direction; //!< ライトの向き
-	float intensity;   //!< 輝度
-	Vector3 specularColor;
-	float padding[2];
-};
+class WorldTransform {
+public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize();
 
-struct PointLight {
-	Vector4 color;    //!< ライトの色
-	Vector3 position; //!< ライトの位置
-	float intensity;  //!< 輝度
-	float radius;     //!< ライトの届く最大距離
-	float dacay;      //!< 減衰率
-	Vector3 specularColor;
-	float padding[2];
-};
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update();
 
-struct SpotLight {
-	Vector4 color;         //!< ライトの色
-	Vector3 position;      //!< ライトの位置
-	float intensity;       //!< 輝度
-	Vector3 direction;     //!< ライトの向き
-	float distance;        //!< ライトの届く最大距離
-	float dacay;           //!< 減衰率
-	float cosAngle;        //!< スポットライトの余弦
-	float cosFalloffStart; // falloffが開始される角度
-	Vector3 specularColor;
-	float padding[2];
-};
+	/// <summary>
+	/// マッピング
+	/// </summary>
+	void Map();
 
-//class Transform {};
+	const Microsoft::WRL::ComPtr<ID3D12Resource> GetTransformationMatrixResource() const { return transformationMatrixResource; }
+
+	Vector3 scale = { 1.0f, 1.0f, 1.0f };
+	Vector3 rotation = { 0.0f, 0.0f, 0.0f };
+	Vector3 translation = { 0.0f, 0.0f, 0.0f };
+
+	Matrix4x4 worldMatrix;
+
+	const WorldTransform* parent = nullptr;
+
+private:
+
+	struct TransformationMatrix {
+		Matrix4x4 WVP;
+		Matrix4x4 World;
+	};
+
+	Transform transform;
+	Matrix4x4 viewMatrix;
+	Matrix4x4 projectionMatrix;
+	Matrix4x4 worldViewProjectionMatrix;
+
+	// 座標変換リソースのバッファリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource;
+	// 座標変換行列リソース内のデータを指すポインタ
+	TransformationMatrix* transformationMatrix = nullptr;
+};

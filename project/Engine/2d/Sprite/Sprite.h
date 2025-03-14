@@ -46,11 +46,6 @@ private:
 		Vector3 specularColor;
 	};
 
-	struct TransformationMatrix {
-		Matrix4x4 WVP;
-		Matrix4x4 World;
-	};
-
 	// VertexResourceを作成する
 	void CreateVertexResource();
 	// IndexResourceを作成する
@@ -88,11 +83,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
 	// バッファリソース内のデータを指すポインタ
 	Material* materialData = nullptr;
-
-	// バッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource;
-	// バッファリソース内のデータを指すポインタ
-	TransformationMatrix* transformationMatrixData = nullptr;
 
 	
 	// 頂点バッファビューを作成する

@@ -105,11 +105,7 @@ private:
 	SpotLight* spotLightData = nullptr;
 
 	// Transform変数を作る
-	Transform transform{
-		{1.0f, 1.0f,   1.0f},
-		{0.0f, -1.58f, 0.0f},
-		{0.0f, 0.0f,   0.0f}
-	};
+	Transform transform;
 
 	Transform cameraTransform{
 		{1.0f,  1.0f, 1.0f  },

@@ -7,6 +7,7 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Transform.h"
+#include "Light.h"
 
 #pragma once
 
@@ -37,9 +38,13 @@ public: // メンバ関数
 
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
+	//void SetParent(Transform& parent);
+
 private:
 
 	Transform transform;
+
+	Transform parent;
 
 	Camera* camera = nullptr;
 
@@ -48,16 +53,6 @@ private:
 	struct CameraForGPU {
 		Vector3 worldPosition;
 	};
-
-	struct TransformationMatrix {
-		Matrix4x4 WVP;
-		Matrix4x4 World;
-	};
-
-	// 座標変換リソースのバッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource;
-	// 座標変換行列リソース内のデータを指すポインタ
-	TransformationMatrix* transformationMatrix = nullptr;
 
 	// 平行光源リソースのバッファリソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
