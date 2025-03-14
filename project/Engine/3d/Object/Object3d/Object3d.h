@@ -37,9 +37,13 @@ public: // メンバ関数
 
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
+	//void SetParent(Transform);
+
 private:
 
 	Transform transform;
+
+	Transform* parent = nullptr;
 
 	Camera* camera = nullptr;
 

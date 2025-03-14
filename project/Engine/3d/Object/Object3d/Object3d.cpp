@@ -76,11 +76,9 @@ void Object3d::Initialize() {
 
 void Object3d::Update() {
 
-	//cameraTransform = camerad;
 
 	// 3DのTransform処理
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	//Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
 	Matrix4x4 worldViewProjectionMatrix;
 	if (camera) {
 		const Matrix4x4& viewProjectionMatrix = camera->GetViewProjectionMatrix();
@@ -88,9 +86,9 @@ void Object3d::Update() {
 	} else {
 		worldViewProjectionMatrix = worldMatrix;
 	}
-	//Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	//Matrix4x4 projectionMatrix = MakePrespectiveFovMatrix(0.45f, float(WinApp::kClientWidth) / float(WinApp::kClientHeight), 0.1f, 100.0f);
-	//Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+
+
+	
 	transformationMatrix->WVP = worldViewProjectionMatrix;
 	transformationMatrix->World = worldMatrix;
 }
