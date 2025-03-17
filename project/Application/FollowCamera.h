@@ -27,7 +27,7 @@ public: // メンバ関数
 
 	void SetTarget(const WorldTransform* target) { target_ = target; }
 
-
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 private: // メンバ変数
 

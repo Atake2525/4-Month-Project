@@ -23,8 +23,8 @@ void PlayerS::Initialize(Object3d* object3d, Camera* camera, Input* input)
 	cameraTransform_.translate = camera->GetTranslate();
 	cameraTransform_.rotate = camera->GetRotate();
 	// Model
-	modelTransform_ = object3d_->GetTransform();
-	modelTransform_.rotate = object3d_->GetRotateInDegree();
+	worldTransform_.transform = object3d_->GetTransform();
+	worldTransform_.transform.rotate = object3d_->GetRotateInDegree();
 	modelColor_ = object3d_->GetColor();
 	modelEnableLighting_ = object3d_->GetEnableLighting();
 	shininess_ = object3d_->GetShininess();
@@ -39,23 +39,23 @@ void PlayerS::Update()
 	const float speed = 0.5f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	if (input_->PushKey(DIK_W)) {
-		modelTransform_.translate += velocity;
-		cameraTransform_.translate += velocity;
+		worldTransform_.transform.translate += velocity;
+		//cameraTransform_.translate += velocity;
 	}
 	if (input_->PushKey(DIK_S)) {
-		modelTransform_.translate -= velocity;
-		cameraTransform_.translate -= velocity;
+		worldTransform_.transform.translate += velocity;
+		//cameraTransform_.translate -= velocity;
 	}
 
 	velocity = { speed, 0.0f, 0.0f };
 
 	if (input_->PushKey(DIK_A)) {
-		modelTransform_.translate -= velocity;
-		cameraTransform_.translate -= velocity;
+		worldTransform_.transform.translate += velocity;
+		//cameraTransform_.translate -= velocity;
 	}
 	if (input_->PushKey(DIK_D)) {
-		modelTransform_.translate += velocity;
-		cameraTransform_.translate += velocity;
+		worldTransform_.transform.translate += velocity;
+		//cameraTransform_.translate += velocity;
 	}
 
 	/*if (input_->PushKey(DIK_SPACE)) {
@@ -63,14 +63,14 @@ void PlayerS::Update()
 	}*/
 
 
-	object3d_->SetTransform(modelTransform_);
-	object3d_->SetRotateInDegree(modelTransform_.rotate);
+	object3d_->SetTransform(worldTransform_.transform);
+	object3d_->SetRotateInDegree(worldTransform_.transform.rotate);
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
 	object3d_->Update();
 
-	camera_->SetTranslate(cameraTransform_.translate);
-	camera_->SetRotate(cameraTransform_.rotate);
+	//camera_->SetTranslate(cameraTransform_.translate);
+	//camera_->SetRotate(cameraTransform_.rotate);
 }
 
 void PlayerS::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightData, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightData)

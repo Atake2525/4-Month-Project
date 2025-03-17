@@ -167,6 +167,8 @@ void DebugMode::Initialize() {
 
 	//followCamera
 	followCamera_ = new FollowCamera();
+	followCamera_->Initialize();
+	followCamera_->SetTarget(&player->GetWorldTransform());
 }
 
 void DebugMode::Update() {
@@ -415,7 +417,11 @@ void DebugMode::Update() {
 
 	//camera->SetRotate(cameraTransform.rotate);
 	//camera->SetTranslate(cameraTransform.translate);
-	camera = player->GetCamera();
+	followCamera_->Update();
+
+	//camera = player->GetCamera();
+	worldtransform_ = followCamera_->GetWorldTransform();
+	camera->SetTranslate(worldtransform_.transform.translate);
 	camera->Update();
 
 	sprite->SetStatus(position, rotation, scale, color);

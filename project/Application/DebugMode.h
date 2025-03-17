@@ -99,8 +99,8 @@ private:
 	Object3d* playerModel = nullptr;
 
 	//プレイヤーカメラ
-	FollowCamera followCamera_;
-
+	FollowCamera* followCamera_;
+	WorldTransform worldtransform_;
 	Input* input = nullptr;
 
 

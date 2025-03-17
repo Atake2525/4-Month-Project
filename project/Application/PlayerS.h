@@ -45,9 +45,12 @@ public: // メンバ関数
 
 	Camera* GetCamera();
 
-private: // メンバ変数
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
-	Transform modelTransform_;
+private: // メンバ変数
+	WorldTransform worldTransform_;
+
+	//Transform modelTransform_;
 
 	Object3d* object3d_ = nullptr;
 
