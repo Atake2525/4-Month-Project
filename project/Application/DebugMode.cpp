@@ -89,8 +89,8 @@ void DebugMode::Initialize() {
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
 
-	switchLight1 = new switchLight();
-	switchLight1->Initialize({ 0,0,0 }, camera, directxBase, input);
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -402,7 +402,7 @@ void DebugMode::Update() {
 	grid->Update();
 
 	/*------ SWITCH ----------*/
-	switchLight1->Update();
+	lightBlock->Update();
 }
 
 void DebugMode::Draw() {
@@ -423,7 +423,7 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	//object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
-	switchLight1->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
@@ -468,8 +468,9 @@ void DebugMode::Finalize() {
 	delete grid;
 
 	delete input;
-	switchLight1->~switchLight();
-
+	
+	delete lightBlock;
+	
 	WireFrameObjectBase::GetInstance()->Finalize();
 
 	FrameWork::Finalize();

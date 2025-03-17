@@ -64,12 +64,12 @@ void switchLight::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightRes
 {
 	if (switchFlag) {
 		switchModel->SetModel("box.obj");
-		switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+		//switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	}
-	else {
+	if(!switchFlag){
 		switchModel->SetModel("axis.obj");
-		switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+		//switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	}
 }

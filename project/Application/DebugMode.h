@@ -37,7 +37,8 @@
 #include "Audio.h"
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
-#include"switchLight.h"
+//#include"switchLight.h"
+#include"LightBlock.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -161,5 +162,6 @@ private:
 	Vector3 mousePos3;
 
 	/*スイッチ*/
-	switchLight* switchLight1;
+	//switchLight* switchLight1;
+	LightBlock* lightBlock;
 };
