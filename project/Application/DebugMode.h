@@ -39,6 +39,7 @@
 #include "WireFrameObjectBase.h"
 
 #include "PlayerS.h"
+#include "FollowCamera.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -96,6 +97,9 @@ private:
 
 	//プレイヤー
 	Object3d* playerModel = nullptr;
+
+	//プレイヤーカメラ
+	FollowCamera followCamera_;
 
 	Input* input = nullptr;
 

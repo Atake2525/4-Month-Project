@@ -171,6 +171,9 @@
     <ClCompile Include="Application\PlayerS.cpp">
       <Filter>Application</Filter>
     </ClCompile>
+    <ClCompile Include="Application\FollowCamera.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externels\imgui\imconfig.h">
@@ -276,6 +279,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\PlayerS.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\FollowCamera.h">
       <Filter>Application</Filter>
     </ClInclude>
   </ItemGroup>
