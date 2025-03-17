@@ -51,7 +51,7 @@ void Goal::Update()
 
 	// ImGuiウィンドウの中にチェックボックスを追加
 	ImGui::Begin("Goal Window");
-	//ImGui::Checkbox("Goal Position", goalPos_);
+	//ImGui::DragFloat3("Goal Position", goalPos_.translation_.x, 0.01f);
 	ImGui::Checkbox("Goal Flag", &goalFlag_); // フラグの状態を表示＆変更
 	ImGui::End();
 
@@ -63,16 +63,8 @@ void Goal::Update()
 
 
 void Goal::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource) {
-	if (goalFlag_) {
-		goalModel_->SetModel("box.obj");
-		goalModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
-
-	}
-	else {
-		goalModel_->SetModel("axis.obj");
-		goalModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
-
-	}
+	
+	goalModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 }
 
