@@ -67,6 +67,7 @@ void DebugMode::Initialize() {
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "block.obj");
 
 	// サウンドのロード soundData1にDataが返される
@@ -87,6 +88,12 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("block.obj");
+
+	//ゴールモデル
+	goalModel_ = new Object3d();
+	goalModel_->Initialize(); //{ 0,0,0 }, camera, directxBase
+	goalModel_->SetModel("goal.obj");
+
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -149,6 +156,9 @@ void DebugMode::Initialize() {
 	modelColor = object3d->GetColor();
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
+
+	goal = new Goal();
+	goal->Initialize({ 0,0,0 }, camera, directxBase);
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -397,6 +407,8 @@ void DebugMode::Update() {
 
 	grid->Update();
 
+	//ゴールの処理
+	goal->Update();
 
 }
 
@@ -422,6 +434,9 @@ void DebugMode::Draw() {
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
 	grid->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+	//ゴール描画
+	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());
@@ -461,6 +476,9 @@ void DebugMode::Finalize() {
 	delete grid;
 
 	delete input;
+
+	delete goalModel_;
+	delete goal;
 
 	WireFrameObjectBase::GetInstance()->Finalize();
 

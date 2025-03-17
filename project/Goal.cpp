@@ -25,9 +25,10 @@ void Goal::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc)
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
 
+	
 	// object3dの初期化(KamataEngineで言うところのModel)
 	goalModel_ = new Object3d();
 	goalModel_->Initialize();
@@ -40,23 +41,24 @@ void Goal::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc)
 void Goal::Update()
 {
 
-	//ゴールするとtrueになる => アニメーションの処理追加
-	if (!goalFlag_) {
-		if () { //playerと当たったら
-			goalFlag_ = true;
+	////ゴールするとtrueになる => アニメーションの処理追加
+	//if (!goalFlag_) {
+	//	if () { //playerと当たったら
+	//		goalFlag_ = true;
 
-		}
-	}
+	//	}
+	//}
 
 	// ImGuiウィンドウの中にチェックボックスを追加
 	ImGui::Begin("Goal Window");
+	//ImGui::Checkbox("Goal Position", goalPos_);
 	ImGui::Checkbox("Goal Flag", &goalFlag_); // フラグの状態を表示＆変更
 	ImGui::End();
 
 
 }
 
-ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj");
+
 
 
 

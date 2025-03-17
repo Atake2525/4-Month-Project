@@ -160,8 +160,10 @@ private:
 
 	Vector2 mousePos2;
 	Vector3 mousePos3;
-	
+
 	/*ゴール*/
-	Goal* goal;
+	Goal* goal = nullptr;
+	//プレイヤー
+	Object3d* goalModel_ = nullptr;
 
 };
