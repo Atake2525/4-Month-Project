@@ -38,6 +38,7 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 
+#include "Goal.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -159,4 +160,8 @@ private:
 
 	Vector2 mousePos2;
 	Vector3 mousePos3;
+	
+	/*ゴール*/
+	Goal* goal;
+
 };

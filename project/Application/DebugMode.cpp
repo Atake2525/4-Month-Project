@@ -396,6 +396,8 @@ void DebugMode::Update() {
 	object3d->Update();
 
 	grid->Update();
+
+
 }
 
 void DebugMode::Draw() {

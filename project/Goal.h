@@ -1,45 +1,48 @@
 ﻿#pragma once
-//#include <AABB.h> //後で追加
 #include "Vector3.h" 
 
-#include "Model.h" 
-#include <Object3d.h>
+#include "Model.h"
 
-#include <ModelManager.h>
-
-#include <algorithm>
-#include <numbers>
+#include"kMath.h"
+#include"Object3dBase.h"
+#include"ModelBase.h"
+#include"ModelManager.h"
+#include"Object3d.h"
+#include"DirectXBase.h"
+#include"Camera.h"
 
 class Player;//後で追加
 
 class Goal
 {
 public:
+
+	~Goal();
 	// 初期化
-	void Initialize(Model* model,const Vector3& position); //Camera* viewProjection, 
+	void Initialize(Vector3, Camera*,DirectXBase*); //Camera* viewProjection, Model* model
 	// 更新
 	void Update();
 	//描画
-	void Draw();
+	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 
 	//当たり判定
 	void OnCollision(const Player* player);
-	//当たり判定
-	//AABB GetAABB();
-
-	//エフェクト
-	void GoalEffect();
+	bool GetFlag() { return goalFlag_; }
 
 private:
 
-	Vector3 position_;  // ゴールの位置
-	//Camera* viewProjection_ = nullptr;
-	Model* GoalModel_ = nullptr;      // objモデルデータ
-	// テクスチャハンドル
-	uint32_t textureHandle_ = 0u;
+	Object3d* goalModel_;// objモデルデータ
+	Vector3 goalPos_;// ゴールの位置
 
-	// 終了フラグ
-	bool isFinished_ = false;
+	/*DirectX*/
+	DirectXBase* directX;
+	//終了フラグ
+	bool goalFlag_ = false;
+	/*カメラ*/
+	Camera* goalCamera_;
+	//ゴール
+	Goal* goal_ = nullptr;
+
 
 };
 
