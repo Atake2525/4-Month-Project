@@ -62,10 +62,13 @@ void DebugMode::Initialize() {
 
 	// テクスチャのロード DataはTextureManagerに保管される
 	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
-	TextureManager::GetInstance()->LoadTexture("Resources/monsterBall.png");
+	//TextureManager::GetInstance()->LoadTexture("Resources/monsterBall.png");
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "block.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Player.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Button.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
@@ -90,6 +93,10 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
+
+	playerModel = new Object3d();
+	playerModel->Initialize();
+	playerModel->SetModel("Player.obj");
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -151,9 +158,15 @@ void DebugMode::Initialize() {
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
 
+	player = new PlayerS();
+	player->Initialize(playerModel, camera, input);
+
 	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
+
+	//followCamera
+	followCamera_ = new FollowCamera();
 }
 
 void DebugMode::Update() {
@@ -311,7 +324,7 @@ void DebugMode::Update() {
 	mousePos3 = input->GetMousePos3();
 
 #ifdef _DEBUG
-	const float speed = 0.7f;
+	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
 	if (input->PushKey(DIK_W)) {
@@ -328,6 +341,7 @@ void DebugMode::Update() {
 	if (input->PushKey(DIK_D)) {
 		cameraTransform.translate += velocity;
 	}
+	*/
 	if (input->PushKey(DIK_SPACE)) {
 		cameraTransform.translate.y += 1.0f;
 	}
@@ -373,6 +387,7 @@ void DebugMode::Update() {
 		// 音声停止
 		Audio::GetInstance()->SoundStopWaveAll();
 	}
+
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;
 	}
@@ -393,11 +408,14 @@ void DebugMode::Update() {
 	}
 
 	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
+
 #endif // _DEBUG
 
 	// 更新処理
-	camera->SetRotate(cameraTransform.rotate);
-	camera->SetTranslate(cameraTransform.translate);
+
+	//camera->SetRotate(cameraTransform.rotate);
+	//camera->SetTranslate(cameraTransform.translate);
+	camera = player->GetCamera();
 	camera->Update();
 
 	sprite->SetStatus(position, rotation, scale, color);
@@ -414,6 +432,8 @@ void DebugMode::Update() {
 	object3d->Update();
 
 	grid->Update();
+
+	player->Update();
 
 	Audio::GetInstance()->Update();
 }
@@ -435,6 +455,8 @@ void DebugMode::Draw() {
 
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
@@ -478,7 +500,11 @@ void DebugMode::Finalize() {
 
 	delete grid;
 
+	delete playerModel;
+
 	delete input;
+
+	delete player;
 
 	WireFrameObjectBase::GetInstance()->Finalize();
 

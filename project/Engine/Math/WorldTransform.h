@@ -64,7 +64,7 @@ private:
 
 	void CreateTransformationMatrixResrouce();
 
-private:
+public:
 
 	struct TransformationMatrix {
 		Matrix4x4 WVP;

@@ -63,6 +63,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)Application;$(ProjectDir);$(ProjectDir)Engine\2d\Sprite;$(ProjectDir)Engine\2d\SpriteBase;$(ProjectDir)Engine\3d\Camera;$(ProjectDir)Engine\3d\Model\Model;$(ProjectDir)Engine\3d\Model\ModelBase;$(ProjectDir)Engine\3d\Object\Object3d;$(ProjectDir)Engine\3d\Object\Object3dBase;$(ProjectDir)Engine\3d\Object\WireFrame;$(ProjectDir)Engine\BlackBox\LeakChecker;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\BlackBox\Log;$(ProjectDir)Engine\Core\BaseEngine;$(ProjectDir)Engine\Core\Input;$(ProjectDir)Engine\Core\WinApp;$(ProjectDir)Engine\LoadManager\ModelManager;$(ProjectDir)Engine\LoadManager\TextureManager;$(ProjectDir)Engine\Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)externels\assimp\include;$(ProjectDir)Engine\2d\Sprite;$(ProjectDir)Engine\2d\SpriteBase;$(ProjectDir)Engine\3d\Camera;$(ProjectDir)Engine\3d\Model\Model;$(ProjectDir)Engine\3d\Model\ModelBase;$(ProjectDir)Engine\3d\Object\Object3d;$(ProjectDir)Engine\3d\Object\Object3dBase;$(ProjectDir)Engine\3d\Object\WireFrame;$(ProjectDir)Engine\BlackBox\LeakChecker;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\BlackBox\Log;$(ProjectDir)Engine\Core\BaseEngine;$(ProjectDir)Engine\Core\Input;$(ProjectDir)Engine\Core\WinApp;$(ProjectDir)Engine\LoadManager\ModelManager;$(ProjectDir)Engine\LoadManager\TextureManager;$(ProjectDir)Engine\Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -135,6 +136,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Core\WinApp\WinApp.cpp" />
     <ClCompile Include="Application\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
+    <ClCompile Include="Application\PlayerS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
@@ -171,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Core\WinApp\WinApp.h" />
     <ClInclude Include="Application\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
+    <ClInclude Include="Application\PlayerS.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externels\imgui\LICENSE.txt" />
