@@ -1,1 +1,4 @@
-
+﻿  DirectXTexUtil.cpp
+\DirectXTexUtil.cpp(1,1): error C1083: コンパイラの中間生成物 ファイルを開けません。'Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.pch':Invalid argument
+  (ソース ファイル '/DirectXTexUtil.cpp' をコンパイルしています)
+  

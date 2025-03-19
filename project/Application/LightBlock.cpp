@@ -18,10 +18,7 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 
 	
 
-	ModelManager::GetInstance()->Initialize(dxcCommon);
-	Object3dBase::GetInstance()->Initialize(dxcCommon);
-	Object3dBase::GetInstance()->SetDefaultCamera(camera_);
-	ModelBase::GetInstance()->Initialize(dxcCommon);
+	
 
 	//ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 	// ÅŒã‚Étrue‚ð“ü—Í‚·‚é‚ÆenableLighting‚ªtrue‚É‚È‚é(‚ ‚Æ‚©‚ç‚Å‚à•ÏX‰Â”\)“ü—Í‚Í‚µ‚È‚­‚Ä‚à“®‚­
