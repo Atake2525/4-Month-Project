@@ -1,15 +1,18 @@
 ﻿#pragma once
+#include"kMath.h"
 #include "Vector3.h" 
 
 #include "Model.h"
+#include"Camera.h"
+#include "Sprite.h"
 
-#include"kMath.h"
+#include"Object3d.h"
 #include"Object3dBase.h"
 #include"ModelBase.h"
 #include"ModelManager.h"
-#include"Object3d.h"
+
 #include"DirectXBase.h"
-#include"Camera.h"
+
 
 class Player;//後で追加
 
@@ -43,6 +46,6 @@ private:
 	//ゴール
 	Goal* goal_ = nullptr;
 
-
+	Sprite* clearSprite_ = nullptr;  // クリアスプライト
 };
 

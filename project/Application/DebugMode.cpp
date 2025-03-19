@@ -158,7 +158,7 @@ void DebugMode::Initialize() {
 	shininess = object3d->GetShininess();
 
 	goal = new Goal();
-	goal->Initialize({ 7.0f,5.0f,-5.0f }, directxBase);// 7.0f,5.0f,-5.0f0.0f,0.0f,0.0f
+	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
 
 	// Camera
 	farClip = camera->GetFarClipDistance();

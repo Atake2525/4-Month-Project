@@ -9,6 +9,8 @@
 //デストラクタ
 Goal::~Goal() {
 	delete goalModel_;
+	delete clearSprite_;
+
 }
 
 void Goal::Initialize(Vector3 position, DirectXBase* dxc)
@@ -18,9 +20,7 @@ void Goal::Initialize(Vector3 position, DirectXBase* dxc)
 
 	ModelManager::GetInstance()->Initialize(directX);
 	Object3dBase::GetInstance()->Initialize(directX);
-
 	ModelBase::GetInstance()->Initialize(directX);
-	//TextureManager::GetInstance()->Initialize(directX);
 
 	//モデル読み込み
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
@@ -32,21 +32,27 @@ void Goal::Initialize(Vector3 position, DirectXBase* dxc)
 	goalModel_ = new Object3d();
 	goalModel_->Initialize();
 	goalModel_->SetModel("goal.obj");
+	goalModel_->SetTranslate(goalPos_);//位置を指定する
 
-	//位置を指定する
-	goalModel_->SetTranslate(goalPos_);
+	//// クリアスプライトの初期化
+	//clearSprite_ = new Sprite();
+	//clearSprite_->Initialize("Resources/Texture/clear.png");
+	//clearSprite_->SetPosition({ 320, 180 });  // 画面中央
 
 }
 
 void Goal::Update()
+
 {
 	goalModel_->Update();
 
-	////ゴールするとtrueになる => アニメーションの処理追加
+	////ゴールすると trueになる => アニメーションの処理追加
 	//if (!goalFlag_) {
-	//	if () { //playerと当たったら
+	//	if () {			//playerと当たったら
 	//		goalFlag_ = true;
-
+	//	}			// ゴールフラグが trueならクリアスプライトを描画
+	//	if (goalFlag_) {
+	//		clearSprite_->Draw();
 	//	}
 	//}
 
@@ -63,13 +69,18 @@ void Goal::Update()
 
 void Goal::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource) {
 
-
 	goalModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+	//// ゴールフラグがtrueならクリアスプライトを描画
+	//if (goalFlag_) {
+	//	clearSprite_->Draw();
+	//}
 
 }
 
 
-//Goal* goal = new Goal(Vector3(0, 5, 0)); // ゴールの位置を設定
-//
-//// 描画処理
-//goal->Draw(); ステージのとこに追加する
+void Goal::OnCollision(const Player* player) {
+	(void)player;
+	//goalFlag_ = true;  // プレイヤーと当たったらゴールフラグをtrueにする
+
+}
