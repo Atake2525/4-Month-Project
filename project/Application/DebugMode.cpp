@@ -89,6 +89,7 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
+	grid->SetTranslate({ 0.0f, -5.0f, 0.0f });
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -397,6 +398,12 @@ void DebugMode::Update() {
 #endif // _DEBUG
 
 	// 更新処理
+
+	if (object3d->CheckCollisionAABB(*grid))
+	{
+
+	}
+
 	camera->SetRotate(cameraTransform.rotate);
 	camera->SetTranslate(cameraTransform.translate);
 	camera->Update();

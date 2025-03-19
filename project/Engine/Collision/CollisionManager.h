@@ -14,6 +14,7 @@
 //	Plat,
 //};
 
+
 class CollisionManager {
 //private:
 //	// シングルトンパターンの適用
@@ -37,7 +38,7 @@ public:
 	//void Finalize();
 
 	// 当たり判定の追加
-	const bool CheckCollision(AABB& target1, AABB& target2);
+	const bool CheckCollision(const AABB& target1, const AABB& target2);
 	const bool CheckCollision(AABB& target1, Sphere& target2);
 	const bool CheckCollision(AABB& target1, OBB& target2);
 };

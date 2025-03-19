@@ -7,6 +7,8 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Transform.h"
+#include "AABB.h"
+#include "CollisionManager.h"
 
 #pragma once
 
@@ -80,6 +82,11 @@ private:
 
 	Model* model_ = nullptr;
 
+	// AABB
+	AABB aabb;
+
+	CollisionManager* collision;
+
 public:
 
 	// Getter(Transform)
@@ -100,6 +107,8 @@ public:
 	//const Vector3& GetSpecularColor() const;
 	// Getter(shininess)
 	const float& GetShininess() const;
+	// Getter(AABB)
+	const AABB& GetAABB() const { return aabb; }
 
 	// Setter(Transform)
 	void SetTransform(const Transform& transform) { this->transform = transform; }
@@ -122,6 +131,9 @@ public:
 	// Setter(shininess)
 	void SetShininess(const float& shininess);
 
+public:
+	// 衝突チェック
+	const bool CheckCollisionAABB(Object3d& object) const;
 
 private:
 
@@ -137,4 +149,7 @@ private:
 	void CreateSpotLightResource();
 	// CameraResourceを作る
 	void CreateCameraResource();
+
+	// AABBをモデルを参照して自動的に作成
+	void CreateAABB();
 };
