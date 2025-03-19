@@ -34,12 +34,7 @@ private:
 	Input* input_;
 	DirectXBase* dxcCommon;
 	switchLight* Light;
-	bool light2BlockFlag = false;
-	bool light3BlockFlag = false;
-
-
-	int32_t light2BlockHp=2;
-	int32_t light3BlockHp = 3;
+	
 
 
 };

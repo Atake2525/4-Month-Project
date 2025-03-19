@@ -34,5 +34,12 @@ private:
 	Camera* switchCamera;
 	/*切り替えるために（仮）*/
 	Input* input_;
+
+	bool light2BlockFlag = false;
+	bool light3BlockFlag = false;
+
+
+	int32_t light2BlockHp = 2;
+	int32_t light3BlockHp = 3;
 };
 
