@@ -1,37 +1,47 @@
 ﻿#include "Star.h"
-#include <cmath>
+//#include "Player.h"
+#include "externels/imgui/imgui.h"
 
-Star::Star(Vector3 position) : position(position), IsCheck(false) {}
-
-Star::~Star()
-{
+// デストラクタ
+Star::~Star() {
+    delete starModel_;
 }
 
-void Star::Initialize(Vector3, DirectXBase*)
-{
+void Star::Initialize(Vector3 position, DirectXBase* dxc) {
+    directX_ = dxc;
+    starPos_ = position;
 
+    ModelManager::GetInstance()->Initialize(directX_);
 
+    // モデル読み込み
+    ModelManager::GetInstance()->LoadModel("Resources/Model", "star.obj");
 
+    // Object3dの初期化
+    starModel_ = new Object3d();
+    starModel_->Initialize();
+    starModel_->SetModel("star.obj");
+    starModel_->SetTranslate(starPos_);
 }
 
 void Star::Update() {
-    // 必要ならアニメーションなどを追加
+    starModel_->Update();
+
+    // ImGuiで位置確認
+    ImGui::Begin("Star Debug");
+    ImGui::DragFloat3("Star Position", &starPos_.x, 0.01f);
+    ImGui::Checkbox("Collected", &collected_);
+    ImGui::End();
 }
 
-void Star::Draw() {
-    if (!IsCheck) {
-        // 星の描画処理 (3Dモデルなど)
+void Star::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource,
+    Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource,
+    Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
+    if (!collected_) {
+        starModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
     }
 }
 
-void Star::CheckCollision(Vector3 playerPos, float radius) {
-    float distance = std::sqrt(
-        (position.x - playerPos.x) * (position.x - playerPos.x) +
-        (position.y - playerPos.y) * (position.y - playerPos.y) +
-        (position.z - playerPos.z) * (position.z - playerPos.z)
-    );
-
-    if (distance < radius) {
-        IsCheck = true; // 取得
-    }
+void Star::OnCollision(const Player* player) {
+    (void)player;  // 未使用警告を回避
+    collected_ = true;  // プレイヤーが取得
 }

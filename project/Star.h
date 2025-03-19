@@ -1,30 +1,35 @@
 ﻿#pragma once
-#include "Vector3.h" // 位置情報用 (独自のベクトルクラス)
+#include "Vector3.h"  
+#include "Object3d.h"
+#include "DirectXBase.h"
+#include "ModelManager.h"
 
-
-#include"DirectXBase.h"
+class Player;
 
 class Star {
 public:
-
     ~Star();
-    Star(Vector3 position);
-    void Initialize(Vector3, DirectXBase*);
-    void Update();   // 更新処理（当たり判定など）
-    void Draw();     // 描画処理
 
-    bool IsCollected() const { return IsCheck; }
-    Vector3 GetPosition() const { return position; }
+    // 初期化
+    void Initialize(Vector3 position, DirectXBase* dxc);
 
-    void CheckCollision(Vector3 playerPos, float radius); // プレイヤーとの当たり判定
+    // 更新
+    void Update();
+
+    // 描画
+    void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource,
+        Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource,
+        Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource);
+
+    // 当たり判定
+    void OnCollision(const Player* player);
+
+    bool IsCollected() const { return collected_; }
 
 private:
+    DirectXBase* directX_;
+    Object3d* starModel_;  // 星のモデル
+    Vector3 starPos_;      // 星の位置
 
-    Vector3 position; // 星の位置
-    bool IsCheck;   // 取得済みかどうか
-
-    //星
-    Star* star = nullptr;
-
-
+    bool collected_ = false; // 取得フラグ
 };

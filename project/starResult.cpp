@@ -1,31 +1,47 @@
 ﻿#include "starResult.h"
+//#include "Player.h"
 
-starResult::~starResult()
-{
+// デストラクタ
+starResult::~starResult() {
+    for (Star* star : stars_) {
+        delete star;
+    }
+    stars_.clear();
 }
 
-starResult::starResult() : score(0) {
+void starResult::Initialize(DirectXBase* dxc) {
+    directX_ = dxc;
+
     // 3つの星を配置
-    stars.push_back(Star(Vector3(1.0f, 0.0f, 1.0f)));
-    stars.push_back(Star(Vector3(3.0f, 0.0f, 4.0f)));
-    stars.push_back(Star(Vector3(5.0f, 0.0f, 2.0f)));
-}
+    Vector3 positions[] = {
+        {1.0f, 0.0f, 1.0f},
+        {3.0f, 0.0f, 4.0f},
+        {5.0f, 0.0f, 2.0f}
+    };
 
-void starResult::Initialize(Vector3, DirectXBase*)
-{
+    for (int i = 0; i < 3; i++) {
+        Star* newStar = new Star();
+        newStar->Initialize(positions[i], directX_);
+        stars_.push_back(newStar);
+    }
 }
 
 void starResult::Update(Vector3 playerPos) {
-    for (auto& star : stars) {
-        star.CheckCollision(playerPos, 1.0f);
-        if (star.IsCollected()) {
-            score += 10; // スコア加算
+    for (Star* star : stars_) {
+        star->Update();
+        if (!star->IsCollected()) {
+            star->OnCollision(nullptr); // 衝突処理
+            if (star->IsCollected()) {
+                score_ += 10; // スコア加算
+            }
         }
     }
 }
 
-void starResult::Draw() {
-    for (auto& star : stars) {
-        star.Draw();
+void starResult::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource,
+    Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource,
+    Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
+    for (Star* star : stars_) {
+        star->Draw(directionalLightResource, pointLightResource, spotLightResource);
     }
 }

@@ -2,22 +2,19 @@
 #include "Star.h"
 #include <vector>
 
-#include"DirectXBase.h"
-
 class starResult {
 public:
-    starResult();
     ~starResult();
+    void Initialize(DirectXBase* dxc);
+    void Update(Vector3 playerPos);
+    void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource,
+        Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource,
+        Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource);
 
-    void Initialize(Vector3, DirectXBase*);
-    void Update(Vector3 playerPos); // 星の更新処理
-    void Draw();                    // 星の描画
-    int GetScore() const { return score; }
+    int GetScore() const { return score_; }
 
 private:
-    std::vector<Star> stars; // 星のリスト
-    int score;
-
-
-
+    std::vector<Star*> stars_;  // 星のリスト
+    DirectXBase* directX_;
+    int score_ = 0;
 };
