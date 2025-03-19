@@ -46,7 +46,7 @@ void switchLight::Update()
 
 		}
 	}
-
+	switchModel->Update();
 	// ImGuiウィンドウの中にチェックボックスを追加
 	ImGui::Begin("Debug Window");
 	ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更

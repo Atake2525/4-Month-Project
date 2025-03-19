@@ -37,7 +37,7 @@ void LightBlock::Initialize(Vector3 position, DirectXBase*dxbase, Input*input)
 void LightBlock::Update()
 {
 	Light->Update();
-
+	BlockModel->Update();
 
 }
 
