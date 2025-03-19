@@ -1,4 +1,5 @@
 #include "DebugMode.h"
+#include "AABB.h"
 
 using namespace Microsoft::WRL;
 
@@ -282,6 +283,25 @@ void DebugMode::Update() {
 	}
 	ImGui::End();
 
+	Vector3 obMin = object3d->GetAABB().min;
+	Vector3 obMax = object3d->GetAABB().max;
+	Vector3 grMin = grid->GetAABB().min;
+	Vector3 grMax = grid->GetAABB().max;
+
+	ImGui::Begin("ModelAABB");
+
+	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
+	ImGui::DragFloat3("objectMax", &obMax.y, 0.1f);
+	ImGui::DragFloat3("gridMin", &grMin.x, 0.1f);
+	ImGui::DragFloat3("gridMax", &grMax.y, 0.1f);
+	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
+	ImGui::DragFloat("FarClip", &farClip, 1.0f);
+	ImGui::DragFloat("Fov", &fov, 0.01f);
+	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
+	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
+
+	ImGui::End();
+
 	ImGui::SetNextWindowPos(ImVec2(1080, 0));
 	ImGui::SetNextWindowSize(ImVec2(200, 300));
 	ImGui::Begin("Camera");
@@ -400,6 +420,12 @@ void DebugMode::Update() {
 #endif // _DEBUG
 
 	// 更新処理
+
+	if (object3d->CheckCollision(grid))
+	{
+		camera->Update();
+	}
+
 	camera->SetRotate(cameraTransform.rotate);
 	camera->SetTranslate(cameraTransform.translate);
 	camera->Update();
