@@ -3,8 +3,15 @@
 
 Star::Star(Vector3 position) : position(position), IsCheck(false) {}
 
+Star::~Star()
+{
+}
+
 void Star::Initialize(Vector3, DirectXBase*)
 {
+
+
+
 }
 
 void Star::Update() {

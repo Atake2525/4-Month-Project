@@ -6,7 +6,9 @@
 
 class Star {
 public:
+
     ~Star();
+    Star(Vector3 position);
     void Initialize(Vector3, DirectXBase*);
     void Update();   // 更新処理（当たり判定など）
     void Draw();     // 描画処理
