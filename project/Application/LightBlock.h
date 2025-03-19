@@ -24,11 +24,19 @@ public:
 
 private:
 	Object3d* BlockModel;
+	/*2‰ñÁ‚µ‚½‚ço‚é‚â‚Â*/
+	Object3d* Light2BlockModel;
+	/*3‰ñÁ‚µ‚½‚ço‚é‚â‚Â*/
+	Object3d* Light3BlockModel;
+
 	Camera* camera_;
 	Vector3 blockPosition;
 	Input* input_;
 	DirectXBase* dxcCommon;
 	switchLight* Light;
+
+	int32_t light2BlockHp=2;
+	int32_t light3BlockHp = 3;
 
 
 };
