@@ -29,8 +29,11 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
 
+	/*switch*/
 	Light = new switchLight();
 	Light->Initialize({ 0,0,0 }, camera_, dxcCommon, input_);
+
+	/*model*/
 	BlockModel = new Object3d();
 	BlockModel->Initialize();
 
