@@ -67,9 +67,7 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Button.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
+
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -93,6 +91,12 @@ void DebugMode::Initialize() {
 
 	lightBlock = new LightBlock();
 	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
+
+	//ゴールモデル
+	goalModel_ = new Object3d();
+	goalModel_->Initialize(); //{ 0,0,0 }, camera, directxBase
+	goalModel_->SetModel("goal.obj");
+
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -155,6 +159,9 @@ void DebugMode::Initialize() {
 	modelColor = object3d->GetColor();
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
+
+	goal = new Goal();
+	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -445,12 +452,6 @@ void DebugMode::Update() {
 
 	grid->Update();
 
-
-	/*------ SWITCH ----------*/
-	lightBlock->Update();
-  
-	Audio::GetInstance()->Update();
-
 }
 
 void DebugMode::Draw() {
@@ -471,12 +472,13 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
-	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
 	grid->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());
@@ -516,9 +518,7 @@ void DebugMode::Finalize() {
 	delete grid;
 
 	delete input;
-	
-	delete lightBlock;
-	
+
 	WireFrameObjectBase::GetInstance()->Finalize();
 
 	FrameWork::Finalize();
