@@ -1,4 +1,5 @@
 #include "DebugMode.h"
+#include "AABB.h"
 
 using namespace Microsoft::WRL;
 
@@ -66,12 +67,11 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "stage.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "block.obj");
+
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+	soundData2 = Audio::GetInstance()->SoundLoadWave("Resources/fanfare.wav");
 
 	// Spriteの初期化
 	sprite = new Sprite();
@@ -87,7 +87,10 @@ void DebugMode::Initialize() {
 
 	grid = new Object3d();
 	grid->Initialize();
-	grid->SetModel("block.obj");
+	grid->SetModel("Grid.obj");
+
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
 
 	//ゴールモデル
 	goalModel_ = new Object3d();
@@ -287,6 +290,25 @@ void DebugMode::Update() {
 	}
 	ImGui::End();
 
+	Vector3 obMin = object3d->GetAABB().min;
+	Vector3 obMax = object3d->GetAABB().max;
+	Vector3 grMin = grid->GetAABB().min;
+	Vector3 grMax = grid->GetAABB().max;
+
+	ImGui::Begin("ModelAABB");
+
+	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
+	ImGui::DragFloat3("objectMax", &obMax.y, 0.1f);
+	ImGui::DragFloat3("gridMin", &grMin.x, 0.1f);
+	ImGui::DragFloat3("gridMax", &grMax.y, 0.1f);
+	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
+	ImGui::DragFloat("FarClip", &farClip, 1.0f);
+	ImGui::DragFloat("Fov", &fov, 0.01f);
+	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
+	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
+
+	ImGui::End();
+
 	ImGui::SetNextWindowPos(ImVec2(1080, 0));
 	ImGui::SetNextWindowSize(ImVec2(200, 300));
 	ImGui::Begin("Camera");
@@ -362,9 +384,25 @@ void DebugMode::Update() {
 		cameraTransform.rotate.z += 0.01f;
 	}
 
-	if (input->TriggerKey(DIK_0)) {
+	if (input->TriggerKey(DIK_1)) {
 		// 音声再生
-		Audio::GetInstance()->SoundPlayWave(soundData1);
+		Audio::GetInstance()->SoundPlayWave(soundData1, 1.0f);
+	}
+	if (input->TriggerKey(DIK_2)) {
+		// 音声再生
+		Audio::GetInstance()->SoundPlayWave(soundData2, 1.0f);
+	}
+	if (input->TriggerKey(DIK_8)) {
+		// 音声停止
+		Audio::GetInstance()->SoundStopWave(soundData1);
+	}
+	if (input->TriggerKey(DIK_9)) {
+		// 音声停止
+		Audio::GetInstance()->SoundStopWave(soundData2);
+	}
+	if (input->TriggerKey(DIK_0)) {
+		// 音声停止
+		Audio::GetInstance()->SoundStopWaveAll();
 	}
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;
@@ -380,6 +418,7 @@ void DebugMode::Update() {
 		mousePos3.y = mousePos3.x;
 		mousePos3.x = mousePos3.z;
 		mousePos3.z = 0.0f;
+		// 実際に反映されるcameraRotateはRadianなので出力されたmousePos3をDegreeとしてRadianに計算しなおす
 		mousePos3 = SwapRadian(mousePos3) / 10.0f;
 		cameraTransform.rotate += mousePos3;
 	}
@@ -388,6 +427,12 @@ void DebugMode::Update() {
 #endif // _DEBUG
 
 	// 更新処理
+
+	if (object3d->CheckCollision(grid))
+	{
+		camera->Update();
+	}
+
 	camera->SetRotate(cameraTransform.rotate);
 	camera->SetTranslate(cameraTransform.translate);
 	camera->Update();
@@ -406,9 +451,6 @@ void DebugMode::Update() {
 	object3d->Update();
 
 	grid->Update();
-
-	//ゴールの処理
-	goal->Update();
 
 }
 
@@ -430,8 +472,6 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
-	//ゴール描画
-	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
@@ -478,9 +518,6 @@ void DebugMode::Finalize() {
 	delete grid;
 
 	delete input;
-
-	delete goalModel_;
-	delete goal;
 
 	WireFrameObjectBase::GetInstance()->Finalize();
 

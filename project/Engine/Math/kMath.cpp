@@ -15,7 +15,7 @@ Vector3& operator+=(Vector3& v1, const Vector3& v2) {
 	return v1;
 }
 
-const Vector3 operator+(Vector3& v1, const Vector3 v2) {
+const Vector3 operator+(const Vector3& v1, const Vector3 v2) {
 	Vector3 result;
 	result.x = v1.x + v2.x;
 	result.y = v1.y + v2.y;
@@ -92,6 +92,12 @@ const Vector3 operator/(const Vector3& v1, const float f) {
 	return result;
 }
 
+const Vector3 operator-(const Vector3& v1) {
+	Vector3 v;
+	v -= v1;
+	return v;
+}
+
 
 
 //単位行列の作成
@@ -128,6 +134,15 @@ Matrix3x3 Multiply3x3(const Matrix3x3& m1, const Matrix3x3& m2) {
 			ans.m[a][b] = m1.m[a][0] * m2.m[0][b] + m1.m[a][1] * m2.m[1][b] + m1.m[a][2] * m2.m[2][b];
 		}
 	}
+	return ans;
+};
+
+// クロス積
+Vector3 Cross(const Vector3& v1, const Vector3& v2) {
+	Vector3 ans;
+	ans.x = v1.y * v2.z - v1.z * v2.y;
+	ans.y = v1.z * v2.x - v1.x * v2.z;
+	ans.z = v1.x * v2.y - v1.y * v2.x;
 	return ans;
 };
 
@@ -262,47 +277,25 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 
 //３次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
-	Matrix4x4 S = { 0 };
 	Matrix4x4 R = { 0 };
-	Matrix4x4 rX = { 0 };
-	Matrix4x4 rY = { 0 };
-	Matrix4x4 rZ = { 0 };
-	Matrix4x4 T = { 0 };
 	Matrix4x4 ans = { 0 };
 
-	S.m[0][0] = scale.x;
-	S.m[1][1] = scale.y;
-	S.m[2][2] = scale.z;
-	S.m[3][3] = 1;
+	R = Multiply(MakeRotateXMatrix(rotate.x), Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
 
-	rX = MakeRotateXMatrix(rotate.x);
-	rY = MakeRotateYMatrix(rotate.y);
-	rZ = MakeRotateZMatrix(rotate.z);
 
-	R = Multiply(rX, Multiply(rY, rZ));
-
-	T.m[0][0] = 1;
-	T.m[1][1] = 1;
-	T.m[2][2] = 1;
-	T.m[3][3] = 1;
-	T.m[3][0] = translate.x;
-	T.m[3][1] = translate.y;
-	T.m[3][2] = translate.z;
-
-	ans.m[0][0] = S.m[0][0] * R.m[0][0];
-	ans.m[0][1] = S.m[0][0] * R.m[0][1];
-	ans.m[0][2] = S.m[0][0] * R.m[0][2];
-	ans.m[1][0] = S.m[1][1] * R.m[1][0];
-	ans.m[1][1] = S.m[1][1] * R.m[1][1];
-	ans.m[1][2] = S.m[1][1] * R.m[1][2];
-	ans.m[2][0] = S.m[2][2] * R.m[2][0];
-	ans.m[2][1] = S.m[2][2] * R.m[2][1];
-	ans.m[2][2] = S.m[2][2] * R.m[2][2];
-	ans.m[3][0] = T.m[3][0];
-	ans.m[3][1] = T.m[3][1];
-	ans.m[3][2] = T.m[3][2];
+	ans.m[0][0] = scale.x * R.m[0][0];
+	ans.m[0][1] = scale.x * R.m[0][1];
+	ans.m[0][2] = scale.x * R.m[0][2];
+	ans.m[1][0] = scale.y * R.m[1][0];
+	ans.m[1][1] = scale.y * R.m[1][1];
+	ans.m[1][2] = scale.y * R.m[1][2];
+	ans.m[2][0] = scale.z * R.m[2][0];
+	ans.m[2][1] = scale.z * R.m[2][1];
+	ans.m[2][2] = scale.z * R.m[2][2];
 	ans.m[3][3] = 1;
-
+	ans.m[3][0] = translate.x;
+	ans.m[3][1] = translate.y;
+	ans.m[3][2] = translate.z;
 
 	return ans;
 };
@@ -416,6 +409,22 @@ Vector3 SwapRadian(Vector3 degree) {
 	return result;
 }
 
+Vector2 SwapDegree(Vector2 radian) {
+	Vector2 result = {
+		radian.x * (180.0f / float(M_PI)),
+		radian.y * (180.0f / float(M_PI)),
+	};
+	return result;
+}
+
+Vector2 SwapRadian(Vector2 degree) {
+	Vector2 result = {
+		degree.x * (float(M_PI) / 180.0f),
+		degree.y * (float(M_PI) / 180.0f),
+	};
+	return result;
+}
+
 float SwapDegree(float radian) {
 	float result = radian * (180.0f / float(M_PI));
 	return result;
@@ -423,6 +432,11 @@ float SwapDegree(float radian) {
 
 float SwapRadian(float degree) {
 	float result = degree * (float(M_PI) / 180.0f);
+	return result;
+}
+
+float Length(const Vector3& v) {
+	float result = sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 	return result;
 }
 

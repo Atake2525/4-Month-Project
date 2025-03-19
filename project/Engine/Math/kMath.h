@@ -34,6 +34,8 @@ const Vector3 operator-(const Vector3& v1, const float f);
 
 const Vector3 operator/(const Vector3& v1, const float f);
 
+const Vector3 operator-(const Vector3& v1);
+
 //単位行列の作成
 Matrix4x4 MakeIdentity4x4();
 
@@ -76,6 +78,9 @@ Matrix4x4 Inverse(const Matrix4x4& m);
 // 正規化
 Vector3 Normalize(const Vector3& v);
 
+// クロス積
+Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
 
 // 1, 透視投影行列
 Matrix4x4 MakePrespectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
@@ -93,9 +98,15 @@ Vector3 SwapDegree(Vector3 radian);
 
 Vector3 SwapRadian(Vector3 degree);
 
+Vector2 SwapDegree(Vector2 radian);
+
+Vector2 SwapRadian(Vector2 degree);
+
 float SwapDegree(float radian);
 
 float SwapRadian(float degree);
+
+float Length(const Vector3& v);
 
 // ベクトル変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);

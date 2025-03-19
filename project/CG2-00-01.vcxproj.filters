@@ -168,7 +168,7 @@
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Goal.cpp">
+
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -275,7 +275,7 @@
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Goal.h">
+
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
