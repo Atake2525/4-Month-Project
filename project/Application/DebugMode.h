@@ -123,6 +123,7 @@ private:
 
 	// サウンド
 	SoundData soundData1;
+	SoundData soundData2;
 
 	// ライトリソース宣言
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
