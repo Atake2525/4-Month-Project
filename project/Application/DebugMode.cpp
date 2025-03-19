@@ -158,7 +158,7 @@ void DebugMode::Initialize() {
 	shininess = object3d->GetShininess();
 
 	goal = new Goal();
-	goal->Initialize({ 7.0f,5.0f,-5.0f }, camera, directxBase);
+	goal->Initialize({ 7.0f,5.0f,-5.0f }, directxBase);// 7.0f,5.0f,-5.0f0.0f,0.0f,0.0f
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -430,13 +430,15 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
+	//ゴール描画
+	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
 	grid->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
-	//ゴール描画
-	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());

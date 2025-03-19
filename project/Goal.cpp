@@ -6,32 +6,32 @@
 #include "externels/imgui/imgui_impl_win32.h"
 
 
+//デストラクタ
 Goal::~Goal() {
 	delete goalModel_;
 }
 
-void Goal::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc)
+void Goal::Initialize(Vector3 position, DirectXBase* dxc)
 {
 	directX = dxc;
-	goalCamera_ = camera;
 	goalPos_ = position;
 
 	ModelManager::GetInstance()->Initialize(directX);
 	Object3dBase::GetInstance()->Initialize(directX);
-	Object3dBase::GetInstance()->SetDefaultCamera(goalCamera_);
+
 	ModelBase::GetInstance()->Initialize(directX);
 	//TextureManager::GetInstance()->Initialize(directX);
 
 	//モデル読み込み
-	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
 
-	
-	// object3dの初期化(KamataEngineで言うところのModel)
+
+	// object3dの初期化
 	goalModel_ = new Object3d();
 	goalModel_->Initialize();
+	goalModel_->SetModel("goal.obj");
 
 	//位置を指定する
 	goalModel_->SetTranslate(goalPos_);
@@ -40,6 +40,7 @@ void Goal::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc)
 
 void Goal::Update()
 {
+	goalModel_->Update();
 
 	////ゴールするとtrueになる => アニメーションの処理追加
 	//if (!goalFlag_) {
@@ -51,8 +52,8 @@ void Goal::Update()
 
 	// ImGuiウィンドウの中にチェックボックスを追加
 	ImGui::Begin("Goal Window");
-	//ImGui::DragFloat3("Goal Position", goalPos_.translation_.x, 0.01f);
-	ImGui::Checkbox("Goal Flag", &goalFlag_); // フラグの状態を表示＆変更
+	ImGui::DragFloat3("Goal Position", &goalPos_.x, 0.01f); //ゴールの位置の確認
+	ImGui::Checkbox("Goal Flag", &goalFlag_);
 	ImGui::End();
 
 
@@ -60,10 +61,9 @@ void Goal::Update()
 
 
 
-
-
 void Goal::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource) {
-	
+
+
 	goalModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 }

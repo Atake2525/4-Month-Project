@@ -19,7 +19,7 @@ public:
 
 	~Goal();
 	// 初期化
-	void Initialize(Vector3, Camera*,DirectXBase*); //Object3d*
+	void Initialize(Vector3, DirectXBase*); //Object3d*
 	void Update();
 	//描画
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
@@ -31,15 +31,15 @@ public:
 
 private:
 
-	Object3d* goalModel_;// objモデルデータ
-	Vector3 goalPos_;// ゴールの位置
-
-	/*DirectX*/
+	//DirectX
 	DirectXBase* directX;
+	Object3d* goalModel_;	// objモデルデータ
+	Vector3 goalPos_;		// ゴールの位置
+	Camera* goalCamera_;	//カメラ
+
 	//終了フラグ
 	bool goalFlag_ = false;
-	/*カメラ*/
-	Camera* goalCamera_;
+
 	//ゴール
 	Goal* goal_ = nullptr;
 
