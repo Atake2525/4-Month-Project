@@ -8,7 +8,6 @@
 #include "Matrix4x4.h"
 #include "Transform.h"
 #include "AABB.h"
-#include "CollisionManager.h"
 
 #pragma once
 
@@ -82,10 +81,11 @@ private:
 
 	Model* model_ = nullptr;
 
-	// AABB
+	// Getterに返すようのAABB(座標を更新する)
 	AABB aabb;
 
-	CollisionManager* collision;
+	// 初期位置のAABB
+	AABB first;
 
 public:
 
@@ -133,7 +133,7 @@ public:
 
 public:
 	// 衝突チェック
-	const bool CheckCollisionAABB(Object3d& object) const;
+	const bool& CheckCollisionAABB(Object3d* object) const;
 
 private:
 

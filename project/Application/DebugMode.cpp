@@ -1,4 +1,5 @@
 #include "DebugMode.h"
+#include "AABB.h"
 
 using namespace Microsoft::WRL;
 
@@ -90,6 +91,7 @@ void DebugMode::Initialize() {
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
 	grid->SetTranslate({ 0.0f, -5.0f, 0.0f });
+	grid->Update();
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -280,6 +282,25 @@ void DebugMode::Update() {
 	}
 	ImGui::End();
 
+	Vector3 obMin = object3d->GetAABB().min;
+	Vector3 obMax = object3d->GetAABB().max;
+	Vector3 grMin = grid->GetAABB().min;
+	Vector3 grMax = grid->GetAABB().max;
+
+	ImGui::Begin("ModelAABB");
+
+	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
+	ImGui::DragFloat3("objectMax", &obMax.y, 0.1f);
+	ImGui::DragFloat3("gridMin", &grMin.x, 0.1f);
+	ImGui::DragFloat3("gridMax", &grMax.y, 0.1f);
+	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
+	ImGui::DragFloat("FarClip", &farClip, 1.0f);
+	ImGui::DragFloat("Fov", &fov, 0.01f);
+	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
+	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
+
+	ImGui::End();
+
 	ImGui::SetNextWindowPos(ImVec2(1080, 0));
 	ImGui::SetNextWindowSize(ImVec2(200, 300));
 	ImGui::Begin("Camera");
@@ -399,9 +420,9 @@ void DebugMode::Update() {
 
 	// 更新処理
 
-	if (object3d->CheckCollisionAABB(*grid))
+	if (object3d->CheckCollisionAABB(grid))
 	{
-
+		camera->Update();
 	}
 
 	camera->SetRotate(cameraTransform.rotate);
