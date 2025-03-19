@@ -44,7 +44,13 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 void LightBlock::Update()
 {
 	Light->Update();
+	if (Light->GetFlag()) {
+		light2BlockHp -= 1;
+		light3BlockHp -= 1;
+		if (light2BlockHp == 0)
 
+		
+	}
 
 }
 
