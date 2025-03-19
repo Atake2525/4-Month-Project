@@ -7,6 +7,7 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Transform.h"
+#include "Sphere.h"
 #include "AABB.h"
 
 #pragma once
@@ -132,8 +133,10 @@ public:
 	void SetShininess(const float& shininess);
 
 public:
-	// 衝突チェック
-	const bool& CheckCollisionAABB(Object3d* object) const;
+	// 衝突チェック(AABBとAABB)
+	const bool& CheckCollision(Object3d* object) const;
+
+	//const bool& CheckCollisionSphere(const Sphere& sphere) const;
 
 private:
 

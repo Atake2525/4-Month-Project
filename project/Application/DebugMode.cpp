@@ -90,8 +90,6 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
-	grid->SetTranslate({ 0.0f, -5.0f, 0.0f });
-	grid->Update();
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -420,7 +418,7 @@ void DebugMode::Update() {
 
 	// 更新処理
 
-	if (object3d->CheckCollisionAABB(grid))
+	if (object3d->CheckCollision(grid))
 	{
 		camera->Update();
 	}
