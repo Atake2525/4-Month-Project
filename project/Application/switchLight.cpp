@@ -16,10 +16,7 @@ void switchLight::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc,
 	switchPosition = position;
 	input_ = input;
 
-	ModelManager::GetInstance()->Initialize(directX);
-	Object3dBase::GetInstance()->Initialize(directX);
-	Object3dBase::GetInstance()->SetDefaultCamera(switchCamera);
-	ModelBase::GetInstance()->Initialize(directX);
+	
 
 
 	//モデル読み込み
