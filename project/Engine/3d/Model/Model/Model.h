@@ -55,6 +55,10 @@ public:
 	//const Vector3& GetSpecularColor() const { return materialData->specularColor; }
 	// Getter(Shininess)
 	const float& GetShininess() const { return materialData->shininess; }
+	// Getter(ModelData)
+	const ModelData& GetModelData() const { return modelData;}
+	// Getter(ModelData vertices)
+	const std::vector<VertexData>& GetVertices() const { return modelData.vertices; }
 
 	// Setter(Color)
 	void SetColor(const Vector4& color) { materialData->color = color; }

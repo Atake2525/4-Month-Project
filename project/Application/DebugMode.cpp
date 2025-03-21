@@ -1,4 +1,5 @@
 #include "DebugMode.h"
+#include "AABB.h"
 
 using namespace Microsoft::WRL;
 
@@ -66,9 +67,7 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Button.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
+
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -91,6 +90,15 @@ void DebugMode::Initialize() {
 	grid->SetModel("Grid.obj");
 	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
 	grid->Update();
+
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
+
+	//ゴールモデル
+	goalModel_ = new Object3d();
+	goalModel_->Initialize(); //{ 0,0,0 }, camera, directxBase
+	goalModel_->SetModel("goal.obj");
+
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -153,6 +161,9 @@ void DebugMode::Initialize() {
 	modelColor = object3d->GetColor();
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
+
+	goal = new Goal();
+	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -282,6 +293,25 @@ void DebugMode::Update() {
 	}
 	ImGui::End();
 
+	Vector3 obMin = object3d->GetAABB().min;
+	Vector3 obMax = object3d->GetAABB().max;
+	Vector3 grMin = grid->GetAABB().min;
+	Vector3 grMax = grid->GetAABB().max;
+
+	ImGui::Begin("ModelAABB");
+
+	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
+	ImGui::DragFloat3("objectMax", &obMax.y, 0.1f);
+	ImGui::DragFloat3("gridMin", &grMin.x, 0.1f);
+	ImGui::DragFloat3("gridMax", &grMax.y, 0.1f);
+	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
+	ImGui::DragFloat("FarClip", &farClip, 1.0f);
+	ImGui::DragFloat("Fov", &fov, 0.01f);
+	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
+	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
+
+	ImGui::End();
+
 	ImGui::SetNextWindowPos(ImVec2(1080, 0));
 	ImGui::SetNextWindowSize(ImVec2(200, 300));
 	ImGui::Begin("Camera");
@@ -400,6 +430,12 @@ void DebugMode::Update() {
 #endif // _DEBUG
 
 	// 更新処理
+
+	if (object3d->CheckCollision(grid))
+	{
+		camera->Update();
+	}
+
 	camera->SetRotate(cameraTransform.rotate);
 	camera->SetTranslate(cameraTransform.translate);
 	camera->Update();
@@ -428,10 +464,6 @@ void DebugMode::Update() {
 
 	grid->Update();
 
-
-	Audio::GetInstance()->Update();
-}
-
 void DebugMode::Draw() {
 	// ImGuiの内部コマンドを生成する
 	ImGui::Render();
@@ -450,10 +482,13 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
+
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
 	grid->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());

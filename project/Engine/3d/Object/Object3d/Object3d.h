@@ -7,7 +7,6 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Transform.h"
-#include "kMath.h"
 
 #pragma once
 
@@ -94,8 +93,6 @@ private:
 
 	Model* model_ = nullptr;
 
-	Matrix4x4 worldMatrix;
-
 public:
 
 	// Getter(Transform)
@@ -116,11 +113,6 @@ public:
 	//const Vector3& GetSpecularColor() const;
 	// Getter(shininess)
 	const float& GetShininess() const;
-	// Getter(worldMatrix)
-	const Matrix4x4& GetWorldMatrix() const { 
-		Matrix4x4 world = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-		return world;
-	}
 
 	// Setter(Transform)
 	void SetTransform(const Transform& transform) { this->transform = transform; }
@@ -143,6 +135,11 @@ public:
 	// Setter(shininess)
 	void SetShininess(const float& shininess);
 
+public:
+	// 衝突チェック(AABBとAABB)
+	const bool& CheckCollision(Object3d* object) const;
+
+	//const bool& CheckCollisionSphere(const Sphere& sphere) const;
 
 private:
 
@@ -158,4 +155,7 @@ private:
 	void CreateSpotLightResource();
 	// CameraResourceを作る
 	void CreateCameraResource();
+
+	// AABBをモデルを参照して自動的に作成
+	void CreateAABB();
 };

@@ -6,6 +6,7 @@
 #include "WinApp.h"
 #include "Model.h"
 #include "ModelManager.h"
+#include "CollisionManager.h"
 #include "Camera.h"
 #include <fstream>
 #include <sstream>
@@ -69,36 +70,24 @@ void Object3d::Initialize() {
         {0.0f, 0.0f, 0.0f}
     };
 
+	first = {
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.0f, 0.0f}
+	};
+
+	aabb = {
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.0f, 0.0f}
+	};
+
 	cameraData->worldPosition = {1.0f, 1.0f, 1.0f};
 
 	camera = Object3dBase::GetInstance()->GetDefaultCamera();
 
-	// Initialize時にも一度処理をしておく
-	// 3DのTransform処理
-	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 
-	if (isParent)
-	{
-		worldMatrix = Multiply(worldMatrix, parent);
-	}
-
-	Matrix4x4 worldViewProjectionMatrix;
-	if (camera) {
-		const Matrix4x4& viewProjectionMatrix = camera->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-	}
-	else {
-		worldViewProjectionMatrix = worldMatrix;
-	}
-
-
-
-	transformationMatrix->WVP = worldViewProjectionMatrix;
-	transformationMatrix->World = worldMatrix;
 }
 
 void Object3d::Update() {
-
 
 	// 3DのTransform処理
 	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
@@ -115,11 +104,12 @@ void Object3d::Update() {
 	} else {
 		worldViewProjectionMatrix = worldMatrix;
 	}
-
-
 	
 	transformationMatrix->WVP = worldViewProjectionMatrix;
 	transformationMatrix->World = worldMatrix;
+
+	aabb.min = first.min + transform.translate;
+	aabb.max = first.max + transform.translate;
 }
 
 void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {
@@ -186,6 +176,7 @@ void Object3d::SetSpotLight(SpotLight* lightData) {
 void Object3d::SetModel(const std::string& filePath) {
 	// モデルを検索してセットする
 	model_ = ModelManager::GetInstance()->FindModel(filePath);
+	CreateAABB();
 }
 
 void Object3d::SetColor(const Vector4& color) { 
@@ -233,3 +224,26 @@ const float& Object3d::GetShininess() const {
 void Object3d::SetShininess(const float& shininess) { 
 	model_->SetShininess(shininess);
 }
+
+void Object3d::CreateAABB() {
+	const std::vector<VertexData> vData = model_->GetVertices();
+	
+	for (VertexData vertices : vData)
+	{
+		first.min.x = min(first.min.x, vertices.position.x);
+		first.min.y = min(first.min.y, vertices.position.y);
+		first.min.z = min(first.min.z, vertices.position.z);
+
+		first.max.x = max(first.max.x, vertices.position.x);
+		first.max.y = max(first.max.y, vertices.position.y);
+		first.max.z = max(first.max.z, vertices.position.z);
+	}
+}
+
+const bool& Object3d::CheckCollision(Object3d* object) const {
+	return CollisionAABB(aabb, object->GetAABB());
+}
+
+//const bool& Object3d::CheckCollisionSphere(const Sphere& sphere) const {
+//	return CollisionAABBSphere(aabb, sphere);
+//}
