@@ -346,7 +346,7 @@ void DebugMode::Update() {
 	mousePos3 = input->GetMousePos3();
 
 #ifdef _DEBUG
-	const float speed = 0.7f;
+	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
 	if (input->PushKey(DIK_W)) {
@@ -362,7 +362,7 @@ void DebugMode::Update() {
 	}
 	if (input->PushKey(DIK_D)) {
 		cameraTransform.translate += velocity;
-	}
+	}*/
 	if (input->PushKey(DIK_SPACE)) {
 		cameraTransform.translate.y += 1.0f;
 	}
@@ -441,8 +441,9 @@ void DebugMode::Update() {
 		isCollision = false;
 	}
 
-	camera->SetRotate(cameraTransform.rotate);
-	camera->SetTranslate(cameraTransform.translate);
+	//camera->SetRotate(cameraTransform.rotate);
+	//camera->SetTranslate(cameraTransform.translate);
+	camera = player->GetCamera();
 	camera->Update();
 
 	sprite->SetStatus(position, rotation, scale, color);
@@ -468,6 +469,8 @@ void DebugMode::Update() {
 	}
 
 	grid->Update();
+
+	player->Update();
 }
 
 void DebugMode::Draw() {
@@ -487,7 +490,7 @@ void DebugMode::Draw() {
 
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
-
+	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
@@ -534,6 +537,10 @@ void DebugMode::Finalize() {
 	delete grid;
 
 	delete input;
+
+	delete playerObj;
+
+	delete player;
 
 	WireFrameObjectBase::GetInstance()->Finalize();
 
