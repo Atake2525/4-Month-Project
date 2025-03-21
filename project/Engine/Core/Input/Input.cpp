@@ -66,28 +66,28 @@ void Input::Update() {
 
 }
 
-bool Input::PushKey(BYTE keyNumber) {
+const bool& Input::PushKey(BYTE keyNumber) const {
 	if (keys[keyNumber]) {
 		return true;
 	}
 	return false;
 }
 
-bool Input::TriggerKey(BYTE keyNumber) {
+const bool& Input::TriggerKey(BYTE keyNumber) const {
 	if (keys[keyNumber] && !keyPres[keyNumber]) {
 		return true;
 	}
 	return false;
 }
 
-bool Input::ReturnKey(BYTE keyNumber) {
+const bool& Input::ReturnKey(BYTE keyNumber) const {
 	if (!keys[keyNumber] && keyPres[keyNumber]) {
 		return true;
 	}
 	return false;
 }
 
-bool Input::PressMouse(int mouseNumber) {
+const bool& Input::PressMouse(int mouseNumber) const {
 	if (mouseState.rgbButtons[mouseNumber] && (0x80))
 	{
 		return true;
@@ -95,7 +95,7 @@ bool Input::PressMouse(int mouseNumber) {
 	return false;
 }
 
-bool Input::TriggerMouse(int mouseNumber) {
+const bool& Input::TriggerMouse(int mouseNumber) const {
 	if (mouseState.rgbButtons[mouseNumber] && !mouseStatePre.rgbButtons[mouseNumber] && (0x80))
 	{
 		return true;
@@ -103,7 +103,7 @@ bool Input::TriggerMouse(int mouseNumber) {
 	return false;
 }
 
-bool Input::ReturnMouse(int mouseNumber) {
+const bool& Input::ReturnMouse(int mouseNumber) const {
 	if (!mouseState.rgbButtons[mouseNumber] && mouseStatePre.rgbButtons[mouseNumber] && (0x80))
 	{
 		return true;
@@ -112,11 +112,11 @@ bool Input::ReturnMouse(int mouseNumber) {
 }
 
 Vector2& Input::GetMousePos2() {
-	Vector2 result = { mouseState.lX, mouseState.lY };
+	Vector2 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY) };
 	return result;
 }
 
 Vector3& Input::GetMousePos3() {
-	Vector3 result = { mouseState.lX, mouseState.lY, mouseState.lZ };
+	Vector3 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY), static_cast<float>(mouseState.lZ) };
 	return result;
 }

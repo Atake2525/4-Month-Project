@@ -26,14 +26,14 @@ public:
 	/// </summary>
 	/// <param name="keyNumber">キー番号 例(DIK_0)</param>
 	/// <returns>押されているか</returns>
-	bool PushKey(BYTE keyNumber);
+	const bool& PushKey(BYTE keyNumber) const;
 
 	/// <summary>
 	/// キーのトリガーをチェック
 	/// </summary>
 	/// <param name="keyNumber">キー番号 例(DIK_0)</param>
 	/// <returns>押したかどうか</returns>
-	bool TriggerKey(BYTE keyNumber);
+	const bool& TriggerKey(BYTE keyNumber) const;
 
 
 	/// <summary>
@@ -41,7 +41,7 @@ public:
 	/// </summary>
 	/// <param name="keyNumber">キー番号 例(DIK_0)</param>
 	/// <returns>離されたか</returns>
-	bool ReturnKey(BYTE keyNumber);
+	const bool& ReturnKey(BYTE keyNumber) const;
 
 	/// <summary>
 	/// マウスの押下をチェック
@@ -49,7 +49,7 @@ public:
 	/// <param name="mouseNumer">0 = 左ボタン</param>
 	/// <param name="mouseNumer">1 = 右ボタン</param>
 	/// <param name="mouseNumer">2 = マウスホイール押し込み</param>
-	bool PressMouse(int mouseNumer);
+	const bool& PressMouse(int mouseNumer) const;
 
 	/// <summary>
 	/// マウスのトリガーをチェック
@@ -57,7 +57,7 @@ public:
 	/// <param name="mouseNumer">0 = 左ボタン</param>
 	/// <param name="mouseNumer">1 = 右ボタン</param>
 	/// <param name="mouseNumer">2 = マウスホイール押し込み</param>
-	bool TriggerMouse(int mouseNumber);
+	const bool& TriggerMouse(int mouseNumber) const;
 
 	/// <summary>
 	/// マウスのリターンをチェック
@@ -65,7 +65,7 @@ public:
 	/// <param name="mouseNumer">0 = 左ボタン</param>
 	/// <param name="mouseNumer">1 = 右ボタン</param>
 	/// <param name="mouseNumer">2 = マウスホイール押し込み</param>
-	bool ReturnMouse(int mouseNumber);
+	const bool& ReturnMouse(int mouseNumber) const;
 
 	// マウスの移動量を取得(Vector2)
 	Vector2& GetMousePos2();
