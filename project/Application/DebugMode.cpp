@@ -67,7 +67,8 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -90,12 +91,7 @@ void DebugMode::Initialize() {
 	grid->SetModel("Grid.obj");
 
 	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
-
-	//ゴールモデル
-	goalModel_ = new Object3d();
-	goalModel_->Initialize(); //{ 0,0,0 }, camera, directxBase
-	goalModel_->SetModel("goal.obj");
+	lightBlock->Initialize({ 0,0,0 }, directxBase, input);
 
 
 	// ライト関係の初期化
@@ -161,7 +157,18 @@ void DebugMode::Initialize() {
 	shininess = object3d->GetShininess();
 
 	goal = new Goal();
+
 	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
+
+
+	star = new Star();
+
+	star->Initialize({ 0.0f,0.0f,0.0f }, directxBase);
+
+	/*starResult = new StarResult();
+
+	starResult->Initialize({ 0.0f,0.0f,0.0f }, directxBase);*/
+
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -450,6 +457,11 @@ void DebugMode::Update() {
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
 
+	lightBlock->Update();
+	goal->Update();
+	star->Update();
+	starResult->Update();
+
 	grid->Update();
 
 }
@@ -472,6 +484,10 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
+	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	star->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	starResult->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
@@ -514,6 +530,13 @@ void DebugMode::Finalize() {
 	Audio::GetInstance()->Finalize();
 
 	delete object3d;
+
+	delete lightBlock;
+
+	delete goal;
+
+	delete star;
+	delete starResult;
 
 	delete grid;
 

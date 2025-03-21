@@ -48,4 +48,3 @@ private:
 
 	Sprite* clearSprite_ = nullptr; // クリアスプライト
 };
-

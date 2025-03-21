@@ -9,8 +9,9 @@ starResult::~starResult() {
     stars_.clear();
 }
 
-void starResult::Initialize(DirectXBase* dxc) {
+void starResult::Initialize(Vector3 position, DirectXBase* dxc) {
     directX_ = dxc;
+    //starPos_ = position;
 
     // 3つの星を配置
     Vector3 positions[] = {
@@ -26,7 +27,9 @@ void starResult::Initialize(DirectXBase* dxc) {
     }
 }
 
-void starResult::Update(Vector3 playerPos) {
+void starResult::Update() {
+
+
     for (Star* star : stars_) {
         star->Update();
         if (!star->IsCollected()) {
@@ -38,10 +41,9 @@ void starResult::Update(Vector3 playerPos) {
     }
 }
 
-void starResult::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource,
-    Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource,
-    Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
+void starResult::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource,Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
     for (Star* star : stars_) {
         star->Draw(directionalLightResource, pointLightResource, spotLightResource);
     }
+
 }

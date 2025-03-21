@@ -23,9 +23,7 @@ void Goal::Initialize(Vector3 position, DirectXBase* dxc)
 	ModelBase::GetInstance()->Initialize(directX);
 
 	//モデル読み込み
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "goal.obj");
 
 
 	// object3dの初期化
