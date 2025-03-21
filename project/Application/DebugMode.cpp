@@ -67,9 +67,7 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Button.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
+
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -90,6 +88,17 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
+	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
+	grid->Update();
+
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
+
+	//ゴールモデル
+	goalModel_ = new Object3d();
+	goalModel_->Initialize(); //{ 0,0,0 }, camera, directxBase
+	goalModel_->SetModel("goal.obj");
+
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -153,9 +162,13 @@ void DebugMode::Initialize() {
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
 
+	goal = new Goal();
+	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
+
 	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
+
 }
 
 void DebugMode::Update() {
@@ -440,10 +453,16 @@ void DebugMode::Update() {
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
 
-	grid->Update();
 
-	Audio::GetInstance()->Update();
-}
+	grid->SetTransform(transform);
+
+	grid->SetParent(camera->GetWorldMatrix());
+	if (input->PushKey(DIK_R))
+	{
+		grid->DeleteParent();
+	}
+
+	grid->Update();
 
 void DebugMode::Draw() {
 	// ImGuiの内部コマンドを生成する
@@ -463,10 +482,13 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
+
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
 	grid->Draw(directionalLightResource, pointLightResource, spotLightResource);
+
+
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());

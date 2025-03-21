@@ -1,0 +1,3 @@
+C:\Users\k023g\OneDrive\デスクトップ\2024_codeFile\CG3\CG3\project\externels\DirectXTex\Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.lib
+C:\Users\k023g\OneDrive\デスクトップ\2024_codeFile\4か月制作\CG3\project\externels\DirectXTex\Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.lib
+C:\Users\k023g\Downloads\4-Month-Project-master\4-Month-Project-master\project\externels\DirectXTex\Bin\Desktop_2022_Win10\x64\Debug\DirectXTex.lib
