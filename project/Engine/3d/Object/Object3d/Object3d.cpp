@@ -72,13 +72,42 @@ void Object3d::Initialize() {
 	cameraData->worldPosition = {1.0f, 1.0f, 1.0f};
 
 	camera = Object3dBase::GetInstance()->GetDefaultCamera();
+
+	// Initialize時にも一度処理をしておく
+	// 3DのTransform処理
+	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+
+	if (isParent)
+	{
+		worldMatrix = Multiply(worldMatrix, parent);
+	}
+
+	Matrix4x4 worldViewProjectionMatrix;
+	if (camera) {
+		const Matrix4x4& viewProjectionMatrix = camera->GetViewProjectionMatrix();
+		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+	}
+	else {
+		worldViewProjectionMatrix = worldMatrix;
+	}
+
+
+
+	transformationMatrix->WVP = worldViewProjectionMatrix;
+	transformationMatrix->World = worldMatrix;
 }
 
 void Object3d::Update() {
 
 
 	// 3DのTransform処理
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+
+	if (isParent)
+	{
+		worldMatrix = Multiply(worldMatrix, parent);
+	}
+
 	Matrix4x4 worldViewProjectionMatrix;
 	if (camera) {
 		const Matrix4x4& viewProjectionMatrix = camera->GetViewProjectionMatrix();

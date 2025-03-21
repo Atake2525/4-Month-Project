@@ -17,6 +17,10 @@ Camera::Camera()
 void Camera::Update() {
 
 	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	if (isParent)
+	{
+		worldMatrix = Multiply(worldMatrix, parent);
+	}
 	viewMatrix = Inverse(worldMatrix);
 	projectionMatrix = MakePrespectiveFovMatrix(fovY, aspect, nearClipDistance, farClipDistance);
 	// ここがエラーの可能性あり

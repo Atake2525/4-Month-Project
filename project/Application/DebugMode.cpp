@@ -89,6 +89,8 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
+	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
+	grid->Update();
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -155,6 +157,7 @@ void DebugMode::Initialize() {
 	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
+
 }
 
 void DebugMode::Update() {
@@ -414,7 +417,17 @@ void DebugMode::Update() {
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
 
+
+	grid->SetTransform(transform);
+
+	grid->SetParent(camera->GetWorldMatrix());
+	if (input->PushKey(DIK_R))
+	{
+		grid->DeleteParent();
+	}
+
 	grid->Update();
+
 
 	Audio::GetInstance()->Update();
 }

@@ -7,6 +7,7 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Transform.h"
+#include "kMath.h"
 
 #pragma once
 
@@ -37,13 +38,22 @@ public: // メンバ関数
 
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
-	//void SetParent(Transform);
+	void SetParent(const Matrix4x4& worldMatrix) { 
+		parent = worldMatrix; 
+		isParent = true;
+	}
+
+	void DeleteParent() {
+		isParent = false;
+	}
 
 private:
 
 	Transform transform;
 
-	Transform* parent = nullptr;
+	Matrix4x4 parent;
+	bool isParent = false;
+	//Transform* parent = nullptr;
 
 	Camera* camera = nullptr;
 
@@ -84,6 +94,8 @@ private:
 
 	Model* model_ = nullptr;
 
+	Matrix4x4 worldMatrix;
+
 public:
 
 	// Getter(Transform)
@@ -104,6 +116,11 @@ public:
 	//const Vector3& GetSpecularColor() const;
 	// Getter(shininess)
 	const float& GetShininess() const;
+	// Getter(worldMatrix)
+	const Matrix4x4& GetWorldMatrix() const { 
+		Matrix4x4 world = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+		return world;
+	}
 
 	// Setter(Transform)
 	void SetTransform(const Transform& transform) { this->transform = transform; }

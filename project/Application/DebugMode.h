@@ -38,7 +38,6 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 
-
 #include "algorithm"
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -107,7 +106,7 @@ private:
 	// Transform変数を作る
 	Transform transform{
 		{1.0f, 1.0f,   1.0f},
-		{0.0f, -1.58f, 0.0f},
+		{0.0f, 0.0f, 0.0f},
 		{0.0f, 0.0f,   0.0f}
 	};
 
