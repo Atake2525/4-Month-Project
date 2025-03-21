@@ -23,6 +23,8 @@ public:
 	void OnCollision(const Player* player);
 
 	bool IsCollected() const { return collected_; }
+	const Vector3& GetPosition() const { return starPos_; }
+
 
 private:
 	DirectXBase* directX_;

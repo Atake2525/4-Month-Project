@@ -14,16 +14,17 @@ void Star::Initialize(Vector3 position, DirectXBase* dxc) {
 	ModelManager::GetInstance()->Initialize(directX_);
 
 	// モデル読み込み
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "star.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "starResult.obj");
 
 	// Object3dの初期化
 	starModel_ = new Object3d();
 	starModel_->Initialize();
-	starModel_->SetModel("star.obj");
+	starModel_->SetModel("starResult.obj");
 	starModel_->SetTranslate(starPos_);
 }
 
 void Star::Update() {
+
 	starModel_->Update();
 
 	// ImGuiで位置確認

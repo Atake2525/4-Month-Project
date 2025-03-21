@@ -169,6 +169,6 @@ private:
 	LightBlock* lightBlock = nullptr;
 
 	Star* star = nullptr;
-	starResult* starResult = nullptr;
+	starResult* starResultManager = nullptr;
 
 };

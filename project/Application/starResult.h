@@ -5,14 +5,15 @@
 class starResult {
 public:
 	~starResult();
-	void Initialize(Vector3 playerPos, DirectXBase* dxc);
+
+	void Initialize( DirectXBase* dxc);//Vector3 playerPos,
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 
-	int GetScore() const { return score_; }
+	//int GetScore() const { return score_; }
 
 private:
 	std::vector<Star*> stars_;  // 星のリスト
 	DirectXBase* directX_;
-	int score_ = 0;
+	//int score_ = 0;
 };

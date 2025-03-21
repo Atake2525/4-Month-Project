@@ -162,12 +162,10 @@ void DebugMode::Initialize() {
 
 
 	star = new Star();
+	star->Initialize({ 3.0f,3.0f,3.0f }, directxBase);
 
-	star->Initialize({ 0.0f,0.0f,0.0f }, directxBase);
-
-	/*starResult = new StarResult();
-
-	starResult->Initialize({ 0.0f,0.0f,0.0f }, directxBase);*/
+	starResultManager = new starResult();
+	starResultManager->Initialize({ 0.0f,0.0f,0.0f }, directxBase);
 
 
 	// Camera
@@ -459,8 +457,11 @@ void DebugMode::Update() {
 
 	lightBlock->Update();
 	goal->Update();
+
 	star->Update();
-	starResult->Update();
+	if (starResultManager) {
+		starResultManager->Update();  // プレイヤー情報を渡すplayer
+	}
 
 	grid->Update();
 
@@ -487,8 +488,10 @@ void DebugMode::Draw() {
 	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	star->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	starResult->Draw(directionalLightResource, pointLightResource, spotLightResource);
-
+	// starResultManager とその中の星を描画
+	if (starResultManager) {
+		starResultManager->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	}
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
@@ -536,7 +539,9 @@ void DebugMode::Finalize() {
 	delete goal;
 
 	delete star;
-	delete starResult;
+	if (starResultManager) {
+		delete starResultManager;
+	}
 
 	delete grid;
 
