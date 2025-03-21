@@ -91,14 +91,6 @@ void DebugMode::Initialize() {
 	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
 	grid->Update();
 
-	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
-
-	//ゴールモデル
-	goalModel_ = new Object3d();
-	goalModel_->Initialize(); //{ 0,0,0 }, camera, directxBase
-	goalModel_->SetModel("goal.obj");
-
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -161,9 +153,6 @@ void DebugMode::Initialize() {
 	modelColor = object3d->GetColor();
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
-
-	goal = new Goal();
-	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
 
 	// Camera
 	farClip = camera->GetFarClipDistance();
@@ -463,6 +452,7 @@ void DebugMode::Update() {
 	}
 
 	grid->Update();
+}
 
 void DebugMode::Draw() {
 	// ImGuiの内部コマンドを生成する
