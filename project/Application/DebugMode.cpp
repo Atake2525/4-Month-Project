@@ -369,12 +369,13 @@ void DebugMode::Update() {
 	if (input->PushKey(DIK_LSHIFT)) {
 		cameraTransform.translate.y -= 1.0f;
 	}
-	if (input->PushKey(DIK_LEFT)) {
+	/*if (input->PushKey(DIK_LEFT)) {
 		cameraTransform.rotate.y -= 0.03f;
 	}
 	if (input->PushKey(DIK_RIGHT)) {
 		cameraTransform.rotate.y += 0.03f;
-	}
+	}*/
+
 	if (input->PushKey(DIK_UP)) {
 		cameraTransform.rotate.x -= 0.03f;
 	}
@@ -469,8 +470,8 @@ void DebugMode::Update() {
 	}
 
 	grid->Update();
-
 	player->Update();
+
 }
 
 void DebugMode::Draw() {
