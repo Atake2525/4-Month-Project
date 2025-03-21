@@ -7,6 +7,8 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Transform.h"
+#include "AABB.h"
+#include "kMath.h"
 
 #pragma once
 
@@ -101,6 +103,8 @@ private:
 	// 初期位置のAABB
 	AABB first;
 
+	Matrix4x4 worldMatrix;
+
 public:
 
 	// Getter(Transform)
@@ -121,6 +125,10 @@ public:
 	//const Vector3& GetSpecularColor() const;
 	// Getter(shininess)
 	const float& GetShininess() const;
+	// Getter(AABB)
+	const AABB& GetAABB() const { return aabb; }
+	// Getter(worldMatrix)
+	const Matrix4x4& GetWorldMatrix() const { return worldMatrix; }
 
 	// Setter(Transform)
 	void SetTransform(const Transform& transform) { this->transform = transform; }

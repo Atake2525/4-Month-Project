@@ -67,7 +67,8 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -90,14 +91,6 @@ void DebugMode::Initialize() {
 	grid->SetModel("Grid.obj");
 	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
 	grid->Update();
-
-	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
-
-	//ゴールモデル
-	goalModel_ = new Object3d();
-	goalModel_->Initialize(); //{ 0,0,0 }, camera, directxBase
-	goalModel_->SetModel("goal.obj");
 
 
 	// ライト関係の初期化
@@ -162,9 +155,6 @@ void DebugMode::Initialize() {
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
 
-	goal = new Goal();
-	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
-
 	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
@@ -186,6 +176,9 @@ void DebugMode::Update() {
 	ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.0f, 0.0f, 0.7f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.0f, 0.0f, 0.7f, 0.5f));
 	ImGui::SetNextWindowSize(ImVec2(300, 400));
+
+	//ImGui::ShowDemoWindow();
+
 	ImGui::Begin("colorConfig");
 
 	if (ImGui::TreeNode("ColorCode")) {
@@ -309,6 +302,7 @@ void DebugMode::Update() {
 	ImGui::DragFloat("Fov", &fov, 0.01f);
 	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
 	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
+	ImGui::Checkbox("Collision", &isCollision);
 
 	ImGui::End();
 
@@ -433,7 +427,11 @@ void DebugMode::Update() {
 
 	if (object3d->CheckCollision(grid))
 	{
-		camera->Update();
+		isCollision = true;
+	}
+	else
+	{
+		isCollision = false;
 	}
 
 	camera->SetRotate(cameraTransform.rotate);
@@ -463,6 +461,7 @@ void DebugMode::Update() {
 	}
 
 	grid->Update();
+}
 
 void DebugMode::Draw() {
 	// ImGuiの内部コマンドを生成する
