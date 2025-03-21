@@ -67,7 +67,8 @@ void DebugMode::Initialize() {
 
 	// モデルのロード
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -175,6 +176,9 @@ void DebugMode::Update() {
 	ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.0f, 0.0f, 0.7f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.0f, 0.0f, 0.7f, 0.5f));
 	ImGui::SetNextWindowSize(ImVec2(300, 400));
+
+	//ImGui::ShowDemoWindow();
+
 	ImGui::Begin("colorConfig");
 
 	if (ImGui::TreeNode("ColorCode")) {
@@ -298,6 +302,7 @@ void DebugMode::Update() {
 	ImGui::DragFloat("Fov", &fov, 0.01f);
 	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
 	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
+	ImGui::Checkbox("Collision", &isCollision);
 
 	ImGui::End();
 
@@ -422,7 +427,11 @@ void DebugMode::Update() {
 
 	if (object3d->CheckCollision(grid))
 	{
-		camera->Update();
+		isCollision = true;
+	}
+	else
+	{
+		isCollision = false;
 	}
 
 	camera->SetRotate(cameraTransform.rotate);

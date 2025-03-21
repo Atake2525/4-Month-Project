@@ -128,10 +128,7 @@ public:
 	// Getter(AABB)
 	const AABB& GetAABB() const { return aabb; }
 	// Getter(worldMatrix)
-	const Matrix4x4& GetWorldMatrix() const {
-		Matrix4x4 world = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-		return world;
-	}
+	const Matrix4x4& GetWorldMatrix() const { return worldMatrix; }
 
 	// Setter(Transform)
 	void SetTransform(const Transform& transform) { this->transform = transform; }

@@ -108,8 +108,10 @@ void Object3d::Update() {
 	transformationMatrix->WVP = worldViewProjectionMatrix;
 	transformationMatrix->World = worldMatrix;
 
-	aabb.min = first.min + transform.translate;
-	aabb.max = first.max + transform.translate;
+	Vector3 worldPos = { worldMatrix.m[3][0], worldMatrix.m[3][1], worldMatrix.m[3][2] };
+
+	aabb.min = first.min + worldPos;
+	aabb.max = first.max + worldPos;
 }
 
 void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {
