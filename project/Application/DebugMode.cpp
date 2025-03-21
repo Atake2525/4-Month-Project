@@ -88,6 +88,8 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
+	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
+	grid->Update();
 
 	lightBlock = new LightBlock();
 	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
@@ -166,6 +168,7 @@ void DebugMode::Initialize() {
 	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
+
 }
 
 void DebugMode::Update() {
@@ -450,9 +453,16 @@ void DebugMode::Update() {
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
 
-	grid->Update();
 
-}
+	grid->SetTransform(transform);
+
+	grid->SetParent(camera->GetWorldMatrix());
+	if (input->PushKey(DIK_R))
+	{
+		grid->DeleteParent();
+	}
+
+	grid->Update();
 
 void DebugMode::Draw() {
 	// ImGuiの内部コマンドを生成する

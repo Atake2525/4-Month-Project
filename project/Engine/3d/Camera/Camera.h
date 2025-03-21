@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "Matrix4x4.h"
+#include "kMath.h"
 
 struct CameraForGPU {
 	Vector3 worldPosition;
@@ -16,7 +17,9 @@ public:
 	void Update();
 
 	// Getter
-	const Matrix4x4& GetWorldMatrix() const { return worldMatrix; }
+	const Matrix4x4& GetWorldMatrix() const { 
+		Matrix4x4 world = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+		return world; }
 	// Getter
 	const Matrix4x4& GetViewMatrix() const { return viewMatrix; }
 	// Getter
@@ -40,11 +43,23 @@ public:
 	void SetFarClipDistance(const float& farClip) { farClipDistance = farClip; }
 	// Setter(fovY)
 	void SetFovY(const float& fov) { fovY = fov; }
+	// Setter(Parent)
+	void SetParent(const Matrix4x4& worldMatrix) { 
+		parent = worldMatrix; 
+		isParent = true;
+	}
+	// Delete Parent(Parent 解除)
+	void DeleteParent() {
+		isParent = false;
+	}
 
 private:
 	Transform transform;
 	Matrix4x4 worldMatrix;
 	Matrix4x4 viewMatrix;
+
+	Matrix4x4 parent;
+	bool isParent = false;
 
 	Matrix4x4 projectionMatrix;
 	float fovY;

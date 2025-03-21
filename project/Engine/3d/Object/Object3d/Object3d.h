@@ -7,8 +7,6 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Transform.h"
-#include "Sphere.h"
-#include "AABB.h"
 
 #pragma once
 
@@ -39,9 +37,22 @@ public: // メンバ関数
 
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
+	void SetParent(const Matrix4x4& worldMatrix) { 
+		parent = worldMatrix; 
+		isParent = true;
+	}
+
+	void DeleteParent() {
+		isParent = false;
+	}
+
 private:
 
 	Transform transform;
+
+	Matrix4x4 parent;
+	bool isParent = false;
+	//Transform* parent = nullptr;
 
 	Camera* camera = nullptr;
 
@@ -82,12 +93,6 @@ private:
 
 	Model* model_ = nullptr;
 
-	// Getterに返すようのAABB(座標を更新する)
-	AABB aabb;
-
-	// 初期位置のAABB
-	AABB first;
-
 public:
 
 	// Getter(Transform)
@@ -108,8 +113,6 @@ public:
 	//const Vector3& GetSpecularColor() const;
 	// Getter(shininess)
 	const float& GetShininess() const;
-	// Getter(AABB)
-	const AABB& GetAABB() const { return aabb; }
 
 	// Setter(Transform)
 	void SetTransform(const Transform& transform) { this->transform = transform; }
