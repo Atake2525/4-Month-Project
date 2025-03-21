@@ -93,6 +93,14 @@ private:
 
 	Model* model_ = nullptr;
 
+	// 衝突判定に必要
+
+	// Getterに返すようのAABB(座標を更新する)
+	AABB aabb;
+
+	// 初期位置のAABB
+	AABB first;
+
 public:
 
 	// Getter(Transform)
