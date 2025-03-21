@@ -69,7 +69,7 @@ void DebugMode::Initialize() {
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Player.obj");
 	// サウンドのロード soundData1にDataが返される
 	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 	soundData2 = Audio::GetInstance()->SoundLoadWave("Resources/fanfare.wav");
@@ -92,6 +92,9 @@ void DebugMode::Initialize() {
 	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
 	grid->Update();
 
+	playerObj = new Object3d();
+	playerObj->Initialize();
+	playerObj->SetModel("Player.obj");
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -158,6 +161,10 @@ void DebugMode::Initialize() {
 	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
+
+	//Player
+	player = new Player();
+	player->Initialize(playerObj, camera, input);
 
 }
 

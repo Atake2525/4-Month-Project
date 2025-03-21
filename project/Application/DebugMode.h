@@ -166,4 +166,5 @@ private:
 
 	Player* player = nullptr;
 
+	Object3d* playerObj = nullptr;
 };
