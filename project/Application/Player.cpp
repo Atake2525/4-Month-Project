@@ -66,29 +66,31 @@ Camera* Player::GetCamera()
 void Player::Move()
 {
 	const float speed = 0.5f;
-	Vector3 velocity(0.0f, 0.0f, speed);
+	Vector3 velocity(0.0f, 0.0f,0.0f);
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
 	if (input_->PushKey(DIK_W)) {
-		modelTransform_.translate += velocity;
-		cameraTransform_.translate = modelTransform_.translate + offSet;
+		velocity.z = speed;
+		moveFlag = true;
 	}
 	if (input_->PushKey(DIK_S)) {
-		modelTransform_.translate -= velocity;
-		cameraTransform_.translate = modelTransform_.translate + offSet;
+		velocity.z = -speed;
+		moveFlag = true;
 	}
-
-	velocity = { speed, 0.0f, 0.0f };
 
 	if (input_->PushKey(DIK_A)) {
-		modelTransform_.translate -= velocity;
-		cameraTransform_.translate = modelTransform_.translate + offSet;
+		velocity.x = -speed;
+		moveFlag = true;
 	}
 	if (input_->PushKey(DIK_D)) {
-		modelTransform_.translate += velocity;
-		cameraTransform_.translate = modelTransform_.translate + offSet;
+		velocity.x = speed;
+		moveFlag = true;
 	}
-
+	if (moveFlag == true) {
+		velocity = Normalize(velocity) * speed;
+	}
+	modelTransform_.translate += velocity;
+	cameraTransform_.translate = modelTransform_.translate + offSet;
 }
 
 void Player::Rotate()

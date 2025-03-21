@@ -68,5 +68,7 @@ private: // メンバ変数
 	float shininess_;
 
 	Transform cameraTransform_;
+
+	bool moveFlag = false;
 };
 
