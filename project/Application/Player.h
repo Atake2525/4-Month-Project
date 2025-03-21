@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "Input.h"
 #include "TextureManager.h"
 #include "Object3dBase.h"
@@ -7,6 +6,7 @@
 #include "ModelBase.h"
 #include "Model.h"
 #include "ModelManager.h"
+#include "Transform.h"
 #include "Camera.h"
 #include "WinApp.h"
 #include "kMath.h"
@@ -16,6 +16,7 @@
 #include "externels/imgui/imgui_impl_win32.h"
 
 class Player {
+public: // メンバ関数
 
 	/// <summary>
 	/// 初期化
@@ -44,4 +45,28 @@ class Player {
 
 	Camera* GetCamera();
 
+private:
+
+	void Move();
+
+	void Rotate();
+
+private: // メンバ変数
+
+	Transform modelTransform_;
+
+	Object3d* object3d_ = nullptr;
+
+	Camera* camera_ = nullptr;
+
+	Vector4 modelColor_;
+
+	Input* input_ = nullptr;
+
+	bool modelEnableLighting_;
+
+	float shininess_;
+
+	Transform cameraTransform_;
 };
+

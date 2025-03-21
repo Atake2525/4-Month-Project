@@ -1,3 +1,4 @@
+#pragma once
 #include <Windows.h>
 #include <cstdint>
 #include <string>
@@ -37,6 +38,7 @@
 #include "Audio.h"
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
+#include "Player.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -161,5 +163,7 @@ private:
 	Vector3 mousePos3;
 
 	bool isCollision = false;
+
+	Player* player = nullptr;
 
 };
