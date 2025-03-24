@@ -146,6 +146,100 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 	return ans;
 };
 
+// 共役Quaternionを返す
+Quaternion Conjugate(const Quaternion& quaternion) {
+	Quaternion result;
+	result = quaternion;
+	result.x = quaternion.x * -1;
+	result.y = quaternion.y * -1;
+	result.z = quaternion.z * -1;
+	return result;
+}
+
+// Quaternionの積
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
+	Quaternion result;
+	result.w = lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z;
+	result.x = (lhs.y * rhs.z - lhs.z * rhs.y + rhs.w * lhs.x + lhs.w * rhs.x);
+	result.y = (lhs.z * rhs.x - lhs.x * rhs.z + rhs.w * lhs.y + lhs.w * rhs.y);
+	result.z = (lhs.x * rhs.y - lhs.y * rhs.x + rhs.w * lhs.z + lhs.w * rhs.z);
+	return result;
+}
+
+// 任意軸回転を表すQuaternionの生成
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
+	Quaternion result;
+	result.w = cos(angle / 2);
+	result.x = axis.x * sin(angle / 2);
+	result.y = axis.y * sin(angle / 2);
+	result.z = axis.z * sin(angle / 2);
+	return result;
+}
+
+// ベクトルをQuaternionで回転させた結果のベクトルを求める
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+	Vector3 result;
+	Quaternion r{ .x = vector.x, .y = vector.y, .z = vector.z, .w = 0 };
+	Quaternion r1 = Multiply(Multiply(quaternion, r), Conjugate(quaternion));
+	result.x = r1.x;
+	result.y = r1.y;
+	result.z = r1.z;
+	return result;
+}
+
+// Quaternionから回転行列を求める
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
+	Matrix4x4 result;
+	result.m[0][0] = (quaternion.w * quaternion.w) + (quaternion.x * quaternion.x) - (quaternion.y * quaternion.y) - (quaternion.z * quaternion.z);
+	result.m[0][1] = 2 * (quaternion.x * quaternion.y + quaternion.w * quaternion.z);
+	result.m[0][2] = 2 * (quaternion.x * quaternion.z - quaternion.w * quaternion.y);
+	result.m[0][3] = 0.0f;
+	result.m[1][0] = 2 * (quaternion.x * quaternion.y - quaternion.w * quaternion.z);
+	result.m[1][1] = (quaternion.w * quaternion.w) - (quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) - (quaternion.z * quaternion.z);
+	result.m[1][2] = 2 * (quaternion.y * quaternion.z + quaternion.w * quaternion.x);
+	result.m[1][3] = 0.0f;
+	result.m[2][0] = 2 * (quaternion.x * quaternion.z + quaternion.w * quaternion.y);
+	result.m[2][1] = 2 * (quaternion.y * quaternion.z - quaternion.w * quaternion.x);
+	result.m[2][2] = (quaternion.w * quaternion.w) - (quaternion.x * quaternion.x) - (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z);
+	result.m[2][3] = 0.0f;
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = 0.0f;
+	result.m[3][3] = 1.0f;
+
+	return result;
+}
+
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
+
+	// 資料p20を参考に中身を埋める。nはaxisのこと
+	float cos = std::cos(angle);
+	float sin = std::sin(angle);
+
+	Matrix4x4 rotateMatrix = {};
+	rotateMatrix.m[0][0] = axis.x * axis.x * (1 - cos) + cos;
+	rotateMatrix.m[0][1] = axis.x * axis.y * (1 - cos) + axis.z * sin;
+	rotateMatrix.m[0][2] = axis.x * axis.z * (1 - cos) - axis.y * sin;
+	rotateMatrix.m[0][3] = 0;
+
+	rotateMatrix.m[1][0] = axis.x * axis.y * (1 - cos) - axis.z * sin;
+	rotateMatrix.m[1][1] = axis.y * axis.y * (1 - cos) + cos;
+	rotateMatrix.m[1][2] = axis.y * axis.z * (1 - cos) + axis.x * sin;
+	rotateMatrix.m[1][3] = 0.0f;
+
+	rotateMatrix.m[2][0] = axis.x * axis.z * (1 - cos) + axis.y * sin;
+	rotateMatrix.m[2][1] = axis.y * axis.z * (1 - cos) - axis.z * sin;
+	rotateMatrix.m[2][2] = axis.z * axis.z * (1 - cos) + cos;
+	rotateMatrix.m[2][3] = 0.0f;
+
+	rotateMatrix.m[3][0] = 0.0f;
+	rotateMatrix.m[3][1] = 0.0f;
+	rotateMatrix.m[3][2] = 0.0f;
+	rotateMatrix.m[3][3] = 1.0f;
+
+	return rotateMatrix;
+}
+
 //2次元アフィン変換行列
 Matrix3x3 MakeAffineMatrix3x3(const Vector2& scale, const Vector2& rotate, const Vector2& translate) {
 	Matrix3x3 S = { 0 };
@@ -281,6 +375,29 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	Matrix4x4 ans = { 0 };
 
 	R = Multiply(MakeRotateXMatrix(rotate.x), Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
+
+
+	ans.m[0][0] = scale.x * R.m[0][0];
+	ans.m[0][1] = scale.x * R.m[0][1];
+	ans.m[0][2] = scale.x * R.m[0][2];
+	ans.m[1][0] = scale.y * R.m[1][0];
+	ans.m[1][1] = scale.y * R.m[1][1];
+	ans.m[1][2] = scale.y * R.m[1][2];
+	ans.m[2][0] = scale.z * R.m[2][0];
+	ans.m[2][1] = scale.z * R.m[2][1];
+	ans.m[2][2] = scale.z * R.m[2][2];
+	ans.m[3][3] = 1;
+	ans.m[3][0] = translate.x;
+	ans.m[3][1] = translate.y;
+	ans.m[3][2] = translate.z;
+
+	return ans;
+};
+
+//３次元アフィン変換行列
+Matrix4x4 MakeAffineMatrixInQuaternion(const Vector3& scale, const Matrix4x4& axisAngle, const Vector3& translate) {
+	Matrix4x4 R = axisAngle;
+	Matrix4x4 ans = { 0 };
 
 
 	ans.m[0][0] = scale.x * R.m[0][0];
