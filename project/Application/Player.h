@@ -51,6 +51,8 @@ private:
 
 	void Rotate();
 
+	void UpdateOnGround();
+
 private: // メンバ変数
 
 	Transform modelTransform_;
@@ -69,6 +71,17 @@ private: // メンバ変数
 
 	Transform cameraTransform_;
 
-	bool moveFlag = false;
+	bool onGround_ = true;
+
+	Vector3 velocity{ 0.0f, 0.0f, 0.0f };
+
+	// ジャンプ初速（上方向）
+	static inline const float kJumpAcceleration = 20.0f;
+
+	// 重力加速度（下方向）
+	static inline const float kGravityAccleration = 0.98f;
+
+	// 最大落下速度
+	static inline const float kLimitFallSpeed = 0.98f;
 };
 

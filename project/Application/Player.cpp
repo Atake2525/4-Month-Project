@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "Player.h"
 
 Player::Player()
@@ -36,9 +37,9 @@ void Player::Update()
 
 	Move();
 
+	//UpdateOnGround();
+
 	Rotate();
-
-
 
 	object3d_->SetTransform(modelTransform_);
 	object3d_->SetRotateInDegree(modelTransform_.rotate);
@@ -65,31 +66,40 @@ Camera* Player::GetCamera()
 
 void Player::Move()
 {
+	velocity.x = 0.0f;
+	velocity.z = 0.0f;
 	const float speed = 0.5f;
-	Vector3 velocity(0.0f, 0.0f,0.0f);
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
-
 	if (input_->PushKey(DIK_W)) {
 		velocity.z = speed;
-		moveFlag = true;
 	}
 	if (input_->PushKey(DIK_S)) {
 		velocity.z = -speed;
-		moveFlag = true;
 	}
-
 	if (input_->PushKey(DIK_A)) {
 		velocity.x = -speed;
-		moveFlag = true;
 	}
 	if (input_->PushKey(DIK_D)) {
 		velocity.x = speed;
-		moveFlag = true;
 	}
-	if (moveFlag == true) {
-		velocity = Normalize(velocity) * speed;
+	if (onGround_) {
+		if (input_->PushKey(DIK_SPACE)) {
+			velocity.y += kJumpAcceleration / 60.0f;
+			onGround_ = false;
+		}
+
 	}
+	else if(onGround_ == false)
+	{
+		velocity.y -= kGravityAccleration / 60.0f;
+		velocity.y = std::max(velocity.y, -kLimitFallSpeed);
+	}
+
 	modelTransform_.translate += velocity;
+	if (modelTransform_.translate.y <= 1.0f) {
+		modelTransform_.translate.y = 1.0f;
+		onGround_ = true;
+	}
 	cameraTransform_.translate = modelTransform_.translate + offSet;
 }
 
