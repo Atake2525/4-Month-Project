@@ -80,6 +80,15 @@ public:
 	/// <param name="">False = 非表示</param>
 	void ShowMouseCursor(bool flag);
 
+	// ジョイスティックの傾きを取得(Vector2)
+	Vector2& GetJoyStickPos2();
+
+	// ジョイスティックの傾きを取得(Vector3)
+	Vector3& GetJoyStickPos3();
+
+
+	const bool& TriggerButton(BYTE buttonNumber) const;
+
 private:
 	// キーボードデバイス
 	ComPtr<IDirectInputDevice8> keyboard;
@@ -100,4 +109,15 @@ private:
 	DIMOUSESTATE mouseStatePre;
 	// マウスカーソル表示
 	bool showCursor = false;
+
+	// コントローラーデバイス
+	ComPtr<IDirectInputDevice8> joystick;
+
+	// スティックの状態
+	DIJOYSTATE joystickState;
+
+	// 軸モードを絶対値モードとして設定
+
+
+
 };

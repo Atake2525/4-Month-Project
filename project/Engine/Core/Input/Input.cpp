@@ -33,6 +33,50 @@ void Input::Initialize(WinApp* winApp) {
 	// 排他制御レベルセット
 	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	assert(SUCCEEDED(result));
+
+	// DorectxInputのインスタンス生成 コントローラー(ゲームパッド)
+	ComPtr<IDirectInput8> directInputGamePad = nullptr;
+	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
+	assert(SUCCEEDED(result));
+	// キーボードデバイスの生成
+	result = directInputGamePad->CreateDevice(GUID_Joystick, &joystick, NULL);
+	assert(SUCCEEDED(result));
+	// 入力データ形式のセット
+	result = joystick->SetDataFormat(&c_dfDIJoystick);
+	assert(SUCCEEDED(result));
+
+	// 軸モード設定
+	DIPROPDWORD diprop;
+	ZeroMemory(&diprop, sizeof(diprop));
+	diprop.diph.dwSize = sizeof(diprop);
+	diprop.diph.dwHeaderSize = sizeof(diprop.diph);
+	diprop.diph.dwHow = DIPH_DEVICE;
+	diprop.diph.dwObj = 0;
+	diprop.dwData = DIPROPAXISMODE_ABS; // 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
+
+	// 軸モードを変更
+	result = joystick->SetProperty(DIPROP_AXISMODE, &diprop.diph);
+
+	// X軸の値の範囲設定
+	DIPROPRANGE diprg;
+	ZeroMemory(&diprg, sizeof(diprg));
+	diprg.diph.dwSize = sizeof(diprg);
+	diprg.diph.dwHeaderSize = sizeof(diprg.diph);
+	diprg.diph.dwHow = DIPH_BYOFFSET;
+	diprg.diph.dwObj = DIJOFS_X;
+	diprg.lMin = -1000;
+	diprg.lMax = 1000;
+
+	result = joystick->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	// Y軸の値の範囲設定
+	diprg.diph.dwObj = DIJOFS_Y;
+	
+	result = joystick->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	// 排他制御レベルセット
+	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+	assert(SUCCEEDED(result));
 }
 
 void Input::ShowMouseCursor(bool flag) {
@@ -63,6 +107,14 @@ void Input::Update() {
 		// 全ボタンの入力情報を取得する
 		result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
 	}
+
+	// コントローラーの状態取得開始
+	result = joystick->Acquire();
+	// ポーリング開始
+	result = joystick->Poll();
+	// 入力情報を取得
+	result = joystick->GetDeviceState(sizeof(DIJOYSTATE), &joystickState);
+
 
 }
 
@@ -119,4 +171,21 @@ Vector2& Input::GetMousePos2() {
 Vector3& Input::GetMousePos3() {
 	Vector3 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY), static_cast<float>(mouseState.lZ) };
 	return result;
+}
+
+Vector2& Input::GetJoyStickPos2() {
+	Vector2 result = { static_cast<float>(joystickState.lX), static_cast<float>(joystickState.lY) };
+	return result;
+}
+
+Vector3& Input::GetJoyStickPos3() {
+	Vector3 result = { static_cast<float>(joystickState.lX), static_cast<float>(joystickState.lY), static_cast<float>(joystickState.lZ) };
+	return result;
+}
+
+const bool& Input::TriggerButton(BYTE ButtonNumber) const {
+	if (dijoA)
+	{
+
+	}
 }
