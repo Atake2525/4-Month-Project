@@ -444,6 +444,9 @@ void DebugMode::Update() {
 		showCursor = !showCursor;
 		input->ShowMouseCursor(showCursor);
 	}
+	if (input->TriggerKey(DIK_G)) {
+		input->UpdateDevice();
+	}
 
 	if (!showCursor)
 	{

@@ -5,12 +5,33 @@
 void Input::Initialize(WinApp* winApp) {
 	winApp_ = winApp;
 	HRESULT result;
-	// DirectInputの初期化
+
 	// DirectInputのインスタンス生成 キーボード
-	ComPtr<IDirectInput8> directInput = nullptr;
 	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
-	// キーボードデバイスの生成
+
+	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputMouse, nullptr);
+	assert(SUCCEEDED(result));
+
+	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
+	assert(SUCCEEDED(result));
+
+	CreateKeyboardDevice();
+	CreateMouseDevice();
+	CreateControllerDevice();
+
+}
+
+void Input::UpdateDevice() {
+	CreateKeyboardDevice();
+	CreateMouseDevice();
+	CreateControllerDevice();
+}
+
+void Input::CreateKeyboardDevice() {
+	HRESULT result;
+	// DirectInputの初期化
+	// マウスデバイスの生成
 	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	assert(SUCCEEDED(result));
 	// 入力データ形式のセット
@@ -19,11 +40,11 @@ void Input::Initialize(WinApp* winApp) {
 	// 排他制御レベルセット
 	result = keyboard->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
+}
 
-	// DorectxInputのインスタンス生成 マウス
-	ComPtr<IDirectInput8> directInputMouse = nullptr;
-	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputMouse, nullptr);
-	assert(SUCCEEDED(result));
+void Input::CreateMouseDevice() {
+	HRESULT result;
+
 	// キーボードデバイスの生成
 	result = directInputMouse->CreateDevice(GUID_SysMouse, &mouse, NULL);
 	assert(SUCCEEDED(result));
@@ -33,70 +54,75 @@ void Input::Initialize(WinApp* winApp) {
 	// 排他制御レベルセット
 	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	assert(SUCCEEDED(result));
-
-
-	
-	// DorectxInputのインスタンス生成 コントローラー(ゲームパッド)
-	//ComPtr<IDirectInput8> directInputGamePad = nullptr;
-	//
-
-	//result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
-	//assert(SUCCEEDED(result));
-	//// ゲームパッドデバイスの生成
-	//result = directInputGamePad->CreateDevice(GUID_Joystick, &gamePad, NULL);
-	//assert(SUCCEEDED(result));
-	//// 入力データ形式のセット
-	//result = gamePad->SetDataFormat(&c_dfDIJoystick);
-	//assert(SUCCEEDED(result));
-
-	//// 軸モード設定
-	//DIPROPDWORD diprop;
-	//ZeroMemory(&diprop, sizeof(diprop));
-	//diprop.diph.dwSize = sizeof(diprop);
-	//diprop.diph.dwHeaderSize = sizeof(diprop.diph);
-	//diprop.diph.dwHow = DIPH_DEVICE;
-	//diprop.diph.dwObj = 0;
-	//diprop.dwData = DIPROPAXISMODE_ABS; // 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
-
-	//// 軸モードを変更
-	//result = gamePad->SetProperty(DIPROP_AXISMODE, &diprop.diph);
-
-	//// X軸の値の範囲設定
-	//DIPROPRANGE diprg;
-	//ZeroMemory(&diprg, sizeof(diprg));
-	//diprg.diph.dwSize = sizeof(diprg);
-	//diprg.diph.dwHeaderSize = sizeof(diprg.diph);
-	//diprg.diph.dwHow = DIPH_BYOFFSET;
-	//diprg.diph.dwObj = DIJOFS_X;
-	//diprg.lMin = -1000;
-	//diprg.lMax = 1000;
-
-	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
-
-	//// Y軸の値の範囲設定
-	//diprg.diph.dwObj = DIJOFS_Y;
-	//
-	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
-
-	//// Y軸の値の範囲設定
-	//diprg.diph.dwObj = DIJOFS_Z;
-
-	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
-
-	//// RX軸の値の範囲設定
-	//diprg.diph.dwObj = DIJOFS_RX;
-
-	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
-
-	//// RY軸の値の範囲設定
-	//diprg.diph.dwObj = DIJOFS_RY;
-
-	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
-
 	// 排他制御レベルセット
 	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	assert(SUCCEEDED(result));
+}
 
+void Input::CreateControllerDevice() {
+	HRESULT result;
+
+
+	// ゲームパッドデバイスの生成
+	result = directInputGamePad->CreateDevice(GUID_Joystick, &gamePad, NULL);
+	if (FAILED(result))
+	{
+		isControllerConnected = false;
+	}
+	else
+	{
+		isControllerConnected = true;
+	}
+	if (isControllerConnected)
+	{
+		// 入力データ形式のセット
+		result = gamePad->SetDataFormat(&c_dfDIJoystick);
+		assert(SUCCEEDED(result));
+
+		// 軸モード設定
+		DIPROPDWORD diprop;
+		ZeroMemory(&diprop, sizeof(diprop));
+		diprop.diph.dwSize = sizeof(diprop);
+		diprop.diph.dwHeaderSize = sizeof(diprop.diph);
+		diprop.diph.dwHow = DIPH_DEVICE;
+		diprop.diph.dwObj = 0;
+		diprop.dwData = DIPROPAXISMODE_ABS; // 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
+
+		// 軸モードを変更
+		result = gamePad->SetProperty(DIPROP_AXISMODE, &diprop.diph);
+
+		// X軸の値の範囲設定
+		DIPROPRANGE diprg;
+		ZeroMemory(&diprg, sizeof(diprg));
+		diprg.diph.dwSize = sizeof(diprg);
+		diprg.diph.dwHeaderSize = sizeof(diprg.diph);
+		diprg.diph.dwHow = DIPH_BYOFFSET;
+		diprg.diph.dwObj = DIJOFS_X;
+		diprg.lMin = -1000;
+		diprg.lMax = 1000;
+
+		result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+		// Y軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_Y;
+
+		result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+		// Y軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_Z;
+
+		result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+		// RX軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_RX;
+
+		result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+		// RY軸の値の範囲設定
+		diprg.diph.dwObj = DIJOFS_RY;
+
+		result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+	}
 }
 
 void Input::ShowMouseCursor(bool flag) {
@@ -128,15 +154,17 @@ void Input::Update() {
 		result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
 	}
 
-	// 前回のコントローラーの入力を保存
-	gamePadStatePre = gamePadState;
-	// コントローラーの状態取得開始
-	//result = gamePad->Acquire();
-	//// ポーリング開始
-	//result = gamePad->Poll();
-	//// 入力情報を取得
-	//result = gamePad->GetDeviceState(sizeof(DIJOYSTATE), &gamePadState);
-
+	if (isControllerConnected)
+	{
+		// 前回のコントローラーの入力を保存
+		gamePadStatePre = gamePadState;
+		// コントローラーの状態取得開始
+		result = gamePad->Acquire();
+		// ポーリング開始
+		result = gamePad->Poll();
+		// 入力情報を取得
+		result = gamePad->GetDeviceState(sizeof(DIJOYSTATE), &gamePadState);
+	}
 
 }
 
