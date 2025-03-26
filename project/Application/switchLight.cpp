@@ -57,16 +57,20 @@ void switchLight::Update()
 			switchFlag = false;
 			if (light2BlockHp == 0) {
 				light2BlockHp = 2;
+				light2BlockFlag = false;
 			}
 			if (light3BlockHp == 0) {
 				light3BlockHp = 3;
+				light3BlockFlag = false;
 			}
 		}
 	}
 
 	// ImGuiウィンドウの中にチェックボックスを追加
-	ImGui::Begin("Debug Window");
+	ImGui::Begin("Resizable Window", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更
+	ImGui::Checkbox("Switch2 Flag", &light2BlockFlag); // フラグの状態を表示＆変更
+	ImGui::Checkbox("Switch3 Flag", &light3BlockFlag); // フラグの状態を表示＆変更
 	ImGui::End();
 }
 

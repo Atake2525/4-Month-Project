@@ -22,9 +22,9 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 
 	//ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
 	// ÅŒã‚Étrue‚ð“ü—Í‚·‚é‚ÆenableLighting‚ªtrue‚É‚È‚é(‚ ‚Æ‚©‚ç‚Å‚à•ÏX‰Â”\)“ü—Í‚Í‚µ‚È‚­‚Ä‚à“®‚­
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
 	/*switch*/
 	Light = new switchLight();
@@ -47,7 +47,9 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 void LightBlock::Update()
 {
 	Light->Update();
-	
+	BlockModel->Update();
+	Light2BlockModel->Update();
+	Light3BlockModel->Update();
 
 }
 
