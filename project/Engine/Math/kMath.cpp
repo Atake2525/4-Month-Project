@@ -228,7 +228,7 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 	rotateMatrix.m[1][3] = 0.0f;
 
 	rotateMatrix.m[2][0] = axis.x * axis.z * (1 - cos) + axis.y * sin;
-	rotateMatrix.m[2][1] = axis.y * axis.z * (1 - cos) - axis.z * sin;
+	rotateMatrix.m[2][1] = axis.y * axis.z * (1 - cos) - axis.x * sin;
 	rotateMatrix.m[2][2] = axis.z * axis.z * (1 - cos) + cos;
 	rotateMatrix.m[2][3] = 0.0f;
 
