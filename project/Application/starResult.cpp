@@ -22,9 +22,14 @@ void starResult::Initialize( DirectXBase* dxc) { //Vector3 position,
 
     for (const auto& pos : positions) {
         Star* newStar = new Star();
-        newStar->Initialize(pos, directX_);
+        Transform starTransform;
+        starTransform.translate = pos;
+        starTransform.rotate = Vector3(0.0f, 0.0f, 0.0f); // 回転の初期値
+        starTransform.scale = Vector3(1.0f, 1.0f, 1.0f); // スケールの初期値
+        newStar->Initialize(starTransform, directX_);
         stars_.push_back(newStar);
     }
+
 
    /* for (int i = 0; i < 3; i++) {
         Star* newStar = new Star();

@@ -6,7 +6,7 @@ class starResult {
 public:
 	~starResult();
 
-	void Initialize( DirectXBase* dxc);//Vector3 playerPos,
+	void Initialize( DirectXBase* dxc);
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 
