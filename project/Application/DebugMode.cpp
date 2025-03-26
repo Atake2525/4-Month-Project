@@ -323,22 +323,22 @@ void DebugMode::Update() {
 	Vector3 obMax = object3d->GetAABB().max;
 	Vector3 grMin = grid->GetAABB().min;
 	Vector3 grMax = grid->GetAABB().max;
-	LeftjoystickPos3 = input->GetLeftJoyStickPos3();
-	RightjoystickPos3 = input->GetRightJoyStickPos3();
+	//LeftjoystickPos3 = input->GetLeftJoyStickPos3();
+	//RightjoystickPos3 = input->GetRightJoyStickPos3();
 
 	bool Up = input->TriggerXButton(DPad::Up);
 	bool Down = input->TriggerXButton(DPad::Down);
 	bool UpRight = input->TriggerXButton(DPad::UpRight);
-	Button = input->ReturnButton(Button::A);
+	//Button = input->ReturnButton(Button::A);
 
 	ImGui::Begin("Controler");
 
-	ImGui::DragFloat3("LeftjoystickPos", &LeftjoystickPos3.x, 1.0f);
-	ImGui::DragFloat3("RightjoystickPos", &RightjoystickPos3.x, 1.0f);
+	//ImGui::DragFloat3("LeftjoystickPos", &LeftjoystickPos3.x, 1.0f);
+	//ImGui::DragFloat3("RightjoystickPos", &RightjoystickPos3.x, 1.0f);
 	ImGui::Checkbox("Up", &Up);
 	ImGui::Checkbox("Down", &Down);
 	ImGui::Checkbox("UpRight", &UpRight);
-	ImGui::Checkbox("Button", &Button);
+	//ImGui::Checkbox("Button", &Button);
 
 	ImGui::End();
 
@@ -527,13 +527,13 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
-	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	star->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	//lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	//goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	//star->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	// starResultManager とその中の星を描画
-	if (starResultManager) {
-		starResultManager->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	}
+	//if (starResultManager) {
+	//	starResultManager->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	//}
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
@@ -576,14 +576,14 @@ void DebugMode::Finalize() {
 
 	delete object3d;
 
-	delete lightBlock;
+	//delete lightBlock;
 
-	delete goal;
+	//delete goal;
 
-	delete star;
-	if (starResultManager) {
-		delete starResultManager;
-	}
+	//delete star;
+	//if (starResultManager) {
+	//	delete starResultManager;
+	//}
 
 	delete grid;
 
