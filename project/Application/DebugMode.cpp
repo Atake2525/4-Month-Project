@@ -428,7 +428,7 @@ void DebugMode::Update() {
 		cameraTransform.rotate += mousePos3;
 	}
 
-	cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
+	//cameraTransform.rotate.x = std::clamp(cameraTransform.rotate.x, SwapRadian(-90.0f), SwapRadian(90.0f));
 #endif // _DEBUG
 
 	// 更新処理

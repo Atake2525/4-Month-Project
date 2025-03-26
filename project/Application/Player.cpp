@@ -70,6 +70,7 @@ void Player::Move()
 	velocity.z = 0.0f;
 	const float speed = 0.5f;
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
+
 	if (input_->PushKey(DIK_W)) {
 		velocity.z = speed;
 	}
@@ -80,11 +81,20 @@ void Player::Move()
 		velocity.x = -speed;
 	}
 	if (input_->PushKey(DIK_D)) {
+
 		velocity.x = speed;
 	}
 
 	velocity = Normalize(velocity);
+
 	modelTransform_.translate += velocity * speed;
+
+	offSet = TransformNormal(offSet,
+		Multiply(Multiply(
+			MakeRotateXMatrix(modelTransform_.rotate.x),
+			MakeRotateYMatrix(modelTransform_.rotate.y)),
+			MakeRotateZMatrix(modelTransform_.rotate.z)
+		));
 
 	cameraTransform_.translate = modelTransform_.translate + offSet;
 
@@ -96,11 +106,11 @@ void Player::Rotate()
 	const float rotate = 0.05f;
 
 	if (input_->PushKey(DIK_RIGHTARROW)) {
-		cameraTransform_.rotate.y -= rotate;
+		modelTransform_.rotate.y += rotate;
 	}
 
 	if (input_->PushKey(DIK_LEFTARROW)) {
-		cameraTransform_.rotate.y += rotate;
+		modelTransform_.rotate.y -= rotate;
 	}
 
 }
