@@ -34,60 +34,64 @@ void Input::Initialize(WinApp* winApp) {
 	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	assert(SUCCEEDED(result));
 
-	// DorectxInputのインスタンス生成 コントローラー(ゲームパッド)
-	ComPtr<IDirectInput8> directInputGamePad = nullptr;
-	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
-	assert(SUCCEEDED(result));
-	// キーボードデバイスの生成
-	result = directInputGamePad->CreateDevice(GUID_Joystick, &gamePad, NULL);
-	assert(SUCCEEDED(result));
-	// 入力データ形式のセット
-	result = gamePad->SetDataFormat(&c_dfDIJoystick);
-	assert(SUCCEEDED(result));
 
-	// 軸モード設定
-	DIPROPDWORD diprop;
-	ZeroMemory(&diprop, sizeof(diprop));
-	diprop.diph.dwSize = sizeof(diprop);
-	diprop.diph.dwHeaderSize = sizeof(diprop.diph);
-	diprop.diph.dwHow = DIPH_DEVICE;
-	diprop.diph.dwObj = 0;
-	diprop.dwData = DIPROPAXISMODE_ABS; // 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
-
-	// 軸モードを変更
-	result = gamePad->SetProperty(DIPROP_AXISMODE, &diprop.diph);
-
-	// X軸の値の範囲設定
-	DIPROPRANGE diprg;
-	ZeroMemory(&diprg, sizeof(diprg));
-	diprg.diph.dwSize = sizeof(diprg);
-	diprg.diph.dwHeaderSize = sizeof(diprg.diph);
-	diprg.diph.dwHow = DIPH_BYOFFSET;
-	diprg.diph.dwObj = DIJOFS_X;
-	diprg.lMin = -1000;
-	diprg.lMax = 1000;
-
-	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
-
-	// Y軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_Y;
 	
-	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+	// DorectxInputのインスタンス生成 コントローラー(ゲームパッド)
+	//ComPtr<IDirectInput8> directInputGamePad = nullptr;
+	//
 
-	// Y軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_Z;
+	//result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
+	//assert(SUCCEEDED(result));
+	//// ゲームパッドデバイスの生成
+	//result = directInputGamePad->CreateDevice(GUID_Joystick, &gamePad, NULL);
+	//assert(SUCCEEDED(result));
+	//// 入力データ形式のセット
+	//result = gamePad->SetDataFormat(&c_dfDIJoystick);
+	//assert(SUCCEEDED(result));
 
-	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//// 軸モード設定
+	//DIPROPDWORD diprop;
+	//ZeroMemory(&diprop, sizeof(diprop));
+	//diprop.diph.dwSize = sizeof(diprop);
+	//diprop.diph.dwHeaderSize = sizeof(diprop.diph);
+	//diprop.diph.dwHow = DIPH_DEVICE;
+	//diprop.diph.dwObj = 0;
+	//diprop.dwData = DIPROPAXISMODE_ABS; // 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
 
-	// RX軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_RX;
+	//// 軸モードを変更
+	//result = gamePad->SetProperty(DIPROP_AXISMODE, &diprop.diph);
 
-	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//// X軸の値の範囲設定
+	//DIPROPRANGE diprg;
+	//ZeroMemory(&diprg, sizeof(diprg));
+	//diprg.diph.dwSize = sizeof(diprg);
+	//diprg.diph.dwHeaderSize = sizeof(diprg.diph);
+	//diprg.diph.dwHow = DIPH_BYOFFSET;
+	//diprg.diph.dwObj = DIJOFS_X;
+	//diprg.lMin = -1000;
+	//diprg.lMax = 1000;
 
-	// RY軸の値の範囲設定
-	diprg.diph.dwObj = DIJOFS_RY;
+	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
 
-	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+	//// Y軸の値の範囲設定
+	//diprg.diph.dwObj = DIJOFS_Y;
+	//
+	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	//// Y軸の値の範囲設定
+	//diprg.diph.dwObj = DIJOFS_Z;
+
+	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	//// RX軸の値の範囲設定
+	//diprg.diph.dwObj = DIJOFS_RX;
+
+	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	//// RY軸の値の範囲設定
+	//diprg.diph.dwObj = DIJOFS_RY;
+
+	//result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
 
 	// 排他制御レベルセット
 	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
