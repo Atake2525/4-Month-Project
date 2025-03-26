@@ -38,6 +38,7 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 
+
 #include "algorithm"
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -166,4 +167,3 @@ private:
 
 	bool isCollision = false;
 
-};
