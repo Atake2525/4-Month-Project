@@ -51,7 +51,7 @@ private:
 
 	void Rotate();
 
-	void UpdateOnGround();
+	void Jump();
 
 private: // メンバ変数
 
@@ -83,5 +83,7 @@ private: // メンバ変数
 
 	// 最大落下速度
 	static inline const float kLimitFallSpeed = 0.98f;
+
+	float JumpVelocity = 0.0f;
 };
 

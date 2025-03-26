@@ -338,11 +338,14 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 
 // 正規化
 Vector3 Normalize(const Vector3& v) {
-	Vector3 ans;
-	ans.x = v.x / sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
-	ans.y = v.y / sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
-	ans.z = v.z / sqrtf((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
-	return ans;
+	float length = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+	if (length == 0) {
+		// 長さがゼロの場合、ゼロベクトルを返す
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
+	else {
+		return Vector3(v.x / length, v.y / length, v.z / length);
+	}
 };
 
 

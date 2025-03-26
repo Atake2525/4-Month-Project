@@ -37,7 +37,7 @@ void Player::Update()
 
 	Move();
 
-	//UpdateOnGround();
+	Jump();
 
 	Rotate();
 
@@ -82,25 +82,13 @@ void Player::Move()
 	if (input_->PushKey(DIK_D)) {
 		velocity.x = speed;
 	}
-	if (onGround_) {
-		if (input_->PushKey(DIK_SPACE)) {
-			velocity.y += kJumpAcceleration / 60.0f;
-			onGround_ = false;
-		}
 
-	}
-	else if(onGround_ == false)
-	{
-		velocity.y -= kGravityAccleration / 60.0f;
-		velocity.y = std::max(velocity.y, -kLimitFallSpeed);
-	}
+	velocity = Normalize(velocity);
+	modelTransform_.translate += velocity * speed;
 
-	modelTransform_.translate += velocity;
-	if (modelTransform_.translate.y <= 1.0f) {
-		modelTransform_.translate.y = 1.0f;
-		onGround_ = true;
-	}
 	cameraTransform_.translate = modelTransform_.translate + offSet;
+
+
 }
 
 void Player::Rotate()
@@ -113,6 +101,31 @@ void Player::Rotate()
 
 	if (input_->PushKey(DIK_LEFTARROW)) {
 		cameraTransform_.rotate.y += rotate;
+	}
+
+}
+
+void Player::Jump()
+{
+
+	if (onGround_) {
+		if (input_->PushKey(DIK_SPACE)) {
+			JumpVelocity += kJumpAcceleration / 60.0f;
+			onGround_ = false;
+		}
+
+	}
+	else if (onGround_ == false)
+	{
+		JumpVelocity -= kGravityAccleration / 60.0f;
+		JumpVelocity = std::max(JumpVelocity, -kLimitFallSpeed);
+	}
+
+	modelTransform_.translate.y += JumpVelocity;
+
+	if (modelTransform_.translate.y <= 1.0f) {
+		modelTransform_.translate.y = 1.0f;
+		onGround_ = true;
 	}
 
 }
