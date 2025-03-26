@@ -162,4 +162,9 @@ private:
 
 	bool isCollision = false;
 
+	Vector3 LeftjoystickPos3;
+	Vector3 RightjoystickPos3;
+
+	bool Button;
+
 };
