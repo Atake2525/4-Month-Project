@@ -20,6 +20,8 @@ public:
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 	bool GetFlag() { return switchFlag; }
+	bool GetSwitchFlag2() { return light2BlockFlag; }
+	bool GetSwitchFlag3() { return light3BlockFlag; }
 
 private:
 	/*モデル*/

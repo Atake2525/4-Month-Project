@@ -85,7 +85,7 @@ void DebugMode::Initialize() {
 	object3d->Initialize();
 	// Modelを指定する
 	object3d->SetModel("stage.obj");
-
+	
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");

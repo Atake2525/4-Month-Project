@@ -40,14 +40,27 @@ void switchLight::Update()
 	if (!switchFlag) {
 		if (input_->TriggerKey(DIK_1)) {
 			switchFlag = true;
+			light2BlockHp = light2BlockHp - 1.0f;
+			light3BlockHp= light3BlockHp - 1.0f;
+			if (light2BlockHp == 0) {
+				light2BlockFlag = true;
+			}
 
+			if (light3BlockHp == 0) {
+				light3BlockFlag = true;
+			}
 		}
 	}
 	else {
 
 		if (input_->TriggerKey(DIK_1)) {
 			switchFlag = false;
-
+			if (light2BlockHp == 0) {
+				light2BlockHp = 2;
+			}
+			if (light3BlockHp == 0) {
+				light3BlockHp = 3;
+			}
 		}
 	}
 

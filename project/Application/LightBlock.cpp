@@ -3,7 +3,8 @@
 LightBlock::~LightBlock()
 {
 	delete BlockModel;
-	
+	delete Light2BlockModel;
+	delete Light3BlockModel;
 	delete Light;
 	
 
@@ -18,10 +19,6 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 
 	
 
-	ModelManager::GetInstance()->Initialize(dxcCommon);
-	Object3dBase::GetInstance()->Initialize(dxcCommon);
-	Object3dBase::GetInstance()->SetDefaultCamera(camera_);
-	ModelBase::GetInstance()->Initialize(dxcCommon);
 
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
@@ -35,7 +32,13 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 
 	/*model*/
 	BlockModel = new Object3d();
-	BlockModel->Initialize();
+	BlockModel->Initialize(); 
+
+	Light2BlockModel = new Object3d();
+	Light2BlockModel->Initialize();
+
+	Light3BlockModel = new Object3d();
+	Light3BlockModel->Initialize();
 
 	//位置を指定する
 	BlockModel->SetTranslate(blockPosition);
@@ -55,5 +58,13 @@ void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightReso
 	if (Light->GetFlag()) {
 		BlockModel->SetModel("box.obj");
 		BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	}
+	if (Light->GetSwitchFlag2()) {
+		Light2BlockModel->SetModel("box.obj");
+		Light2BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	}
+	if (Light->GetSwitchFlag3()) {
+		Light3BlockModel->SetModel("box.obj");
+		Light3BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	}
 }
