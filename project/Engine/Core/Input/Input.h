@@ -48,6 +48,9 @@ public:
 	void Initialize(WinApp* winApp);
 	void Update();
 
+	// デバイスの更新(デバイスの再認識に使う)
+	void UpdateDevice();
+
 public:
 	/// <summary>
 	/// キーの押下をチェック
@@ -149,6 +152,18 @@ public:
 	const bool& ReturnButton(Button button) const;
 
 private:
+
+	// DirectInputのインスタンス生成 キーボード
+	ComPtr<IDirectInput8> directInput = nullptr;
+	// DorectxInputのインスタンス生成 マウス
+	ComPtr<IDirectInput8> directInputMouse = nullptr;
+	// DorectxInputのインスタンス生成 コントローラー(ゲームパッド)
+	ComPtr<IDirectInput8> directInputGamePad = nullptr;
+
+	void CreateKeyboardDevice();
+	void CreateMouseDevice();
+	void CreateControllerDevice();
+
 	// キーボードデバイス
 	ComPtr<IDirectInputDevice8> keyboard;
 
@@ -171,6 +186,9 @@ private:
 
 	// コントローラーデバイス
 	ComPtr<IDirectInputDevice8> gamePad;
+
+	// コントローラーが接続されているか
+	bool isControllerConnected = false;
 
 	// スティックの無効範囲
 	double unresponsiveRange = 100;
