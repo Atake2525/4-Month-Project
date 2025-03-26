@@ -162,10 +162,10 @@ void DebugMode::Initialize() {
 
 
 	star = new Star();
-	star->Initialize({ 3.0f,3.0f,3.0f }, directxBase);
+	star->Initialize({ 0.0f,0.0f,0.0f }, directxBase);
 
 	starResultManager = new starResult();
-	starResultManager->Initialize({ 0.0f,0.0f,0.0f }, directxBase);
+	starResultManager->Initialize(directxBase); //{ 0.0f,0.0f,0.0f }, 
 
 
 	// Camera

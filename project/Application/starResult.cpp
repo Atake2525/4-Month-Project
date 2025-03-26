@@ -15,9 +15,9 @@ void starResult::Initialize( DirectXBase* dxc) { //Vector3 position,
 
     // 3つの星を配置
     Vector3 positions[] = {
-        {1.0f, 0.0f, 1.0f},
-        {3.0f, 0.0f, 4.0f},
-        {5.0f, 0.0f, 2.0f}
+        {1.0f, 1.0f, 1.0f},
+        {3.0f, 1.0f, 5.0f},
+        {5.0f, 1.0f, 8.0f}
     };
 
     for (const auto& pos : positions) {
