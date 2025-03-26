@@ -38,6 +38,7 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 
+
 #include "algorithm"
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -160,11 +161,4 @@ private:
 	Vector2 mousePos2;
 	Vector3 mousePos3;
 
-	bool isCollision = false;
 
-	Vector3 LeftjoystickPos3;
-	Vector3 RightjoystickPos3;
-
-	bool Button;
-
-};
