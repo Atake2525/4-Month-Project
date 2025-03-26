@@ -10,6 +10,34 @@
 
 #pragma once
 
+enum class DPad {
+	None,
+	Up,
+	UpRight,
+	UpLeft,
+	Down,
+	DownRight,
+	DownLeft,
+	Left,
+	Right,
+};
+
+enum class Button {
+	None,
+	A,
+	B,
+	X,
+	Y,
+	LB,
+	RB,
+	LT,
+	RT,
+	View,
+	Menu,
+	LeftStick,
+	RightStick,
+};
+
 class WinApp;
 
 class Input {
@@ -68,10 +96,10 @@ public:
 	const bool& ReturnMouse(int mouseNumber) const;
 
 	// マウスの移動量を取得(Vector2)
-	Vector2& GetMousePos2();
+	const Vector2& GetMouseVel2() const;
 
 	// マウスの移動量を取得(Vector3)
-	Vector3& GetMousePos3();
+	const Vector3& GetMouseVel3() const;
 
 	/// <summary>
 	/// マウスカーソルの表示変更
@@ -80,14 +108,45 @@ public:
 	/// <param name="">False = 非表示</param>
 	void ShowMouseCursor(bool flag);
 
-	// ジョイスティックの傾きを取得(Vector2)
-	Vector2& GetJoyStickPos2();
+	// ジョイスティック左の傾きを取得(Vector2)
+	const Vector2& GetLeftJoyStickPos2() const;
 
-	// ジョイスティックの傾きを取得(Vector3)
-	Vector3& GetJoyStickPos3();
+	// ジョイスティック左の傾きを取得(Vector3)
+	const Vector3& GetLeftJoyStickPos3() const;
 
+	// ジョイスティック右の傾きを取得(Vector2)
+	const Vector2& GetRightJoyStickPos2() const;
+
+	// ジョイスティック右の傾きを取得(Vector3)
+	const Vector3& GetRightJoyStickPos3() const;
 
 	const bool& TriggerButton(BYTE buttonNumber) const;
+
+
+	/// <summary>
+	/// 十字キー(コントローラー)の押下をチェック
+	/// </summary>
+	const bool& PushXButton(DPad dPad) const;
+
+	/// <summary>
+	/// 十字キー(コントローラー)のトリガーをチェック
+	/// </summary>
+	const bool& TriggerXButton(DPad dPad) const;
+
+	/// <summary>
+	/// ボタン(コントローラー)の押下をチェック
+	/// </summary>
+	const bool& PushButton(Button button) const;
+
+	/// <summary>
+	/// ボタン(コントローラー)のトリガーをチェック
+	/// </summary>
+	const bool& TriggerButton(Button button) const;
+
+	/// <summary>
+	/// ボタン(コントローラー)のリターンをチェック
+	/// </summary>
+	const bool& ReturnButton(Button button) const;
 
 private:
 	// キーボードデバイス
@@ -111,10 +170,15 @@ private:
 	bool showCursor = false;
 
 	// コントローラーデバイス
-	ComPtr<IDirectInputDevice8> joystick;
+	ComPtr<IDirectInputDevice8> gamePad;
 
-	// スティックの状態
-	DIJOYSTATE joystickState;
+	// スティックの無効範囲
+	double unresponsiveRange = 100;
+
+	// コントローラーの状態
+	DIJOYSTATE gamePadState;
+	// 前回のコントローラーの状態
+	DIJOYSTATE gamePadStatePre;
 
 	// 軸モードを絶対値モードとして設定
 

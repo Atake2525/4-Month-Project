@@ -39,10 +39,10 @@ void Input::Initialize(WinApp* winApp) {
 	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
 	assert(SUCCEEDED(result));
 	// キーボードデバイスの生成
-	result = directInputGamePad->CreateDevice(GUID_Joystick, &joystick, NULL);
+	result = directInputGamePad->CreateDevice(GUID_Joystick, &gamePad, NULL);
 	assert(SUCCEEDED(result));
 	// 入力データ形式のセット
-	result = joystick->SetDataFormat(&c_dfDIJoystick);
+	result = gamePad->SetDataFormat(&c_dfDIJoystick);
 	assert(SUCCEEDED(result));
 
 	// 軸モード設定
@@ -55,7 +55,7 @@ void Input::Initialize(WinApp* winApp) {
 	diprop.dwData = DIPROPAXISMODE_ABS; // 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
 
 	// 軸モードを変更
-	result = joystick->SetProperty(DIPROP_AXISMODE, &diprop.diph);
+	result = gamePad->SetProperty(DIPROP_AXISMODE, &diprop.diph);
 
 	// X軸の値の範囲設定
 	DIPROPRANGE diprg;
@@ -67,16 +67,32 @@ void Input::Initialize(WinApp* winApp) {
 	diprg.lMin = -1000;
 	diprg.lMax = 1000;
 
-	result = joystick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
 
 	// Y軸の値の範囲設定
 	diprg.diph.dwObj = DIJOFS_Y;
 	
-	result = joystick->SetProperty(DIPROP_RANGE, &diprg.diph);
+	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	// Y軸の値の範囲設定
+	diprg.diph.dwObj = DIJOFS_Z;
+
+	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	// RX軸の値の範囲設定
+	diprg.diph.dwObj = DIJOFS_RX;
+
+	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+
+	// RY軸の値の範囲設定
+	diprg.diph.dwObj = DIJOFS_RY;
+
+	result = gamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
 
 	// 排他制御レベルセット
 	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	assert(SUCCEEDED(result));
+
 }
 
 void Input::ShowMouseCursor(bool flag) {
@@ -108,12 +124,14 @@ void Input::Update() {
 		result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
 	}
 
+	// 前回のコントローラーの入力を保存
+	gamePadStatePre = gamePadState;
 	// コントローラーの状態取得開始
-	result = joystick->Acquire();
+	result = gamePad->Acquire();
 	// ポーリング開始
-	result = joystick->Poll();
+	result = gamePad->Poll();
 	// 入力情報を取得
-	result = joystick->GetDeviceState(sizeof(DIJOYSTATE), &joystickState);
+	result = gamePad->GetDeviceState(sizeof(DIJOYSTATE), &gamePadState);
 
 
 }
@@ -163,29 +181,714 @@ const bool& Input::ReturnMouse(int mouseNumber) const {
 	return false;
 }
 
-Vector2& Input::GetMousePos2() {
+const Vector2& Input::GetMouseVel2() const {
 	Vector2 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY) };
 	return result;
 }
 
-Vector3& Input::GetMousePos3() {
+const Vector3& Input::GetMouseVel3() const {
 	Vector3 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY), static_cast<float>(mouseState.lZ) };
 	return result;
 }
 
-Vector2& Input::GetJoyStickPos2() {
-	Vector2 result = { static_cast<float>(joystickState.lX), static_cast<float>(joystickState.lY) };
+const Vector2& Input::GetLeftJoyStickPos2() const {
+	Vector2 result = { 0.0f, 0.0f };
+	if (gamePadState.lX < -unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lX);
+	}
+	else if (gamePadState.lX > unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lX);
+	}
+
+	if (gamePadState.lY < -unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lY);
+	}
+	else if (gamePadState.lY > unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lY);
+	}
 	return result;
 }
 
-Vector3& Input::GetJoyStickPos3() {
-	Vector3 result = { static_cast<float>(joystickState.lX), static_cast<float>(joystickState.lY), static_cast<float>(joystickState.lZ) };
+const Vector3& Input::GetLeftJoyStickPos3() const {
+	Vector3 result = { 0.0f, 0.0f, 0.0f };
+	if (gamePadState.lX < -unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lX);
+	}
+	else if (gamePadState.lX > unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lX);
+	}
+
+	if (gamePadState.lY < -unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lY);
+	} 
+	else if (gamePadState.lY > unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lY);
+	}
+
+	if (gamePadState.lZ < -unresponsiveRange)
+	{
+		result.z = static_cast<float>(gamePadState.lZ);
+	}
+	else if (gamePadState.lZ > unresponsiveRange)
+	{
+		result.z = static_cast<float>(gamePadState.lZ);
+	}
+	return result;
+}
+
+const Vector2& Input::GetRightJoyStickPos2() const {
+	Vector2 result = { 0.0f, 0.0f };
+	if (gamePadState.lX < -unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lRx);
+	}
+	else if (gamePadState.lX > unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lRx);
+	}
+
+	if (gamePadState.lY < -unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lRy);
+	}
+	else if (gamePadState.lY > unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lRy);
+	}
+	return result;
+}
+
+const Vector3& Input::GetRightJoyStickPos3() const {
+	Vector3 result = { 0.0f, 0.0f, 0.0f };
+	if (gamePadState.lRx < -unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lRx);
+	}
+	else if (gamePadState.lRx > unresponsiveRange)
+	{
+		result.x = static_cast<float>(gamePadState.lRx);
+	}
+
+	if (gamePadState.lRy < -unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lRy);
+	}
+	else if (gamePadState.lRy > unresponsiveRange)
+	{
+		result.y = static_cast<float>(gamePadState.lRy);
+	}
+
+	if (gamePadState.lRz < -unresponsiveRange)
+	{
+		result.z = static_cast<float>(gamePadState.lRz);
+	}
+	else if (gamePadState.lRz > unresponsiveRange)
+	{
+		result.z = static_cast<float>(gamePadState.lRz);
+	}
 	return result;
 }
 
 const bool& Input::TriggerButton(BYTE ButtonNumber) const {
-	if (dijoA)
+	/*if (dijoA)
 	{
 
+	}*/
+	return false;
+}
+
+const bool& Input::PushXButton(DPad dPad) const {
+	DPad result = DPad::None;
+	switch (gamePadState.rgdwPOV[0])
+	{
+	case 0: // 上
+		result = DPad::Up;
+		break;
+
+	case 18000: // 下
+		result = DPad::Down;
+		break;
+
+	case 9000: // 右
+		result = DPad::Right;
+		break;
+
+	case 27000: // 左
+		result = DPad::Left;
+		break;
+
+	case 4500: // 右上
+		result = DPad::UpRight;
+		break;
+		
+	case 31500: // 左上
+		result = DPad::UpLeft;
+		break;
+
+	case 13500: // 右下
+		result = DPad::DownRight;
+		break;
+
+	case 22500: // 左下
+		result = DPad::DownLeft;
+		break;
+
 	}
+
+
+	if (dPad == result)
+	{
+		return true;
+	}
+	return false;
+}
+
+const bool& Input::TriggerXButton(DPad dPad) const {
+	DPad result = DPad::None;
+	switch (gamePadState.rgdwPOV[0])
+	{
+	case 0: // 上
+		result = DPad::Up;
+		break;
+
+	case 18000: // 下
+		result = DPad::Down;
+		break;
+
+	case 9000: // 右
+		result = DPad::Right;
+		break;
+
+	case 27000: // 左
+		result = DPad::Left;
+		break;
+
+	case 4500: // 右上
+		result = DPad::UpRight;
+		break;
+
+	case 31500: // 左上
+		result = DPad::UpLeft;
+		break;
+
+	case 13500: // 右下
+		result = DPad::DownRight;
+		break;
+
+	case 22500: // 左下
+		result = DPad::DownLeft;
+		break;
+
+	}
+
+	DPad resultPre = DPad::None;
+
+	switch (gamePadStatePre.rgdwPOV[0])
+	{
+	case 0: // 上
+		resultPre = DPad::Up;
+		break;
+
+	case 18000: // 下
+		resultPre = DPad::Down;
+		break;
+
+	case 9000: // 右
+		resultPre = DPad::Right;
+		break;
+
+	case 27000: // 左
+		resultPre = DPad::Left;
+		break;
+
+	case 4500: // 右上
+		resultPre = DPad::UpRight;
+		break;
+
+	case 31500: // 左上
+		resultPre = DPad::UpLeft;
+		break;
+
+	case 13500: // 右下
+		resultPre = DPad::DownRight;
+		break;
+
+	case 22500: // 左下
+		resultPre = DPad::DownLeft;
+		break;
+
+	}
+
+
+	if (dPad == result && dPad != resultPre)
+	{
+		return true;
+	}
+	return false;
+}
+
+const bool& Input::PushButton(Button button) const {
+	Button result = Button::None;
+	for (int i = 0; i < 10; i++)
+	{
+		if (!gamePadState.rgbButtons[i] && 0x80)
+		{
+			continue;
+		}
+
+		switch (i)
+		{
+		case 0:
+			result = Button::A;
+			if (button == result)
+			{
+				return true;
+				break;
+			}
+		case 1:
+			result = Button::B;
+			if (button == result)
+			{
+				return true;
+			}
+		case 2:
+			result = Button::X;
+			if (button == result)
+			{
+				return true;
+			}
+		case 3:
+			result = Button::Y;
+			if (button == result)
+			{
+				return true;
+			}
+		case 4:
+			result = Button::LB;
+			if (button == result)
+			{
+				return true;
+			}
+		case 5:
+			result = Button::RB;
+			if (button == result)
+			{
+				return true;
+			}
+		case 6:
+			result = Button::View;
+			if (button == result)
+			{
+				return true;
+			}
+		case 7:
+			result = Button::Menu;
+			if (button == result)
+			{
+				return true;
+			}
+		case 8:
+			result = Button::LeftStick;
+			if (button == result)
+			{
+				return true;
+			}
+		case 9:
+			result = Button::RightStick;
+			if (button == result)
+			{
+				return true;
+			}
+		}
+	}
+	Vector3 joystick = GetLeftJoyStickPos3();
+	if (joystick.z < 0)
+	{
+		result = Button::RT;
+		if (button == result)
+		{
+			return true;
+		}
+	}
+	else if (joystick.z > 0)
+	{
+		result = Button::LT;
+		if (button == result)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+const bool& Input::TriggerButton(Button button) const {
+	Button result = Button::None;
+	Button resultPre = Button::None;
+	for (int i = 0; i < 10; i++)
+	{
+		if (!gamePadState.rgbButtons[i] && 0x80)
+		{
+			continue;
+		}
+
+		switch (i)
+		{
+		case 0:
+			result = Button::A;
+			if (button == result)
+			{
+				break;
+			}
+		case 1:
+			result = Button::B;
+			if (button == result)
+			{
+				break;
+			}
+		case 2:
+			result = Button::X;
+			if (button == result)
+			{
+				break;
+			}
+		case 3:
+			result = Button::Y;
+			if (button == result)
+			{
+				break;
+			}
+		case 4:
+			result = Button::LB;
+			if (button == result)
+			{
+				break;
+			}
+		case 5:
+			result = Button::RB;
+			if (button == result)
+			{
+				break;
+			}
+		case 6:
+			result = Button::View;
+			if (button == result)
+			{
+				break;
+			}
+		case 7:
+			result = Button::Menu;
+			if (button == result)
+			{
+				break;
+			}
+		case 8:
+			result = Button::LeftStick;
+			if (button == result)
+			{
+				break;
+			}
+		case 9:
+			result = Button::RightStick;
+			if (button == result)
+			{
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (!gamePadStatePre.rgbButtons[i] && 0x80)
+		{
+			continue;
+		}
+
+		switch (i)
+		{
+		case 0:
+			resultPre = Button::A;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 1:
+			resultPre = Button::B;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 2:
+			resultPre = Button::X;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 3:
+			resultPre = Button::Y;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 4:
+			resultPre = Button::LB;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 5:
+			resultPre = Button::RB;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 6:
+			resultPre = Button::View;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 7:
+			resultPre = Button::Menu;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 8:
+			resultPre = Button::LeftStick;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 9:
+			resultPre = Button::RightStick;
+			if (button == resultPre)
+			{
+				break;
+			}
+		}
+	}
+
+	if (result == button && resultPre != button)
+	{
+		return true;
+	}
+
+	Vector3 joystick = GetLeftJoyStickPos3();
+	float joystickPre = 0.0f;
+	if (gamePadStatePre.lZ < -unresponsiveRange)
+	{
+		joystickPre = static_cast<float>(gamePadStatePre.lZ);
+	}
+	else if (gamePadStatePre.lZ > unresponsiveRange)
+	{
+		joystickPre = static_cast<float>(gamePadStatePre.lZ);
+	}
+
+	if (joystick.z < 0 && joystickPre >= 0)
+	{
+		result = Button::RT;
+		if (button == result)
+		{
+			return true;
+		}
+	}
+	else if (joystick.z > 0 && joystickPre <= 0)
+	{
+		result = Button::LT;
+		if (button == result)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+const bool& Input::ReturnButton(Button button) const {
+	Button result = Button::None;
+	Button resultPre = Button::None;
+	for (int i = 0; i < 10; i++)
+	{
+		if (!gamePadState.rgbButtons[i] && 0x80)
+		{
+			continue;
+		}
+
+		switch (i)
+		{
+		case 0:
+			result = Button::A;
+			if (button == result)
+			{
+				break;
+			}
+		case 1:
+			result = Button::B;
+			if (button == result)
+			{
+				break;
+			}
+		case 2:
+			result = Button::X;
+			if (button == result)
+			{
+				break;
+			}
+		case 3:
+			result = Button::Y;
+			if (button == result)
+			{
+				break;
+			}
+		case 4:
+			result = Button::LB;
+			if (button == result)
+			{
+				break;
+			}
+		case 5:
+			result = Button::RB;
+			if (button == result)
+			{
+				break;
+			}
+		case 6:
+			result = Button::View;
+			if (button == result)
+			{
+				break;
+			}
+		case 7:
+			result = Button::Menu;
+			if (button == result)
+			{
+				break;
+			}
+		case 8:
+			result = Button::LeftStick;
+			if (button == result)
+			{
+				break;
+			}
+		case 9:
+			result = Button::RightStick;
+			if (button == result)
+			{
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (!gamePadStatePre.rgbButtons[i] && 0x80)
+		{
+			continue;
+		}
+
+		switch (i)
+		{
+		case 0:
+			resultPre = Button::A;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 1:
+			resultPre = Button::B;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 2:
+			resultPre = Button::X;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 3:
+			resultPre = Button::Y;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 4:
+			resultPre = Button::LB;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 5:
+			resultPre = Button::RB;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 6:
+			resultPre = Button::View;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 7:
+			resultPre = Button::Menu;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 8:
+			resultPre = Button::LeftStick;
+			if (button == resultPre)
+			{
+				break;
+			}
+		case 9:
+			resultPre = Button::RightStick;
+			if (button == resultPre)
+			{
+				break;
+			}
+		}
+	}
+
+	if (result != button && resultPre == button)
+	{
+		return true;
+	}
+
+	Vector3 joystick = GetLeftJoyStickPos3();
+	float joystickPre = 0.0f;
+	if (gamePadStatePre.lZ < -unresponsiveRange)
+	{
+		joystickPre = static_cast<float>(gamePadStatePre.lZ);
+	}
+	else if (gamePadStatePre.lZ > unresponsiveRange)
+	{
+		joystickPre = static_cast<float>(gamePadStatePre.lZ);
+	}
+
+	if (joystick.z >= 0 && joystickPre < 0)
+	{
+		result = Button::RT;
+		if (button == result)
+		{
+			return true;
+		}
+	}
+	else if (joystick.z <= 0 && joystickPre > 0)
+	{
+		result = Button::LT;
+		if (button == result)
+		{
+			return true;
+		}
+	}
+	return false;
 }
