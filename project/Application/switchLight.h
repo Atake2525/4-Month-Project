@@ -16,7 +16,7 @@ class switchLight
 {
 public:
 	~switchLight();
-	void Initialize(Vector3, Camera*, DirectXBase*, Input*);
+	void Initialize(Vector3, DirectXBase*, Input*);
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 	bool GetFlag() { return switchFlag; }
@@ -35,4 +35,3 @@ private:
 	/*切り替えるために（仮）*/
 	Input* input_;
 };
-
