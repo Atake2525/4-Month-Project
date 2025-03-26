@@ -16,9 +16,6 @@ void LightBlock::Initialize(Vector3 position, DirectXBase* dxbase, Input* input)
 	blockPosition = position;
 
 
-	//モデル読み込み
-	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 

@@ -39,8 +39,7 @@
     <ClCompile Include="Application\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
     <ClCompile Include="Goal.cpp" />
-    <ClCompile Include="Application\starResult.cpp" />
-    <ClCompile Include="Application\Star.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
@@ -80,8 +79,7 @@
     <ClInclude Include="Application\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Goal.h" />
-    <ClInclude Include="Application\starResult.h" />
-    <ClInclude Include="Application\Star.h" />
+
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Object3d.hlsli" />
@@ -89,5 +87,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="externels\imgui\LICENSE.txt" />
+
   </ItemGroup>
 </Project>

@@ -37,10 +37,7 @@
 #include "Audio.h"
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
-#include "Goal.h"
-#include "LightBlock.h"
-#include "starResult.h"
-#include "Star.h"
+
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -110,7 +107,7 @@ private:
 	// Transform変数を作る
 	Transform transform{
 		{1.0f, 1.0f,   1.0f},
-		{0.0f, -1.58f, 0.0f},
+		{0.0f, 0.0f, 0.0f},
 		{0.0f, 0.0f,   0.0f}
 	};
 
@@ -164,11 +161,4 @@ private:
 	Vector2 mousePos2;
 	Vector3 mousePos3;
 
-	Goal* goal = nullptr;
 
-	LightBlock* lightBlock = nullptr;
-
-	Star* star = nullptr;
-	starResult* starResultManager = nullptr;
-
-};

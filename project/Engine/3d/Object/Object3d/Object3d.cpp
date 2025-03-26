@@ -84,14 +84,19 @@ void Object3d::Initialize() {
 
 	camera = Object3dBase::GetInstance()->GetDefaultCamera();
 
+
 }
 
 void Object3d::Update() {
 
-	//cameraTransform = camerad;
 	// 3DのTransform処理
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	//Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
+	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+
+	if (isParent)
+	{
+		worldMatrix = Multiply(worldMatrix, parent);
+	}
+
 	Matrix4x4 worldViewProjectionMatrix;
 	if (camera) {
 		const Matrix4x4& viewProjectionMatrix = camera->GetViewProjectionMatrix();
@@ -103,8 +108,10 @@ void Object3d::Update() {
 	transformationMatrix->WVP = worldViewProjectionMatrix;
 	transformationMatrix->World = worldMatrix;
 
-	aabb.min = first.min + transform.translate;
-	aabb.max = first.max + transform.translate;
+	Vector3 worldPos = { worldMatrix.m[3][0], worldMatrix.m[3][1], worldMatrix.m[3][2] };
+
+	aabb.min = first.min + worldPos;
+	aabb.max = first.max + worldPos;
 }
 
 void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {

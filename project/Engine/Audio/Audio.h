@@ -76,9 +76,9 @@ private:
 
 	// audio test
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* masterVoice;
+	IXAudio2MasteringVoice* masterVoice = nullptr;
 
 	std::vector<AudioList> audioList;
 
-	int frameTime;
+	int frameTime = 0;
 };

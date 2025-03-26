@@ -16,6 +16,39 @@ using namespace Microsoft::WRL;
 // ・LCONTROLでマウスカーソルを出す
 // ・ESCAPEでゲーム終了
 // 
+// -- Input --
+// 
+// Vector3の左ジョイスティックのZ座標はLT,RTの押し込み具合を出している(LTは+,RTは-)
+// 
+// 十字キー
+// enum class DPad {
+//None,
+//Up,
+//UpRight,
+//UpLeft,
+//Down,
+//DownRight,
+//DownLeft,
+//Left,
+//Right,
+//};
+//
+// ボタン
+//enum class Button {
+//	None,
+//	A,
+//	B,
+//	X,
+//	Y,
+//	LB,
+//	RB,
+//	LT,
+//	RT,
+//	View,
+//	Menu,
+//	LeftStick,
+//	RightStick,
+//};
 // 
 // -------------- //
 
@@ -90,9 +123,6 @@ void DebugMode::Initialize() {
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
 
-	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0,0,0 }, directxBase, input);
-
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -156,21 +186,10 @@ void DebugMode::Initialize() {
 	modelEnableLighting = object3d->GetEnableLighting();
 	shininess = object3d->GetShininess();
 
-	goal = new Goal();
-
-	goal->Initialize({ 8.0f,4.0f,11.0f }, directxBase);
-
-
-	star = new Star();
-	star->Initialize({ 0.0f,0.0f,0.0f }, directxBase);
-
-	starResultManager = new starResult();
-	starResultManager->Initialize(directxBase); //{ 0.0f,0.0f,0.0f }, 
-
-
 	// Camera
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
+
 }
 
 void DebugMode::Update() {
@@ -188,6 +207,9 @@ void DebugMode::Update() {
 	ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.0f, 0.0f, 0.7f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.0f, 0.0f, 0.7f, 0.5f));
 	ImGui::SetNextWindowSize(ImVec2(300, 400));
+
+	//ImGui::ShowDemoWindow();
+
 	ImGui::Begin("colorConfig");
 
 	if (ImGui::TreeNode("ColorCode")) {
@@ -299,18 +321,22 @@ void DebugMode::Update() {
 	Vector3 obMax = object3d->GetAABB().max;
 	Vector3 grMin = grid->GetAABB().min;
 	Vector3 grMax = grid->GetAABB().max;
+	LeftjoystickPos3 = input->GetLeftJoyStickPos3();
+	RightjoystickPos3 = input->GetRightJoyStickPos3();
 
-	ImGui::Begin("ModelAABB");
+	bool Up = input->TriggerXButton(DPad::Up);
+	bool Down = input->TriggerXButton(DPad::Down);
+	bool UpRight = input->TriggerXButton(DPad::UpRight);
+	Button = input->ReturnButton(Button::A);
 
-	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
-	ImGui::DragFloat3("objectMax", &obMax.y, 0.1f);
-	ImGui::DragFloat3("gridMin", &grMin.x, 0.1f);
-	ImGui::DragFloat3("gridMax", &grMax.y, 0.1f);
-	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
-	ImGui::DragFloat("FarClip", &farClip, 1.0f);
-	ImGui::DragFloat("Fov", &fov, 0.01f);
-	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
-	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
+	ImGui::Begin("Controler");
+
+	ImGui::DragFloat3("LeftjoystickPos", &LeftjoystickPos3.x, 1.0f);
+	ImGui::DragFloat3("RightjoystickPos", &RightjoystickPos3.x, 1.0f);
+	ImGui::Checkbox("Up", &Up);
+	ImGui::Checkbox("Down", &Down);
+	ImGui::Checkbox("UpRight", &UpRight);
+	ImGui::Checkbox("Button", &Button);
 
 	ImGui::End();
 
@@ -343,8 +369,8 @@ void DebugMode::Update() {
 	// FovY(視野角を変更するための関数)
 	camera->SetFovY(fov);
 
-	mousePos2 = input->GetMousePos2();
-	mousePos3 = input->GetMousePos3();
+	mousePos2 = input->GetMouseVel2();
+	mousePos3 = input->GetMouseVel3();
 
 #ifdef _DEBUG
 	const float speed = 0.7f;
@@ -435,7 +461,11 @@ void DebugMode::Update() {
 
 	if (object3d->CheckCollision(grid))
 	{
-		camera->Update();
+		isCollision = true;
+	}
+	else
+	{
+		isCollision = false;
 	}
 
 	camera->SetRotate(cameraTransform.rotate);
@@ -455,16 +485,17 @@ void DebugMode::Update() {
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
 
-	lightBlock->Update();
-	goal->Update();
 
-	star->Update();
-	if (starResultManager) {
-		starResultManager->Update();  // プレイヤー情報を渡すplayer
+
+	grid->SetTransform(transform);
+
+	grid->SetParent(camera->GetWorldMatrix());
+	if (input->PushKey(DIK_R))
+	{
+		grid->DeleteParent();
 	}
 
 	grid->Update();
-
 }
 
 void DebugMode::Draw() {

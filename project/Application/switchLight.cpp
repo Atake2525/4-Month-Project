@@ -15,6 +15,7 @@ void switchLight::Initialize(Vector3 position, DirectXBase* dxc, Input* input)
 	switchPosition = position;
 	input_ = input;
 
+
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
