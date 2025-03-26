@@ -131,11 +131,11 @@ void Input::Update() {
 	// 前回のコントローラーの入力を保存
 	gamePadStatePre = gamePadState;
 	// コントローラーの状態取得開始
-	result = gamePad->Acquire();
-	// ポーリング開始
-	result = gamePad->Poll();
-	// 入力情報を取得
-	result = gamePad->GetDeviceState(sizeof(DIJOYSTATE), &gamePadState);
+	//result = gamePad->Acquire();
+	//// ポーリング開始
+	//result = gamePad->Poll();
+	//// 入力情報を取得
+	//result = gamePad->GetDeviceState(sizeof(DIJOYSTATE), &gamePadState);
 
 
 }
