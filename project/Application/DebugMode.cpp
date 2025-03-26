@@ -264,6 +264,8 @@ void DebugMode::Update() {
 	if (ImGui::TreeNode("ModelSTR")) {
 		ImGui::DragFloat3("Scale", &modelTransform.scale.x, 0.01f);
 		ImGui::DragFloat3("Rotate", &modelTransform.rotate.x, 1.0f);
+		ImGui::DragFloat3("Axis", &axis.x, SwapRadian(1.0f));
+		ImGui::DragFloat("QuaternionRotate", &angle, 0.01f);
 		ImGui::DragFloat3("Translate", &modelTransform.translate.x, 0.01f);
 		ImGui::Checkbox("EnableLighting", &modelEnableLighting);
 		ImGui::TreePop();
@@ -442,6 +444,10 @@ void DebugMode::Update() {
 		showCursor = !showCursor;
 		input->ShowMouseCursor(showCursor);
 	}
+	if (input->TriggerKey(DIK_F))
+	{
+		object3d->SetAxisAngle(axis);
+  }
 	if (input->TriggerKey(DIK_G)) {
 		input->UpdateDevice();
 	}
@@ -484,6 +490,8 @@ void DebugMode::Update() {
 
 	object3d->SetTransform(modelTransform);
 	object3d->SetRotateInDegree(modelTransform.rotate);
+	object3d->SetQuaternionAngle(angle);
+	//object3d->SetRotateInQuaternion();
 	object3d->SetColor(modelColor);
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();

@@ -79,7 +79,7 @@
     <ClInclude Include="Application\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Goal.h" />
-
+    <ClInclude Include="Engine\Math\Quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Object3d.hlsli" />

@@ -161,4 +161,9 @@ private:
 	Vector2 mousePos2;
 	Vector3 mousePos3;
 
+	Vector3 axis = { 0.0f, 1.0f, 0.0f };
+
+	float angle = 0.0f;
+
+	bool isCollision = false;
 

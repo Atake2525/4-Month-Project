@@ -80,6 +80,10 @@ void Object3d::Initialize() {
 		{0.0f, 0.0f, 0.0f}
 	};
 
+	//angle = 0.0f;
+
+	SetAxisAngle({0.0f, 0.1f, 0.0f});
+
 	cameraData->worldPosition = {1.0f, 1.0f, 1.0f};
 
 	camera = Object3dBase::GetInstance()->GetDefaultCamera();
@@ -89,8 +93,12 @@ void Object3d::Initialize() {
 
 void Object3d::Update() {
 
+	//angle += SwapRadian(1.0f);
+	//SetQuaternionAngle();
+
 	// 3DのTransform処理
 	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	worldMatrix = Multiply(worldMatrix, rotateQuaternionMatrix);
 
 	if (isParent)
 	{
