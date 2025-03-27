@@ -120,53 +120,146 @@ private:
 	// テクスチャ切り出しサイズ
 	Vector2 textureSize = {100.0f, 100.0f};
 
+	// 移動量
+	Transform velocity = { 0.0f, 0.0f };
+	// 減衰量
+	Transform acceleration = { 0.0f, 0.0f };
+
 	// テクスチャ番号
 	uint32_t textureIndex = 0;
 
 public:
-	// Getter(Position)
+	/// <summary>
+	/// Getter(Position)
+	/// </summary>
+	/// <param name="Position">位置</param>
 	const Vector2& GetPosition() const { return position; }
-	// Getter(Rotation)
+	/// <summary>
+	/// Getter(Rotation)
+	/// </summary>
+	/// <param name="Rotation">回転</param>
 	const float& GetRotation() const { return rotation; }
-	// Getter(Scale)
+	/// <summary>
+	/// Getter(Scale)
+	/// </summary>
+	/// <param name="Scale">大きさ</param>
 	const Vector2& GetScale() const { return scale; }
-	// Getter(Color)
+	/// <summary>
+	/// Getter(Color)
+	/// </summary>
+	/// <param name="Color">色</param>
 	const Vector4& GetColor() const { return materialData->color; }
-	// Getter(AnchorPoint)
+	/// <summary>
+	/// Getter(AnchorPoint)
+	/// </summary>
+	/// <param name="AnchorPoint">回転の原点</param>
 	const Vector2& GetAnchorPoint() const { return anchorPoint; }
-	// Getter(FlipX)
+	/// <summary>
+	/// Getter(FlipX)
+	/// </summary>
+	/// <param name="FlipX">左右フリップX</param>
 	const bool& GetIsFlipX() const { return isFlipX; }
-	// Getter(FlipY)
+	/// <summary>
+	/// Getter(FlipY)
+	/// </summary>
+	/// <param name="FlipY">左右フリップY</param>
 	const bool& GetIsFlipY() const { return isFlipY; }
-	// Getter(TextureLeftTop)
+	/// <summary>
+	/// Getter(TextureLeftTop)
+	/// </summary>
+	/// <param name="TextureLeftTop">テクスチャ左上サイズ</param>
 	const Vector2& GetTextureLeftTop() const { return textureLeftTop; }
-	// Getter(TextureSize)
+	/// <summary>
+	/// Getter(TextureSize)
+	/// </summary>
+	/// <param name="TextureSize">テクスチャ切り出しサイズX</param>
 	const Vector2& GetTextureSize() const { return textureSize; }
+	/// <summary>
+	/// Getter(Velocity)
+	/// </summary>
+	/// <param name="Velocity">値の移動量</param>
+	const Transform& GetVelocity() const { return velocity; }
+	/// <summary>
+	/// Getter(Acceleration)
+	/// </summary>
+	/// <param name="Acceleration">Velocityの減衰量</param>
+	const Transform& GetAcceleration() const { return acceleration; }
 
-	// Setter(Position)
+	/// <summary>
+	/// Setter(Position)
+	/// </summary>
+	/// <param name="Position">位置</param>
 	void SetPosition(const Vector2& pos) { position = pos; }
-	// Setter(Rotation)
+	/// <summary>
+	/// Setter(Rotation)
+	/// </summary>
+	/// <param name="Rotation">回転</param>
 	void SetRotatioin(const float& rotate) { rotation = rotate; }
-	// Setter(Scale)
+	/// <summary>
+	/// Setter(Scale)
+	/// </summary>
+	/// <param name="Scale">大きさ</param>
 	void SetScale(const Vector2& size) { scale = size; }
-	// Setter(Color)
+	/// <summary>
+	/// Setter(Color)
+	/// </summary>
+	/// <param name="Color">色</param>
 	void SetColor(const Vector4& color) { materialData->color = color; }
-	// Setter(AnchorPoint)
+	/// <summary>
+	/// Setter(AnchorPoint)
+	/// </summary>
+	/// <param name="AnchorPoint">回転の原点</param>
 	void SetAnchorPoint(const Vector2& anchPoint) { anchorPoint = anchPoint; }
-	// Setter(FlipX)
+	/// <summary>
+	/// Setter(FlipX)
+	/// </summary>
+	/// <param name="FlipX">左右フリップX</param>
 	void SetIsFlipX(const bool& FlipX) { isFlipX = FlipX; }
-	// Setter(FlipY)
+	/// <summary>
+	/// Setter(FlipY)
+	/// </summary>
+	/// <param name="FlipY">左右フリップY</param>
 	void SetIsFlipY(const bool& FlipY) { isFlipY = FlipY; }
-	// Setter(FlipXY)
+	/// <summary>
+	/// Setter(FlipXY)
+	/// </summary>
+	/// <param name="FlipX : ">左右フリップX</param>
+	/// <param name="FlipY: ">左右フリップY</param>
 	void SetIsFlip(const bool& FlipX, const bool& FlipY);
-	// Setter(TextureLeftTop)
+	/// <summary>
+	/// Setter(TextureLeftTop)
+	/// </summary>
+	/// <param name="TextureLeftTop: ">テクスチャ左上サイズ</param>
 	void SetTextureLeftTop(const Vector2& LeftTop) { textureLeftTop = LeftTop; }
-	// Setter(TextureSize)
+	/// <summary>
+	/// Setter(TextureSize)
+	/// </summary>
+	/// <param name="TextureSize: ">テクスチャ切り出しサイズ</param>
 	void SetTextureSize(const Vector2& size) { textureSize = size; }
-	// Setter(Transform)
+	/// <summary>
+	/// Setter(Transform)
+	/// </summary>
+	/// <param name="Transform: ">大きさ、回転、位置の構造体</param>
 	void SetTransform(Transform& transform);
-	// Setter(Transform)
+	/// <summary>
+	/// Setter(Transform)
+	/// </summary>
+	/// <param name="Position: ">位置</param>
+	/// <param name="Rotation: ">回転</param>
+	/// <param name="Scale: ">大きさ</param>
 	void SetTransform(const Vector2& position, const float& rotation, const Vector2& scale);
+	/// <summary>
+	/// Setter(Velocity)
+	/// </summary>
+	/// <param name="Velocity: ">値の移動量</param>
+	/// /// <param name="Transform: ">大きさ、回転、位置の構造体</param>
+	void SetVelocityTransform(const Transform& transform) { velocity = transform; }
+	/// <summary>
+	/// Setter(Acceleration)
+	/// </summary>
+	/// <param name="Acceleration: ">Velocityの減衰量</param>
+	/// /// <param name="Transform: ">大きさ、回転、位置の構造体</param>
+	void SetAccelerationTransform(const Transform& transform) { velocity = transform; }
 	//void SetMaterial(Material* material);
 	// 
 	// 初期化時などの一度に変更したい場合に

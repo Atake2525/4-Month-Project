@@ -120,6 +120,8 @@ void Sprite::Update() {
 	transform.scale = {scale.x, scale.y, 0.1f};
 
 
+	//transform += velocity;
+
 
 	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
 	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
