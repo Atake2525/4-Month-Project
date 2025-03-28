@@ -107,10 +107,12 @@ void Player::Rotate()
 
 	if (input_->PushKey(DIK_RIGHTARROW)) {
 		modelTransform_.rotate.y += rotate;
+		cameraTransform_.rotate.y += rotate;
 	}
 
 	if (input_->PushKey(DIK_LEFTARROW)) {
 		modelTransform_.rotate.y -= rotate;
+		cameraTransform_.rotate.y -= rotate;
 	}
 
 }
