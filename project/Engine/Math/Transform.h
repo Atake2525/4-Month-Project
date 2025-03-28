@@ -40,3 +40,7 @@ struct SpotLight {
 };
 
 //class Transform {};
+
+Transform& operator+=(const Transform& t1, const Transform& t2);
+
+Transform& operator-=(const Transform& t1, const Transform& t2);

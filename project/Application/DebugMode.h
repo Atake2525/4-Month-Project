@@ -13,6 +13,7 @@
 #include <dxcapi.h>
 #include <fstream>
 #include <sstream>
+#include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include <cassert>
