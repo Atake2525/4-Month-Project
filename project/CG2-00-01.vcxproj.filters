@@ -41,6 +41,9 @@
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Application\Star.cpp" />
     <ClCompile Include="Application\starResult.cpp" />
+    <ClCompile Include="Engine\3dCollision\CollisionModel\CollisionModel.cpp" />
+    <ClCompile Include="Engine\3dCollision\CollisionObject\CollisionObject3d.cpp" />
+    <ClCompile Include="Engine\LoadManager\CollisionModelManager\CollisionModelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
@@ -83,6 +86,9 @@
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Application\Star.h" />
     <ClInclude Include="Application\starResult.h" />
+    <ClInclude Include="Engine\3dCollision\CollisionModel\CollisionModel.h" />
+    <ClInclude Include="Engine\3dCollision\CollisionObject\CollisionObject3d.h" />
+    <ClInclude Include="Engine\LoadManager\CollisionModelManager\CollisionModelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Object3d.hlsli" />

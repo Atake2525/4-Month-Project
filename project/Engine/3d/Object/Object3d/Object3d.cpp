@@ -123,7 +123,7 @@ void Object3d::Update() {
 }
 
 void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {
-	
+
 	if (model_) {
 		model_->SetIA();
 	}

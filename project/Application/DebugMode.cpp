@@ -104,8 +104,8 @@ void DebugMode::Initialize() {
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 
 	// サウンドのロード soundData1にDataが返される
-	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
-	soundData2 = Audio::GetInstance()->SoundLoadWave("Resources/fanfare.wav");
+	soundData1 = Audio::GetInstance()->SoundLoadWave("Resources/sound/Alarm01.wav");
+	soundData2 = Audio::GetInstance()->SoundLoadWave("Resources/sound/fanfare.wav");
 
 	// Spriteの初期化
 	sprite = new Sprite();
@@ -572,6 +572,7 @@ void DebugMode::Finalize() {
 	delete sprite;
 
 	Audio::GetInstance()->SoundUnload(&soundData1);
+	Audio::GetInstance()->SoundUnload(&soundData2);
 	Audio::GetInstance()->Finalize();
 
 	delete object3d;
