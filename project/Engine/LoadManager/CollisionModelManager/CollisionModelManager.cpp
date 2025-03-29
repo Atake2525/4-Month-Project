@@ -40,3 +40,23 @@ CollisionModel* CollisionModelManager::FindModel(const std::string& filePath) {
 	// ƒtƒ@ƒCƒ‹–¼ˆê’v–³‚µ
 	return nullptr;
 }
+
+void CollisionModelManager::Update(AABB& collisionTarget) {
+	target = collisionTarget;
+
+}
+
+void CollisionModelManager::CreateAABB() {
+	const std::vector<VertexData> vData = model_->GetVertices();
+
+	for (VertexData vertices : vData)
+	{
+		first.min.x = min(first.min.x, vertices.position.x);
+		first.min.y = min(first.min.y, vertices.position.y);
+		first.min.z = min(first.min.z, vertices.position.z);
+
+		first.max.x = max(first.max.x, vertices.position.x);
+		first.max.y = max(first.max.y, vertices.position.y);
+		first.max.z = max(first.max.z, vertices.position.z);
+	}
+}

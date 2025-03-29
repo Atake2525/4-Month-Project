@@ -1,6 +1,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include "AABB.h"
 
 #pragma once
 
@@ -36,8 +37,22 @@ public:
 
 	CollisionModel* FindModel(const std::string& filePath);
 
+	// 更新
+	void Update(AABB& collisionTraget);
+
 private:
 	// モデレータ
 	std::map<std::string, std::unique_ptr<CollisionModel>> models;
+
+	void CreateAABB();
+
+	AABB target;
+
+	void CheckCollisionLeft();
+	void CheckCollisionRight();
+	void CheckCollisionTop();
+	void CheckCollisionBottom();
+	void CheckCollisionBack();
+	void CheckCollisionFront();
 
 };
