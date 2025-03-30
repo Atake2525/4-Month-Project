@@ -95,9 +95,9 @@ private:
 	ComPtr<IDirectInputDevice8> mouse;
 
 	// 全マウスの状態
-	DIMOUSESTATE mouseState;
+	DIMOUSESTATE mouseState = {};
 	// 前回の全マウスの状態
-	DIMOUSESTATE mouseStatePre;
+	DIMOUSESTATE mouseStatePre = {};
 	// マウスカーソル表示
 	bool showCursor = false;
 };

@@ -29,6 +29,7 @@ void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
 	modelColor_ = object3d_->GetColor();
 	modelEnableLighting_ = object3d_->GetEnableLighting();
 	shininess_ = object3d_->GetShininess();
+	modelTransform_.translate.z = 0.0f;
 
 }
 
@@ -140,4 +141,14 @@ void Player::Jump()
 		onGround_ = true;
 	}
 
+}
+
+
+// 衝突判定の実装で追加したもの
+const Vector3& Player::GetPosition() const {
+	Vector3 result;
+	result.x = object3d_->GetWorldMatrix().m[3][0];
+	result.y = object3d_->GetWorldMatrix().m[3][1];
+	result.z = object3d_->GetWorldMatrix().m[3][2];
+	return result;
 }

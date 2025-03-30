@@ -11,6 +11,10 @@
 #include "WinApp.h"
 #include "kMath.h"
 
+
+// 衝突判定で追加
+#include "AABB.h"
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -44,6 +48,22 @@ public: // メンバ関数
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightData, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightData);
 
 	Camera* GetCamera();
+
+
+	// 衝突判定作成で追加した者たち
+	const bool& GetOnGround() const { return onGround_; }
+
+	void SetOnGround(const bool& onGround) { onGround_ = onGround; }
+
+	const Vector3& GetVelocity() const { return velocity; }
+
+	void SetVelocity(const Vector3& vel) { velocity = vel; }
+
+	const Vector3& GetPosition() const;
+
+	const AABB& GetAABB() const { return object3d_->GetAABB(); }
+
+	void AddTranslate(const Vector3& translate) { modelTransform_.translate += translate; }
 
 private:
 

@@ -95,6 +95,7 @@ void DebugMode::Initialize() {
 	playerObj = new Object3d();
 	playerObj->Initialize();
 	playerObj->SetModel("Player.obj");
+	playerObj->Update();
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -165,6 +166,10 @@ void DebugMode::Initialize() {
 	//Player
 	player = new Player();
 	player->Initialize(playerObj, camera, input);
+
+	collision = new PlayerCollision();
+	//collision->Initialize(player);
+	collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
 
 }
 
@@ -301,9 +306,9 @@ void DebugMode::Update() {
 	ImGui::Begin("ModelAABB");
 
 	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
-	ImGui::DragFloat3("objectMax", &obMax.y, 0.1f);
+	ImGui::DragFloat3("objectMax", &obMax.x, 0.1f);
 	ImGui::DragFloat3("gridMin", &grMin.x, 0.1f);
-	ImGui::DragFloat3("gridMax", &grMax.y, 0.1f);
+	ImGui::DragFloat3("gridMax", &grMax.x, 0.1f);
 	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
 	ImGui::DragFloat("FarClip", &farClip, 1.0f);
 	ImGui::DragFloat("Fov", &fov, 0.01f);
@@ -470,7 +475,9 @@ void DebugMode::Update() {
 	}
 
 	grid->Update();
+	player->AddTranslate(collision->UpdateCollision(player->GetAABB()));
 	player->Update();
+
 
 }
 

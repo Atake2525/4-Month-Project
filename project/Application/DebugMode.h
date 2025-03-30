@@ -39,6 +39,7 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 #include "Player.h"
+#include "PlayerCollision.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -165,6 +166,8 @@ private:
 	bool isCollision = false;
 
 	Player* player = nullptr;
+
+	PlayerCollision* collision = nullptr;
 
 	Object3d* playerObj = nullptr;
 };
