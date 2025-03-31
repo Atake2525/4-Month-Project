@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "AABB.h"
 #include "kMath.h"
+#include "Quaternion.h"
 
 #pragma once
 
@@ -39,11 +40,13 @@ public: // メンバ関数
 
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
+	// Parentを登録(子)
 	void SetParent(const Matrix4x4& worldMatrix) { 
 		parent = worldMatrix; 
 		isParent = true;
 	}
 
+	// Parentを破棄
 	void DeleteParent() {
 		isParent = false;
 	}
@@ -51,6 +54,12 @@ public: // メンバ関数
 private:
 
 	Transform transform;
+
+	Vector3 axisAngle;
+
+	//float angle = 0.0f;
+
+	Matrix4x4 rotateQuaternionMatrix;
 
 	Matrix4x4 parent;
 	bool isParent = false;
@@ -150,6 +159,11 @@ public:
 	//void SetSpecularColor(const Vector3& specularColor);
 	// Setter(shininess)
 	void SetShininess(const float& shininess);
+	// 任意軸回転の軸を指定の回転角に変更
+	void SetAxisAngle(const Vector3& rotate) { axisAngle = Normalize(rotate); }
+	// 任意軸回転の回転量を設定
+	void SetQuaternionAngle(const float& angle) { rotateQuaternionMatrix = MakeRotateAxisAngle(axisAngle, angle); }
+
 
 public:
 	// 衝突チェック(AABBとAABB)

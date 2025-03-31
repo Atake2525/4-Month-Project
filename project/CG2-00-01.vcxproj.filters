@@ -39,8 +39,8 @@
     <ClCompile Include="Application\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
     <ClCompile Include="Goal.cpp" />
-    <ClCompile Include="Application\Player.cpp" />
-    <ClCompile Include="Application\PlayerCollision.cpp" />
+    <ClCompile Include="Application\Star.cpp" />
+    <ClCompile Include="Application\starResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
@@ -80,14 +80,154 @@
     <ClInclude Include="Application\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Goal.h" />
-    <ClInclude Include="Application\Player.h" />
-    <ClInclude Include="Application\PlayerCollision.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="Engine\Math\Quaternion.h" />
+    <ClInclude Include="Application\Star.h" />
+    <ClInclude Include="Application\starResult.h" />
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <None Include="Resources\shaders\Object3d.hlsli" />
     <None Include="Resources\shaders\Particle.hlsli" />
+    <ClCompile Include="Application\FrameWork.cpp">
+      <Filter>ソース ファイル</Filter>
+    <Text Include="externels\imgui\LICENSE.txt" />
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="externels\imgui\LICENSE.txt" />
+    <ClInclude Include="externels\imgui\imconfig.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externels\imgui\imgui.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externels\imgui\imgui_impl_dx12.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externels\imgui\imgui_impl_win32.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externels\imgui\imgui_internal.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externels\imgui\imstb_rectpack.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externels\imgui\imstb_textedit.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externels\imgui\imstb_truetype.h">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\kMath.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Matrix3x3.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Matrix4x4.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Vector3.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Vector2.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Vector4.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Input\Input.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\WinApp\WinApp.h">
+      <Filter>Engine\WinApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\BaseEngine\DirectXBase.h">
+      <Filter>Engine\BaseEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\BlackBox\Log\Logger.h">
+      <Filter>Engine\BlackBox\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\BlackBox\Log\StringUtility.h">
+      <Filter>Engine\BlackBox\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\BlackBox\LeakChecker\D3DResourceLeakChecker.h">
+      <Filter>Engine\BlackBox\LeakChecker</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\LoadManager\TextureManager\TextureManager.h">
+      <Filter>Engine\Manager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Object\Object3d\Object3d.h">
+      <Filter>Engine\3d\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Object\Object3dBase\Object3dBase.h">
+      <Filter>Engine\3d\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Model\Model\Model.h">
+      <Filter>Engine\3d\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Model\ModelBase\ModelBase.h">
+      <Filter>Engine\3d\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Transform.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Camera\Camera.h">
+      <Filter>Engine\3d\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2d\Sprite\Sprite.h">
+      <Filter>Engine\2d\Sprite\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\LoadManager\ModelManager\ModelManager.h">
+      <Filter>Engine\Manager\ModelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\2d\SpriteBase\SpriteBase.h">
+      <Filter>Engine\2d\Sprite\SpriteBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Audio\Audio.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\DebugMode.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\FrameWork.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="externels\imgui\LICENSE.txt">
+      <Filter>Engine\BlackBox\imgui</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shaders\Particle.hlsli">
+      <Filter>Engine\shaders</Filter>
+    </None>
+    <None Include="Resources\shaders\Object3d.hlsli">
+      <Filter>Engine\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\shaders\Object3d.PS.hlsl">
+      <Filter>Engine\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Object3d.VS.hlsl">
+      <Filter>Engine\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Particle.PS.hlsl">
+      <Filter>Engine\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Particle.VS.hlsl">
+      <Filter>Engine\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
