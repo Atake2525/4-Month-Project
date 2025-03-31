@@ -40,6 +40,7 @@
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Application\Player.cpp" />
+    <ClCompile Include="Application\PlayerCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
@@ -80,6 +81,7 @@
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Application\Player.h" />
+    <ClInclude Include="Application\PlayerCollision.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Object3d.hlsli" />
