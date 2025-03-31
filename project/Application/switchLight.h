@@ -42,7 +42,7 @@ private:
 	//==========スイッチ範囲指定===============
 
 	Player* player_;
-	AABB* aabb_;
+	
 	float radius;
 
 };

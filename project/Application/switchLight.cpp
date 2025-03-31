@@ -1,5 +1,6 @@
 #include "switchLight.h"
 #include<iostream>
+#include"CollisionManager.h"
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -9,11 +10,11 @@ switchLight::~switchLight()
 {
 	delete switchModel;
 }
-void switchLight::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc, Input* input)
+void switchLight::Initialize(Transform transform, Camera* camera, DirectXBase* dxc, Input* input,Player*player)
 {
 	directX = dxc;
 	switchCamera = camera;
-	switchPosition = position;
+	switchTransform = transform;
 	input_ = input;
 
 	
@@ -31,26 +32,27 @@ void switchLight::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc,
 	switchModel->Initialize();
 
 	//位置を指定する
-	switchModel->SetTranslate(switchPosition);
+	switchModel->SetTranslate(switchTransform.translate);
 }
 
 void switchLight::Update()
 {
-	//falseの時におしたらtrueになる
-	if (!switchFlag) {
-		if (input_->TriggerKey(DIK_1)) {
-			switchFlag = true;
+	if (CollisionAABB(player_->GetAABB(), GetAAbb())) {
+		//falseの時におしたらtrueになる
+		if (!switchFlag) {
+			if (input_->TriggerKey(DIK_1)) {
+				switchFlag = true;
 
+			}
+		}
+		else {
+
+			if (input_->TriggerKey(DIK_1)) {
+				switchFlag = false;
+
+			}
 		}
 	}
-	else {
-
-		if (input_->TriggerKey(DIK_1)) {
-			switchFlag = false;
-
-		}
-	}
-
 	// ImGuiウィンドウの中にチェックボックスを追加
 	ImGui::Begin("Debug Window");
 	ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更
@@ -69,5 +71,18 @@ void switchLight::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightRes
 		//switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	}
+}
+
+AABB switchLight::GetAAbb()
+{
+	
+		Vector3 worldPos = switchTransform.translate;
+		AABB aabb;
+
+		aabb.min = { worldPos.x - radius, worldPos.y -radius, worldPos.z - radius };
+		aabb.max = { worldPos.x + radius, worldPos.y + radius, worldPos.z + radius };
+
+		return aabb;
+	
 }
 
