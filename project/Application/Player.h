@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "WinApp.h"
 #include "kMath.h"
-
+#include "PlayerCollision.h"
 
 // 衝突判定で追加
 #include "AABB.h"
@@ -63,7 +63,10 @@ public: // メンバ関数
 
 	const AABB& GetAABB() const { return object3d_->GetAABB(); }
 
-	void AddTranslate(const Vector3& translate) { modelTransform_.translate += translate; }
+	void AddTranslate(const Vector3& translate) { 
+		Vector3 result = translate;
+		modelTransform_.translate += result; 
+	}
 
 private:
 
@@ -105,5 +108,9 @@ private: // メンバ変数
 	static inline const float kLimitFallSpeed = 0.98f;
 
 	float JumpVelocity = 0.0f;
+
+
+	// 追加したクラス
+	PlayerCollision* collision = nullptr;
 };
 

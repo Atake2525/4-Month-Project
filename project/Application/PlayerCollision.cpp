@@ -2,9 +2,10 @@
 //#include "Player.h"
 
 
-PlayerCollision::~PlayerCollision() {
-	//delete player_;
-}
+//PlayerCollision::~PlayerCollision() {
+//	collisionListPlate.clear();
+//	//delete player_;
+//}
 
 //void PlayerCollision::Initialize(Player* player) {
 //	player_ = player;
@@ -33,7 +34,7 @@ const Vector3& PlayerCollision::UpdateCollision(const AABB& playerAABB) const {
 			else if (collisionPlate.normal.x == -1.0f)
 			{
 				float moveAmount = playerAABB.max.x - collisionPlate.aabb.max.x;
-				result.x = moveAmount;
+				result.x = -moveAmount;
 			}
 			else if (collisionPlate.normal.z == 1.0f)
 			{
@@ -43,7 +44,7 @@ const Vector3& PlayerCollision::UpdateCollision(const AABB& playerAABB) const {
 			else if (collisionPlate.normal.z == -1.0f)
 			{
 				float moveAmount = playerAABB.max.z - collisionPlate.aabb.max.z;
-				result.z = moveAmount;
+				result.z = -moveAmount;
 			}
 		}
 	}

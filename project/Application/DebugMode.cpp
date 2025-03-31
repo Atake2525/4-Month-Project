@@ -167,9 +167,7 @@ void DebugMode::Initialize() {
 	player = new Player();
 	player->Initialize(playerObj, camera, input);
 
-	collision = new PlayerCollision();
-	//collision->Initialize(player);
-	collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
+	
 
 }
 
@@ -475,7 +473,6 @@ void DebugMode::Update() {
 	}
 
 	grid->Update();
-	player->AddTranslate(collision->UpdateCollision(player->GetAABB()));
 	player->Update();
 
 
