@@ -126,6 +126,7 @@ void DebugMode::Initialize() {
 	playerObj = new Object3d();
 	playerObj->Initialize();
 	playerObj->SetModel("Player.obj");
+	playerObj->SetQuaternionAngle(0.0f);
 	playerObj->Update();
 
 	// ライト関係の初期化
