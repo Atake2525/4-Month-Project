@@ -88,24 +88,35 @@ void Player::Move()
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
 	move = input_->GetLeftJoyStickPos2();
-	if (move.x == 0.0f && move.y == 0.0f) {
-		if (input_->PushKey(DIK_W)) {
-			velocity.z = speed;
-		}
-		if (input_->PushKey(DIK_S)) {
-			velocity.z = -speed;
-		}
-		if (input_->PushKey(DIK_A)) {
-			velocity.x = -speed;
-		}
-		if (input_->PushKey(DIK_D)) {
+	if (move.x >= 0.5f) {
+		move.x = 0.5f;
+	}
+	else if (move.x <= -0.5f) {
+		move.x = -0.5f;
+	}
 
-			velocity.x = speed;
-		}
+	if (move.y >= 0.5f) {
+		move.y = 0.5f;
+	}
+	else if (move.y <= -0.5f) {
+		move.y = -0.5f;
+	}
+	if (input_->PushKey(DIK_W)) {
+		move.y = -speed;
+	}
+	if (input_->PushKey(DIK_S)) {
+		move.y = speed;
+	}
+	if (input_->PushKey(DIK_A)) {
+		move.x = -speed;
+	}
+	if (input_->PushKey(DIK_D)) {
+		move.x = speed;
 	}
 	velocity.z = -move.y;
 	velocity.x = move.x;
-	velocity = Normalize(velocity);
+	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
+	velocity.y = 0;
 
 	modelTransform_.translate += velocity * speed;
 
