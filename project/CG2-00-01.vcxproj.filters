@@ -7,7 +7,7 @@
     <FxCompile Include="Resources\shaders\Particle.VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application\DebugMode.cpp" />
+    <ClCompile Include="Application\Scene\DebugMode.cpp" />
     <ClCompile Include="Application\LightBlock.cpp" />
     <ClCompile Include="Application\switchLight.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
@@ -25,7 +25,7 @@
     <ClCompile Include="Engine\Core\Input\Input.cpp" />
     <ClCompile Include="Engine\Math\kMath.cpp" />
     <ClCompile Include="Engine\BlackBox\Log\Logger.cpp" />
-    <ClCompile Include="Application\main.cpp" />
+    <ClCompile Include="Application\FrameWork\main.cpp" />
     <ClCompile Include="Engine\3d\Model\Model\Model.cpp" />
     <ClCompile Include="Engine\3d\Model\ModelBase\ModelBase.cpp" />
     <ClCompile Include="Engine\LoadManager\ModelManager\ModelManager.cpp" />
@@ -36,14 +36,17 @@
     <ClCompile Include="Engine\LoadManager\TextureManager\TextureManager.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Engine\Core\WinApp\WinApp.cpp" />
-    <ClCompile Include="Application\FrameWork.cpp" />
+    <ClCompile Include="Application\FrameWork\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Application\Star.cpp" />
     <ClCompile Include="Application\starResult.cpp" />
+    <ClCompile Include="Application\Scene\GameScene.cpp" />
+    <ClCompile Include="Application\Scene\MyGame.cpp" />
+    <ClCompile Include="Engine\Lighting\Light.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\DebugMode.h" />
+    <ClInclude Include="Application\Scene\DebugMode.h" />
     <ClInclude Include="Application\LightBlock.h" />
     <ClInclude Include="Application\switchLight.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
@@ -77,12 +80,15 @@
     <ClInclude Include="Engine\Math\Vector4.h" />
     <ClInclude Include="Engine\Math\Matrix4x4.h" />
     <ClInclude Include="Engine\Core\WinApp\WinApp.h" />
-    <ClInclude Include="Application\FrameWork.h" />
+    <ClInclude Include="Application\FrameWork\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Application\Star.h" />
     <ClInclude Include="Application\starResult.h" />
+    <ClInclude Include="Application\Scene\GameScene.h" />
+    <ClInclude Include="Application\Scene\MyGame.h" />
+    <ClInclude Include="Engine\Lighting\Light.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Object3d.hlsli" />

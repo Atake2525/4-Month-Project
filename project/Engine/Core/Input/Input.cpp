@@ -2,6 +2,20 @@
 #include <cassert>
 #include "WinApp.h"
 
+Input* Input::instance = nullptr;
+
+Input* Input::GetInstance() {
+	if (instance == nullptr) {
+		instance = new Input;
+	}
+	return instance;
+}
+
+void Input::Finalize() {
+	delete instance;
+	instance = nullptr;
+}
+
 void Input::Initialize(WinApp* winApp) {
 	winApp_ = winApp;
 	HRESULT result;
