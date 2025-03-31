@@ -343,11 +343,19 @@ const Vector3& Input::GetRightJoyStickPos3() const {
 	return result;
 }
 
-const bool& Input::TriggerButton(BYTE ButtonNumber) const {
-	/*if (dijoA)
+const bool& Input::IsMoveLeftJoyStick() const{
+	if (gamePadState.lX != 0 || gamePadState.lY != 0)
 	{
+		return true;
+	}
+	return false;
+}
 
-	}*/
+const bool& Input::IsMoveRightJoyStick() const {
+	if (gamePadState.lRx != 0 || gamePadState.lRy != 0)
+	{
+		return true;
+	}
 	return false;
 }
 
