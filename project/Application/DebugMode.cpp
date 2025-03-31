@@ -95,6 +95,7 @@ void DebugMode::Initialize() {
 	playerObj = new Object3d();
 	playerObj->Initialize();
 	playerObj->SetModel("Player.obj");
+	playerObj->Update();
 
 	// ライト関係の初期化
 	directionalLightResource = directxBase->CreateBufferResource(sizeof(DirectionalLight));
@@ -165,6 +166,8 @@ void DebugMode::Initialize() {
 	//Player
 	player = new Player();
 	player->Initialize(playerObj, camera, input);
+
+	
 
 }
 
@@ -301,9 +304,9 @@ void DebugMode::Update() {
 	ImGui::Begin("ModelAABB");
 
 	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
-	ImGui::DragFloat3("objectMax", &obMax.y, 0.1f);
+	ImGui::DragFloat3("objectMax", &obMax.x, 0.1f);
 	ImGui::DragFloat3("gridMin", &grMin.x, 0.1f);
-	ImGui::DragFloat3("gridMax", &grMax.y, 0.1f);
+	ImGui::DragFloat3("gridMax", &grMax.x, 0.1f);
 	ImGui::DragFloat3("Translate", &cameraTransform.translate.x, 0.01f);
 	ImGui::DragFloat("FarClip", &farClip, 1.0f);
 	ImGui::DragFloat("Fov", &fov, 0.01f);
@@ -471,6 +474,7 @@ void DebugMode::Update() {
 
 	grid->Update();
 	player->Update();
+
 
 }
 

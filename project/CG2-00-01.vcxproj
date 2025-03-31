@@ -109,6 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\DebugMode.cpp" />
     <ClCompile Include="Application\LightBlock.cpp" />
     <ClCompile Include="Application\Player.cpp" />
+    <ClCompile Include="Application\PlayerCollision.cpp" />
     <ClCompile Include="Application\switchLight.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\2d\SpriteBase\SpriteBase.cpp" />
@@ -144,6 +145,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\DebugMode.h" />
     <ClInclude Include="Application\LightBlock.h" />
     <ClInclude Include="Application\Player.h" />
+    <ClInclude Include="Application\PlayerCollision.h" />
     <ClInclude Include="Application\switchLight.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="Engine\2d\SpriteBase\SpriteBase.h" />

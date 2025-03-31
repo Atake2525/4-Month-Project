@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "Object3d.h"
 #include "Object3dBase.h"
 #include "DirectXBase.h"
@@ -62,7 +63,7 @@ void Object3d::Initialize() {
 	//spotLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// cosFalloffStartがcosAngleより下にならないように調整
-	spotLightData->cosFalloffStart = max(spotLightData->cosFalloffStart, spotLightData->cosAngle);
+	spotLightData->cosFalloffStart = std::max(spotLightData->cosFalloffStart, spotLightData->cosAngle);
 
 	transform = {
 	    {1.0f, 1.0f, 1.0f},
@@ -232,13 +233,13 @@ void Object3d::CreateAABB() {
 	
 	for (VertexData vertices : vData)
 	{
-		first.min.x = min(first.min.x, vertices.position.x);
-		first.min.y = min(first.min.y, vertices.position.y);
-		first.min.z = min(first.min.z, vertices.position.z);
+		first.min.x = std::min(first.min.x, vertices.position.x);
+		first.min.y = std::min(first.min.y, vertices.position.y);
+		first.min.z = std::min(first.min.z, vertices.position.z);
 
-		first.max.x = max(first.max.x, vertices.position.x);
-		first.max.y = max(first.max.y, vertices.position.y);
-		first.max.z = max(first.max.z, vertices.position.z);
+		first.max.x = std::max(first.max.x, vertices.position.x);
+		first.max.y = std::max(first.max.y, vertices.position.y);
+		first.max.z = std::max(first.max.z, vertices.position.z);
 	}
 }
 
