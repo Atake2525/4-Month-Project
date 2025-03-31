@@ -3,7 +3,7 @@
 #include "WinApp.h"
 
 Camera::Camera() 
-	: transform({ {1.0f, 1.0f, 1.0f}, {0.3f, 0.0f, 0.0f  }, {0.0f, 6.0f, -19.0f} })
+	: transform({ {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} })
 	, fovY(0.45f)
 	, aspect(float(WinApp::kClientWidth) / float(WinApp::kClientHeight))
 	, nearClipDistance(0.1f)

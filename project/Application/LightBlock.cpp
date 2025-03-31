@@ -44,6 +44,6 @@ void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightReso
 
 	if (Light->GetFlag()) {
 		BlockModel->SetModel("box.obj");
-		BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+		BlockModel->Draw();
 	}
 }

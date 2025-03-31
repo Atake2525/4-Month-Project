@@ -41,9 +41,31 @@ enum class Button {
 class WinApp;
 
 class Input {
+private:
+	// シングルトンパターンを適用
+	static Input* instance;
+
+	// コンストラクタ、デストラクタの隠蔽
+	Input() = default;
+	~Input() = default;
+	// コピーコンストラクタ、コピー代入演算子の封印
+	//Input(Input&) = delete;
+	//Input& operator=(Input&) = delete;
+
 public:
 	// namespcae省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>Input* instance</returns>
+	static Input* GetInstance();
+
+	/// <summary>
+	/// 終了
+	/// </summary>
+	void Finalize();
 
 	void Initialize(WinApp* winApp);
 	void Update();

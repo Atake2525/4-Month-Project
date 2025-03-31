@@ -42,7 +42,7 @@ void Star::Update() {
 
 void Star::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
 	if (!collected_) {
-		starModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
+		starModel_->Draw();
 	}
 
 }
