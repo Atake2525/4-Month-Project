@@ -2,8 +2,13 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "kMath.h"
 #include <cassert>
 #define NOMINMAX
+
+#include "externels/imgui/imgui.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
 
 // 衝突判定の相手を設定して更新
 const Vector3& PlayerCollision::UpdateCollision(const AABB& playerAABB) const {
@@ -12,6 +17,14 @@ const Vector3& PlayerCollision::UpdateCollision(const AABB& playerAABB) const {
 	// 壁の衝突判定
 	for (Plate collisionPlate : collisionListPlate)
 	{
+		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::End();*/
+		if (dist > collisionDistance)
+		{
+			continue;
+		}
 		// 衝突判定をAABBとAABBでとる
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{

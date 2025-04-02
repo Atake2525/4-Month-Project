@@ -39,6 +39,9 @@ private:
 		AABB aabb;
 		Vector3 normal;
 	};
+
+	// 衝突判定が計算される距離
+	float collisionDistance = 1000.0f;
 	
 	std::vector<Plate> collisionListPlate;
 };
