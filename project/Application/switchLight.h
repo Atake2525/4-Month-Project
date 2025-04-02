@@ -19,7 +19,9 @@ class switchLight
 {
 public:
 	~switchLight();
+
 	void Initialize(Transform, Camera*, DirectXBase*, Input*,Player*);
+
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 	bool GetFlag() { return switchFlag; }
@@ -46,4 +48,3 @@ private:
 	float radius;
 
 };
-

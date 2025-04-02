@@ -81,26 +81,42 @@ Camera* Player::GetCamera()
 
 void Player::Move()
 {
+	Vector2 move{0,0};
 	velocity.x = 0.0f;
 	velocity.z = 0.0f;
 	const float speed = 0.5f;
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
+	move = input_->GetLeftJoyStickPos2();
+	if (move.x >= 0.5f) {
+		move.x = 0.5f;
+	}
+	else if (move.x <= -0.5f) {
+		move.x = -0.5f;
+	}
+
+	if (move.y >= 0.5f) {
+		move.y = 0.5f;
+	}
+	else if (move.y <= -0.5f) {
+		move.y = -0.5f;
+	}
 	if (input_->PushKey(DIK_W)) {
-		velocity.z = speed;
+		move.y = -speed;
 	}
 	if (input_->PushKey(DIK_S)) {
-		velocity.z = -speed;
+		move.y = speed;
 	}
 	if (input_->PushKey(DIK_A)) {
-		velocity.x = -speed;
+		move.x = -speed;
 	}
 	if (input_->PushKey(DIK_D)) {
-
-		velocity.x = speed;
+		move.x = speed;
 	}
-
-	velocity = Normalize(velocity);
+	velocity.z = -move.y;
+	velocity.x = move.x;
+	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
+	velocity.y = 0;
 
 	modelTransform_.translate += velocity * speed;
 
@@ -119,24 +135,34 @@ void Player::Move()
 void Player::Rotate()
 {
 	const float rotate = 0.05f;
-
-	if (input_->PushKey(DIK_RIGHTARROW)) {
-		modelTransform_.rotate.y += rotate;
-		cameraTransform_.rotate.y += rotate;
+	Vector3 move{ 0,0 };
+	move = input_->GetRightJoyStickPos3();
+	if (move.x >= 0.05f) {
+		move.x = 0.05f;
 	}
-
-	if (input_->PushKey(DIK_LEFTARROW)) {
-		modelTransform_.rotate.y -= rotate;
-		cameraTransform_.rotate.y -= rotate;
+	if (move.x <= -0.05f) {
+		move.x = -0.05f;
 	}
+	if (move.x == 0.0f) {
+		if (input_->PushKey(DIK_RIGHTARROW)) {
+			modelTransform_.rotate.y += rotate;
+			cameraTransform_.rotate.y += rotate;
+		}
 
+		if (input_->PushKey(DIK_LEFTARROW)) {
+			modelTransform_.rotate.y -= rotate;
+			cameraTransform_.rotate.y -= rotate;
+		}
+	}
+	modelTransform_.rotate.y += move.x;
+	cameraTransform_.rotate.y += move.x;
 }
 
 void Player::Jump()
 {
 
 	if (onGround_) {
-		if (input_->PushKey(DIK_SPACE)) {
+		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Button::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
 		}

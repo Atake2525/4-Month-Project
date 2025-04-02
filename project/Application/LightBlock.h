@@ -19,22 +19,22 @@ class LightBlock
 {
 public:
 	~LightBlock();
+
 	void Initialize(Vector3, Camera*, DirectXBase*, Input*,Player*);
+
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 
 private:
 	Object3d* BlockModel;
-	Camera* camera_;
 	Vector3 blockPosition;
 	Input* input_;
 	DirectXBase* dxcCommon;
 	switchLight* Light;
-	//===========“–‚½‚è”»’è—p============
+	//===========ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½p============
 
 	/*player*/
 	Player* player_;
 
 
 };
-

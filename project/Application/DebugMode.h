@@ -41,6 +41,7 @@
 #include "Player.h"
 #include"LightBlock.h"
 
+
 #include "algorithm"
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -162,6 +163,10 @@ private:
 
 	Vector2 mousePos2;
 	Vector3 mousePos3;
+
+	Vector3 axis = { 0.0f, 1.0f, 0.0f };
+
+	float angle = 0.0f;
 
 	bool isCollision = false;
 

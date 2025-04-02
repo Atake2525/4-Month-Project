@@ -16,6 +16,39 @@ using namespace Microsoft::WRL;
 // ・LCONTROLでマウスカーソルを出す
 // ・ESCAPEでゲーム終了
 // 
+// -- Input --
+// 
+// Vector3の左ジョイスティックのZ座標はLT,RTの押し込み具合を出している(LTは+,RTは-)
+// 
+// 十字キー
+// enum class DPad {
+//None,
+//Up,
+//UpRight,
+//UpLeft,
+//Down,
+//DownRight,
+//DownLeft,
+//Left,
+//Right,
+//};
+//
+// ボタン
+//enum class Button {
+//	None,
+//	A,
+//	B,
+//	X,
+//	Y,
+//	LB,
+//	RB,
+//	LT,
+//	RT,
+//	View,
+//	Menu,
+//	LeftStick,
+//	RightStick,
+//};
 // 
 // -------------- //
 
@@ -89,12 +122,11 @@ void DebugMode::Initialize() {
 	grid = new Object3d();
 	grid->Initialize();
 	grid->SetModel("Grid.obj");
-	grid->SetTranslate({ 0.0f, 3.0f, 20.0f });
-	grid->Update();
 
 	playerObj = new Object3d();
 	playerObj->Initialize();
 	playerObj->SetModel("Player.obj");
+	playerObj->SetQuaternionAngle(0.0f);
 	playerObj->Update();
 
 	// ライト関係の初期化
@@ -245,6 +277,8 @@ void DebugMode::Update() {
 	if (ImGui::TreeNode("ModelSTR")) {
 		ImGui::DragFloat3("Scale", &modelTransform.scale.x, 0.01f);
 		ImGui::DragFloat3("Rotate", &modelTransform.rotate.x, 1.0f);
+		ImGui::DragFloat3("Axis", &axis.x, SwapRadian(1.0f));
+		ImGui::DragFloat("QuaternionRotate", &angle, 0.01f);
 		ImGui::DragFloat3("Translate", &modelTransform.translate.x, 0.01f);
 		ImGui::Checkbox("EnableLighting", &modelEnableLighting);
 		ImGui::TreePop();
@@ -302,8 +336,13 @@ void DebugMode::Update() {
 	Vector3 obMax = object3d->GetAABB().max;
 	Vector3 grMin = grid->GetAABB().min;
 	Vector3 grMax = grid->GetAABB().max;
+	//LeftjoystickPos3 = input->GetLeftJoyStickPos3();
+	//RightjoystickPos3 = input->GetRightJoyStickPos3();
 
-	ImGui::Begin("ModelAABB");
+	bool Up = input->TriggerXButton(DPad::Up);
+	bool Down = input->TriggerXButton(DPad::Down);
+	bool UpRight = input->TriggerXButton(DPad::UpRight);
+	//Button = input->ReturnButton(Button::A);
 
 	ImGui::DragFloat3("objectMin", &obMin.x, 0.1f);
 	ImGui::DragFloat3("objectMax", &obMax.x, 0.1f);
@@ -315,6 +354,14 @@ void DebugMode::Update() {
 	ImGui::DragFloat2("mousePos2", &mousePos2.x, 1.0f);
 	ImGui::DragFloat3("mousePos3", &mousePos3.x, 1.0f);
 	ImGui::Checkbox("Collision", &isCollision);
+	ImGui::Begin("Controler");
+
+	//ImGui::DragFloat3("LeftjoystickPos", &LeftjoystickPos3.x, 1.0f);
+	//ImGui::DragFloat3("RightjoystickPos", &RightjoystickPos3.x, 1.0f);
+	ImGui::Checkbox("Up", &Up);
+	ImGui::Checkbox("Down", &Down);
+	ImGui::Checkbox("UpRight", &UpRight);
+	//ImGui::Checkbox("Button", &Button);
 
 	ImGui::End();
 
@@ -347,8 +394,8 @@ void DebugMode::Update() {
 	// FovY(視野角を変更するための関数)
 	camera->SetFovY(fov);
 
-	mousePos2 = input->GetMousePos2();
-	mousePos3 = input->GetMousePos3();
+	mousePos2 = input->GetMouseVel2();
+	mousePos3 = input->GetMouseVel3();
 
 #ifdef _DEBUG
 	/*const float speed = 0.7f;
@@ -421,6 +468,13 @@ void DebugMode::Update() {
 		showCursor = !showCursor;
 		input->ShowMouseCursor(showCursor);
 	}
+	if (input->TriggerKey(DIK_F))
+	{
+		object3d->SetAxisAngle(axis);
+  }
+	if (input->TriggerKey(DIK_G)) {
+		input->UpdateDevice();
+	}
 
 	if (!showCursor)
 	{
@@ -461,9 +515,12 @@ void DebugMode::Update() {
 
 	object3d->SetTransform(modelTransform);
 	object3d->SetRotateInDegree(modelTransform.rotate);
+	object3d->SetQuaternionAngle(angle);
+	//object3d->SetRotateInQuaternion();
 	object3d->SetColor(modelColor);
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
+
 
 
 	grid->SetTransform(transform);
@@ -501,7 +558,14 @@ void DebugMode::Draw() {
 	/*Block*/
 	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	
+
+	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	star->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	starResultManager とその中の星を描画
+	if (starResultManager) {
+	starResultManager->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	}
+
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
@@ -543,6 +607,15 @@ void DebugMode::Finalize() {
 	Audio::GetInstance()->Finalize();
 
 	delete object3d;
+
+	//delete lightBlock;
+
+	//delete goal;
+
+	//delete star;
+	//if (starResultManager) {
+	//	delete starResultManager;
+	//}
 
 	delete grid;
 
