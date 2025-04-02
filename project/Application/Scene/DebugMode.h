@@ -99,12 +99,12 @@ private:
 
 	// ライトデータの宣言
 
-	DirectionalLight* directionalLightData = nullptr;
+	//DirectionalLight* directionalLightData = nullptr;
 
 
-	PointLight* pointLightData = nullptr;
+	//PointLight* pointLightData = nullptr;
 
-	SpotLight* spotLightData = nullptr;
+	//SpotLight* spotLightData = nullptr;
 
 	// Transform変数を作る
 	Transform transform{

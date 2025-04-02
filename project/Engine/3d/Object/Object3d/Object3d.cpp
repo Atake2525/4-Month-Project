@@ -3,6 +3,7 @@
 #include "Object3dBase.h"
 #include "DirectXBase.h"
 #include "TextureManager.h"
+#include "Light.h"
 #include "kMath.h"
 #include "WinApp.h"
 #include "Model.h"
@@ -19,17 +20,17 @@ void Object3d::Initialize() {
 
 	//// Resourceの作成
 	CreateTransformationMatrixResrouce();
-	CreateLightResource();
+	//CreateLightResource();
 	CreateCameraResource();
 
 	// 書き込むためのアドレスを取得
 	transformationMatrixResource->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrix));
 	// 平行光源リソースに書き込むためのアドレスを取得
-	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
-	// 点光源リソースに書き込むためのアドレスを取得
-	pointLightResource->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData));
-	// スポットライトリソースに書き込むためのアドレスを取得
-	spotLightResource->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData));
+	//directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
+	//// 点光源リソースに書き込むためのアドレスを取得
+	//pointLightResource->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData));
+	//// スポットライトリソースに書き込むためのアドレスを取得
+	//spotLightResource->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData));
 	// 書き込むためのアドレスを取得
 	cameraResource->Map(0, nullptr, reinterpret_cast<void**>(&cameraData));
 
@@ -37,33 +38,33 @@ void Object3d::Initialize() {
 	transformationMatrix->WVP = MakeIdentity4x4();
 	transformationMatrix->World = MakeIdentity4x4();
 
-	// 平行光源にデータを書き込む
-	directionalLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
-	directionalLightData->direction = {0.0f, -1.0f, 0.0f};
-	directionalLightData->intensity = 0.0f;
-	directionalLightData->specularColor = { 1.0f, 1.0f, 1.0f };
+	//// 平行光源にデータを書き込む
+	//directionalLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
+	//directionalLightData->direction = {0.0f, -1.0f, 0.0f};
+	//directionalLightData->intensity = 0.0f;
+	//directionalLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
-	// 点光源にデータを書き込む
-	pointLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
-	pointLightData->position = {0.0f, 2.0f, 0.0f};
-	pointLightData->intensity = 0.0f;
-	pointLightData->radius = 5.0f;
-	pointLightData->dacay = 5.0f;
-	pointLightData->specularColor = { 1.0f, 1.0f, 1.0f };
+	//// 点光源にデータを書き込む
+	//pointLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
+	//pointLightData->position = {0.0f, 2.0f, 0.0f};
+	//pointLightData->intensity = 0.0f;
+	//pointLightData->radius = 5.0f;
+	//pointLightData->dacay = 5.0f;
+	//pointLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
-	// スポットライトにデータを書き込む
-	spotLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
-	spotLightData->position = {0.0f, 0.0f, 0.0f};
-	spotLightData->distance = 10.0f;
-	spotLightData->direction = Normalize({-1.0f, 0.0f, 0.0f});
-	spotLightData->intensity = 0.0f;
-	spotLightData->dacay = 2.0f;
-	spotLightData->cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
-	spotLightData->cosFalloffStart = std::cos(std::numbers::pi_v<float> / 2.6f);
+	//// スポットライトにデータを書き込む
+	//spotLightData->color = {1.0f, 1.0f, 1.0f, 1.0f};
+	//spotLightData->position = {0.0f, 0.0f, 0.0f};
+	//spotLightData->distance = 10.0f;
+	//spotLightData->direction = Normalize({-1.0f, 0.0f, 0.0f});
+	//spotLightData->intensity = 0.0f;
+	//spotLightData->dacay = 2.0f;
+	//spotLightData->cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
+	//spotLightData->cosFalloffStart = std::cos(std::numbers::pi_v<float> / 2.6f);
 	//spotLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	// cosFalloffStartがcosAngleより下にならないように調整
-	spotLightData->cosFalloffStart = std::max(spotLightData->cosFalloffStart, spotLightData->cosAngle);
+	//spotLightData->cosFalloffStart = max(spotLightData->cosFalloffStart, spotLightData->cosAngle);
 
 	transform = {
 	    {1.0f, 1.0f, 1.0f},
@@ -81,9 +82,9 @@ void Object3d::Initialize() {
 		{0.0f, 0.0f, 0.0f}
 	};
 
-	//angle = 0.0f;
+	SetAxisAngle({0.0f, 1.0f, 0.0f});
 
-	SetAxisAngle({0.0f, 0.1f, 0.0f});
+	SetQuaternionAngle(0.0f);
 
 	cameraData->worldPosition = {1.0f, 1.0f, 1.0f};
 
@@ -93,9 +94,6 @@ void Object3d::Initialize() {
 }
 
 void Object3d::Update() {
-
-	//angle += SwapRadian(1.0f);
-	//SetQuaternionAngle();
 
 	// 3DのTransform処理
 	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
@@ -123,17 +121,17 @@ void Object3d::Update() {
 	aabb.max = first.max + worldPos;
 }
 
-void Object3d::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResourced, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced) {
+void Object3d::Draw() {
 	
 	if (model_) {
 		model_->SetIA();
 	}
 
-	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(4, directionalLightResourced->GetGPUVirtualAddress());
+	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(4, Light::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
-	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(5, pointLightResourced->GetGPUVirtualAddress());
+	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(5, Light::GetInstance()->GetPointlLightResource()->GetGPUVirtualAddress());
 
-	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(6, spotLightResourced->GetGPUVirtualAddress());
+	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(6, Light::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
 
 	// wvp用のCBufferの場所を設定
 	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource->GetGPUVirtualAddress());
@@ -150,39 +148,21 @@ void Object3d::CreateTransformationMatrixResrouce() {
 	transformationMatrixResource = Object3dBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(TransformationMatrix)); 
 }
 
-void Object3d::CreateLightResource() {
-	CreateDirectionalLightResource();
-	CreatePointLightResource();
-	CreateSpotLightResource();
-}
-
-void Object3d::CreateDirectionalLightResource() { 
-	directionalLightResource = Object3dBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(DirectionalLight)); 
-}
-
-void Object3d::CreatePointLightResource() { 
-	pointLightResource = Object3dBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(PointLight));
-}
-
-void Object3d::CreateSpotLightResource() { 
-	spotLightResource = Object3dBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(SpotLight)); 
-}
-
 void Object3d::CreateCameraResource() { 
 	cameraResource = Object3dBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(CameraForGPU));
 }
 
-void Object3d::SetDirectionalLight(DirectionalLight* lightData) {
-	directionalLightData = lightData;
-}
-
-void Object3d::SetPointLight(PointLight* lightData) { 
-	pointLightData = lightData;
-}
-
-void Object3d::SetSpotLight(SpotLight* lightData) { 
-	spotLightData = lightData; 
-}
+//void Object3d::SetDirectionalLight(DirectionalLight* lightData) {
+//	directionalLightData = lightData;
+//}
+//
+//void Object3d::SetPointLight(PointLight* lightData) { 
+//	pointLightData = lightData;
+//}
+//
+//void Object3d::SetSpotLight(SpotLight* lightData) { 
+//	spotLightData = lightData; 
+//}
 
 void Object3d::SetModel(const std::string& filePath) {
 	// モデルを検索してセットする

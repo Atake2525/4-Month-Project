@@ -19,7 +19,8 @@ public:
 	// Getter
 	const Matrix4x4& GetWorldMatrix() const { 
 		Matrix4x4 world = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-		return world; }
+		return world; 
+	}
 	// Getter
 	const Matrix4x4& GetViewMatrix() const { return viewMatrix; }
 	// Getter
@@ -34,6 +35,8 @@ public:
 	const float& GetFarClipDistance() const { return farClipDistance; }
 	// Getter(fovY)
 	const float& GetfovY() const { return fovY; }
+	// Getter(Transform)
+	const Transform& GetTransform() const { return transform; }
 
 	// Setter(Rotate)
 	void SetRotate(const Vector3& rotate) { transform.rotate = rotate; }
@@ -43,6 +46,8 @@ public:
 	void SetFarClipDistance(const float& farClip) { farClipDistance = farClip; }
 	// Setter(fovY)
 	void SetFovY(const float& fov) { fovY = fov; }
+	// Setter(Transform)
+	void SetTransform(const Transform& transform) { this->transform = transform; }
 	// Setter(Parent)
 	void SetParent(const Matrix4x4& worldMatrix) { 
 		parent = worldMatrix; 

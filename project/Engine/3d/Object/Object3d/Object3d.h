@@ -28,15 +28,15 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	/// <param name="worldPos">CameraPosition</param>
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResourced);
+	void Draw();
 
 	void SetModel(const std::string& filePath);
 
-	void SetDirectionalLight(DirectionalLight* lightData);
+	/*void SetDirectionalLight(DirectionalLight* lightData);
 
 	void SetPointLight(PointLight* lightData);
 
-	void SetSpotLight(SpotLight* lightData);
+	void SetSpotLight(SpotLight* lightData);*/
 
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
@@ -83,20 +83,20 @@ private:
 	// 座標変換行列リソース内のデータを指すポインタ
 	TransformationMatrix* transformationMatrix = nullptr;
 
-	// 平行光源リソースのバッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
-	// 平行光源リソース内のデータを指すポインタ
-	DirectionalLight* directionalLightData = nullptr;
+	//// 平行光源リソースのバッファリソース
+	//Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
+	//// 平行光源リソース内のデータを指すポインタ
+	//DirectionalLight* directionalLightData = nullptr;
 
-	// 点光源リソースのバッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource;
-	// 点光源リソース内のデータを指すポインタ
-	PointLight* pointLightData = nullptr;
+	//// 点光源リソースのバッファリソース
+	//Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource;
+	//// 点光源リソース内のデータを指すポインタ
+	//PointLight* pointLightData = nullptr;
 
-	// スポットライトリソースのバッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource;
-	// スポットライトリソース内のデータを指すポインタ
-	SpotLight* spotLightData = nullptr;
+	//// スポットライトリソースのバッファリソース
+	//Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource;
+	//// スポットライトリソース内のデータを指すポインタ
+	//SpotLight* spotLightData = nullptr;
 
 	// PhongShading用カメラ
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource;
@@ -176,13 +176,13 @@ private:
 	// TransformationMatrixResourceを作る
 	void CreateTransformationMatrixResrouce();
 	// LightResourceを作る
-	void CreateLightResource();
-	// DirectionalLightResourceを作る
-	void CreateDirectionalLightResource();
-	// PointLightResourceを作る
-	void CreatePointLightResource();
-	// SpotLightResourceを作る
-	void CreateSpotLightResource();
+	//void CreateLightResource();
+	//// DirectionalLightResourceを作る
+	//void CreateDirectionalLightResource();
+	//// PointLightResourceを作る
+	//void CreatePointLightResource();
+	//// SpotLightResourceを作る
+	//void CreateSpotLightResource();
 	// CameraResourceを作る
 	void CreateCameraResource();
 
