@@ -9,19 +9,25 @@ LightBlock::~LightBlock()
 
 }
 
-void LightBlock::Initialize(Vector3 position, DirectXBase* dxbase, Input* input)
+
+void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input,Player*player)
+
 {
 	dxcCommon = dxbase;
 	input_ = input;
 	blockPosition = position;
 
+	player_ = player;
+	
 
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
 	/*switch*/
 	Light = new switchLight();
-	Light->Initialize({ 0,0,0 }, dxcCommon, input_);
+
+	Light->Initialize({ 0,0,0 }, camera_, dxcCommon, input_,player_);
+
 
 	/*model*/
 	BlockModel = new Object3d();
@@ -34,6 +40,8 @@ void LightBlock::Initialize(Vector3 position, DirectXBase* dxbase, Input* input)
 void LightBlock::Update()
 {
 	Light->Update();
+
+
 	BlockModel->Update();
 
 }
