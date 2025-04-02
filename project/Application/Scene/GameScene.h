@@ -8,6 +8,7 @@
 #include "WireFrameObjectBase.h"
 #include "Sprite.h"
 #include "AABB.h"
+#include "Player.h"
 
 #pragma once
 
@@ -53,6 +54,8 @@ private:
 	AABB aabb;
 
 	bool enableLighting = false;
+
+	Player* player = nullptr;
 
 };
 

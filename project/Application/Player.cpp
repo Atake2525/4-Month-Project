@@ -10,15 +10,23 @@ Player::~Player()
 {
 	// 追加したクラス
 	delete collision;
+	delete object3d_;
+	delete camera_;
 }
 
-void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
+void Player::Initialize(Camera* camera)
 {
 	camera_ = camera;
 
-	object3d_ = object3d;
-
 	// 追加したクラス
+
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Player.obj");
+
+	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+
+	object3d_ = new Object3d();
+	object3d_->Initialize();
+	object3d_->SetModel("Player.obj");
 
 	collision = new PlayerCollision();
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
@@ -26,8 +34,7 @@ void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });
 
-	input_ = new Input();
-	input_ = input;
+	input_->GetInstance();
 
 	//camera
 	cameraTransform_.translate = camera->GetTranslate();
@@ -69,9 +76,9 @@ void Player::Update()
 
 }
 
-void Player::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightData, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightData)
+void Player::Draw()
 {
-	object3d_->Draw(directionalLightData, pointLightData, spotLightData);
+	object3d_->Draw();
 }
 
 Camera* Player::GetCamera()
@@ -101,17 +108,19 @@ void Player::Move()
 	else if (move.y <= -0.5f) {
 		move.y = -0.5f;
 	}
-	if (input_->PushKey(DIK_W)) {
-		move.y = -speed;
-	}
-	if (input_->PushKey(DIK_S)) {
-		move.y = speed;
-	}
-	if (input_->PushKey(DIK_A)) {
-		move.x = -speed;
-	}
-	if (input_->PushKey(DIK_D)) {
-		move.x = speed;
+	if (input_->IsMoveLeftJoyStick()) {
+		if (input_->PushKey(DIK_W)) {
+			move.y = -speed;
+		}
+		if (input_->PushKey(DIK_S)) {
+			move.y = speed;
+		}
+		if (input_->PushKey(DIK_A)) {
+			move.x = -speed;
+		}
+		if (input_->PushKey(DIK_D)) {
+			move.x = speed;
+		}
 	}
 	velocity.z = -move.y;
 	velocity.x = move.x;

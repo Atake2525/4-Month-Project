@@ -11,6 +11,7 @@
 #include "WinApp.h"
 #include "kMath.h"
 #include "PlayerCollision.h"
+#include "ModelManager.h"
 
 // 衝突判定で追加
 #include "AABB.h"
@@ -35,7 +36,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Object3d* object3d, Camera* camera, Input* input);
+	void Initialize(Camera* camera);
 
 	/// <summary>
 	/// 毎フレーム処理
@@ -45,7 +46,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightData, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightData);
+	void Draw();
 
 	Camera* GetCamera();
 
@@ -77,6 +78,8 @@ private:
 	void Jump();
 
 private: // メンバ変数
+	//モデル
+	Object3d* object3d_ = nullptr;
 
 	Transform modelTransform_;
 
@@ -112,5 +115,6 @@ private: // メンバ変数
 
 	// 追加したクラス
 	PlayerCollision* collision = nullptr;
+
 };
 

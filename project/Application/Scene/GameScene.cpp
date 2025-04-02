@@ -24,6 +24,8 @@ void GameScene::Initialize() {
 
 	cameraTransform.scale = { 1.0f, 1.0f, 1.0f };
 
+	player = new Player();
+	player->Initialize(camera);
 
 	modelTransform = object3d->GetTransform();
 }
@@ -100,6 +102,7 @@ void GameScene::Update() {
 
 	input->ShowMouseCursor(true);
 
+	player->Update();
 	camera->SetTranslate(cameraTransform.translate);
 	camera->SetRotate(cameraTransform.rotate);
 	camera->Update();
@@ -122,6 +125,8 @@ void GameScene::Draw() {
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
+
+	player->Draw();
 }
 
 void GameScene::Finalize() {
