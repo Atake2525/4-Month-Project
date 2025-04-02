@@ -292,20 +292,20 @@ const Vector3& Input::GetLeftJoyStickPos3() const {
 
 const Vector2& Input::GetRightJoyStickPos2() const {
 	Vector2 result = { 0.0f, 0.0f };
-	if (gamePadState.lX < -unresponsiveRange)
+	if (gamePadState.lRx < -unresponsiveRange)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
-	else if (gamePadState.lX > unresponsiveRange)
+	else if (gamePadState.lRx > unresponsiveRange)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
 
-	if (gamePadState.lY < -unresponsiveRange)
+	if (gamePadState.lRy < -unresponsiveRange)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
-	else if (gamePadState.lY > unresponsiveRange)
+	else if (gamePadState.lRy > unresponsiveRange)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
@@ -344,18 +344,52 @@ const Vector3& Input::GetRightJoyStickPos3() const {
 }
 
 const bool& Input::IsMoveLeftJoyStick() const{
-	if (gamePadState.lX != 0 || gamePadState.lY != 0)
+	if (gamePadState.lX < -unresponsiveRange)
 	{
 		return true;
 	}
+	else if (gamePadState.lX > unresponsiveRange)
+	{
+		return true;
+	}
+
+	if (gamePadState.lY < -unresponsiveRange)
+	{
+		return true;
+	}
+	else if (gamePadState.lY > unresponsiveRange)
+	{
+		return true;
+	}
+	//if (gamePadState.lX != 0 || gamePadState.lY != 0)
+	//{
+	//	return true;
+	//}
 	return false;
 }
 
 const bool& Input::IsMoveRightJoyStick() const {
-	if (gamePadState.lRx != 0 || gamePadState.lRy != 0)
+	if (gamePadState.lRx < -unresponsiveRange)
 	{
 		return true;
 	}
+	else if (gamePadState.lRx > unresponsiveRange)
+	{
+		return true;
+	}
+
+	if (gamePadState.lRy < -unresponsiveRange)
+	{
+		return true;
+	}
+	else if (gamePadState.lRy > unresponsiveRange)
+	{
+		return true;
+	}
+	//if (gamePadState.lRx != 0 || gamePadState.lRy != 0)
+	//{
+	//	return true;
+	//}
 	return false;
 }
 
