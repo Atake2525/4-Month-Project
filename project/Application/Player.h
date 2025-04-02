@@ -14,6 +14,7 @@
 
 // 衝突判定で追加
 #include "AABB.h"
+#include"OBB.h"
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -62,6 +63,7 @@ public: // メンバ関数
 	const Vector3& GetPosition() const;
 
 	const AABB& GetAABB() const { return object3d_->GetAABB(); }
+
 
 	void AddTranslate(const Vector3& translate) { 
 		Vector3 result = translate;

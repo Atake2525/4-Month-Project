@@ -116,6 +116,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Camera\Camera.cpp" />
     <ClCompile Include="Engine\BlackBox\LeakChecker\D3DResourceLeakChecker.cpp" />
     <ClCompile Include="Engine\Core\BaseEngine\DirectXBase.cpp" />
+    <ClCompile Include="Engine\Math\OBB.cpp" />
     <ClCompile Include="externels\imgui\imgui.cpp" />
     <ClCompile Include="externels\imgui\imgui_demo.cpp" />
     <ClCompile Include="externels\imgui\imgui_draw.cpp" />
@@ -142,6 +143,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Application\Star.cpp" />
     <ClCompile Include="Application\starResult.cpp" />
+    <ClCompile Include="OBB.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
