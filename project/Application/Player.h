@@ -78,8 +78,6 @@ private:
 	void Jump();
 
 private: // メンバ変数
-	//モデル
-	Object3d* object3d_ = nullptr;
 
 	Transform modelTransform_;
 

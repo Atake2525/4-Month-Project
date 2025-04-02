@@ -103,8 +103,9 @@ void GameScene::Update() {
 	input->ShowMouseCursor(true);
 
 	player->Update();
-	camera->SetTranslate(cameraTransform.translate);
-	camera->SetRotate(cameraTransform.rotate);
+	//camera->SetTranslate(cameraTransform.translate);
+	//camera->SetRotate(cameraTransform.rotate);
+	camera = player->GetCamera();
 	camera->Update();
 	object3d->SetTransform(modelTransform);
 	object3d->SetEnableLighting(enableLighting);
@@ -136,4 +137,6 @@ void GameScene::Finalize() {
 	delete object3d;
 
 	delete sprite;
+
+	delete player;
 }

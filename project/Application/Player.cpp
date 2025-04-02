@@ -8,10 +8,12 @@ Player::Player()
 
 Player::~Player()
 {
+	delete camera_;
+
+	delete object3d_;
+
 	// 追加したクラス
 	delete collision;
-	delete object3d_;
-	delete camera_;
 }
 
 void Player::Initialize(Camera* camera)
@@ -34,7 +36,7 @@ void Player::Initialize(Camera* camera)
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });
 
-	input_->GetInstance();
+	input_ = Input::GetInstance();
 
 	//camera
 	cameraTransform_.translate = camera->GetTranslate();
@@ -94,7 +96,9 @@ void Player::Move()
 	const float speed = 0.5f;
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
-	move = input_->GetLeftJoyStickPos2();
+	if (input_->IsMoveLeftJoyStick()) {
+		move = input_->GetLeftJoyStickPos2();
+	}
 	if (move.x >= 0.5f) {
 		move.x = 0.5f;
 	}
@@ -108,7 +112,7 @@ void Player::Move()
 	else if (move.y <= -0.5f) {
 		move.y = -0.5f;
 	}
-	if (input_->IsMoveLeftJoyStick()) {
+	if (input_->IsMoveLeftJoyStick() == false) {
 		if (input_->PushKey(DIK_W)) {
 			move.y = -speed;
 		}

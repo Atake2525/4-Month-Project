@@ -67,9 +67,9 @@ void Goal::Update()
 
 
 
-void Goal::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource) {
+void Goal::Draw() {
 
-	goalModel_->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	goalModel_->Draw();
 
 	//// ゴールフラグがtrueならクリアスプライトを描画
 	//if (goalFlag_) {

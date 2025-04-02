@@ -25,7 +25,7 @@ public:
 	void Initialize(Vector3, DirectXBase*); //Object3d*
 	void Update();
 	//描画
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
+	void Draw();
 
 	//当たり判定
 	void OnCollision(const Player* player);
