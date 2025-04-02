@@ -39,6 +39,7 @@
 #include "FrameWork.h"
 #include "WireFrameObjectBase.h"
 #include "Player.h"
+#include"LightBlock.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -167,4 +168,7 @@ private:
 	Player* player = nullptr;
 
 	Object3d* playerObj = nullptr;
+
+	/*=====消えるブロック=====*/
+	LightBlock* lightBlock = nullptr;
 };

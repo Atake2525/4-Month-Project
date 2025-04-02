@@ -16,7 +16,7 @@ void switchLight::Initialize(Transform transform, Camera* camera, DirectXBase* d
 	switchCamera = camera;
 	switchTransform = transform;
 	input_ = input;
-
+	player_ = player;
 	
 
 

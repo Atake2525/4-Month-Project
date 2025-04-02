@@ -9,13 +9,13 @@ LightBlock::~LightBlock()
 
 }
 
-void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input)
+void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input,Player*player)
 {
 	camera_ = camera;
 	dxcCommon = dxbase;
 	input_ = input;
 	blockPosition = position;
-
+	player_ = player;
 	
 
 	
@@ -28,7 +28,7 @@ void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase,
 
 	/*switch*/
 	Light = new switchLight();
-	Light->Initialize({ 0,0,0 }, camera_, dxcCommon, input_);
+	Light->Initialize({ 0,0,0 }, camera_, dxcCommon, input_,player_);
 
 	/*model*/
 	BlockModel = new Object3d();
@@ -42,7 +42,7 @@ void LightBlock::Update()
 {
 	Light->Update();
 
-
+	BlockModel->Update();
 }
 
 void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)

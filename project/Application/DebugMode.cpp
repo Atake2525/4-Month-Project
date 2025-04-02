@@ -167,7 +167,9 @@ void DebugMode::Initialize() {
 	player = new Player();
 	player->Initialize(playerObj, camera, input);
 
-	
+	//==BLOCK===
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input, player);
 
 }
 
@@ -475,7 +477,8 @@ void DebugMode::Update() {
 	grid->Update();
 	player->Update();
 
-
+	/*Block*/
+	lightBlock->Update();
 }
 
 void DebugMode::Draw() {
@@ -495,8 +498,10 @@ void DebugMode::Draw() {
 
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	/*Block*/
+	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
-
+	
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
 
