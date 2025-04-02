@@ -145,7 +145,9 @@ public:
 	// ジョイスティック右の傾きを取得(Vector3)
 	const Vector3& GetRightJoyStickPos3() const;
 
-	const bool& TriggerButton(BYTE buttonNumber) const;
+	const bool& IsMoveLeftJoyStick() const;
+
+	const bool& IsMoveRightJoyStick() const;
 
 
 	/// <summary>
