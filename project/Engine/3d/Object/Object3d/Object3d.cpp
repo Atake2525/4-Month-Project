@@ -231,6 +231,15 @@ void Object3d::SetShininess(const float& shininess) {
 void Object3d::CreateAABB() {
 	const std::vector<VertexData> vData = model_->GetVertices();
 	
+	VertexData v = vData.at(1);
+
+	first.min.x = v.position.x;
+	first.min.y = v.position.y;
+	first.min.z = v.position.z;
+	first.max.x = v.position.x;
+	first.max.y = v.position.y;
+	first.max.z = v.position.z;
+
 	for (VertexData vertices : vData)
 	{
 		first.min.x = std::min(first.min.x, vertices.position.x);

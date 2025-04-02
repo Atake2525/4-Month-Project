@@ -466,7 +466,7 @@ void DebugMode::Update() {
 
 	grid->SetTransform(transform);
 
-	grid->SetParent(camera->GetWorldMatrix());
+	grid->SetParent(player->GetWorldMatrix());
 	if (input->PushKey(DIK_R))
 	{
 		grid->DeleteParent();
