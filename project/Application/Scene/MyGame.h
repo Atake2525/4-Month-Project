@@ -19,6 +19,7 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #include "GameScene.h"
+#include "Title.h"
 
 #pragma once
 
@@ -55,5 +56,9 @@ private:
 	bool finished = false;
 
 	GameScene* gameScene = nullptr;
+
+
+	Title* titleScene = nullptr;
+	bool isGameStarted = false;
 
 };

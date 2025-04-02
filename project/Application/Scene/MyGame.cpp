@@ -35,10 +35,31 @@ void MyGame::Initialize() {
 	gameScene->Initialize();
 
 	//// ↑---- シーンの初期化 ----↑ ////
+
+	titleScene = new Title();
+	titleScene->Initialize(directxBase);
+
 }
 
 void MyGame::Update() {
 	FrameWork::Update();
+
+	//追加
+	if (!isGameStarted) {
+		titleScene->Update();
+		if (titleScene->isFinished()) {
+			isGameStarted = true; // 先にフラグを変更
+
+			titleScene->Finalize();
+			delete titleScene;
+			titleScene = nullptr;
+
+			gameScene = new GameScene();
+			gameScene->Initialize();
+		}
+	}
+	//
+
 
 	if (winApp->ProcessMessage()) {
 		finished = true;
@@ -62,7 +83,15 @@ void MyGame::Draw() {
 
 	directxBase->PreDraw();
 
-	gameScene->Draw();
+	//gameScene->Draw();
+	//追加
+	if (!isGameStarted) {
+		titleScene->Draw();
+	}
+	else {
+		gameScene->Draw();
+	} //
+
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());
@@ -96,10 +125,22 @@ void MyGame::Finalize() {
 
 	//// ↓---- シーンの解放 ----↓ ////
 
-	gameScene->Finalize();
-	delete gameScene;
+	/*gameScene->Finalize();
+	delete gameScene;*/
 
 	//// ↑---- シーンの解放 ----↑ ////
+
+	//追加
+	if (!isGameStarted) {
+		titleScene->Finalize();
+		delete titleScene;
+	}
+	else {
+		gameScene->Finalize();
+		delete gameScene;
+	} //
+
+
 
 	FrameWork::Finalize();
 }
