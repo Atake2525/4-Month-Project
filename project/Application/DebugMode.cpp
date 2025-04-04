@@ -205,7 +205,7 @@ void DebugMode::Initialize() {
 	lightSwitch->Initialize(switchTransform, camera, directxBase, input, player);
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input, lightSwitch);
+	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
 
 }
 
@@ -562,7 +562,7 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	/*Block*/
-	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource,lightSwitch->GetFlag());
 	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	lightSwitch->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
