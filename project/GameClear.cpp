@@ -1,13 +1,11 @@
 // GameClear.cpp
 #include "GameClear.h"
 #include "TextureManager.h"
-#include <DirectXBase.h>
+#include "Sprite.h"
 
-void GameClear::Initialize(DirectXBase* dxc) {
-    directX = dxc;
+void GameClear::Initialize() {
     input = Input::GetInstance();
 
-    SpriteBase::GetInstance()->Initialize(directX);
     TextureManager::GetInstance()->LoadTexture("Resources/Sprite/game_clear.png");
 
     clearSprite = new Sprite();

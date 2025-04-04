@@ -1,14 +1,9 @@
 #include "Title.h"
 #include "TextureManager.h"
-#include <DirectXBase.h>
 
-void Title::Initialize(DirectXBase* dxc) {
+void Title::Initialize() {
 
-	directX = dxc;
 	input = Input::GetInstance();
-
-	// MyGame などの DirectXBase 
-	SpriteBase::GetInstance()->Initialize(directX);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/title.png");
 

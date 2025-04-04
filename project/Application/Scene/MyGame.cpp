@@ -37,7 +37,7 @@ void MyGame::Initialize() {
 	//// ↑---- シーンの初期化 ----↑ ////
 
 	titleScene = new Title();
-	titleScene->Initialize(directxBase);
+	titleScene->Initialize();
 
 }
 
@@ -66,7 +66,7 @@ void MyGame::Update() {
 		gameScene = nullptr;
 
 		gameClearScene = new GameClear();
-		gameClearScene->Initialize(directxBase);
+		gameClearScene->Initialize();
 	}
 	else if (gameClearScene) {
 		gameClearScene->Update();
@@ -153,10 +153,13 @@ void MyGame::Finalize() {
 
 	//追加
 
+	titleScene->Finalize();
 	delete titleScene;
 
+	gameScene->Finalize();
 	delete gameScene;
 
+	gameClearScene->Finalize();
 	delete gameClearScene;
 
 	FrameWork::Finalize();

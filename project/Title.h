@@ -2,14 +2,13 @@
 
 #include "SpriteBase.h"
 #include "Sprite.h"
-#include"DirectXBase.h"
 
 #include "Input.h"
 
 class Title {
 public:
 
-	void Initialize(DirectXBase* dxc);
+	void Initialize();
 	void Update();
 	void Draw();
 	void Finalize();
@@ -18,7 +17,6 @@ public:
 
 
 private:
-	DirectXBase* directX;
 	Sprite* titleSprite = nullptr;
 	Input* input = nullptr;
 	bool finished = false;
