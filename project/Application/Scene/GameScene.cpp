@@ -10,6 +10,7 @@ void GameScene::Initialize() {
 	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
 	camera = new Camera();
+	
 
 	input = Input::GetInstance();
 

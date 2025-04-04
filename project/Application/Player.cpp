@@ -8,8 +8,6 @@ Player::Player()
 
 Player::~Player()
 {
-	delete camera_;
-
 	delete object3d_;
 
 	// 追加したクラス
