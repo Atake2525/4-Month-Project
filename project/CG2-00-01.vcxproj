@@ -138,6 +138,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\FrameWork\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
     <ClCompile Include="Application\Scene\GameScene.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Application\Star.cpp" />
     <ClCompile Include="Application\starResult.cpp" />
@@ -183,12 +185,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\FrameWork\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Application\Scene\GameScene.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Application\Star.h" />
     <ClInclude Include="Application\starResult.h" />
     <ClInclude Include="Application\Scene\MyGame.h" />
     <ClInclude Include="Engine\Lighting\Light.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Title.h" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +234,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CG2-00-01.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

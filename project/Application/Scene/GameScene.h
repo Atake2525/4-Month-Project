@@ -35,6 +35,7 @@ public:
 	void Draw();
 
 	const bool& isFinished() const { return finished; }
+	bool isClear() const { return clearFlag; }
 
 private:
 	Object3d* object3d = nullptr;
@@ -53,6 +54,9 @@ private:
 	AABB aabb;
 
 	bool enableLighting = false;
+
+	//クリアフラグ
+	bool clearFlag = false;
 
 };
 

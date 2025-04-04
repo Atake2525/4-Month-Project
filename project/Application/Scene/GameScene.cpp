@@ -52,10 +52,11 @@ void GameScene::Update() {
 	}
 	ImGui::End();
 
-	if (input->TriggerKey(DIK_ESCAPE))
-	{
+	if (input->TriggerKey(DIK_ESCAPE)) {
 		finished = true;
 	}
+
+	
 	const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
@@ -98,6 +99,11 @@ void GameScene::Update() {
 		cameraTransform.rotate.z += 0.01f;
 	}
 
+	// Cキーでクリア判定
+	if (input->TriggerKey(DIK_C)) {
+		clearFlag = true;
+	}
+
 	input->ShowMouseCursor(true);
 
 	camera->SetTranslate(cameraTransform.translate);
@@ -108,7 +114,7 @@ void GameScene::Update() {
 	object3d->Update();
 	aabb = object3d->GetAABB();
 	sprite->Update();
-	
+
 	input->Update();
 
 }

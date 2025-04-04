@@ -42,6 +42,7 @@ void MyGame::Initialize() {
 }
 
 void MyGame::Update() {
+
 	FrameWork::Update();
 
 	//追加
@@ -58,8 +59,21 @@ void MyGame::Update() {
 			gameScene->Initialize();
 		}
 	}
-	//
+	// ゲームクリア後のシーン遷移
+	if (isGameStarted && !gameClearScene && gameScene->isClear()) {
+		gameScene->Finalize();
+		delete gameScene;
+		gameScene = nullptr;
 
+		gameClearScene = new GameClear();
+		gameClearScene->Initialize(directxBase);
+	}
+	else if (gameClearScene) {
+		gameClearScene->Update();
+		if (gameClearScene->isFinished()) {
+			finished = true;
+		}
+	}
 
 	if (winApp->ProcessMessage()) {
 		finished = true;
@@ -68,12 +82,15 @@ void MyGame::Update() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	gameScene->Update();
-
-	if (gameScene->isFinished())
-	{
-		finished = true;
+	if (!gameClearScene) {
+		gameScene->Update();
+		if (gameScene->isFinished())
+		{
+			finished = true;
+		}
 	}
+
+
 }
 
 void MyGame::Draw() {
@@ -84,9 +101,13 @@ void MyGame::Draw() {
 	directxBase->PreDraw();
 
 	//gameScene->Draw();
+
 	//追加
 	if (!isGameStarted) {
 		titleScene->Draw();
+	}
+	else if (gameClearScene) {
+		gameClearScene->Draw();
 	}
 	else {
 		gameScene->Draw();
