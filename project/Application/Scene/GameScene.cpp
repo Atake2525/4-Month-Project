@@ -138,6 +138,8 @@ void GameScene::Finalize() {
 
 	delete sprite;
 
-	delete title->titleSprite;
+	/*delete clearSprite;
+
+	delete titleSprite;*/
 
 }

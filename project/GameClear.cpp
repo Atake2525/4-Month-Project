@@ -31,5 +31,4 @@ void GameClear::Draw() {
 void GameClear::Finalize() {
 
     delete clearSprite;
-    //clearSprite = nullptr;
 }

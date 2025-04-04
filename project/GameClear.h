@@ -19,4 +19,5 @@ private:
     Sprite* clearSprite = nullptr;
     Input* input = nullptr;
     bool finished = false;
+
 };

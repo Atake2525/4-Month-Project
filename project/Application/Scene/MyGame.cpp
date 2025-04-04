@@ -152,12 +152,10 @@ void MyGame::Finalize() {
 	//// ↑---- シーンの解放 ----↑ ////
 
 	//追加
-	
-		delete titleScene;
-	
-	
-		delete gameScene;
-	
+
+	delete titleScene;
+
+	delete gameScene;
 
 	delete gameClearScene;
 

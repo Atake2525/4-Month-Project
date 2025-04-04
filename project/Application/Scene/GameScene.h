@@ -58,6 +58,9 @@ private:
 
 	bool enableLighting = false;
 
+	/*Sprite* clearSprite = nullptr;
+	Sprite* titleSprite = nullptr;*/
+
 	//クリアフラグ
 	bool clearFlag = false;
 
