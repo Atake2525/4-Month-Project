@@ -137,4 +137,7 @@ void GameScene::Finalize() {
 	delete object3d;
 
 	delete sprite;
+
+	delete title->titleSprite;
+
 }

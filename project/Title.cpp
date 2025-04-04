@@ -36,6 +36,6 @@ void Title::Draw() {
 
 void Title::Finalize() {
 	delete titleSprite;
-	titleSprite = nullptr;
+	//titleSprite = nullptr;
 
 }

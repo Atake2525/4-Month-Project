@@ -9,6 +9,9 @@
 #include "Sprite.h"
 #include "AABB.h"
 
+#include "Title.h"
+#include "GameClear.h"
+
 #pragma once
 
 class GameScene

@@ -152,16 +152,14 @@ void MyGame::Finalize() {
 	//// ↑---- シーンの解放 ----↑ ////
 
 	//追加
-	if (!isGameStarted) {
-		titleScene->Finalize();
+	
 		delete titleScene;
-	}
-	else {
-		gameScene->Finalize();
+	
+	
 		delete gameScene;
-	} //
+	
 
-
+	delete gameClearScene;
 
 	FrameWork::Finalize();
 }
