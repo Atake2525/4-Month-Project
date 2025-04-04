@@ -4,20 +4,20 @@ LightBlock::~LightBlock()
 {
 	delete BlockModel;
 
-	delete Light;
+	
 
 
 }
 
 
-void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input,switchLight*switchLight)
+void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input)
 
 {
 	dxcCommon = dxbase;
 	input_ = input;
 	transform.translate = position;
 	camera_ = camera;
-	Light = switchLight;
+	
 	
 
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
@@ -41,11 +41,11 @@ void LightBlock::Update()
 
 }
 
-void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)
+void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource,bool Flag)
 {
 	
 
-	if (Light->GetFlag()) {
+	if (Flag) {
 		BlockModel->SetModel("box.obj");
 		BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	}
