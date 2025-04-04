@@ -69,11 +69,12 @@ void Player::Update()
 	}
 	ImGui::End();
 
+	Rotate();
+
 	Move();
 
 	Jump();
 
-	Rotate();
 
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);
