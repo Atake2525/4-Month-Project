@@ -68,11 +68,15 @@ void Player::Update()
 		ImGui::TreePop();
 	}
 	ImGui::End();
+
 	Move();
 
 	Jump();
 
 	Rotate();
+
+	camera_->SetTranslate(cameraTransform_.translate);
+	camera_->SetRotate(cameraTransform_.rotate);
 
 	object3d_->SetTransform(modelTransform_);
 	object3d_->SetRotateInDegree(modelTransform_.rotate);
@@ -82,11 +86,11 @@ void Player::Update()
 	// 衝突判定をするためのもの
 	modelTransform_.translate += collision->UpdateCollision(object3d_->GetAABB());
 
+
+
 	object3d_->SetTranslate(modelTransform_.translate);
 	object3d_->Update();
 
-	camera_->SetTranslate(cameraTransform_.translate);
-	camera_->SetRotate(cameraTransform_.rotate);
 
 
 
@@ -170,15 +174,16 @@ void Player::Rotate()
 	if (move.x <= -0.05f) {
 		move.x = -0.05f;
 	}
+
 	if (move.x == 0.0f) {
 		if (input_->PushKey(DIK_RIGHTARROW)) {
-			modelTransform_.rotate.y += rotate;
-			cameraTransform_.rotate.y += rotate;
+			modelTransform_.rotate.y -= rotate;
+			cameraTransform_.rotate.y -= rotate;
 		}
 
 		if (input_->PushKey(DIK_LEFTARROW)) {
-			modelTransform_.rotate.y -= rotate;
-			cameraTransform_.rotate.y -= rotate;
+			modelTransform_.rotate.y += rotate;
+			cameraTransform_.rotate.y += rotate;
 		}
 	}
 	else {
