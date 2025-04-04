@@ -156,6 +156,9 @@ public:
 	// 衝突チェック(AABBとAABB)
 	const bool& CheckCollision(Object3d* object) const;
 
+	// OBBをWorldMatrixから作成してOBBで返す
+	const OBB& CreateOBB() const;
+
 	//const bool& CheckCollisionSphere(const Sphere& sphere) const;
 
 private:
@@ -176,6 +179,4 @@ private:
 	// AABBをモデルを参照して自動的に作成
 	void CreateAABB();
 
-	// OBBをWorldMatrixから作成してOBBで返す
-	const OBB& CreateOBB() const;
 };

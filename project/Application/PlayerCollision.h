@@ -36,6 +36,7 @@ private:
 	struct Plate
 	{
 		AABB aabb;
+		OBB obb;
 		Vector3 normal;
 	};
 

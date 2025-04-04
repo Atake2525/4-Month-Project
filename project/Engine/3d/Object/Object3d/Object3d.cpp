@@ -85,7 +85,7 @@ void Object3d::Initialize() {
 
 	camera = Object3dBase::GetInstance()->GetDefaultCamera();
 
-
+	worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 }
 
 void Object3d::Update() {
@@ -270,7 +270,7 @@ const OBB& Object3d::CreateOBB() const {
 		result.orientations[i].z = worldMatrix.m[i][2];
 	}
 
-	result.size = { aabb.max.x, aabb.max.y, aabb.max.z};
+	result.size = { first.max.x, first.max.y, first.max.z};
 
 	return result;
 }

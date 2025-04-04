@@ -12,68 +12,49 @@
 
 const bool& PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) const {
 
+	// 分離軸リスト
+	Vector3 axes[15];
+	for (int i = 0; i < 3; ++i) {
+		axes[i] = obb1.orientations[i]; // obb1の軸
+		axes[3 + i] = obb2.orientations[i]; // obb2の軸
+	}
 
+	// obb1 と obb2 の軸のクロス積
+	int k = 6;
+	for (int i = 0; i < 3; ++i) {
+		for (int j = 0; j < 3; ++j) {
+			axes[k++] = Cross(obb1.orientations[i], obb2.orientations[j]);
+		}
+	}
 
+	// 各分離軸について調べる
+	for (int i = 0; i < 15; ++i) {
+		Vector3 axis = axes[i];
+		if (axis.x == 0 && axis.y == 0 && axis.z == 0) continue; // ゼロベクトルは無視
 
+		axis = Normalize(axis); // 軸を正規化
 
+		// 各OBBの半径を計算
+		float r1 =
+			std::abs(Dot(axis, obb1.orientations[0] * obb1.size.x)) +
+			std::abs(Dot(axis, obb1.orientations[1] * obb1.size.y)) +
+			std::abs(Dot(axis, obb1.orientations[2] * obb1.size.z));
 
+		float r2 =
+			std::abs(Dot(axis, obb2.orientations[0] * obb2.size.x)) +
+			std::abs(Dot(axis, obb2.orientations[1] * obb2.size.y)) +
+			std::abs(Dot(axis, obb2.orientations[2] * obb2.size.z));
 
+		// 投影距離
+		Vector3 distance = obb2.center - obb1.center;
+		float projectedDistance = std::abs(Dot(distance, axis));
 
+		if (projectedDistance > r1 + r2) {
+			return false; // 投影が重ならない -> 当たり判定なし
+		}
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-	//// 分離軸リスト
-	//Vector3 axes[15];
-	//for (int i = 0; i < 3; ++i) {
-	//	axes[i] = obb1.orientations[i]; // obb1の軸
-	//	axes[3 + i] = obb2.orientations[i]; // obb2の軸
-	//}
-
-	//// obb1 と obb2 の軸のクロス積
-	//int k = 6;
-	//for (int i = 0; i < 3; ++i) {
-	//	for (int j = 0; j < 3; ++j) {
-	//		axes[k++] = Cross(obb1.orientations[i], obb2.orientations[j]);
-	//	}
-	//}
-
-	//// 各分離軸について調べる
-	//for (int i = 0; i < 15; ++i) {
-	//	Vector3 axis = axes[i];
-	//	if (axis.x == 0 && axis.y == 0 && axis.z == 0) continue; // ゼロベクトルは無視
-
-	//	axis = Normalize(axis); // 軸を正規化
-
-	//	// 各OBBの半径を計算
-	//	float r1 =
-	//		std::abs(Dot(axis, obb1.orientations[0] * obb1.size.x)) +
-	//		std::abs(Dot(axis, obb1.orientations[1] * obb1.size.y)) +
-	//		std::abs(Dot(axis, obb1.orientations[2] * obb1.size.z));
-
-	//	float r2 =
-	//		std::abs(Dot(axis, obb2.orientations[0] * obb2.size.x)) +
-	//		std::abs(Dot(axis, obb2.orientations[1] * obb2.size.y)) +
-	//		std::abs(Dot(axis, obb2.orientations[2] * obb2.size.z));
-
-	//	// 投影距離
-	//	Vector3 distance = obb2.center - obb1.center;
-	//	float projectedDistance = std::abs(Dot(distance, axis));
-
-	//	if (projectedDistance > r1 + r2) {
-	//		return false; // 投影が重ならない -> 当たり判定なし
-	//	}
-	//}
-
-	//return true; // すべての軸で投影が重なる -> 当たり判定あり
+	return true; // すべての軸で投影が重なる -> 当たり判定あり
 }
 
 
@@ -128,6 +109,8 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 
 	std::vector<VertexData> vertices;
 	AABB aabb;
+	OBB obb;
+
 	Vector3 collisionNormal = { 0.0f, 0.0f, 0.0f };
 	Assimp::Importer importer;
 	std::string filePath = directoryPath + "/" + filename;
@@ -196,8 +179,21 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 
 			}
 
+			obb.center = aabb.max / 2;
+
+			Matrix4x4 rotate = Multiply(MakeRotateXMatrix(0.0f), Multiply(MakeRotateYMatrix(0.0f), MakeRotateZMatrix(0.0f)));
+
+			for (int i = 0; i < 3; i++)
+			{
+				obb.orientations[i].x = rotate.m[i][0];
+				obb.orientations[i].y = rotate.m[i][1];
+				obb.orientations[i].z = rotate.m[i][2];
+			}
+
+			obb.size = aabb.max;
+
 			// 平面衝突判定の構造体を作成
-			Plate plate = { aabb, collisionNormal };
+			Plate plate = { aabb, obb, collisionNormal };
 			// listに登録(vector)
 			collisionListPlate.push_back(plate); 
 			// 参照したいのは1つの平面情報だけなので以前取得した頂点情報をクリア
