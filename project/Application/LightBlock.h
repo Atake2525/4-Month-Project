@@ -21,9 +21,9 @@ class LightBlock
 public:
 	~LightBlock();
 
-	void Initialize(Vector3, Camera*, DirectXBase*, Input*,switchLight*);
+	void Initialize(Vector3, Camera*, DirectXBase*, Input*, switchLight*);
 
-	void Update(switchLight*);
+	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 	AABB GetAABB();
 	
@@ -34,6 +34,8 @@ private:
 	Input* input_;
 	DirectXBase* dxcCommon;
 	Camera* camera_;
+
+	switchLight* Light = nullptr;
 	
 
 	Transform switchPosition;

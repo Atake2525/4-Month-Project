@@ -537,8 +537,8 @@ void DebugMode::Update() {
 
 	grid->Update();
 	/*Block*/
-	lightBlock->Update();
 	lightSwitch->Update();
+	lightBlock->Update();
 	player->Update(lightBlock);
 
 	
@@ -565,12 +565,12 @@ void DebugMode::Draw() {
 	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	lightSwitch->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	star->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	//goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	//star->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	///starResultManager とその中の星を描画
-	if (starResultManager) {
-	starResultManager->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	}
+	//if (starResultManager) {
+	//starResultManager->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	//}
 
 	// ここから下でDrawしたModelはグリッド表示される
 	WireFrameObjectBase::GetInstance()->ShaderDraw();
@@ -630,6 +630,10 @@ void DebugMode::Finalize() {
 	delete playerObj;
 
 	delete player;
+
+	delete lightBlock;
+
+	//delete lightSwitch;
 
 	WireFrameObjectBase::GetInstance()->Finalize();
 

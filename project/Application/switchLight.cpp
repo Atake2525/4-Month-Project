@@ -1,14 +1,15 @@
 #include "switchLight.h"
 #include<iostream>
-#include"CollisionManager.h"
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
+#include"Player.h"
+
 switchLight::~switchLight()
 {
-	delete switchModel;
+	//delete switchModel;
 }
 
 void switchLight::Initialize(Transform transform, Camera* camera, DirectXBase* dxc, Input* input,Player*player)
@@ -39,7 +40,7 @@ void switchLight::Initialize(Transform transform, Camera* camera, DirectXBase* d
 
 void switchLight::Update()
 {
-	if (CollisionAABB(player_->GetAABB(), GetAAbb())) {
+	if (IsCollisionAABB(player_->GetAABB(), GetAAbb())) {
 		//falseの時におしたらtrueになる
 		if (!switchFlag) {
 			if (input_->TriggerKey(DIK_1)) {
@@ -62,6 +63,15 @@ void switchLight::Update()
 	ImGui::Begin("Debug Window");
 	ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更
 	ImGui::End();
+}
+
+const bool& switchLight::IsCollisionAABB(const AABB& a, const AABB& b) {
+	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {
+		return true;
+	}
+	return false;
 }
 
 void switchLight::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)

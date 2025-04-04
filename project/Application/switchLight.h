@@ -8,24 +8,27 @@
 #include"Camera.h"
 #include"Input.h"
 #include"AABB.h"
-#include"Player.h"
 #include"Transform.h"
 
 #include <wrl.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
+class Player;
+
 class switchLight
 {
 public:
 	~switchLight();
 
-	void Initialize(Transform, Camera*, DirectXBase*, Input*,Player*);
+	void Initialize(Transform, Camera*, DirectXBase*, Input*, Player*);
 
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 	bool GetFlag() { return switchFlag; }
 	AABB GetAAbb();
+
+	const bool& IsCollisionAABB(const AABB& a, const AABB& b);
 
 private:
 	/*モデル*/
@@ -43,7 +46,7 @@ private:
 
 	//==========スイッチ範囲指定===============
 
-	Player* player_;
+	Player* player_ = nullptr;
 	
 	float radius;
 

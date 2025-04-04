@@ -1,6 +1,6 @@
 #define NOMINMAX
 #include "Player.h"
-#include"CollisionManager.h"
+#include"LightBlock.h"
 
 Player::Player()
 {
@@ -80,13 +80,22 @@ Camera* Player::GetCamera()
 	return camera_;
 }
 
+const bool& Player::IsCollisionAABB(const AABB& a, const AABB& b) {
+	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {
+		return true;
+	}
+	return false;
+}
+
 void Player::CheckCollsion(LightBlock*block)
 {
 	
 		const AABB& blockAABB = block->GetAABB();
 		const AABB& playerAABB = object3d_->GetAABB();
 
-		if (CollisionAABB(playerAABB, blockAABB)) {
+		if (IsCollisionAABB(playerAABB, blockAABB)) {
 			
 
 			// **上から着地**

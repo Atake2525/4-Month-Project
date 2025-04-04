@@ -41,6 +41,8 @@
 #include "Player.h"
 #include"LightBlock.h"
 #include"switchLight.h"
+#include "Goal.h"
+#include "Star.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"

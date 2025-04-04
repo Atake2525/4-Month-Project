@@ -11,7 +11,6 @@
 #include "WinApp.h"
 #include "kMath.h"
 #include "PlayerCollision.h"
-#include"LightBlock.h"
 
 // 衝突判定で追加
 #include "AABB.h"
@@ -19,6 +18,8 @@
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
+
+class LightBlock;
 
 class Player {
 public: // メンバ関数
@@ -68,6 +69,8 @@ public: // メンバ関数
 		Vector3 result = translate;
 		modelTransform_.translate += result; 
 	}
+
+	const bool& IsCollisionAABB(const AABB& a, const AABB& b);
 
 	void CheckCollsion(LightBlock*);
 
