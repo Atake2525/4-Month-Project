@@ -1,5 +1,8 @@
 #define NOMINMAX
 #include "Player.h"
+#include "externels/imgui/imgui.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
 
 Player::Player()
 {
@@ -51,7 +54,20 @@ void Player::Initialize(Camera* camera)
 
 void Player::Update()
 {
-
+	ImGui::Begin("State");
+	if (ImGui::TreeNode("PlayerCamera")) {
+		ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
+		ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.1f);
+		ImGui::DragFloat3("Scale", &cameraTransform_.scale.x, 0.1f);
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("PlayerModel")) {
+		ImGui::DragFloat3("Tranlate", &modelTransform_.translate.x, 0.1f);
+		ImGui::DragFloat3("Rotate", &modelTransform_.rotate.x, 0.1f);
+		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
+		ImGui::TreePop();
+	}
+	ImGui::End();
 	Move();
 
 	Jump();
@@ -165,8 +181,10 @@ void Player::Rotate()
 			cameraTransform_.rotate.y -= rotate;
 		}
 	}
-	modelTransform_.rotate.y += move.x;
-	cameraTransform_.rotate.y += move.x;
+	else {
+		modelTransform_.rotate.y += move.x;
+		cameraTransform_.rotate.y += move.x;
+	}
 }
 
 void Player::Jump()

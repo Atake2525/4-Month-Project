@@ -16,10 +16,6 @@
 // 衝突判定で追加
 #include "AABB.h"
 
-#include "externels/imgui/imgui.h"
-#include "externels/imgui/imgui_impl_dx12.h"
-#include "externels/imgui/imgui_impl_win32.h"
-
 class Player {
 public: // メンバ関数
 

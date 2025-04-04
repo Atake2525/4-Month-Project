@@ -10,8 +10,7 @@ void GameScene::Initialize() {
 	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
 	camera = new Camera();
-	
-
+	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 	input = Input::GetInstance();
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
