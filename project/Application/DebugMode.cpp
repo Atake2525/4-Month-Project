@@ -199,9 +199,13 @@ void DebugMode::Initialize() {
 	player = new Player();
 	player->Initialize(playerObj, camera, input);
 
+	//switch
+	// 
+	lightSwitch = new switchLight();
+	lightSwitch->Initialize(switchTransform, camera, directxBase, input, player);
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input, player);
+	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input, lightSwitch);
 
 }
 
@@ -532,10 +536,12 @@ void DebugMode::Update() {
 	}
 
 	grid->Update();
-	player->Update();
-
 	/*Block*/
 	lightBlock->Update();
+	lightSwitch->Update();
+	player->Update(lightBlock);
+
+	
 }
 
 void DebugMode::Draw() {
@@ -558,10 +564,10 @@ void DebugMode::Draw() {
 	/*Block*/
 	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
-
+	lightSwitch->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	star->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	starResultManager とその中の星を描画
+	///starResultManager とその中の星を描画
 	if (starResultManager) {
 	starResultManager->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	}

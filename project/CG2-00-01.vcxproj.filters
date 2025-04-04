@@ -43,8 +43,6 @@
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Application\Star.cpp" />
     <ClCompile Include="Application\starResult.cpp" />
-    <ClCompile Include="OBB.cpp" />
-    <ClCompile Include="Engine\Math\OBB.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />

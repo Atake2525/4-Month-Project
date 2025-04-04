@@ -54,8 +54,7 @@ const Vector3& PlayerCollision::UpdateCollision(const AABB& playerAABB) const {
 
 // 衝突判定の追加
 //void PlayerCollision::AddCollision(const AABB& collisionAABB) {
-//	collisionListAABB.push_back(collisionAABB);
-//}
+//	collisionListAABB.push_back(collisionAABB);       
 
 // 衝突判定の追加(壁、床)
 void PlayerCollision::AddCollision(const AABB& AABB, const Vector3& collisionNormal) {

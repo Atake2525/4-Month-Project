@@ -40,7 +40,7 @@
 #include "WireFrameObjectBase.h"
 #include "Player.h"
 #include"LightBlock.h"
-
+#include"switchLight.h"
 
 #include "algorithm"
 #include "externels/imgui/imgui.h"
@@ -176,4 +176,6 @@ private:
 
 	/*=====消えるブロック=====*/
 	LightBlock* lightBlock = nullptr;
+	switchLight* lightSwitch = nullptr;
+	Transform switchTransform;
 };

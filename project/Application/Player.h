@@ -11,10 +11,10 @@
 #include "WinApp.h"
 #include "kMath.h"
 #include "PlayerCollision.h"
+#include"LightBlock.h"
 
 // 衝突判定で追加
 #include "AABB.h"
-#include"OBB.h"
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -41,7 +41,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
+	void Update(LightBlock*);
 
 	/// <summary>
 	/// 描画
@@ -63,12 +63,13 @@ public: // メンバ関数
 	const Vector3& GetPosition() const;
 
 	const AABB& GetAABB() const { return object3d_->GetAABB(); }
-
-
+	
 	void AddTranslate(const Vector3& translate) { 
 		Vector3 result = translate;
 		modelTransform_.translate += result; 
 	}
+
+	void CheckCollsion(LightBlock*);
 
 private:
 
@@ -111,7 +112,7 @@ private: // メンバ変数
 
 	float JumpVelocity = 0.0f;
 
-
+	
 	// 追加したクラス
 	PlayerCollision* collision = nullptr;
 };

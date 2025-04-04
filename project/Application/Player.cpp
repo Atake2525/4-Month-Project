@@ -1,5 +1,6 @@
 #define NOMINMAX
 #include "Player.h"
+#include"CollisionManager.h"
 
 Player::Player()
 {
@@ -12,10 +13,10 @@ Player::~Player()
 	delete collision;
 }
 
-void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
+void Player::Initialize(Object3d* object3d, Camera* camera, Input* input )
 {
 	camera_ = camera;
-
+	
 	object3d_ = object3d;
 
 	// 追加したクラス
@@ -42,7 +43,7 @@ void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
 
 }
 
-void Player::Update()
+void Player::Update(LightBlock*block)
 {
 
 	Move();
@@ -50,7 +51,7 @@ void Player::Update()
 	Jump();
 
 	Rotate();
-
+	CheckCollsion(block);
 	object3d_->SetTransform(modelTransform_);
 	object3d_->SetRotateInDegree(modelTransform_.rotate);
 	object3d_->SetColor(modelColor_);
@@ -77,6 +78,35 @@ void Player::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, M
 Camera* Player::GetCamera()
 {
 	return camera_;
+}
+
+void Player::CheckCollsion(LightBlock*block)
+{
+	
+		const AABB& blockAABB = block->GetAABB();
+		const AABB& playerAABB = object3d_->GetAABB();
+
+		if (CollisionAABB(playerAABB, blockAABB)) {
+			
+
+			// **上から着地**
+			if (playerAABB.min.y >= blockAABB.max.y - 0.1f && velocity.y < 0) {
+				modelTransform_.translate.y = blockAABB.max.y; // ブロックの上に乗る
+				velocity.y=0; // Y速度リセット（落ちないように）
+			}
+
+			// **横から衝突したとき**
+			if (playerAABB.max.x >= blockAABB.min.x && playerAABB.min.x <= blockAABB.max.x) {
+				if (velocity.x > 0) { // 右から衝突
+					modelTransform_.translate.x = blockAABB.min.x - playerAABB.max.x + playerAABB.min.x;
+				}
+				else if (velocity.x < 0) { // 左から衝突
+					modelTransform_.translate.x = blockAABB.max.x - playerAABB.min.x + playerAABB.max.x;
+				}
+				velocity.x=0; // X速度リセット（押し戻し）
+			}
+		
+	}
 }
 
 void Player::Move()
@@ -192,3 +222,4 @@ const Vector3& Player::GetPosition() const {
 	result.z = object3d_->GetWorldMatrix().m[3][2];
 	return result;
 }
+

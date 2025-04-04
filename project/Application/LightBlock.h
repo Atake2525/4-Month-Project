@@ -9,6 +9,7 @@
 #include"Input.h"
 #include"switchLight.h"
 #include"Player.h"
+#include"AABB.h"
 
 #include <wrl.h>
 #include <d3d12.h>
@@ -20,21 +21,25 @@ class LightBlock
 public:
 	~LightBlock();
 
-	void Initialize(Vector3, Camera*, DirectXBase*, Input*,Player*);
+	void Initialize(Vector3, Camera*, DirectXBase*, Input*,switchLight*);
 
-	void Update();
+	void Update(switchLight*);
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
-
+	AABB GetAABB();
+	
+	
 private:
 	Object3d* BlockModel;
-	Vector3 blockPosition;
+	Transform transform;
 	Input* input_;
 	DirectXBase* dxcCommon;
-	switchLight* Light;
-	//===========�����蔻��p============
+	Camera* camera_;
+	
 
-	/*player*/
-	Player* player_;
+	Transform switchPosition;
+	//==========当たり判定============
+
+	
 
 
 };

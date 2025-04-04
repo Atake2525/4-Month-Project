@@ -9,4 +9,3 @@ struct OBB
 	Vector3 size;
 };
 
-OBB OBBChange(Vector3 min,Vector3 max,Vector3 rotate);
