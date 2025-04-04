@@ -110,6 +110,7 @@ void Object3d::Update() {
 	transformationMatrix->World = worldMatrix;
 
 	Vector3 worldPos = { worldMatrix.m[3][0], worldMatrix.m[3][1], worldMatrix.m[3][2] };
+	const std::vector<VertexData> vData = model_->GetVertices();
 
 	aabb.min = first.min + worldPos;
 	aabb.max = first.max + worldPos;
@@ -240,7 +241,7 @@ void Object3d::CreateAABB() {
 	first.max.y = v.position.y;
 	first.max.z = v.position.z;
 
-	for (VertexData vertices : vData)
+	for (const auto& vertices : vData)
 	{
 		first.min.x = std::min(first.min.x, vertices.position.x);
 		first.min.y = std::min(first.min.y, vertices.position.y);
@@ -250,6 +251,28 @@ void Object3d::CreateAABB() {
 		first.max.y = std::max(first.max.y, vertices.position.y);
 		first.max.z = std::max(first.max.z, vertices.position.z);
 	}
+}
+
+
+const OBB& Object3d::CreateOBB() const {
+	// OBBの作成
+	OBB result;
+
+	result.center.x = worldMatrix.m[3][0];
+	result.center.y = worldMatrix.m[3][1];
+	result.center.z = worldMatrix.m[3][2];
+
+	//result.orientations[0] = 
+	for (int i = 0; i < 3; i++)
+	{
+		result.orientations[i].x = worldMatrix.m[i][0];
+		result.orientations[i].y = worldMatrix.m[i][1];
+		result.orientations[i].z = worldMatrix.m[i][2];
+	}
+
+	result.size = { aabb.max.x, aabb.max.y, aabb.max.z};
+
+	return result;
 }
 
 const bool& Object3d::CheckCollision(Object3d* object) const {

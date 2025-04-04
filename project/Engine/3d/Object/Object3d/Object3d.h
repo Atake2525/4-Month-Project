@@ -8,6 +8,7 @@
 #include "Matrix4x4.h"
 #include "Transform.h"
 #include "AABB.h"
+#include "OBB.h"
 #include "kMath.h"
 
 #pragma once
@@ -174,4 +175,7 @@ private:
 
 	// AABBをモデルを参照して自動的に作成
 	void CreateAABB();
+
+	// OBBをWorldMatrixから作成してOBBで返す
+	const OBB& CreateOBB() const;
 };

@@ -10,12 +10,79 @@
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
+const bool& PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) const {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//// 分離軸リスト
+	//Vector3 axes[15];
+	//for (int i = 0; i < 3; ++i) {
+	//	axes[i] = obb1.orientations[i]; // obb1の軸
+	//	axes[3 + i] = obb2.orientations[i]; // obb2の軸
+	//}
+
+	//// obb1 と obb2 の軸のクロス積
+	//int k = 6;
+	//for (int i = 0; i < 3; ++i) {
+	//	for (int j = 0; j < 3; ++j) {
+	//		axes[k++] = Cross(obb1.orientations[i], obb2.orientations[j]);
+	//	}
+	//}
+
+	//// 各分離軸について調べる
+	//for (int i = 0; i < 15; ++i) {
+	//	Vector3 axis = axes[i];
+	//	if (axis.x == 0 && axis.y == 0 && axis.z == 0) continue; // ゼロベクトルは無視
+
+	//	axis = Normalize(axis); // 軸を正規化
+
+	//	// 各OBBの半径を計算
+	//	float r1 =
+	//		std::abs(Dot(axis, obb1.orientations[0] * obb1.size.x)) +
+	//		std::abs(Dot(axis, obb1.orientations[1] * obb1.size.y)) +
+	//		std::abs(Dot(axis, obb1.orientations[2] * obb1.size.z));
+
+	//	float r2 =
+	//		std::abs(Dot(axis, obb2.orientations[0] * obb2.size.x)) +
+	//		std::abs(Dot(axis, obb2.orientations[1] * obb2.size.y)) +
+	//		std::abs(Dot(axis, obb2.orientations[2] * obb2.size.z));
+
+	//	// 投影距離
+	//	Vector3 distance = obb2.center - obb1.center;
+	//	float projectedDistance = std::abs(Dot(distance, axis));
+
+	//	if (projectedDistance > r1 + r2) {
+	//		return false; // 投影が重ならない -> 当たり判定なし
+	//	}
+	//}
+
+	//return true; // すべての軸で投影が重なる -> 当たり判定あり
+}
+
+
 // 衝突判定の相手を設定して更新
 const Vector3& PlayerCollision::UpdateCollision(const AABB& playerAABB) const {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
 	// 壁の衝突判定
-	for (Plate collisionPlate : collisionListPlate)
+	for (const auto& collisionPlate : collisionListPlate)
 	{
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
 		/*ImGui::Begin("collisionDistance");
@@ -57,7 +124,7 @@ const Vector3& PlayerCollision::UpdateCollision(const AABB& playerAABB) const {
 // 衝突判定の追加(壁)
 void PlayerCollision::AddCollision(const std::string& directoryPath, const std::string& filename) {
 
-	const float epsilon = 1e-6;
+	//const float epsilon = 1e-6;
 
 	std::vector<VertexData> vertices;
 	AABB aabb;
@@ -86,7 +153,7 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
 				VertexData vertex;
 				// 数字が極めて小さい時ほぼ0に変換する
-				if (fabs(position.x) < epsilon)
+				/*if (fabs(position.x) < epsilon)
 				{
 					position.x = 0.00000f;
 				}
@@ -97,7 +164,7 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 				if (fabs(position.z) < epsilon)
 				{
 					position.z = 0.00000f;
-				}
+				}*/
 				vertex.position = { position.x, position.y, position.z, 1.0f };
 				vertex.normal = { normal.x, normal.y, normal.z };
 				// aiProcess_MakeLeftHandedはz*=-1で、右手->左手に変換するので手動で対処
@@ -117,15 +184,15 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 				vertices.push_back(vertex);
 			}
 			// AABBを生成する
-			for (VertexData vertices : vertices)
+			for (const auto& vertex : vertices)
 			{
-				aabb.min.x = std::min(aabb.min.x, vertices.position.x);
-				aabb.min.y = std::min(aabb.min.y, vertices.position.y);
-				aabb.min.z = std::min(aabb.min.z, vertices.position.z);
+				aabb.min.x = std::min(aabb.min.x, vertex.position.x);
+				aabb.min.y = std::min(aabb.min.y, vertex.position.y);
+				aabb.min.z = std::min(aabb.min.z, vertex.position.z);
 
-				aabb.max.x = std::max(aabb.max.x, vertices.position.x);
-				aabb.max.y = std::max(aabb.max.y, vertices.position.y);
-				aabb.max.z = std::max(aabb.max.z, vertices.position.z);
+				aabb.max.x = std::max(aabb.max.x, vertex.position.x);
+				aabb.max.y = std::max(aabb.max.y, vertex.position.y);
+				aabb.max.z = std::max(aabb.max.z, vertex.position.z);
 
 			}
 

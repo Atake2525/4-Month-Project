@@ -112,11 +112,11 @@ bool Input::ReturnMouse(int mouseNumber) {
 }
 
 Vector2& Input::GetMousePos2() {
-	Vector2 result = { mouseState.lX, mouseState.lY };
+	Vector2 result = { static_cast<float>(mouseState.lX),  static_cast<float>(mouseState.lY) };
 	return result;
 }
 
 Vector3& Input::GetMousePos3() {
-	Vector3 result = { mouseState.lX, mouseState.lY, mouseState.lZ };
+	Vector3 result = { static_cast<float>(mouseState.lX),  static_cast<float>(mouseState.lY),  static_cast<float>(mouseState.lZ) };
 	return result;
 }

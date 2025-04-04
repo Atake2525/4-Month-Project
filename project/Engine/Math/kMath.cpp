@@ -30,13 +30,13 @@ Vector3& operator-=(Vector3& v1, const Vector3& v2) {
 	return v1;
 }
 
-const Vector3 operator-(Vector3& v1, const Vector3 v2) {
-	Vector3 result;
-	result.x = v1.x - v2.x;
-	result.y = v1.y - v2.y;
-	result.z = v1.z - v2.z;
-	return result;
-}
+//const Vector3 operator-(Vector3& v1, const Vector3 v2) {
+//	Vector3 result;
+//	result.x = v1.x - v2.x;
+//	result.y = v1.y - v2.y;
+//	result.z = v1.z - v2.z;
+//	return result;
+//}
 
 Vector3& operator*=(Vector3& v1, const Vector3& v2) {
 	v1.x *= v2.x;
@@ -92,13 +92,15 @@ const Vector3 operator/(const Vector3& v1, const float f) {
 	return result;
 }
 
-const Vector3 operator-(const Vector3& v1) {
-	Vector3 v;
-	v -= v1;
-	return v;
+//Vector3 operator- (Vector3& v1) {
+//	Vector3 v;
+//	v -= v1;
+//	return v;
+//}
+
+Vector3 Vector3::operator-(const Vector3& other) const {
+	 return { x - other.x, y - other.y, z - other.z };
 }
-
-
 
 //単位行列の作成
 Matrix4x4 MakeIdentity4x4() {
@@ -143,6 +145,12 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 	ans.x = v1.y * v2.z - v1.z * v2.y;
 	ans.y = v1.z * v2.x - v1.x * v2.z;
 	ans.z = v1.x * v2.y - v1.y * v2.x;
+	return ans;
+};
+
+float Dot(const Vector3& v1, const Vector3& v2) {
+	float ans;
+	ans = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 	return ans;
 };
 

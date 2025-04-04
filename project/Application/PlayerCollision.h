@@ -1,7 +1,8 @@
 #include "Vector3.h"
+#include "Vector4.h"
+#include "OBB.h"
 #include "AABB.h"
 #include "vector"
-#include "Vector4.h"
 #include <string>
 
 #pragma once
@@ -25,8 +26,6 @@ public:
 	/// <param name="filename">ファイルの名前</param>
 	void AddCollision(const std::string& directoryPath, const std::string& filename);
 
-	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
-
 private:
 
 	struct VertexData {
@@ -39,6 +38,10 @@ private:
 		AABB aabb;
 		Vector3 normal;
 	};
+
+	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
+
+	const bool& IsCollisionOBB(const OBB& obb1, const OBB& obb2) const;
 
 	// 衝突判定が計算される距離
 	float collisionDistance = 1000.0f;

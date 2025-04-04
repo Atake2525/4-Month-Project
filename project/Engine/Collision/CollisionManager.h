@@ -51,7 +51,6 @@ const bool& CollisionAABB(const AABB& a, const AABB& b) {
 	}
 	return false;
 }
-
 //const bool& CollisionAABBSphere(const AABB& target1, const Sphere& target2) {
 //	// 最近接点を求める
 //	Vector3 closestPoint{
