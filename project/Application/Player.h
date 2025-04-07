@@ -42,12 +42,14 @@ public: // メンバ関数
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update(LightBlock*);
+	void Update();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightData, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightData, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightData);
+
+	void SetLightBlock(LightBlock* lightBlock) { lightBlock_ = lightBlock; }
 
 	Camera* GetCamera();
 
@@ -118,5 +120,7 @@ private: // メンバ変数
 	
 	// 追加したクラス
 	PlayerCollision* collision = nullptr;
+
+	LightBlock* lightBlock_ = nullptr;
 };
 

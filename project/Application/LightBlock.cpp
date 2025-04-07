@@ -1,26 +1,28 @@
 #include "LightBlock.h"
+#include"ModelManager.h"
 
 LightBlock::~LightBlock()
 {
-	delete BlockModel;
-
-	
-
-
+	if (BlockModel)
+	{
+		delete BlockModel;
+	}
 }
 
-
-void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input)
-
+void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*input*/)
 {
-	dxcCommon = dxbase;
-	input_ = input;
-	transform.translate = position;
-	camera_ = camera;
+	transform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		position
+	};
+	//input_ = input;
+	//transform.translate = position;
+	//camera_ = camera;
 	
 	
 
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
+	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
 	
@@ -43,15 +45,14 @@ void LightBlock::Update()
 
 void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource,bool Flag)
 {
-	
-
-	if (Flag) {
+	bool flag = Flag;
+	if (flag) {
 		BlockModel->SetModel("box.obj");
 		BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	}
 }
 
-AABB LightBlock::GetAABB()
+const AABB& LightBlock::GetAABB() const
 {
 
 		AABB aabb;

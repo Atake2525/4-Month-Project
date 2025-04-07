@@ -1,11 +1,11 @@
 #pragma once
 #include"kMath.h"
 #include"Object3dBase.h"
-#include"ModelBase.h"
+//#include"ModelBase.h"
 #include"ModelManager.h"
 #include"Object3d.h"
-#include"DirectXBase.h"
-#include"Camera.h"
+//#include"DirectXBase.h"
+//#include"Camera.h"
 #include"Input.h"
 #include"AABB.h"
 #include"Transform.h"
@@ -21,7 +21,7 @@ class switchLight
 public:
 	~switchLight();
 
-	void Initialize(Transform, Camera*, DirectXBase*, Input*, Player*);
+	void Initialize(Transform,/* Camera*, DirectXBase*,*/ Input*, Player*);
 
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
@@ -38,9 +38,9 @@ private:
 	/*オンオフのフラグ*/
 	bool switchFlag;
 	/*DirectX*/
-	DirectXBase* directX;
+	//DirectXBase* directX;
 	/*カメラ*/
-	Camera* switchCamera;
+	//Camera* switchCamera;
 	/*切り替えるために（仮）*/
 	Input* input_;
 

@@ -9,11 +9,12 @@ Player::Player()
 
 Player::~Player()
 {
+	//delete lightBlock_;
 	// 追加したクラス
 	delete collision;
 }
 
-void Player::Initialize(Object3d* object3d, Camera* camera, Input* input )
+void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
 {
 	camera_ = camera;
 	
@@ -26,6 +27,7 @@ void Player::Initialize(Object3d* object3d, Camera* camera, Input* input )
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -24.0f}, {12.0f, 10.0f, -24.0f} }, Vector3{ 0.0f, 0.0f, 1.0f });
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });
+
 
 	input_ = new Input();
 	input_ = input;
@@ -43,7 +45,7 @@ void Player::Initialize(Object3d* object3d, Camera* camera, Input* input )
 
 }
 
-void Player::Update(LightBlock*block)
+void Player::Update()
 {
 
 	Move();
@@ -51,7 +53,7 @@ void Player::Update(LightBlock*block)
 	Jump();
 
 	Rotate();
-	CheckCollsion(block);
+	CheckCollsion(lightBlock_);
 	object3d_->SetTransform(modelTransform_);
 	object3d_->SetRotateInDegree(modelTransform_.rotate);
 	object3d_->SetColor(modelColor_);

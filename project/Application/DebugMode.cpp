@@ -195,17 +195,25 @@ void DebugMode::Initialize() {
 	farClip = camera->GetFarClipDistance();
 	fov = camera->GetfovY();
 
+	switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.0f, 0.0f}
+	};
+
 	//Player
 	player = new Player();
 	player->Initialize(playerObj, camera, input);
 
+	//==BLOCK===
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0.0f, 0.0f, 0.0f }/*, camera, input*/);
 	//switch
 	// 
 	lightSwitch = new switchLight();
-	lightSwitch->Initialize(switchTransform, camera, directxBase, input, player);
-	//==BLOCK===
-	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0,0,0 }, camera, directxBase, input);
+	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
+
+	player->SetLightBlock(lightBlock);
 
 }
 
@@ -468,10 +476,11 @@ void DebugMode::Update() {
 	if (input->TriggerKey(DIK_ESCAPE)) {
 		Finished = true;
 	}
-	if (input->TriggerKey(DIK_LCONTROL)) {
+	/*if (input->TriggerKey(DIK_LCONTROL)) {
 		showCursor = !showCursor;
 		input->ShowMouseCursor(showCursor);
-	}
+	}*/
+	input->ShowMouseCursor(true);
 	if (input->TriggerKey(DIK_F))
 	{
 		object3d->SetAxisAngle(axis);
@@ -539,7 +548,7 @@ void DebugMode::Update() {
 	/*Block*/
 	lightSwitch->Update();
 	lightBlock->Update();
-	player->Update(lightBlock);
+	player->Update();
 
 	
 }
@@ -562,7 +571,7 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	/*Block*/
-	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource,lightSwitch->GetFlag());
+	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource,true);
 	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	lightSwitch->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	//goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
@@ -633,7 +642,7 @@ void DebugMode::Finalize() {
 
 	delete lightBlock;
 
-	//delete lightSwitch;
+	delete lightSwitch;
 
 	WireFrameObjectBase::GetInstance()->Finalize();
 

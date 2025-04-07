@@ -1,14 +1,12 @@
 #pragma once
 #include"kMath.h"
-#include"Object3dBase.h"
-#include"ModelBase.h"
-#include"ModelManager.h"
+//#include"Object3dBase.h"
+//#include"ModelBase.h"
 #include"Object3d.h"
-#include"DirectXBase.h"
-#include"Camera.h"
-#include"Input.h"
-#include"switchLight.h"
-#include"Player.h"
+//#include"Camera.h"
+//#include"Input.h"
+//#include"switchLight.h"
+//#include"Player.h"
 #include"AABB.h"
 
 #include <wrl.h>
@@ -21,27 +19,23 @@ class LightBlock
 public:
 	~LightBlock();
 
-	void Initialize(Vector3, Camera*, DirectXBase*, Input*);
+	void Initialize(const Vector3& position/*, Camera*, Input**/);
 
 	void Update();
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>,bool);
-	AABB GetAABB();
+	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource, bool Flag);
+	const AABB& GetAABB() const;
 	
 	
 private:
 	Object3d* BlockModel;
 	Transform transform;
-	Input* input_;
-	DirectXBase* dxcCommon;
-	Camera* camera_;
+	//Input* input_;
+	//Camera* camera_;
 
-	switchLight* Light = nullptr;
+	//switchLight* Light = nullptr;
 	
 
-	Transform switchPosition;
+	//Transform switchPosition;
 	//==========当たり判定============
-
-	
-
 
 };

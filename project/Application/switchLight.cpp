@@ -9,13 +9,14 @@
 
 switchLight::~switchLight()
 {
-	//delete switchModel;
+	if (switchModel)
+	{
+		delete switchModel;
+	}
 }
 
-void switchLight::Initialize(Transform transform, Camera* camera, DirectXBase* dxc, Input* input,Player*player)
+void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase* dxc*/, Input* input,Player*player)
 {
-	directX = dxc;
-	switchCamera = camera;
 	switchTransform = transform;
 	input_ = input;
 	player_ = player;
@@ -33,7 +34,7 @@ void switchLight::Initialize(Transform transform, Camera* camera, DirectXBase* d
 	// object3dの初期化(KamataEngineで言うところのModel)
 	switchModel = new Object3d();
 	switchModel->Initialize();
-
+	switchModel->SetModel("Grid.obj");
 	//位置を指定する
 	switchModel->SetTranslate(switchTransform.translate);
 }
