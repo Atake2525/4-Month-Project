@@ -169,6 +169,8 @@ void Player::Rotate()
 	const float rotate = 0.05f;
 	Vector3 move{ 0,0 };
 	move = input_->GetRightJoyStickPos3();
+	Vector3 mouse{ 0,0 ,0 };
+	mouse = input_->GetMouseVel3();
 	if (move.x >= 0.05f) {
 		move.x = 0.05f;
 	}
@@ -177,20 +179,22 @@ void Player::Rotate()
 	}
 
 	if (move.x == 0.0f) {
-		if (input_->PushKey(DIK_RIGHTARROW)) {
-			modelTransform_.rotate.y -= rotate;
-			cameraTransform_.rotate.y -= rotate;
-		}
+		modelTransform_.rotate.y += mouse.x;
+		cameraTransform_.rotate.y += mouse.x;
 
-		if (input_->PushKey(DIK_LEFTARROW)) {
-			modelTransform_.rotate.y += rotate;
-			cameraTransform_.rotate.y += rotate;
-		}
 	}
 	else {
 		modelTransform_.rotate.y += move.x;
 		cameraTransform_.rotate.y += move.x;
 	}
+
+	ImGui::Begin("State");
+	if (ImGui::TreeNode("Mouse")) {
+		ImGui::DragFloat3("Mouse", &mouse.x, 0.1f);
+		ImGui::TreePop();
+	}
+	ImGui::End();
+
 }
 
 void Player::Jump()
