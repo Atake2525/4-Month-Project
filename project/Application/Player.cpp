@@ -87,13 +87,8 @@ void Player::Update()
 	// 衝突判定をするためのもの
 	modelTransform_.translate += collision->UpdateCollision(object3d_->GetAABB());
 
-
-
 	object3d_->SetTranslate(modelTransform_.translate);
 	object3d_->Update();
-
-
-
 
 }
 
@@ -171,11 +166,19 @@ void Player::Rotate()
 	move = input_->GetRightJoyStickPos3();
 	Vector3 mouse{ 0,0 ,0 };
 	mouse = input_->GetMouseVel3();
+
 	if (move.x >= 0.05f) {
 		move.x = 0.05f;
 	}
 	if (move.x <= -0.05f) {
 		move.x = -0.05f;
+	}
+
+	if (mouse.x >= 0.075f) {
+		mouse.x = 0.075f;
+	}
+	if (mouse.x <= -0.075f) {
+		mouse.x = -0.075f;
 	}
 
 	if (move.x == 0.0f) {

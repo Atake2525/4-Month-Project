@@ -28,6 +28,7 @@ void GameScene::Initialize() {
 	player->Initialize(camera);
 
 	modelTransform = object3d->GetTransform();
+
 }
 
 void GameScene::Update() {
@@ -100,7 +101,7 @@ void GameScene::Update() {
 		cameraTransform.rotate.z += 0.01f;
 	}
 
-	input->ShowMouseCursor(true);
+	input->ShowMouseCursor(false);
 
 	player->Update();
 	//camera->SetTranslate(cameraTransform.translate);
