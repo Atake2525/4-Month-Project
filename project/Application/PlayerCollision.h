@@ -7,6 +7,10 @@
 
 #pragma once
 
+enum class LenXY {
+	X,
+	Y,
+};
 
 class PlayerCollision {
 public:
@@ -16,9 +20,22 @@ public:
 	//初期化
 	//void Initialize(Player* player);
 
-	// 衝突判定の相手を設定して更新(必要な分移動させる)
-	const Vector3& UpdateCollision(const AABB& playerAABB) const;
+	// 衝突判定Xの相手を設定して更新(必要な分移動させる)
+	const Vector3& UpdateCollisionX(const AABB& playerAABB, const float& playerVelocityX) const;
 
+	// 衝突判定Yの相手を設定して更新(必要な分移動させる)
+	const Vector3& UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) const;
+
+	// 衝突判定Zの相手を設定して更新(必要な分移動させる)
+	const Vector3& UpdateCollisionZ(const AABB& playerAABB, const float& playerVelocityZ) const;
+
+	// 衝突判定Yの上部に衝突しているかをboolで返す
+	const bool& IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) const;
+
+	// 衝突判定Yの下部に衝突しているかをboolで返す
+	const bool& IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) const;
+
+	const LenXY& GetLenXY(const AABB& playerAABB, const float& playerVelocityY	)
 	/// <summary>
 	/// 衝突判定の追加(壁)
 	/// </summary>
