@@ -1,5 +1,10 @@
 #define NOMINMAX
 #include "Player.h"
+#include "OBB.h"
+
+#include "externels/imgui/imgui.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
 
 Player::Player()
 {
@@ -21,10 +26,12 @@ void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
 	// 追加したクラス
 
 	collision = new PlayerCollision();
-	collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
+	collision->AddCollision("Resources/Model/collision", "stageCollision.obj");
+	//collision->AddCollision("Resources/Debug", "Col.obj");
+	/*collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -24.0f}, {12.0f, 10.0f, -24.0f} }, Vector3{ 0.0f, 0.0f, 1.0f });
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
-	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });
+	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });*/
 
 	input_ = new Input();
 	input_ = input;
@@ -56,8 +63,45 @@ void Player::Update()
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
 	object3d_->Update();
+
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+	{
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+	}
+	else if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	{
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+	}
+
 	// 衝突判定をするためのもの
-	modelTransform_.translate += collision->UpdateCollision(object3d_->GetAABB());
+	modelTransform_.translate += collision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
+
+	if (!onGround_ && collision->IsColYUnderside(object3d_->GetAABB(), JumpVelocity)) {
+		JumpVelocity = 0.0f;
+	}
+	if (!onGround_ && collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
+		JumpVelocity = 0.0f;
+		onGround_ = true;
+	}
 
 	object3d_->SetTranslate(modelTransform_.translate);
 	object3d_->Update();
@@ -65,6 +109,34 @@ void Player::Update()
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);
 
+	bool x = false;
+	bool z = false;
+
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+	{
+		x = true;
+	}
+	else
+	{
+		x = false;
+	}
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	{
+		z = true;
+	}
+	else
+	{
+		z = false;
+	}
+
+	ImGui::Begin("Player");
+	ImGui::DragFloat3("translate", &modelTransform_.translate.x, 1.0f);
+	ImGui::DragFloat3("Velocity", &velocity.x, 1.0f);
+	ImGui::DragFloat("VelocityY", &JumpVelocity, 1.0f);
+	ImGui::Checkbox("onGround", &onGround_);
+	ImGui::Checkbox("X", &x);
+	ImGui::Checkbox("Z", &z);
+	ImGui::End();
 
 
 }
@@ -165,6 +237,10 @@ void Player::Jump()
 		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Button::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
+		} 
+		else if (!collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity))
+		{
+			onGround_ = false;
 		}
 
 	}
@@ -176,10 +252,11 @@ void Player::Jump()
 
 	modelTransform_.translate.y += JumpVelocity;
 
-	if (modelTransform_.translate.y <= 1.0f) {
+	/*if (modelTransform_.translate.y <= 1.0f) {
 		modelTransform_.translate.y = 1.0f;
+		JumpVelocity = 0.0f;
 		onGround_ = true;
-	}
+	}*/
 
 }
 

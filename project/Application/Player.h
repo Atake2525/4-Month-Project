@@ -68,6 +68,8 @@ public: // メンバ関数
 		modelTransform_.translate += result; 
 	}
 
+	const Matrix4x4& GetWorldMatrix() const { return object3d_->GetWorldMatrix(); }
+
 private:
 
 	void Move();

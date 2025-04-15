@@ -23,7 +23,7 @@ Vector3& operator/=(Vector3& v1, const Vector3& v2);
 
 const Vector3 operator+(const Vector3& v1, const Vector3 v2);
 
-const Vector3 operator-(const Vector3& v1, const Vector3 v2);
+//const Vector3 operator-(const Vector3& v1, const Vector3 v2);
 
 const Vector3 operator*(const Vector3& v1, const Vector3 v2);
 
@@ -35,7 +35,8 @@ const Vector3 operator-(const Vector3& v1, const float f);
 
 const Vector3 operator/(const Vector3& v1, const float f);
 
-const Vector3 operator-(const Vector3& v1);
+//Vector3 operator-(Vector3& v1);
+
 
 //単位行列の作成
 Matrix4x4 MakeIdentity4x4();
@@ -87,6 +88,8 @@ Vector3 Normalize(const Vector3& v);
 // クロス積
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
+// 内積
+float Dot(const Vector3& v1, const Vector3& v2);
 // 共役Quaternionを返す
 Quaternion Conjugate(const Quaternion& quaternion);
 
@@ -128,6 +131,8 @@ float SwapDegree(float radian);
 float SwapRadian(float degree);
 
 float Length(const Vector3& v);
+
+float Distance(const Vector3& v1, const Vector3& v2);
 
 // ベクトル変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);

@@ -1,9 +1,16 @@
 #include "Vector3.h"
+#include "Vector4.h"
+#include "OBB.h"
 #include "AABB.h"
 #include "vector"
+#include <string>
 
 #pragma once
 
+enum class LenXZ {
+	X,
+	Z,
+};
 
 class PlayerCollision {
 public:
@@ -13,32 +20,50 @@ public:
 	//初期化
 	//void Initialize(Player* player);
 
-	// 衝突判定の相手を設定して更新(必要な分移動させる)
-	const Vector3& UpdateCollision(const AABB& playerAABB) const;
+	// 衝突判定Xの相手を設定して更新(必要な分移動させる)
+	const Vector3& UpdateCollisionX(const AABB& playerAABB, const float& playerVelocityX) const;
 
-	// 衝突判定の追加
-	//void AddCollision(const AABB& collisionAABB);
+	// 衝突判定Yの相手を設定して更新(必要な分移動させる)
+	const Vector3& UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) const;
 
+	// 衝突判定Zの相手を設定して更新(必要な分移動させる)
+	const Vector3& UpdateCollisionZ(const AABB& playerAABB, const float& playerVelocityZ) const;
+
+	// 衝突判定Yの上部に衝突しているかをboolで返す
+	const bool& IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) const;
+
+	// 衝突判定Yの下部に衝突しているかをboolで返す
+	const bool& IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) const;
+
+	const LenXZ& GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const;
 	/// <summary>
 	/// 衝突判定の追加(壁)
 	/// </summary>
-	/// <param name="AABB">壁の座標</param>
-	/// <param name="collisionNormal">衝突したときに向かう方向</param>
-	void AddCollision(const AABB& AABB, const Vector3& collisionNormal);
-
-	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
+	/// <param name="directoryPath">ディレクトリのパス</param>
+	/// <param name="filename">ファイルの名前</param>
+	void AddCollision(const std::string& directoryPath, const std::string& filename);
 
 private:
+
+	struct VertexData {
+		Vector4 position;
+		Vector3 normal;
+	};
+
 	struct Plate
 	{
 		AABB aabb;
+		OBB obb;
 		Vector3 normal;
 	};
-	//AABB playerAABB;
 
-	//Player* player_ = nullptr;
+	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
 
-	//std::vector<AABB> collisionListAABB;
+	const bool& IsCollisionOBB(const OBB& obb1, const OBB& obb2) const;
+
+	// 衝突判定が計算される距離
+	float collisionDistance = 1000.0f;
+	
 	std::vector<Plate> collisionListPlate;
 };
 

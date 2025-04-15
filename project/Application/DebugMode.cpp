@@ -521,11 +521,9 @@ void DebugMode::Update() {
 	object3d->SetEnableLighting(modelEnableLighting);
 	object3d->Update();
 
-
-
 	grid->SetTransform(transform);
 
-	grid->SetParent(camera->GetWorldMatrix());
+	grid->SetParent(player->GetWorldMatrix());
 	if (input->PushKey(DIK_R))
 	{
 		grid->DeleteParent();
