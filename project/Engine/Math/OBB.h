@@ -5,6 +5,6 @@
 struct OBB
 {
 	Vector3 center;
-	Vector3 orientation[3];
+	Vector3 orientations[3];
 	Vector3 size;
 };
