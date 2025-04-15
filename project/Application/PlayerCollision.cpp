@@ -75,6 +75,10 @@ const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const f
 		{
 			continue;
 		}
+		if (playerAABB.max.y > collisionPlate.aabb.max.y)
+		{
+			continue;
+		}
 		// 衝突判定をAABBとAABBでとる
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{
@@ -109,6 +113,10 @@ const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const f
 		{
 			continue;
 		}
+		/*if (playerAABB.max.y > collisionPlate.aabb.max.y)
+		{
+			continue;
+		}*/
 		// 衝突判定をAABBとAABBでとる
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{
@@ -140,6 +148,10 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 		ImGui::DragFloat("dist", &dist);
 		ImGui::End();*/
 		if (dist > collisionDistance)
+		{
+			continue;
+		}
+		if (playerAABB.max.y > collisionPlate.aabb.max.y)
 		{
 			continue;
 		}
@@ -213,6 +225,45 @@ const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float
 		}
 	}
 	return false;
+}
+
+const LenXZ& PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const {
+	int in = 0;
+	int num = 0;
+	float len = Distance(collisionListPlate.at(1).aabb.max, playerAABB.max);
+	for (const auto& collisionPlate : collisionListPlate)
+	{
+		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
+
+		if (len > dist)
+		{
+			len = dist;
+			num = in;
+		}
+		in++;
+	}
+	// プレイヤーの中心を求める
+	Vector3 center = (collisionListPlate.at(num).aabb.max - collisionListPlate.at(num).aabb.min) /  2 + collisionListPlate.at(num).aabb.min;
+
+	// 衝突判定用のAABBの作成
+	AABB centerAABB = { center, center };
+	// 衝突判定をAABBとAABBでとる
+	if (CollisionAABB(playerAABB, centerAABB))
+	{
+		//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
+		if (collisionListPlate.at(num).normal.x == 1.0f || collisionListPlate.at(num).normal.x == -1.0f)
+		{
+			return LenXZ::X;
+		}
+		else if (collisionListPlate.at(num).normal.z == 1.0f || collisionListPlate.at(num).normal.z == -1.0f)
+		{
+			return LenXZ::Z;
+		}
+	}
+	ImGui::Begin("collisionDistance");
+	ImGui::DragFloat("Len", &len);
+	ImGui::End();
+	return LenXZ::Z;
 }
 
 // 衝突判定の追加(壁)

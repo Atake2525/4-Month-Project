@@ -27,6 +27,7 @@ void Player::Initialize(Object3d* object3d, Camera* camera, Input* input)
 
 	collision = new PlayerCollision();
 	collision->AddCollision("Resources/Model/collision", "stageCollision.obj");
+	//collision->AddCollision("Resources/Debug", "Col.obj");
 	/*collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -24.0f}, {12.0f, 10.0f, -24.0f} }, Vector3{ 0.0f, 0.0f, 1.0f });
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
@@ -62,6 +63,35 @@ void Player::Update()
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
 	object3d_->Update();
+
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+	{
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+	}
+	else if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	{
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+	}
+
 	// 衝突判定をするためのもの
 	modelTransform_.translate += collision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
 
@@ -76,27 +106,36 @@ void Player::Update()
 	object3d_->SetTranslate(modelTransform_.translate);
 	object3d_->Update();
 
-
-	// 衝突判定をするためのもの
-	modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
-
-	object3d_->SetTranslate(modelTransform_.translate);
-	object3d_->Update();
-	// 衝突判定をするためのもの
-	modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
-
-	object3d_->SetTranslate(modelTransform_.translate);
-	object3d_->Update();
-
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);
 
+	bool x = false;
+	bool z = false;
+
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+	{
+		x = true;
+	}
+	else
+	{
+		x = false;
+	}
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	{
+		z = true;
+	}
+	else
+	{
+		z = false;
+	}
 
 	ImGui::Begin("Player");
 	ImGui::DragFloat3("translate", &modelTransform_.translate.x, 1.0f);
 	ImGui::DragFloat3("Velocity", &velocity.x, 1.0f);
 	ImGui::DragFloat("VelocityY", &JumpVelocity, 1.0f);
 	ImGui::Checkbox("onGround", &onGround_);
+	ImGui::Checkbox("X", &x);
+	ImGui::Checkbox("Z", &z);
 	ImGui::End();
 
 

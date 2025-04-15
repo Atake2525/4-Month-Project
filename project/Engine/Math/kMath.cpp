@@ -1,4 +1,5 @@
 ﻿#include "kMath.h"
+#include "AABB.h"
 
 const Vector3 operator*(const Vector3& v, const float f) {
 	Vector3 result;
@@ -100,6 +101,14 @@ const Vector3 operator/(const Vector3& v1, const float f) {
 
 Vector3 Vector3::operator-(const Vector3& other) const {
 	 return { x - other.x, y - other.y, z - other.z };
+}
+
+AABB AABB::operator+(const AABB& aabb) const {
+	return { max + aabb.max, min + aabb.min };
+}
+
+AABB AABB::operator-(const AABB& aabb) const {
+	return { max - aabb.max, min - aabb.min };
 }
 
 //単位行列の作成
