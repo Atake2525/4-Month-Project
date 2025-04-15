@@ -87,6 +87,8 @@ Vector3 Normalize(const Vector3& v);
 // クロス積
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
+float Dot(const Vector3& v1, const Vector3& v2);
+
 // 共役Quaternionを返す
 Quaternion Conjugate(const Quaternion& quaternion);
 
