@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "AABB.h"
 #include "Player.h"
+
 #include "Goal.h"
 #include "Star.h"
 #include "StarResult.h"
@@ -61,6 +62,11 @@ private:
 	bool enableLighting = false;
 
 	Player* player = nullptr;
+
+	Goal* goal = nullptr;
+
+	Star* star = nullptr;
+	starResult* starResultManager = nullptr;
 
 };
 
