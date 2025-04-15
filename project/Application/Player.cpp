@@ -98,25 +98,41 @@ void Player::CheckCollsion(LightBlock*block)
 		const AABB& playerAABB = object3d_->GetAABB();
 
 		if (IsCollisionAABB(playerAABB, blockAABB)) {
-			
+			//突き抜けたかについて
+			float overlapLeft=playerAABB.max.x-blockAABB.min.x;
+			float overlapRight = blockAABB.max.x - playerAABB.min.x;
+			float overlapTop = playerAABB.min.y - blockAABB.max.y;
+			float overlapBottom = blockAABB.min.y - playerAABB.max.y;
 
-			// **上から着地**
-			if (playerAABB.min.y >= blockAABB.max.y - 0.1f && velocity.y < 0) {
-				modelTransform_.translate.y = blockAABB.max.y; // ブロックの上に乗る
-				velocity.y=0; // Y速度リセット（落ちないように）
-			}
+			/*もっとも小さいオーバーラップを優先的に解決*/
+			float minOverlapX = std::min(overlapLeft, overlapRight);
+			float minOverlapY = std::min(overlapTop, overlapBottom);
 
-			// **横から衝突したとき**
-			if (playerAABB.max.x >= blockAABB.min.x && playerAABB.min.x <= blockAABB.max.x) {
-				if (velocity.x > 0) { // 右から衝突
-					modelTransform_.translate.x = blockAABB.min.x - playerAABB.max.x + playerAABB.min.x;
+			if (minOverlapX < minOverlapY) {
+				if (overlapLeft < overlapRight) {
+
+					/*左衝突*/
+					modelTransform_.translate.x -= overlapLeft;
 				}
-				else if (velocity.x < 0) { // 左から衝突
-					modelTransform_.translate.x = blockAABB.max.x - playerAABB.min.x + playerAABB.max.x;
+				else {
+					/*右衝突*/
+					modelTransform_.translate.x += overlapRight;
 				}
-				velocity.x=0; // X速度リセット（押し戻し）
+				velocity.x = 0;
 			}
-		
+			else {
+				if (overlapTop < overlapBottom) {
+					/*上から着地*/
+					modelTransform_.translate.y -= overlapTop;
+					velocity.y = 0;
+					onGround_ = true;
+				}
+				else {
+					/*下からぶつかった*/
+					modelTransform_.translate.y += overlapBottom;
+					velocity.y = 0;
+				}
+			}
 	}
 }
 
