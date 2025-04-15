@@ -9,6 +9,11 @@
 #include "Sprite.h"
 #include "AABB.h"
 #include "Player.h"
+#include "Goal.h"
+#include "Star.h"
+#include "StarResult.h"
+
+
 
 #pragma once
 

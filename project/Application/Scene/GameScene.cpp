@@ -128,6 +128,14 @@ void GameScene::Draw() {
 	object3d->Draw();
 
 	player->Draw();
+
+	goal->Draw();
+	star->Draw();
+	// starResultManager ‚Æ‚»‚Ì’†‚Ì¯‚ð•`‰æ
+	if (starResultManager) {
+		starResultManager->Draw();
+	}
+
 }
 
 void GameScene::Finalize() {
@@ -139,4 +147,13 @@ void GameScene::Finalize() {
 	delete sprite;
 
 	delete player;
+
+	delete goal;
+
+	delete star;
+	if (starResultManager) {
+		delete starResultManager;
+	}
+
+
 }
