@@ -11,9 +11,6 @@
 #include"ModelBase.h"
 #include"ModelManager.h"
 
-#include"DirectXBase.h"
-
-
 class Player;//後で追加
 
 class Goal
@@ -22,7 +19,7 @@ public:
 
 	~Goal();
 	// 初期化
-	void Initialize(Vector3, DirectXBase*); //Object3d*
+	void Initialize(const Transform& translate); //Object3d*
 	void Update();
 	//描画
 	void Draw();
@@ -39,6 +36,7 @@ private:
 	Object3d* goalModel_;	// objモデルデータ
 	Vector3 goalPos_;		// ゴールの位置
 	Camera* goalCamera_;	//カメラ
+	Transform transform_;  // 位置、回転、スケール
 
 	//終了フラグ
 	bool goalFlag_ = false;

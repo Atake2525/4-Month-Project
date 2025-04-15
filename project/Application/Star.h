@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Vector3.h"  
 #include "Object3d.h"
-#include "DirectXBase.h"
 #include "ModelManager.h"
 
 class Player;
@@ -11,13 +10,13 @@ public:
 	~Star();
 
 	// 初期化
-	void Initialize(const Transform& translate, DirectXBase* dxc);
+	void Initialize(const Transform& translate);
 
 	// 更新
 	void Update();
 
 	// 描画
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
+	void Draw();
 
 	// 当たり判定
 	void OnCollision(const Player* player);

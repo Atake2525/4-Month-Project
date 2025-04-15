@@ -13,10 +13,10 @@ Goal::~Goal() {
 
 }
 
-void Goal::Initialize(Vector3 position, DirectXBase* dxc)
+void Goal::Initialize(const Transform& translate)
 {
-	directX = dxc;
-	goalPos_ = position;
+	//directX = dxc;
+	this->transform_ = translate;
 
 	ModelManager::GetInstance()->Initialize(directX);
 	Object3dBase::GetInstance()->Initialize(directX);
@@ -30,7 +30,7 @@ void Goal::Initialize(Vector3 position, DirectXBase* dxc)
 	goalModel_ = new Object3d();
 	goalModel_->Initialize();
 	goalModel_->SetModel("goal.obj");
-	goalModel_->SetTranslate(goalPos_);//位置を指定する
+	goalModel_->SetTranslate(transform_.translate);//位置を指定する
 
 	//// クリアスプライトの初期化
 	//clearSprite_ = new Sprite();

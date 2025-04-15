@@ -7,10 +7,10 @@ Star::~Star() {
 	delete starModel_;
 }
 
-void Star::Initialize(const Transform& translate, DirectXBase* dxc) {
+void Star::Initialize(const Transform& translate) {
 	
 	this->transform_ = translate;
-	this->directX_ = dxc;
+	//this->directX_ = dxc;
 
 	ModelManager::GetInstance()->Initialize(directX_);
 
@@ -40,7 +40,7 @@ void Star::Update() {
 	ImGui::End();
 }
 
-void Star::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
+void Star::Draw() {
 	if (!collected_) {
 		starModel_->Draw();
 	}
