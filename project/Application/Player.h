@@ -110,5 +110,6 @@ private: // メンバ変数
 	// 追加したクラス
 	PlayerCollision* collision = nullptr;
 
+	bool mouseFlag = true;
 };
 

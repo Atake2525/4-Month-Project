@@ -87,13 +87,8 @@ void Player::Update()
 	// 衝突判定をするためのもの
 	modelTransform_.translate += collision->UpdateCollision(object3d_->GetAABB());
 
-
-
 	object3d_->SetTranslate(modelTransform_.translate);
 	object3d_->Update();
-
-
-
 
 }
 
@@ -169,6 +164,9 @@ void Player::Rotate()
 	const float rotate = 0.05f;
 	Vector3 move{ 0,0 };
 	move = input_->GetRightJoyStickPos3();
+	Vector3 mouse{ 0,0 ,0 };
+	mouse = input_->GetMouseVel3();
+
 	if (move.x >= 0.05f) {
 		move.x = 0.05f;
 	}
@@ -176,21 +174,30 @@ void Player::Rotate()
 		move.x = -0.05f;
 	}
 
-	if (move.x == 0.0f) {
-		if (input_->PushKey(DIK_RIGHTARROW)) {
-			modelTransform_.rotate.y -= rotate;
-			cameraTransform_.rotate.y -= rotate;
-		}
+	if (mouse.x >= 0.075f) {
+		mouse.x = 0.075f;
+	}
+	if (mouse.x <= -0.075f) {
+		mouse.x = -0.075f;
+	}
 
-		if (input_->PushKey(DIK_LEFTARROW)) {
-			modelTransform_.rotate.y += rotate;
-			cameraTransform_.rotate.y += rotate;
-		}
+	if (move.x == 0.0f) {
+		modelTransform_.rotate.y += mouse.x;
+		cameraTransform_.rotate.y += mouse.x;
+
 	}
 	else {
 		modelTransform_.rotate.y += move.x;
 		cameraTransform_.rotate.y += move.x;
 	}
+
+	ImGui::Begin("State");
+	if (ImGui::TreeNode("Mouse")) {
+		ImGui::DragFloat3("Mouse", &mouse.x, 0.1f);
+		ImGui::TreePop();
+	}
+	ImGui::End();
+
 }
 
 void Player::Jump()
