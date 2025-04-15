@@ -4,6 +4,7 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Quaternion.h"
 #include <cmath>
 #include <cassert>
 #define _USE_MATH_DEFINES
@@ -73,6 +74,11 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 //３次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 
+//3次元アフィン変換行列Quaternion版
+Matrix4x4 MakeAffineMatrixInQuaternion(const Vector3& scale, const Matrix4x4& axisAngle, const Vector3& translate);
+
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
 //逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);
 
@@ -84,6 +90,20 @@ Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
 // 内積
 float Dot(const Vector3& v1, const Vector3& v2);
+// 共役Quaternionを返す
+Quaternion Conjugate(const Quaternion& quaternion);
+
+// Quaternionの積
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
+
+// 任意軸回転を表すQuaternionの生成
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
+
+// ベクトルをQuaternionで回転させた結果のベクトルを求める
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
+
+// Quaternionから回転行列を求める
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 
 
 // 1, 透視投影行列

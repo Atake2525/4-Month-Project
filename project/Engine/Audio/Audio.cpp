@@ -47,8 +47,6 @@ void Audio::Initialize() {
 }
 
 SoundData Audio::SoundLoadWave(const char* filename) {
-	HRESULT result;
-
 	/// ファイルオープン
 
 	// ファイル入力ストリームのインスタンス

@@ -7,6 +7,9 @@
 #include"DirectXBase.h"
 #include"Camera.h"
 #include"Input.h"
+#include"AABB.h"
+#include"Player.h"
+#include"Transform.h"
 
 #include <wrl.h>
 #include <d3d12.h>
@@ -16,16 +19,19 @@ class switchLight
 {
 public:
 	~switchLight();
-	void Initialize(Vector3, Camera*, DirectXBase*, Input*);
+
+	void Initialize(Transform, Camera*, DirectXBase*, Input*,Player*);
+
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 	bool GetFlag() { return switchFlag; }
+	AABB GetAAbb();
 
 private:
 	/*モデル*/
 	Object3d* switchModel;
 	/*位置*/
-	Vector3 switchPosition;
+	Transform switchTransform;
 	/*オンオフのフラグ*/
 	bool switchFlag;
 	/*DirectX*/
@@ -34,5 +40,11 @@ private:
 	Camera* switchCamera;
 	/*切り替えるために（仮）*/
 	Input* input_;
-};
 
+	//==========スイッチ範囲指定===============
+
+	Player* player_;
+	
+	float radius;
+
+};

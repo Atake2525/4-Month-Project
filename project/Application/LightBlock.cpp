@@ -3,32 +3,31 @@
 LightBlock::~LightBlock()
 {
 	delete BlockModel;
-	
+
 	delete Light;
-	
+
 
 }
 
-void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input)
+
+void LightBlock::Initialize(Vector3 position, Camera*camera, DirectXBase*dxbase, Input*input,Player*player)
+
 {
-	camera_ = camera;
 	dxcCommon = dxbase;
 	input_ = input;
 	blockPosition = position;
 
+	player_ = player;
 	
 
-	
-
-	//モデル読み込み
-	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
 	/*switch*/
 	Light = new switchLight();
-	Light->Initialize({ 0,0,0 }, camera_, dxcCommon, input_);
+
+	Light->Initialize({ 0,0,0 }, camera_, dxcCommon, input_,player_);
+
 
 	/*model*/
 	BlockModel = new Object3d();
@@ -42,6 +41,8 @@ void LightBlock::Update()
 {
 	Light->Update();
 
+
+	BlockModel->Update();
 
 }
 

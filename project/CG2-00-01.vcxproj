@@ -64,6 +64,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)\Engine\kMath;$(ProjectDir);$(ProjectDir)\Application;$(ProjectDir)Engine\Collision;$(ProjectDir)externels\assimp\include;$(ProjectDir)Engine\2d\Sprite;$(ProjectDir)Engine\2d\SpriteBase;$(ProjectDir)Engine\3d\Camera;$(ProjectDir)Engine\3d\Model\Model;$(ProjectDir)Engine\3d\Model\ModelBase;$(ProjectDir)Engine\3d\Object\WireFrame;$(ProjectDir)Engine\3d\Object\Object3d;$(ProjectDir)Engine\3d\Object\Object3dBase;$(ProjectDir)Engine\3d\Object\WireFrame;$(ProjectDir)Engine\BlackBox\LeakChecker;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\BlackBox\Log;$(ProjectDir)Engine\Core\BaseEngine;$(ProjectDir)Engine\Core\Input;$(ProjectDir)Engine\Core\WinApp;$(ProjectDir)Engine\LoadManager\ModelManager;$(ProjectDir)Engine\LoadManager\TextureManager;$(ProjectDir)Engine\Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externels\assimp\include;$(ProjectDir)\Engine\LoadManager\TextureManager;$(ProjectDir)\Engine\LoadManager\ModelManager;$(ProjectDir)\Engine\Core\WinApp;$(ProjectDir)\Engine\Core\Input;$(ProjectDir)\Engine\Core\BaseEngine;$(ProjectDir)\Engine\Collision;$(ProjectDir)\Engine\BlackBox\Log;$(ProjectDir)\Engine\BlackBox\LeakChecker;$(ProjectDir)\Engine\Audio;$(ProjectDir)\Engine\2d\SpriteBase;$(ProjectDir)\Engine\2d\Sprite;$(ProjectDir)\Engine\Math;$(ProjectDir)\Engine\3d\Object\WireFrame;$(ProjectDir)\Engine\3d\Object\Object3dBase;$(ProjectDir)\Engine\3d\Object\Object3d;$(ProjectDir)\Engine\3d\Model\ModelBase;$(ProjectDir)\Engine\3d\Model\Model;$(ProjectDir)\Engine\3d\Camera;$(ProjectDir)\Application;$(ProjectDir);</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,6 +91,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)\Engine\kMath;$(ProjectDir);$(ProjectDir)\Application;$(ProjectDir)Engine\Collision;$(ProjectDir)externels\assimp\include;$(ProjectDir)Engine\2d\Sprite;$(ProjectDir)Engine\2d\SpriteBase;$(ProjectDir)Engine\3d\Camera;$(ProjectDir)Engine\3d\Model\Model;$(ProjectDir)Engine\3d\Model\ModelBase;$(ProjectDir)Engine\3d\Object\WireFrame;$(ProjectDir)Engine\3d\Object\Object3d;$(ProjectDir)Engine\3d\Object\Object3dBase;$(ProjectDir)Engine\BlackBox\LeakChecker;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\BlackBox\Log;$(ProjectDir)Engine\Core\BaseEngine;$(ProjectDir)Engine\Core\Input;$(ProjectDir)Engine\Core\WinApp;$(ProjectDir)Engine\LoadManager\ModelManager;$(ProjectDir)Engine\LoadManager\TextureManager;$(ProjectDir)Engine\Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externels\assimp\include;$(ProjectDir)\Engine\LoadManager\TextureManager;$(ProjectDir)\Engine\LoadManager\ModelManager;$(ProjectDir)\Engine\Core\WinApp;$(ProjectDir)\Engine\Core\Input;$(ProjectDir)\Engine\Core\BaseEngine;$(ProjectDir)\Engine\Collision;$(ProjectDir)\Engine\BlackBox\Log;$(ProjectDir)\Engine\BlackBox\LeakChecker;$(ProjectDir)\Engine\Audio;$(ProjectDir)\Engine\2d\SpriteBase;$(ProjectDir)\Engine\2d\Sprite;$(ProjectDir)\Engine\Math;$(ProjectDir)\Engine\3d\Object\WireFrame;$(ProjectDir)\Engine\3d\Object\Object3dBase;$(ProjectDir)\Engine\3d\Object\Object3d;$(ProjectDir)\Engine\3d\Model\ModelBase;$(ProjectDir)\Engine\3d\Model\Model;$(ProjectDir)\Engine\3d\Camera;$(ProjectDir)\Application;$(ProjectDir);$(ProjectDir);$(ProjectDir)Engine\Collision;$(ProjectDir)externels\assimp\include;$(ProjectDir)Engine\2d\Sprite;$(ProjectDir)Engine\2d\SpriteBase;$(ProjectDir)Engine\3d\Camera;$(ProjectDir)Engine\3d\Model\Model;$(ProjectDir)Engine\3d\Model\ModelBase;$(ProjectDir)Engine\3d\Object\Object3d;$(ProjectDir)Engine\3d\Object\WireFrame;$(ProjectDir)Engine\3d\Object\Object3dBase;$(ProjectDir)Engine\BlackBox\LeakChecker;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\BlackBox\Log;$(ProjectDir)Engine\Core\BaseEngine;$(ProjectDir)Engine\Core\Input;$(ProjectDir)Engine\Core\WinApp;$(ProjectDir)Engine\LoadManager\ModelManager;$(ProjectDir)Engine\LoadManager\TextureManager;$(ProjectDir)Engine\Math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -97,7 +99,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externels\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -140,6 +142,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
     <ClCompile Include="Goal.cpp" />
+    <ClCompile Include="Application\Star.cpp" />
+    <ClCompile Include="Application\starResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
@@ -181,6 +185,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Goal.h" />
+    <ClInclude Include="Engine\Math\Quaternion.h" />
+    <ClInclude Include="Application\Star.h" />
+    <ClInclude Include="Application\starResult.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externels\imgui\LICENSE.txt" />
@@ -217,6 +224,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

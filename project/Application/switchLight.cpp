@@ -1,5 +1,6 @@
 #include "switchLight.h"
 #include<iostream>
+#include"CollisionManager.h"
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -9,21 +10,23 @@ switchLight::~switchLight()
 {
 	delete switchModel;
 }
-void switchLight::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc, Input* input)
+
+void switchLight::Initialize(Transform transform, Camera* camera, DirectXBase* dxc, Input* input,Player*player)
 {
 	directX = dxc;
 	switchCamera = camera;
-	switchPosition = position;
+	switchTransform = transform;
 	input_ = input;
-
+	player_ = player;
 	
+
 
 
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
 
 	// object3dの初期化(KamataEngineで言うところのModel)
@@ -31,25 +34,29 @@ void switchLight::Initialize(Vector3 position, Camera* camera, DirectXBase* dxc,
 	switchModel->Initialize();
 
 	//位置を指定する
-	switchModel->SetTranslate(switchPosition);
+	switchModel->SetTranslate(switchTransform.translate);
 }
 
 void switchLight::Update()
 {
-	//falseの時におしたらtrueになる
-	if (!switchFlag) {
-		if (input_->TriggerKey(DIK_1)) {
-			switchFlag = true;
+	if (CollisionAABB(player_->GetAABB(), GetAAbb())) {
+		//falseの時におしたらtrueになる
+		if (!switchFlag) {
+			if (input_->TriggerKey(DIK_1)) {
+				switchFlag = true;
 
+			}
+		}
+		else {
+
+			if (input_->TriggerKey(DIK_1)) {
+				switchFlag = false;
+
+			}
 		}
 	}
-	else {
 
-		if (input_->TriggerKey(DIK_1)) {
-			switchFlag = false;
-
-		}
-	}
+	switchModel->Update();
 
 	// ImGuiウィンドウの中にチェックボックスを追加
 	ImGui::Begin("Debug Window");
@@ -61,13 +68,27 @@ void switchLight::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightRes
 {
 	if (switchFlag) {
 		switchModel->SetModel("box.obj");
-		//switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+		switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	}
-	if(!switchFlag){
+	if (!switchFlag) {
 		switchModel->SetModel("axis.obj");
-		//switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+		switchModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 	}
+}
+
+
+AABB switchLight::GetAAbb()
+{
+	
+		Vector3 worldPos = switchTransform.translate;
+		AABB aabb;
+
+		aabb.min = { worldPos.x - radius, worldPos.y -radius, worldPos.z - radius };
+		aabb.max = { worldPos.x + radius, worldPos.y + radius, worldPos.z + radius };
+
+		return aabb;
+	
 }
 

@@ -8,6 +8,7 @@
 #include"Camera.h"
 #include"Input.h"
 #include"switchLight.h"
+#include"Player.h"
 
 #include <wrl.h>
 #include <d3d12.h>
@@ -18,18 +19,22 @@ class LightBlock
 {
 public:
 	~LightBlock();
-	void Initialize(Vector3, Camera*, DirectXBase*, Input*);
+
+	void Initialize(Vector3, Camera*, DirectXBase*, Input*,Player*);
+
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 
 private:
 	Object3d* BlockModel;
-	Camera* camera_;
 	Vector3 blockPosition;
 	Input* input_;
 	DirectXBase* dxcCommon;
 	switchLight* Light;
+	//===========�����蔻��p============
+
+	/*player*/
+	Player* player_;
 
 
 };
-

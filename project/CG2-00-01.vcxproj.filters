@@ -9,6 +9,8 @@
   <ItemGroup>
     <ClCompile Include="Application\DebugMode.cpp" />
     <ClCompile Include="Application\LightBlock.cpp" />
+    <ClCompile Include="Application\Player.cpp" />
+    <ClCompile Include="Application\PlayerCollision.cpp" />
     <ClCompile Include="Application\switchLight.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\2d\SpriteBase\SpriteBase.cpp" />
@@ -39,12 +41,14 @@
     <ClCompile Include="Application\FrameWork.cpp" />
     <ClCompile Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.cpp" />
     <ClCompile Include="Goal.cpp" />
-    <ClCompile Include="Application\Player.cpp" />
-    <ClCompile Include="Application\PlayerCollision.cpp" />
+    <ClCompile Include="Application\Star.cpp" />
+    <ClCompile Include="Application\starResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\DebugMode.h" />
     <ClInclude Include="Application\LightBlock.h" />
+    <ClInclude Include="Application\Player.h" />
+    <ClInclude Include="Application\PlayerCollision.h" />
     <ClInclude Include="Application\switchLight.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="Engine\2d\SpriteBase\SpriteBase.h" />
@@ -80,8 +84,12 @@
     <ClInclude Include="Application\FrameWork.h" />
     <ClInclude Include="Engine\3d\Object\WireFrame\WireFrameObjectBase.h" />
     <ClInclude Include="Goal.h" />
-    <ClInclude Include="Application\Player.h" />
-    <ClInclude Include="Application\PlayerCollision.h" />
+    <ClInclude Include="Engine\Math\Quaternion.h" />
+    <ClInclude Include="Application\Star.h" />
+    <ClInclude Include="Application\starResult.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Object3d.hlsli" />
