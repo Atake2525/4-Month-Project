@@ -560,6 +560,12 @@ float Length(const Vector3& v) {
 	return result;
 }
 
+float Distance(const Vector3& v1, const Vector3& v2) {
+	Vector3 dist = { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+	float result = Length(dist);
+	return result;
+}
+
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result{
 		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],

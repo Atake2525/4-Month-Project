@@ -129,5 +129,7 @@ float SwapRadian(float degree);
 
 float Length(const Vector3& v);
 
+float Distance(const Vector3& v1, const Vector3& v2);
+
 // ベクトル変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
