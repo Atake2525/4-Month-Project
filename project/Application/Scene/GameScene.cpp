@@ -31,10 +31,10 @@ void GameScene::Initialize() {
 	goal->Initialize({ 8.0f,4.0f,11.0f });
 
 	star = new Star();
-	star->Initialize({ 0.0f,0.0f,0.0f });
+	star->Initialize({ 0.0f,0.0f,0.0f }, directX_);
 
 	starResultManager = new starResult();
-	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+	starResultManager->Initialize(directX_); //{ 0.0f,0.0f,0.0f },
 
 	modelTransform = object3d->GetTransform();
 }
