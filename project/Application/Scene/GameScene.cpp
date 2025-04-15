@@ -11,7 +11,9 @@ void GameScene::Initialize() {
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
+
 	input = Input::GetInstance();
+	input->ShowMouseCursor(true);
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 
@@ -59,7 +61,7 @@ void GameScene::Update() {
 	{
 		finished = true;
 	}
-	const float speed = 0.7f;
+	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
 	if (input->PushKey(DIK_W)) {
@@ -99,9 +101,8 @@ void GameScene::Update() {
 	}
 	if (input->PushKey(DIK_E)) {
 		cameraTransform.rotate.z += 0.01f;
-	}
+	}*/
 
-	input->ShowMouseCursor(false);
 
 	player->Update();
 	//camera->SetTranslate(cameraTransform.translate);

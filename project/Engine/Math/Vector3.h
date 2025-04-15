@@ -6,6 +6,6 @@ struct Vector3
 	float y;
 	float z;
 
-	// Œ¸Z‰‰Zq‚ÌƒI[ƒo[ƒ[ƒh
+	// æ¸›ç®—æ¼”ç®—å­ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	Vector3 operator-(const Vector3& other) const;
 };
