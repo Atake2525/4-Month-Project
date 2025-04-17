@@ -13,9 +13,8 @@ Goal::~Goal() {
 
 }
 
-void Goal::Initialize(Vector3 position, DirectXBase* dxc)
+void Goal::Initialize(Vector3 position)
 {
-	directX = dxc;
 	goalPos_ = position;
 
 	ModelManager::GetInstance()->Initialize(directX);

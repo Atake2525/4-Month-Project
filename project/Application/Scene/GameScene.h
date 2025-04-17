@@ -10,6 +10,10 @@
 #include "AABB.h"
 #include "Player.h"
 
+#include "Star.h"
+#include "starResult.h"
+#include "Goal.h"
+
 #pragma once
 
 class GameScene
@@ -56,6 +60,10 @@ private:
 	bool enableLighting = false;
 
 	Player* player = nullptr;
+
+	Star* star = nullptr;
+	starResult* starResultManager = nullptr;
+	Goal* goal = nullptr;
 
 };
 

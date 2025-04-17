@@ -11,7 +11,6 @@
 #include"ModelBase.h"
 #include"ModelManager.h"
 
-#include"DirectXBase.h"
 
 
 class Player;//後で追加
@@ -22,7 +21,7 @@ public:
 
 	~Goal();
 	// 初期化
-	void Initialize(Vector3, DirectXBase*); //Object3d*
+	void Initialize(Vector3); //Object3d*
 	void Update();
 	//描画
 	void Draw();

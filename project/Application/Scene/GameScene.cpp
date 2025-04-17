@@ -31,6 +31,16 @@ void GameScene::Initialize() {
 
 	modelTransform = object3d->GetTransform();
 
+	goal = new Goal();
+	goal->Initialize({ 8.0f,4.0f,11.0f });
+
+	star = new Star();
+	star->Initialize({ 0.0f,0.0f,0.0f });
+
+	starResultManager = new starResult();
+	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+
+
 }
 
 void GameScene::Update() {
@@ -114,8 +124,15 @@ void GameScene::Update() {
 	object3d->Update();
 	aabb = object3d->GetAABB();
 	sprite->Update();
-	
+
 	input->Update();
+
+	goal->Update();
+
+	star->Update();
+	if (starResultManager) {
+		starResultManager->Update();  // ƒvƒŒƒCƒ„[î•ñ‚ð“n‚·player
+	}
 
 }
 
@@ -130,6 +147,9 @@ void GameScene::Draw() {
 	object3d->Draw();
 
 	player->Draw();
+
+
+
 }
 
 void GameScene::Finalize() {
