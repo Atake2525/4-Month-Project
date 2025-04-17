@@ -11,8 +11,6 @@ void Star::Initialize(const Transform& translate) {
 	
 	this->transform_ = translate;
 
-	ModelManager::GetInstance()->Initialize(directX_);
-
 	// モデル読み込み
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "starResult.obj");
 

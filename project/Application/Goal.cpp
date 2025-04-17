@@ -19,9 +19,9 @@ void Goal::Initialize(Vector3 position)
     goalPos = position;
 
     //モデル読み込み
-    ModelManager::GetInstance()->LoadModel("Resources/Model", "axis.obj");
-    ModelManager::GetInstance()->LoadModel("Resources/Model", "goal.obj");
-    ModelManager::GetInstance()->LoadModel("Resources/Model", "box.obj", true);
+    //ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
+    ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "goal.obj");
+    //ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
 
     // object3dの初期化
