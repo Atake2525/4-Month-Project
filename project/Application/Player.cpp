@@ -1,5 +1,9 @@
 #define NOMINMAX
 #include "Player.h"
+
+#include <iostream>
+#include <algorithm>
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -161,60 +165,20 @@ void Player::Move()
 
 void Player::Rotate()
 {
-	const float rotate = 0.05f;
-	Vector3 move{ 0,0,0 };
-	move = input_->GetRightJoyStickPos3();
-	Vector3 mouse{ 0,0 ,0 };
-	mouse = input_->GetMouseVel3();
-
-	if (move.x >= 0.05f) {
-		move.x = 0.05f;
-	}
-	else if (move.x <= -0.05f) {
-		move.x = -0.05f;
-	}
-
-	if (move.y >= 0.05f) {
-		move.y = 0.05f;
-	}
-	else if (move.y <= -0.05f) {
-		move.y = -0.05f;
-	}
-
-	if (mouse.x >= 0.075f) {
-		mouse.x = 0.075f;
-	}
-	else if (mouse.x <= -0.075f) {
-		mouse.x = -0.075f;
-	}
-
-	if (mouse.y >= 0.05f) {
-		mouse.y = 0.05f;
-	}
-	else if (mouse.y <= -0.05f) {
-		mouse.y = -0.05f;
-	}
-
-	if (move.x == 0.0f && move.y == 0.0f) {
-		modelTransform_.rotate.y += mouse.x;
-		modelTransform_.rotate.x += mouse.y;
-		cameraTransform_.rotate.y += mouse.x;
-		cameraTransform_.rotate.x += mouse.y;
+	
+	if (input_->IsMoveRightJoyStick()) {
+		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
 	else {
-		modelTransform_.rotate.y += move.x;
-		modelTransform_.rotate.x += move.y;
-		cameraTransform_.rotate.y += move.x;
-		cameraTransform_.rotate.x += move.y;
+		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
+		cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
-	// 0.2^16.0
-
-	ImGui::Begin("State");
-	if (ImGui::TreeNode("Mouse")) {
-		ImGui::DragFloat3("Mouse", &mouse.x, 0.1f);
-		ImGui::TreePop();
-	}
-	ImGui::End();
+	
 
 }
 
