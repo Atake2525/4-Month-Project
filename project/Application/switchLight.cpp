@@ -41,7 +41,7 @@ void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase*
 
 void switchLight::Update()
 {
-	if (IsCollisionAABB(player_->GetAABB(), GetAAbb())) {
+	//if (IsCollisionAABB(player_->GetAABB(), GetAAbb())) {
 		//falseの時におしたらtrueになる
 		if (!switchFlag) {
 			if (input_->TriggerKey(DIK_1)) {
@@ -55,7 +55,7 @@ void switchLight::Update()
 				switchFlag = false;
 
 			}
-		}
+		//}
 	}
 
 	switchModel->Update();

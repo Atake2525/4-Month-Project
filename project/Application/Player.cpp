@@ -99,16 +99,19 @@ void Player::CheckCollsion(LightBlock*block)
 
 		if (IsCollisionAABB(playerAABB, blockAABB)) {
 			//突き抜けたかについて
-			float overlapLeft=playerAABB.max.x-blockAABB.min.x;
-			float overlapRight = blockAABB.max.x - playerAABB.min.x;
-			float overlapTop = playerAABB.min.y - blockAABB.max.y;
-			float overlapBottom = blockAABB.min.y - playerAABB.max.y;
+			float overlapLeft= std::abs(playerAABB.max.x-blockAABB.min.x);
+			float overlapRight = std::abs(blockAABB.max.x - playerAABB.min.x);
+			float overlapTop = std::abs(playerAABB.min.y - blockAABB.max.y);
+			float overlapBottom = std::abs(blockAABB.min.y - playerAABB.max.y);
+			float overlapBack = std::abs(playerAABB.max.z - blockAABB.min.z);
+			float overlapFront = std::abs(blockAABB.max.z - playerAABB.min.z);
+
 
 			/*もっとも小さいオーバーラップを優先的に解決*/
 			float minOverlapX = std::min(overlapLeft, overlapRight);
 			float minOverlapY = std::min(overlapTop, overlapBottom);
-
-			if (minOverlapX < minOverlapY) {
+			float minOverlapZ = std::min(overlapBack, overlapFront);
+			if (minOverlapX < minOverlapY && minOverlapX <= minOverlapZ) {
 				if (overlapLeft < overlapRight) {
 
 					/*左衝突*/
@@ -120,18 +123,27 @@ void Player::CheckCollsion(LightBlock*block)
 				}
 				velocity.x = 0;
 			}
-			else {
+			else if(minOverlapY <= minOverlapX && minOverlapY <= minOverlapZ) {
 				if (overlapTop < overlapBottom) {
 					/*上から着地*/
 					modelTransform_.translate.y -= overlapTop;
 					velocity.y = 0;
-					onGround_ = true;
+					
 				}
 				else {
 					/*下からぶつかった*/
 					modelTransform_.translate.y += overlapBottom;
 					velocity.y = 0;
 				}
+			}else{
+					// Z軸方向で解決
+					if (overlapBack < overlapFront) {
+						modelTransform_.translate.z -= overlapBack;
+					}
+					else {
+						modelTransform_.translate.z += overlapFront;
+					}
+					velocity.z = 0;
 			}
 	}
 }

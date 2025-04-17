@@ -22,13 +22,14 @@ public:
 	void Initialize(const Vector3& position/*, Camera*, Input**/);
 
 	void Update();
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource, bool Flag);
-	const AABB& GetAABB() const;
+	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource);
+	const AABB& GetAABB() ;
 	
 	
 private:
 	Object3d* BlockModel;
 	Transform transform;
+	AABB aabb_;
 	//Input* input_;
 	//Camera* camera_;
 
