@@ -57,5 +57,6 @@ private:
 
 	Player* player = nullptr;
 
+	bool mouseFlag = false;
 };
 

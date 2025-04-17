@@ -101,9 +101,18 @@ void GameScene::Update() {
 		cameraTransform.rotate.z += 0.01f;
 	}
 
-	input->ShowMouseCursor(false);
+	if (input->TriggerKey(DIK_TAB)) {
+		if (mouseFlag == true) {
+			mouseFlag = false;
+		}
+		else {
+			mouseFlag = true;
+		}
+		input->ShowMouseCursor(mouseFlag);
+	}
 
 	player->Update();
+
 	//camera->SetTranslate(cameraTransform.translate);
 	//camera->SetRotate(cameraTransform.rotate);
 	camera = player->GetCamera();

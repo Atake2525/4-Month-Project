@@ -207,6 +207,7 @@ void Player::Rotate()
 		cameraTransform_.rotate.y += move.x;
 		cameraTransform_.rotate.x += move.y;
 	}
+	// 0.2^16.0
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("Mouse")) {
