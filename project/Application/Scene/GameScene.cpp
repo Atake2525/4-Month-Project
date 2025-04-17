@@ -131,7 +131,7 @@ void GameScene::Update() {
 
 	star->Update();
 	if (starResultManager) {
-		starResultManager->Update();  // ƒvƒŒƒCƒ„[î•ñ‚ð“n‚·player
+		starResultManager->Update();  // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã‚’æ¸¡ã™ player
 	}
 
 }
@@ -148,6 +148,12 @@ void GameScene::Draw() {
 
 	player->Draw();
 
+	goal->Draw();
+	star->Draw();
+	// starResultManager ã¨ãã®ä¸­ã®æ˜Ÿã‚’æç”»
+	if (starResultManager) {
+		starResultManager->Draw();
+	}
 
 
 }
@@ -161,4 +167,12 @@ void GameScene::Finalize() {
 	delete sprite;
 
 	delete player;
+
+	delete goal;
+
+	delete star;
+	if (starResultManager) {
+		delete starResultManager;
+	}
+
 }
