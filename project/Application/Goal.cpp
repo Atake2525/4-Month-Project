@@ -9,54 +9,54 @@
 
 //デストラクタ
 Goal::~Goal() {
-    delete goalModel;
-    delete clearSprite_;
-        
+	delete goalModel;
+	delete clearSprite_;
+
 }
 void Goal::Initialize(Vector3 position)
 {
-    //directX = dxc;
-    goalPos = position;
+	//directX = dxc;
+	goalPos = position;
 
-    //モデル読み込み
-    //ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
-    ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "goal.obj");
-    //ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
+	//モデル読み込み
+	//ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "goal.obj");
+	//ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
 
-    // object3dの初期化
-    goalModel = new Object3d();
-    goalModel->Initialize();
-    goalModel->SetModel("goal.obj");
-    goalModel->SetTranslate(goalPos);//位置を指定する
+	// object3dの初期化
+	goalModel = new Object3d();
+	goalModel->Initialize();
+	goalModel->SetModel("goal.obj");
+	goalModel->SetTranslate(goalPos);//位置を指定する
 
-    //// クリアスプライトの初期化
-    //clearSprite = new Sprite();
-    //clearSprite->Initialize("Resources/Texture/clear.png");
-    //clearSprite->SetPosition({ 320, 180 });  // 画面中央
+	//// クリアスプライトの初期化
+	//clearSprite = new Sprite();
+	//clearSprite->Initialize("Resources/Texture/clear.png");
+	//clearSprite->SetPosition({ 320, 180 });  // 画面中央
 
 }
 
 void Goal::Update()
 
 {
-    goalModel->Update();
+	goalModel->Update();
 
-    ////ゴールすると trueになる => アニメーションの処理追加
-    //if (!goalFlag) {
-    //    if () {            //playerと当たったら
-    //        goalFlag = true;
-    //    }            // ゴールフラグが trueならクリアスプライトを描画
-    //    if (goalFlag) {
-    //        clearSprite->Draw();
-    //    }
-    //}
+	////ゴールすると trueになる => アニメーションの処理追加
+	//if (!goalFlag) {
+	//    if () {            //playerと当たったら
+	//        goalFlag = true;
+	//    }            // ゴールフラグが trueならクリアスプライトを描画
+	//    if (goalFlag) {
+	//        clearSprite->Draw();
+	//    }
+	//}
 
-    // ImGuiウィンドウの中にチェックボックスを追加
-    ImGui::Begin("Goal Window");
-    ImGui::DragFloat3("Goal Position", &goalPos.x, 0.01f); //ゴールの位置の確認
-    ImGui::Checkbox("Goal Flag", &goalFlag);
-    ImGui::End();
+	// ImGuiウィンドウの中にチェックボックスを追加
+	ImGui::Begin("Goal Window");
+	ImGui::DragFloat3("Goal Position", &goalPos.x, 0.01f); //ゴールの位置の確認
+	ImGui::Checkbox("Goal Flag", &goalFlag);
+	ImGui::End();
 
 
 }
@@ -65,18 +65,26 @@ void Goal::Update()
 
 void Goal::Draw() {
 
-    goalModel->Draw();
+	goalModel->Draw();
 
-    //// ゴールフラグが trueならクリアスプライトを描画
-    //if (goalFlag) {
-    //    clearSprite->Draw();
-    //}
+	//// ゴールフラグが trueならクリアスプライトを描画
+	//if (goalFlag) {
+	//    clearSprite->Draw();
+	//}
 
 }
 
 
-void Goal::OnCollision(const Player* player) {
-    (void)player;
-    //goalFlag_ = true;  // プレイヤーと当たったらゴールフラグを trueにする
+bool Goal::OnCollision(Object3d* object3d) {
+
+	if (goalModel->CheckCollision(object3d)) {
+
+
+
+		return true;
+	}
+	return false;
+
+	//goalFlag_ = true;  // プレイヤーと当たったらゴールフラグを trueにする
 
 }

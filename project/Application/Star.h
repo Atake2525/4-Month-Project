@@ -19,7 +19,7 @@ public:
 	void Draw();
 
 	// 当たり判定
-	void OnCollision(const Player* player);
+	bool OnCollision(Object3d* object3d);
 
 	bool IsCollected() const { return collected_; }
 

@@ -128,8 +128,16 @@ void GameScene::Update() {
 	input->Update();
 
 	goal->Update();
+	if (goal->OnCollision(player->GetObject3d())) {
+		return;
+	}
 
 	star->Update();
+
+	if (star->OnCollision(player->GetObject3d())) {
+		return;
+	}
+
 	if (starResultManager) {
 		starResultManager->Update();  // プレイヤー情報を渡す player
 	}

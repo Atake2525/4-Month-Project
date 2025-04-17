@@ -44,7 +44,12 @@ void Star::Draw() {
 
 }
 
-void Star::OnCollision(const Player* player) {
-	(void)player;  // 未使用警告を回避
-	collected_ = true;  // プレイヤーが取得
+bool Star::OnCollision(Object3d* object3d) {
+
+	if (starModel_->CheckCollision(object3d)) {
+
+		return true;
+	}
+	return false;
+	//collected_ = true;  // プレイヤーが取得
 }

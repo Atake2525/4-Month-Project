@@ -64,6 +64,9 @@ public: // メンバ関数
 		Vector3 result = translate;
 		modelTransform_.translate += result; 
 	}
+	
+	//ゴールの当たり判定で追加
+	 Object3d *GetObject3d()  { return object3d_; }
 
 private:
 
