@@ -179,7 +179,10 @@ void Player::Rotate()
 		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
 	
-
+	cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
+	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
+	//-0.1f 0.9f cameraRotate
+	//0.2f 16.0f cameraTransfrom
 }
 
 void Player::Jump()
