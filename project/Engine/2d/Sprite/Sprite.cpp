@@ -3,12 +3,20 @@
 #include "DirectXBase.h"
 #include "TextureManager.h"
 
-void Sprite::SetTransform(Transform& transform){ 
+void Sprite::SetTransform(const Transform& transform){ 
 	position.x = transform.translate.x;
 	position.y = transform.translate.y;
 	rotation = transform.rotate.z;
-	scale.x = transform.rotate.x;
-	scale.y = transform.rotate.y;
+	scale.x = transform.scale.x;
+	scale.y = transform.scale.y;
+}
+
+const Transform& Sprite::GetTransform() const {
+	Transform result;
+	result.translate = { position.x, position.y, 0.0f };
+	result.rotate = {0.0f, 0.0f, rotation };
+	result.scale = { scale.x, scale.y, 1.0f };
+	return result;
 }
 
 //void Sprite::SetMaterial(Material* material){ 
@@ -26,6 +34,11 @@ void Sprite::SetTransform(const Vector2& position, const float& rotation, const 
 	this->position = position;
 	this->rotation = rotation;
 	this->scale = scale;
+}
+
+void Sprite::SetTexture(const std::string& textureFilePath) {
+	textureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath(textureFilePath);
+	AdjustTextureSize();
 }
 
 

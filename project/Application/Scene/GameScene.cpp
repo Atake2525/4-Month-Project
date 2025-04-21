@@ -11,7 +11,9 @@ void GameScene::Initialize() {
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
+
 	input = Input::GetInstance();
+	input->ShowMouseCursor(showCursor);
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 
@@ -26,6 +28,9 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
+
+	button = new Button();
+	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/endButton.png");
 
 	modelTransform = object3d->GetTransform();
 
@@ -56,6 +61,10 @@ void GameScene::Update() {
 	ImGui::End();
 
 	if (input->TriggerKey(DIK_ESCAPE))
+	{
+		finished = true;
+	}
+	if (button->OnButton())
 	{
 		finished = true;
 	}
@@ -100,8 +109,26 @@ void GameScene::Update() {
 	if (input->PushKey(DIK_E)) {
 		cameraTransform.rotate.z += 0.01f;
 	}
-
-	input->ShowMouseCursor(false);
+	if (input->TriggerKey(DIK_LCONTROL))
+	{
+		showCursor = !showCursor;
+		input->ShowMouseCursor(showCursor);
+	}
+	if (input->TriggerKey(DIK_0))
+	{
+		button->SetSprite("Resources/Sprite/button.png");
+	}
+	if (input->TriggerKey(DIK_1))
+	{
+		button->SetSprite("Resources/Sprite/endButton.png");
+	}
+	if (input->TriggerKey(DIK_2))
+	{
+		Transform ta = button->GetTransform();
+		ta.scale.x += 5.0f;
+		ta.scale.y += 5.0f;
+		button->SetTransform(ta);
+	}
 
 	player->Update();
 	//camera->SetTranslate(cameraTransform.translate);
@@ -113,7 +140,7 @@ void GameScene::Update() {
 	object3d->Update();
 	aabb = object3d->GetAABB();
 	sprite->Update();
-	
+
 	input->Update();
 
 }
@@ -122,6 +149,7 @@ void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
 
+	button->Draw();
 	//sprite->Draw();
 
 	Object3dBase::GetInstance()->ShaderDraw();
@@ -140,4 +168,6 @@ void GameScene::Finalize() {
 	delete sprite;
 
 	delete player;
+
+	delete button;
 }
