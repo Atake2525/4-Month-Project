@@ -108,6 +108,7 @@ void GameScene::Update() {
 	}
 	if (input->PushKey(DIK_E)) {
 		cameraTransform.rotate.z += 0.01f;
+
 	}
 	if (input->TriggerKey(DIK_LCONTROL))
 	{
