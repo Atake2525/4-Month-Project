@@ -10,7 +10,7 @@
 //デストラクタ
 Goal::~Goal() {
 	delete goalModel;
-	delete clearSprite_;
+	delete clearSprite;
 
 }
 void Goal::Initialize(Vector3 position)
@@ -19,10 +19,8 @@ void Goal::Initialize(Vector3 position)
 	goalPos = position;
 
 	//モデル読み込み
-	//ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "goal.obj");
-	//ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
-
+	
 
 	// object3dの初期化
 	goalModel = new Object3d();
@@ -32,7 +30,7 @@ void Goal::Initialize(Vector3 position)
 
 	//// クリアスプライトの初期化
 	//clearSprite = new Sprite();
-	//clearSprite->Initialize("Resources/Texture/clear.png");
+	//clearSprite->Initialize("Resources/Sprite/clear.png");
 	//clearSprite->SetPosition({ 320, 180 });  // 画面中央
 
 }
@@ -78,8 +76,6 @@ void Goal::Draw() {
 bool Goal::OnCollision(Object3d* object3d) {
 
 	if (goalModel->CheckCollision(object3d)) {
-
-
 
 		return true;
 	}

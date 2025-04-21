@@ -46,5 +46,5 @@ private:
     //ゴール
     Goal* goal = nullptr;
 
-    Sprite* clearSprite_ = nullptr; // クリアスプライト
+    Sprite* clearSprite = nullptr; // クリアスプライト
 };

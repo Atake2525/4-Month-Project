@@ -64,6 +64,9 @@ private:
 	Star* star = nullptr;
 	starResult* starResultManager = nullptr;
 	Goal* goal = nullptr;
+	bool isGoal = false;
+
+	Goal* clearSprite = nullptr;
 
 };
 

@@ -66,7 +66,9 @@ public: // メンバ関数
 	}
 	
 	//ゴールの当たり判定で追加
-	 Object3d *GetObject3d()  { return object3d_; }
+	 Object3d *GoalObject3d()  { return object3d_; }
+	 // 星の当たり判定で追加
+	 Object3d* StarObject3d() { return object3d_; }
 
 private:
 

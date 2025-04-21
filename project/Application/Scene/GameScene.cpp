@@ -41,6 +41,11 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 
 
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear..png");
+	clearSprite = new Goal();
+	clearSprite->Initialize("Resources/Sprite/clear.png");
+	
+
 }
 
 void GameScene::Update() {
@@ -101,7 +106,7 @@ void GameScene::Update() {
 		cameraTransform.rotate.y += 0.03f;
 	}
 	if (input->PushKey(DIK_UP)) {
-		cameraTransform.rotate.x -= 0.03f; 
+		cameraTransform.rotate.x -= 0.03f;
 	}
 	if (input->PushKey(DIK_DOWN)) {
 		cameraTransform.rotate.x += 0.03f;
@@ -127,20 +132,31 @@ void GameScene::Update() {
 
 	input->Update();
 
+
 	goal->Update();
-	if (goal->OnCollision(player->GetObject3d())) {
+	// ゴールの当たり判定
+	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
+		isGoal = true;
+
+		if (isGoal) {
+			clearSprite->Draw();
+		}
+
 		return;
+
 	}
 
 	star->Update();
-
-	if (star->OnCollision(player->GetObject3d())) {
-		return;
-	}
-
 	if (starResultManager) {
 		starResultManager->Update();  // プレイヤー情報を渡す player
 	}
+
+	// 星の当たり判定
+	if (star->OnCollision(player->StarObject3d())) {
+		return;
+	}
+
+
 
 }
 
@@ -157,6 +173,8 @@ void GameScene::Draw() {
 	player->Draw();
 
 	goal->Draw();
+	clearSprite->Draw();
+
 	star->Draw();
 	// starResultManager とその中の星を描画
 	if (starResultManager) {
@@ -177,6 +195,8 @@ void GameScene::Finalize() {
 	delete player;
 
 	delete goal;
+
+	delete clearSprite;
 
 	delete star;
 	if (starResultManager) {
