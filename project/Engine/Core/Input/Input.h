@@ -22,7 +22,7 @@ enum class DPad {
 	Right,
 };
 
-enum class Button {
+enum class Controller {
 	None,
 	A,
 	B,
@@ -37,8 +37,6 @@ enum class Button {
 	LeftStick,
 	RightStick,
 };
-
-class WinApp;
 
 class Input {
 private:
@@ -67,7 +65,7 @@ public:
 	/// </summary>
 	void Finalize();
 
-	void Initialize(WinApp* winApp);
+	void Initialize();
 	void Update();
 
 	// デバイスの更新(デバイスの再認識に使う)
@@ -99,26 +97,30 @@ public:
 	/// <summary>
 	/// マウスの押下をチェック
 	/// </summary>
-	/// <param name="mouseNumer">0 = 左ボタン</param>
-	/// <param name="mouseNumer">1 = 右ボタン</param>
+	/// <param name="mouseNumer">0 = 左クリック</param>
+	/// <param name="mouseNumer">1 = 右クリック</param>
 	/// <param name="mouseNumer">2 = マウスホイール押し込み</param>
 	const bool& PressMouse(int mouseNumer) const;
 
 	/// <summary>
 	/// マウスのトリガーをチェック
 	/// </summary>
-	/// <param name="mouseNumer">0 = 左ボタン</param>
-	/// <param name="mouseNumer">1 = 右ボタン</param>
+	/// <param name="mouseNumer">0 = 左クリック</param>
+	/// <param name="mouseNumer">1 = 右クリック</param>
 	/// <param name="mouseNumer">2 = マウスホイール押し込み</param>
 	const bool& TriggerMouse(int mouseNumber) const;
 
 	/// <summary>
 	/// マウスのリターンをチェック
 	/// </summary>
-	/// <param name="mouseNumer">0 = 左ボタン</param>
-	/// <param name="mouseNumer">1 = 右ボタン</param>
+	/// <param name="mouseNumer">0 = 左クリック</param>
+	/// <param name="mouseNumer">1 = 右クリック</param>
 	/// <param name="mouseNumer">2 = マウスホイール押し込み</param>
 	const bool& ReturnMouse(int mouseNumber) const;
+	
+	const Vector2& GetMousePos2() const;
+
+	const Vector3& GetMousePos3() const;
 
 	// マウスの移動量を取得(Vector2)
 	const Vector2& GetMouseVel2() const;
@@ -163,17 +165,17 @@ public:
 	/// <summary>
 	/// ボタン(コントローラー)の押下をチェック
 	/// </summary>
-	const bool& PushButton(Button button) const;
+	const bool& PushButton(Controller button) const;
 
 	/// <summary>
 	/// ボタン(コントローラー)のトリガーをチェック
 	/// </summary>
-	const bool& TriggerButton(Button button) const;
+	const bool& TriggerButton(Controller button) const;
 
 	/// <summary>
 	/// ボタン(コントローラー)のリターンをチェック
 	/// </summary>
-	const bool& ReturnButton(Button button) const;
+	const bool& ReturnButton(Controller button) const;
 
 private:
 
@@ -191,8 +193,6 @@ private:
 	// キーボードデバイス
 	ComPtr<IDirectInputDevice8> keyboard;
 
-	WinApp* winApp_ = nullptr;
-
 	// 全キーの状態
 	BYTE keys[256] = {};
 	// 前回の全キーの状態
@@ -207,7 +207,7 @@ private:
 	DIMOUSESTATE mouseStatePre = {};
 	// マウスカーソル表示
 	bool showCursor = false;
-
+	
 	// コントローラーデバイス
 	ComPtr<IDirectInputDevice8> gamePad;
 

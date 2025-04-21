@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "AABB.h"
 #include "Player.h"
+#include "Button.h"
 
 #pragma once
 
@@ -56,6 +57,10 @@ private:
 	bool enableLighting = false;
 
 	Player* player = nullptr;
+
+	Button* button = nullptr;
+
+	bool showCursor = true;
 
 };
 
