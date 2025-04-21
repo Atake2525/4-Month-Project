@@ -101,7 +101,7 @@ void GameScene::Update() {
 		cameraTransform.rotate.y += 0.03f;
 	}
 	if (input->PushKey(DIK_UP)) {
-		cameraTransform.rotate.x -= 0.03f;
+		cameraTransform.rotate.x -= 0.03f; 
 	}
 	if (input->PushKey(DIK_DOWN)) {
 		cameraTransform.rotate.x += 0.03f;
