@@ -7,7 +7,7 @@ void GameScene::Initialize() {
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
 
-	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
@@ -123,7 +123,7 @@ void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
 
-	//sprite->Draw();
+	sprite->Draw();
 
 	Object3dBase::GetInstance()->ShaderDraw();
 

@@ -54,8 +54,13 @@ void Sprite::Initialize(std::string textureFilePath) {
 	// TransformationMatrixBufferViewの作成
 	SetTransformatinMatrix();
 
+	TextureManager::GetInstance()->LoadTexture(textureFilePath);
 	textureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath(textureFilePath);
+
+	// テクスチャサイズの計算
 	AdjustTextureSize();
+
+	Update();
 }
 
 void Sprite::Update() {
