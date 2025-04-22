@@ -13,6 +13,7 @@
 #include "PlayerCollision.h"
 #include "ModelManager.h"
 
+#include"LightBlock.h"
 // 衝突判定で追加
 #include "AABB.h"
 
@@ -64,6 +65,8 @@ public: // メンバ関数
 		Vector3 result = translate;
 		modelTransform_.translate += result; 
 	}
+
+	void CheckCollsion(LightBlock* block);
 	
 	//ゴールの当たり判定で追加
 	 Object3d *GoalObject3d()  { return object3d_; }
