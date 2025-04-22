@@ -124,7 +124,7 @@ const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const f
 			if (collisionPlate.normal.y == 1.0f && playerVelocityY < 0.0f)
 			{
 				float moveAmount = collisionPlate.aabb.max.y - playerAABB.min.y;
-				result.y = moveAmount;
+				result.y = moveAmount - 0.01f;
 			}
 			else if (collisionPlate.normal.y == -1.0f && playerVelocityY > 0.0f)
 			{
@@ -161,12 +161,12 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
 			if (collisionPlate.normal.z == 1.0f && playerVelocityZ < 0.0f)
 			{
-				float moveAmount = collisionPlate.aabb.min.z - playerAABB.max.z;
+				float moveAmount = collisionPlate.aabb.max.z - playerAABB.min.z;
 				result.z = moveAmount;
 			}
 			else if (collisionPlate.normal.z == -1.0f && playerVelocityZ > 0.0f)
 			{
-				float moveAmount = playerAABB.max.z - collisionPlate.aabb.min.z;
+				float moveAmount = playerAABB.max.z - collisionPlate.aabb.max.z;
 				result.z = -moveAmount;
 			}
 		}
@@ -181,15 +181,14 @@ const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& pl
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
 		ImGui::End();*/
-		AABB plAABB = {
-			.min{playerAABB.min.x + playerVelocityZ * speed, playerAABB.min.y + playerVelocityZ * speed},
-			.max{playerAABB.max.x + playerVelocityZ * speed, playerAABB.max.y + playerVelocityZ * speed}
-		};
+		AABB plAABB = playerAABB;
+		plAABB.min.x = playerAABB.min.x + playerVelocityZ * speed;
+		plAABB.max.x = playerAABB.max.x + playerVelocityZ * speed;
 		if (dist > collisionDistance)
 		{
 			continue;
 		}
-		if (plAABB.max.z > collisionPlate.aabb.max.z)
+		if (plAABB.max.y > collisionPlate.aabb.max.y)
 		{
 			continue;
 		}
@@ -217,15 +216,15 @@ const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& pl
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
 		ImGui::End();*/
-		AABB plAABB = {
-			.min{playerAABB.min.x + playerVelocityX * speed, playerAABB.min.y + playerVelocityX * speed},
-			.max{playerAABB.max.x + playerVelocityX * speed, playerAABB.max.y + playerVelocityX * speed}
-		};
+		AABB plAABB = playerAABB;
+		plAABB.min.x = playerAABB.min.x + playerVelocityX * speed;
+		plAABB.max.x = playerAABB.max.x + playerVelocityX * speed;
+
 		if (dist > collisionDistance)
 		{
 			continue;
 		}
-		if (plAABB.max.x > collisionPlate.aabb.max.x)
+		if (plAABB.max.y > collisionPlate.aabb.max.y)
 		{
 			continue;
 		}
@@ -263,7 +262,7 @@ const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& p
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{
 			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
-			if (collisionPlate.normal.y == 1.0f && playerVelocityY < 0.0f)
+			if (collisionPlate.normal.y == 1.0f/* && playerVelocityY < 0.0f*/)
 			{
 				return true;
 			}
