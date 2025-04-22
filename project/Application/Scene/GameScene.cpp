@@ -198,6 +198,10 @@ void GameScene::Draw() {
   
 	button->Draw();
 
+	if (isGoal)
+	{
+		clearSprite->Draw();
+	}
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
@@ -205,7 +209,6 @@ void GameScene::Draw() {
 	player->Draw();
 
 	goal->Draw();
-	clearSprite->Draw();
 
 	star->Draw();
 	// starResultManager とその中の星を描画
