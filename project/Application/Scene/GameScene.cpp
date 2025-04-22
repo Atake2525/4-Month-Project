@@ -13,7 +13,7 @@ void GameScene::Initialize() {
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 
 	input = Input::GetInstance();
-	input->ShowMouseCursor(true);
+	input->ShowMouseCursor(showCursor);
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 
@@ -29,7 +29,26 @@ void GameScene::Initialize() {
 	player = new Player();
 	player->Initialize(camera);
 
+	button = new Button();
+	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/endButton.png");
+
 	modelTransform = object3d->GetTransform();
+
+	goal = new Goal();
+	goal->Initialize({ 8.0f,4.0f,11.0f });
+
+	star = new Star();
+	star->Initialize({ 0.0f,0.0f,0.0f });
+
+	starResultManager = new starResult();
+	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+
+
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
+	clearSprite = new Sprite();
+	clearSprite->Initialize("Resources/Sprite/clear.png");
+	//Vector3(0.0f, 0.0f, 0.0f)
+	
 
 }
 
@@ -61,7 +80,11 @@ void GameScene::Update() {
 	{
 		finished = true;
 	}
-	/*const float speed = 0.7f;
+	if (button->OnButton())
+	{
+		finished = true;
+	}
+	const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
 	if (input->PushKey(DIK_W)) {
@@ -101,8 +124,28 @@ void GameScene::Update() {
 	}
 	if (input->PushKey(DIK_E)) {
 		cameraTransform.rotate.z += 0.01f;
-	}*/
 
+	}
+	if (input->TriggerKey(DIK_LCONTROL))
+	{
+		showCursor = !showCursor;
+		input->ShowMouseCursor(showCursor);
+	}
+	if (input->TriggerKey(DIK_0))
+	{
+		button->SetSprite("Resources/Sprite/button.png");
+	}
+	if (input->TriggerKey(DIK_1))
+	{
+		button->SetSprite("Resources/Sprite/endButton.png");
+	}
+	if (input->TriggerKey(DIK_2))
+	{
+		Transform ta = button->GetTransform();
+		ta.scale.x += 5.0f;
+		ta.scale.y += 5.0f;
+		button->SetTransform(ta);
+	}
 
 	player->Update();
 	//camera->SetTranslate(cameraTransform.translate);
@@ -114,8 +157,36 @@ void GameScene::Update() {
 	object3d->Update();
 	aabb = object3d->GetAABB();
 	sprite->Update();
-	
+
 	input->Update();
+
+
+	goal->Update();
+	//clearSprite->Update();
+
+	// ゴールの当たり判定
+	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
+		isGoal = true;
+
+		if (isGoal) {
+			clearSprite->Update();
+		}
+
+		return;
+
+	}
+
+	star->Update();
+	if (starResultManager) {
+		starResultManager->Update();  // プレイヤー情報を渡す player
+	}
+
+	// 星の当たり判定
+	if (star->OnCollision(player->StarObject3d())) {
+		return;
+	}
+
+
 
 }
 
@@ -123,13 +194,26 @@ void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
 
-	sprite->Draw();
+	//sprite->Draw();
+  
+	button->Draw();
 
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
 
 	player->Draw();
+
+	goal->Draw();
+	clearSprite->Draw();
+
+	star->Draw();
+	// starResultManager とその中の星を描画
+	if (starResultManager) {
+		starResultManager->Draw();
+	}
+
+
 }
 
 void GameScene::Finalize() {
@@ -141,4 +225,18 @@ void GameScene::Finalize() {
 	delete sprite;
 
 	delete player;
+
+
+	delete goal;
+
+	delete clearSprite;
+
+	delete star;
+	if (starResultManager) {
+		delete starResultManager;
+	}
+
+
+	delete button;
+
 }

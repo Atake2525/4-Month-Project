@@ -241,7 +241,7 @@ void Player::Jump()
 {
 
 	if (onGround_) {
-		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Button::A)) {
+		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
 		}

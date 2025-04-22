@@ -142,6 +142,8 @@ public:
 	const Vector2& GetTextureLeftTop() const { return textureLeftTop; }
 	// Getter(TextureSize)
 	const Vector2& GetTextureSize() const { return textureSize; }
+	// Getter(Transform)
+	const Transform& GetTransform() const;
 
 	// Setter(Position)
 	void SetPosition(const Vector2& pos) { position = pos; }
@@ -164,12 +166,14 @@ public:
 	// Setter(TextureSize)
 	void SetTextureSize(const Vector2& size) { textureSize = size; }
 	// Setter(Transform)
-	void SetTransform(Transform& transform);
+	void SetTransform(const Transform& transform);
 	// Setter(Transform)
 	void SetTransform(const Vector2& position, const float& rotation, const Vector2& scale);
 	//void SetMaterial(Material* material);
 	// 
 	// 初期化時などの一度に変更したい場合に
 	void SetStatus(const Vector2& position, const float& rotation, const Vector2& scale, const Vector4& color);
+	// Setter(Texture)
+	void SetTexture(const std::string& textureFilePath);
 
 };

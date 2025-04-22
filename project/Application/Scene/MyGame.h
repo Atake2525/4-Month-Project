@@ -48,8 +48,6 @@ private:
 
 #pragma region 基盤システム
 
-	WinApp* winApp = nullptr;
-
 	DirectXBase* directxBase = nullptr;
 
 	bool finished = false;

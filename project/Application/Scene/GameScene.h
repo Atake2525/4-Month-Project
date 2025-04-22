@@ -9,6 +9,11 @@
 #include "Sprite.h"
 #include "AABB.h"
 #include "Player.h"
+#include "Button.h"
+
+#include "Star.h"
+#include "starResult.h"
+#include "Goal.h"
 
 #pragma once
 
@@ -56,6 +61,19 @@ private:
 	bool enableLighting = false;
 
 	Player* player = nullptr;
+
+
+	Star* star = nullptr;
+	starResult* starResultManager = nullptr;
+	Goal* goal = nullptr;
+	bool isGoal = false;
+
+	Sprite* clearSprite = nullptr;
+
+	Button* button = nullptr;
+
+	bool showCursor = true;
+
 
 };
 

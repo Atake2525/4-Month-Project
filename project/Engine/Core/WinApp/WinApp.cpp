@@ -2,6 +2,16 @@
 #include "externels/imgui/imgui.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+WinApp* WinApp::instance = nullptr;
+
+WinApp* WinApp::GetInstance() {
+	if (instance == nullptr)
+	{
+		instance = new WinApp;
+	}
+	return instance;
+}
+
 // ウィンドウプロージャ
 LRESULT CALLBACK WinApp::windowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
@@ -67,11 +77,29 @@ void WinApp::Initialize() {
 
 		// ウィンドウを表示する
 		ShowWindow(hwnd, SW_SHOW);
+		
 	}
 
-	
-
 	HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
+}
+
+const AABB& WinApp::GetWindowAABB() const {
+	RECT windowRect;
+	RECT rt;
+	if (GetWindowRect(hwnd, &windowRect)) {
+		rt = windowRect;
+	}
+	if (rt.right < 0 || rt.bottom < 0)
+	{
+		AABB none = { {0.0f, 0.0f}, {0.0f, 0.0f} };
+		return none;
+	}
+	AABB result = {
+		{rt.left, rt.top},
+		{rt.right, rt.bottom}
+	};
+
+	return result;
 }
 
 void WinApp::Update() {
@@ -94,6 +122,9 @@ void WinApp::Update() {
 void WinApp::Finalize() { 
 	CloseWindow(hwnd);
 	CoUninitialize();
+
+	delete instance;
+	instance = nullptr;
 }
 
 // メッセージの処理
