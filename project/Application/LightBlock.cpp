@@ -23,7 +23,7 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 	
 
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Player.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Lightblock.obj");
 
 	
 
@@ -52,10 +52,10 @@ void LightBlock::Update()
 void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)
 {
 	
-	BlockModel->SetModel("Player.obj");
+	BlockModel->SetModel("Lightblock.obj");
 	
 		
-		BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
 }
 
