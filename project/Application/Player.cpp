@@ -54,6 +54,8 @@ void Player::Initialize(Camera* camera)
 	shininess_ = object3d_->GetShininess();
 	modelTransform_.translate.z = 0.0f;
 
+	drawModel = object3d_->GetTransform();
+	drawModel.rotate = object3d_->GetRotateInDegree();
 }
 
 void Player::Update()
@@ -79,19 +81,22 @@ void Player::Update()
 
 	Jump();
 
+	drawModel.translate = modelTransform_.translate;
 
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);
 
-	object3d_->SetTransform(modelTransform_);
-	object3d_->SetRotateInDegree(modelTransform_.rotate);
+	object3d_->SetTransform(drawModel);
+	object3d_->SetRotateInDegree(drawModel.rotate);
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
 	object3d_->Update();
 	// 衝突判定をするためのもの
 	modelTransform_.translate += collision->UpdateCollision(object3d_->GetAABB());
 
-	object3d_->SetTranslate(modelTransform_.translate);
+	drawModel.translate = modelTransform_.translate;
+
+	object3d_->SetTranslate(drawModel.translate);
 	object3d_->Update();
 
 }
@@ -179,7 +184,7 @@ void Player::Rotate()
 		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
 	
-	cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
+	//cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
 	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
 	//-0.1f 0.9f cameraRotate
 	//0.2f 16.0f cameraTransfrom
