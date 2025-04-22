@@ -23,7 +23,7 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 	
 
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "lightblock.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "starResult.obj");
 
 	
 	
@@ -34,7 +34,7 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 	transform.rotate = BlockModel->GetRotateInDegree();
 	transform.scale = BlockModel->GetScale();
 	
-	BlockModel->SetModel("lightblock.obj");
+	BlockModel->SetModel("starResult.obj");
 	
 }
 
@@ -48,7 +48,7 @@ void LightBlock::Update()
 	BlockModel->SetTranslate(transform.translate);
 	BlockModel->SetRotateInDegree(transform.rotate);
 	BlockModel->SetScale(transform.scale);
-	BlockModel->SetModel("lightblock.obj");
+	BlockModel->SetModel("starResult.obj");
 }
 
 void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)

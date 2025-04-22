@@ -84,7 +84,7 @@ void Object3d::Initialize() {
 	//angle = 0.0f;
 
 	SetAxisAngle({0.0f, 0.1f, 0.0f});
-
+	SetQuaternionAngle(0.0f);
 	cameraData->worldPosition = {1.0f, 1.0f, 1.0f};
 
 	camera = Object3dBase::GetInstance()->GetDefaultCamera();
