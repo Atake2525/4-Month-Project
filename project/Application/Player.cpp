@@ -53,7 +53,7 @@ void Player::Initialize(Camera* camera)
 	modelColor_ = object3d_->GetColor();
 	modelEnableLighting_ = object3d_->GetEnableLighting();
 	shininess_ = object3d_->GetShininess();
-	modelTransform_.translate.z = 0.0f;
+	modelTransform_.translate.z = -5.0f;
 
 	drawModel = object3d_->GetTransform();
 	drawModel.rotate = object3d_->GetRotateInDegree();
@@ -82,6 +82,9 @@ void Player::Update()
 
 	Jump();
 
+
+	object3d_->SetTranslate(modelTransform_.translate);
+	object3d_->Update();
 	drawModel.translate = modelTransform_.translate;
 	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
 	{
@@ -97,7 +100,8 @@ void Player::Update()
 		object3d_->SetTranslate(modelTransform_.translate);
 		object3d_->Update();
 	}
-	else if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	else 
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
 	{
 		// 衝突判定をするためのもの
 		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
@@ -121,6 +125,14 @@ void Player::Update()
 		JumpVelocity = 0.0f;
 		onGround_ = true;
 	}
+	else if (!collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity))
+	{
+		onGround_ = false;
+	}
+
+	ImGui::Begin("onGround");
+	ImGui::Checkbox("onGround", &onGround_);
+	ImGui::End();
 
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);
@@ -190,6 +202,23 @@ void Player::Move()
 	velocity.x = move.x;
 	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
 	velocity.y = 0;
+
+	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
+	{
+		velocity.x = 0.0f;
+	}
+	else if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Back && velocity.x > 0.0f)
+	{
+		velocity.x = 0.0f;
+	}
+	if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Front && velocity.z < 0.0f)
+	{
+		velocity.z = 0.0f;
+	}
+	else if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Back && velocity.z > 0.0f)
+	{
+		velocity.z = 0.0f;
+	}*/
 
 	modelTransform_.translate += velocity * speed;
 

@@ -124,7 +124,7 @@ const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const f
 			if (collisionPlate.normal.y == 1.0f && playerVelocityY < 0.0f)
 			{
 				float moveAmount = collisionPlate.aabb.max.y - playerAABB.min.y;
-				result.y = moveAmount;
+				result.y = moveAmount - 0.01f;
 			}
 			else if (collisionPlate.normal.y == -1.0f && playerVelocityY > 0.0f)
 			{
@@ -174,6 +174,77 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 	return result;
 }
 
+const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) const {
+	for (const auto& collisionPlate : collisionListPlate)
+	{
+		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::End();*/
+		AABB plAABB = playerAABB;
+		plAABB.min.x = playerAABB.min.x + playerVelocityZ * speed;
+		plAABB.max.x = playerAABB.max.x + playerVelocityZ * speed;
+		if (dist > collisionDistance)
+		{
+			continue;
+		}
+		if (plAABB.max.y > collisionPlate.aabb.max.y)
+		{
+			continue;
+		}
+		// 衝突判定をAABBとAABBでとる
+		if (CollisionAABB(plAABB, collisionPlate.aabb))
+		{
+			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
+			if (collisionPlate.normal.z == 1.0f && playerVelocityZ < 0.0f)
+			{
+				return ColNormal::Front;
+			}
+			else if (collisionPlate.normal.z == -1.0f && playerVelocityZ > 0.0f)
+			{
+				return ColNormal::Back;
+			}
+		}
+	}
+	return ColNormal::None;
+}
+
+const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& playerVelocityX, const float& speed) const {
+	for (const auto& collisionPlate : collisionListPlate)
+	{
+		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::End();*/
+		AABB plAABB = playerAABB;
+		plAABB.min.x = playerAABB.min.x + playerVelocityX * speed;
+		plAABB.max.x = playerAABB.max.x + playerVelocityX * speed;
+
+		if (dist > collisionDistance)
+		{
+			continue;
+		}
+		if (plAABB.max.y > collisionPlate.aabb.max.y)
+		{
+			continue;
+		}
+		// 衝突判定をAABBとAABBでとる
+		if (CollisionAABB(plAABB, collisionPlate.aabb))
+		{
+			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
+			if (collisionPlate.normal.x == 1.0f && playerVelocityX < 0.0f)
+			{
+				return ColNormal::Front;
+			}
+			else if (collisionPlate.normal.x == -1.0f && playerVelocityX > 0.0f)
+			{
+				return ColNormal::Back;
+			}
+		}
+	}
+	return ColNormal::None;
+}
+
 // 衝突判定Yの上部に衝突しているかをboolで返す
 const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) const {
 	// 壁の衝突判定
@@ -191,7 +262,7 @@ const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& p
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{
 			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
-			if (collisionPlate.normal.y == 1.0f && playerVelocityY < 0.0f)
+			if (collisionPlate.normal.y == 1.0f/* && playerVelocityY < 0.0f*/)
 			{
 				return true;
 			}
