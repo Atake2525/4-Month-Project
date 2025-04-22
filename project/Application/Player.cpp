@@ -76,21 +76,24 @@ void Player::Update()
 
 	Jump();
 
-	//if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
-	//{
-	//	// 衝突判定をするためのもの
-	//	modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
 
-	//	object3d_->SetTranslate(modelTransform_.translate);
-	//	object3d_->Update();
+	object3d_->SetTranslate(modelTransform_.translate);
+	object3d_->Update();
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+	{
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
 
-	//	// 衝突判定をするためのもの
-	//	modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
 
-	//	object3d_->SetTranslate(modelTransform_.translate);
-	//	object3d_->Update();
-	//}
-	//else 
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+		object3d_->SetTranslate(modelTransform_.translate);
+		object3d_->Update();
+	}
+	else 
 	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
 	{
 		// 衝突判定をするためのもの
@@ -191,7 +194,7 @@ void Player::Move()
 	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
 	velocity.y = 0;
 
-	if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
+	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
 	{
 		velocity.x = 0.0f;
 	}
@@ -206,7 +209,7 @@ void Player::Move()
 	else if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Back && velocity.z > 0.0f)
 	{
 		velocity.z = 0.0f;
-	}
+	}*/
 
 	modelTransform_.translate += velocity * speed;
 
