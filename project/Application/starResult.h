@@ -6,9 +6,9 @@ class starResult {
 public:
 	~starResult();
 
-	void Initialize( DirectXBase* dxc);
+	void Initialize();
 	void Update();
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
+	void Draw();
 
 	//int GetScore() const { return score_; }
 

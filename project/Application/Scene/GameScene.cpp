@@ -34,6 +34,22 @@ void GameScene::Initialize() {
 
 	modelTransform = object3d->GetTransform();
 
+	goal = new Goal();
+	goal->Initialize({ 8.0f,4.0f,11.0f });
+
+	star = new Star();
+	star->Initialize({ 0.0f,0.0f,0.0f });
+
+	starResultManager = new starResult();
+	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+
+
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
+	clearSprite = new Sprite();
+	clearSprite->Initialize("Resources/Sprite/clear.png");
+	//Vector3(0.0f, 0.0f, 0.0f)
+	
+
 }
 
 void GameScene::Update() {
@@ -144,6 +160,34 @@ void GameScene::Update() {
 
 	input->Update();
 
+
+	goal->Update();
+	//clearSprite->Update();
+
+	// ゴールの当たり判定
+	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
+		isGoal = true;
+
+		if (isGoal) {
+			clearSprite->Update();
+		}
+
+		return;
+
+	}
+
+	star->Update();
+	if (starResultManager) {
+		starResultManager->Update();  // プレイヤー情報を渡す player
+	}
+
+	// 星の当たり判定
+	if (star->OnCollision(player->StarObject3d())) {
+		return;
+	}
+
+
+
 }
 
 void GameScene::Draw() {
@@ -158,6 +202,17 @@ void GameScene::Draw() {
 	object3d->Draw();
 
 	player->Draw();
+
+	goal->Draw();
+	clearSprite->Draw();
+
+	star->Draw();
+	// starResultManager とその中の星を描画
+	if (starResultManager) {
+		starResultManager->Draw();
+	}
+
+
 }
 
 void GameScene::Finalize() {
@@ -170,5 +225,17 @@ void GameScene::Finalize() {
 
 	delete player;
 
+
+	delete goal;
+
+	delete clearSprite;
+
+	delete star;
+	if (starResultManager) {
+		delete starResultManager;
+	}
+
+
 	delete button;
+
 }
