@@ -207,7 +207,7 @@ void DebugMode::Initialize() {
 
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 5.0f, 6.0f, -19.0f }/*, camera, input*/);
+	lightBlock->Initialize({ 0.0f, 24.0f, -19.0f }/*, camera, input*/);
 	//switch
 	// 
 	lightSwitch = new switchLight();
@@ -571,11 +571,12 @@ void DebugMode::Draw() {
 	// モデルの描画(各ライトを入れないといけない)
 	object3d->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	/*Block*/
-	if (lightSwitch->GetFlag()) {
+	//if (lightSwitch->GetFlag()) {
 		lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
-	}
+	//}
 	player->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	lightSwitch->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	lightBlock->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	//goal->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	//star->Draw(directionalLightResource, pointLightResource, spotLightResource);
 	///starResultManager とその中の星を描画

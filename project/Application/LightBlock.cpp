@@ -23,8 +23,9 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 	
 
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Lightblock.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "lightblock.obj");
 
+	
 	
 
 	/*model*/
@@ -33,7 +34,7 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 	transform.rotate = BlockModel->GetRotateInDegree();
 	transform.scale = BlockModel->GetScale();
 	
-
+	BlockModel->SetModel("lightblock.obj");
 	
 }
 
@@ -42,17 +43,18 @@ void LightBlock::Update()
 	
 	
 	
+	BlockModel->Update();
 	//位置を指定する
 	BlockModel->SetTranslate(transform.translate);
 	BlockModel->SetRotateInDegree(transform.rotate);
 	BlockModel->SetScale(transform.scale);
-	BlockModel->Update();
+	BlockModel->SetModel("lightblock.obj");
 }
 
 void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)
 {
 	
-	BlockModel->SetModel("Lightblock.obj");
+	
 	
 		
 	BlockModel->Draw(directionalLightResource, pointLightResource, spotLightResource);
