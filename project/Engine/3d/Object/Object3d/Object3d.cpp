@@ -170,6 +170,13 @@ void Object3d::SetModel(const std::string& filePath) {
 	CreateAABB();
 }
 
+void Object3d::SetModel(const std::string& directoryPath, const std::string& filePath, const bool& enableLighting) {
+	ModelManager::GetInstance()->LoadModel(directoryPath, filePath, enableLighting);
+	// モデルを検索してセットする
+	model_ = ModelManager::GetInstance()->FindModel(filePath);
+	CreateAABB();
+}
+
 void Object3d::SetColor(const Vector4& color) { 
 	model_->SetColor(color); 
 }

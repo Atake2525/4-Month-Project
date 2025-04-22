@@ -7,7 +7,7 @@ void GameScene::Initialize() {
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
 
-	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
@@ -33,6 +33,22 @@ void GameScene::Initialize() {
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/endButton.png");
 
 	modelTransform = object3d->GetTransform();
+
+	goal = new Goal();
+	goal->Initialize({ 8.0f,4.0f,11.0f });
+
+	star = new Star();
+	star->Initialize({ 0.0f,0.0f,0.0f });
+
+	starResultManager = new starResult();
+	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+
+
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
+	clearSprite = new Sprite();
+	clearSprite->Initialize("Resources/Sprite/clear.png");
+	//Vector3(0.0f, 0.0f, 0.0f)
+	
 
 }
 
@@ -131,7 +147,18 @@ void GameScene::Update() {
 		button->SetTransform(ta);
 	}
 
+	if (input->TriggerKey(DIK_TAB)) {
+		if (mouseFlag == true) {
+			mouseFlag = false;
+		}
+		else {
+			mouseFlag = true;
+		}
+		input->ShowMouseCursor(mouseFlag);
+	}
+
 	player->Update();
+
 	//camera->SetTranslate(cameraTransform.translate);
 	//camera->SetRotate(cameraTransform.rotate);
 	camera = player->GetCamera();
@@ -144,20 +171,63 @@ void GameScene::Update() {
 
 	input->Update();
 
+
+	goal->Update();
+	//clearSprite->Update();
+
+	// ゴールの当たり判定
+	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
+		isGoal = true;
+
+		if (isGoal) {
+			clearSprite->Update();
+		}
+
+		return;
+
+	}
+
+	star->Update();
+	if (starResultManager) {
+		starResultManager->Update();  // プレイヤー情報を渡す player
+	}
+
+	// 星の当たり判定
+	if (star->OnCollision(player->StarObject3d())) {
+		return;
+	}
+
+
+
 }
 
 void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
 
-	button->Draw();
 	//sprite->Draw();
+  
+	button->Draw();
 
+	if (isGoal)
+	{
+		clearSprite->Draw();
+	}
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
 
 	player->Draw();
+
+	goal->Draw();
+
+	star->Draw();
+	// starResultManager とその中の星を描画
+	if (starResultManager) {
+		starResultManager->Draw();
+	}
+
+
 }
 
 void GameScene::Finalize() {
@@ -170,5 +240,17 @@ void GameScene::Finalize() {
 
 	delete player;
 
+
+	delete goal;
+
+	delete clearSprite;
+
+	delete star;
+	if (starResultManager) {
+		delete starResultManager;
+	}
+
+
 	delete button;
+
 }

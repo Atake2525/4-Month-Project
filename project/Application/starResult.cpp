@@ -9,15 +9,15 @@ starResult::~starResult() {
     stars_.clear();
 }
 
-void starResult::Initialize( DirectXBase* dxc) { //Vector3 position,
-    directX_ = dxc;
+void starResult::Initialize() { //Vector3 position,
+    //directX_ = dxc;
     //starPos_ = position;
 
     // 3つの星を配置
     Vector3 positions[] = {
-        {1.0f, 1.0f, 1.0f},
-        {3.0f, 1.0f, 5.0f},
-        {5.0f, 1.0f, 8.0f}
+        {5.0f, 1.0f, 1.0f},
+        {7.0f, 1.0f, 5.0f},
+        {9.0f, 1.0f, 8.0f}
     };
 
     for (const auto& pos : positions) {
@@ -26,7 +26,7 @@ void starResult::Initialize( DirectXBase* dxc) { //Vector3 position,
         starTransform.translate = pos;
         starTransform.rotate = Vector3(0.0f, 0.0f, 0.0f); // 回転の初期値
         starTransform.scale = Vector3(1.0f, 1.0f, 1.0f); // スケールの初期値
-        newStar->Initialize(starTransform, directX_);
+        newStar->Initialize(starTransform);
         stars_.push_back(newStar);
     }
 
@@ -56,9 +56,9 @@ void starResult::Update() {
 
 }
 
-void starResult::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource,Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
+void starResult::Draw() {
     for (Star* star : stars_) {
-        star->Draw(directionalLightResource, pointLightResource, spotLightResource);
+        star->Draw();
     }
 
 }
