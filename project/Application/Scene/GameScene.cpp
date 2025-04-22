@@ -42,7 +42,13 @@ void GameScene::Initialize() {
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
-
+	//==BLOCK===
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0.0f, 24.0f, -19.0f }/*, camera, input*/);
+	//switch
+	// 
+	lightSwitch = new switchLight();
+	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
 	clearSprite = new Sprite();
