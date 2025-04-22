@@ -1,5 +1,9 @@
 #define NOMINMAX
 #include "Player.h"
+
+#include <iostream>
+#include <algorithm>
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -51,6 +55,8 @@ void Player::Initialize(Camera* camera)
 	shininess_ = object3d_->GetShininess();
 	modelTransform_.translate.z = 0.0f;
 
+	drawModel = object3d_->GetTransform();
+	drawModel.rotate = object3d_->GetRotateInDegree();
 }
 
 void Player::Update()
@@ -76,6 +82,7 @@ void Player::Update()
 
 	Jump();
 
+	drawModel.translate = modelTransform_.translate;
 	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
 	{
 		// 衝突判定をするためのもの
@@ -118,13 +125,15 @@ void Player::Update()
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);
 
-	object3d_->SetTransform(modelTransform_);
-	object3d_->SetRotateInDegree(modelTransform_.rotate);
+	object3d_->SetTransform(drawModel);
+	object3d_->SetRotateInDegree(drawModel.rotate);
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
 	object3d_->Update();
 
-	object3d_->SetTranslate(modelTransform_.translate);
+	drawModel.translate = modelTransform_.translate;
+
+	object3d_->SetTranslate(drawModel.translate);
 	object3d_->Update();
 
 }
@@ -198,43 +207,24 @@ void Player::Move()
 
 void Player::Rotate()
 {
-	const float rotate = 0.05f;
-	Vector3 move{ 0,0 };
-	move = input_->GetRightJoyStickPos3();
-	Vector3 mouse{ 0,0 ,0 };
-	mouse = input_->GetMouseVel3();
-
-	if (move.x >= 0.05f) {
-		move.x = 0.05f;
-	}
-	if (move.x <= -0.05f) {
-		move.x = -0.05f;
-	}
-
-	if (mouse.x >= 0.075f) {
-		mouse.x = 0.075f;
-	}
-	if (mouse.x <= -0.075f) {
-		mouse.x = -0.075f;
-	}
-
-	if (move.x == 0.0f) {
-		modelTransform_.rotate.y += mouse.x;
-		cameraTransform_.rotate.y += mouse.x;
-
+	
+	if (input_->IsMoveRightJoyStick()) {
+		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
 	else {
-		modelTransform_.rotate.y += move.x;
-		cameraTransform_.rotate.y += move.x;
+		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
+		cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
-
-	ImGui::Begin("State");
-	if (ImGui::TreeNode("Mouse")) {
-		ImGui::DragFloat3("Mouse", &mouse.x, 0.1f);
-		ImGui::TreePop();
-	}
-	ImGui::End();
-
+	
+	//cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
+	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
+	//-0.1f 0.9f cameraRotate
+	//0.2f 16.0f cameraTransfrom
 }
 
 void Player::Jump()

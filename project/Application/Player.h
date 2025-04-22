@@ -82,6 +82,8 @@ private: // メンバ変数
 
 	Transform modelTransform_;
 
+	Transform drawModel;
+
 	Object3d* object3d_ = nullptr;
 
 	Camera* camera_ = nullptr;

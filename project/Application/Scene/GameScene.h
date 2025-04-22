@@ -75,5 +75,6 @@ private:
 	bool showCursor = true;
 
 
+	bool mouseFlag = false;
 };
 
