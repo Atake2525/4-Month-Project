@@ -49,7 +49,7 @@ void Player::Initialize(Camera* camera)
 	modelColor_ = object3d_->GetColor();
 	modelEnableLighting_ = object3d_->GetEnableLighting();
 	shininess_ = object3d_->GetShininess();
-	modelTransform_.translate.z = 0.0f;
+	modelTransform_.translate.z = -5.0f;
 
 }
 
@@ -181,6 +181,15 @@ void Player::Move()
 	velocity.x = move.x;
 	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
 	velocity.y = 0;
+
+	if (collision->IsColX(object3d_->GetAABB(), velocity.x))
+	{
+		velocity.x = 0.0f;
+	}
+	if (collision->IsColZ(object3d_->GetAABB(), velocity.z))
+	{
+		velocity.z = 0.0f;
+	}
 
 	modelTransform_.translate += velocity * speed;
 

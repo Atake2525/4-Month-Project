@@ -166,12 +166,76 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 			}
 			else if (collisionPlate.normal.z == -1.0f && playerVelocityZ > 0.0f)
 			{
-				float moveAmount = playerAABB.max.z - collisionPlate.aabb.max.z;
+				float moveAmount = playerAABB.max.z - collisionPlate.aabb.min.z;
 				result.z = -moveAmount;
 			}
 		}
 	}
 	return result;
+}
+
+const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ) const {
+	for (const auto& collisionPlate : collisionListPlate)
+	{
+		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::End();*/
+		if (dist > collisionDistance)
+		{
+			continue;
+		}
+		if (playerAABB.max.z > collisionPlate.aabb.max.z)
+		{
+			continue;
+		}
+		// 衝突判定をAABBとAABBでとる
+		if (CollisionAABB(playerAABB, collisionPlate.aabb))
+		{
+			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
+			if (collisionPlate.normal.z == 1.0f && playerVelocityZ < 0.0f)
+			{
+				return ColNormal::Front;
+			}
+			else if (collisionPlate.normal.z == -1.0f && playerVelocityZ > 0.0f)
+			{
+				return ColNormal::Back;
+			}
+		}
+	}
+	return ColNormal::None;
+}
+
+const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& playerVelocityX) const {
+	for (const auto& collisionPlate : collisionListPlate)
+	{
+		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::End();*/
+		if (dist > collisionDistance)
+		{
+			continue;
+		}
+		if (playerAABB.max.x > collisionPlate.aabb.max.x)
+		{
+			continue;
+		}
+		// 衝突判定をAABBとAABBでとる
+		if (CollisionAABB(playerAABB, collisionPlate.aabb))
+		{
+			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
+			if (collisionPlate.normal.x == 1.0f && playerVelocityX < 0.0f)
+			{
+				return ColNormal::Front;
+			}
+			else if (collisionPlate.normal.x == -1.0f && playerVelocityX > 0.0f)
+			{
+				return ColNormal::Back;
+			}
+		}
+	}
+	return ColNormal::None;
 }
 
 // 衝突判定Yの上部に衝突しているかをboolで返す
