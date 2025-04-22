@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "AABB.h"
 #include "Player.h"
+#include "Button.h"
 
 #include "Star.h"
 #include "starResult.h"
@@ -61,12 +62,18 @@ private:
 
 	Player* player = nullptr;
 
+
 	Star* star = nullptr;
 	starResult* starResultManager = nullptr;
 	Goal* goal = nullptr;
 	bool isGoal = false;
 
 	Sprite* clearSprite = nullptr;
+
+	Button* button = nullptr;
+
+	bool showCursor = true;
+
 
 };
 
