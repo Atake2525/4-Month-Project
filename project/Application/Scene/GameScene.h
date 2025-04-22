@@ -66,7 +66,7 @@ private:
 	Goal* goal = nullptr;
 	bool isGoal = false;
 
-	Goal* clearSprite = nullptr;
+	Sprite* clearSprite = nullptr;
 
 };
 

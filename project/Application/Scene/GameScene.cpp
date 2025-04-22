@@ -41,9 +41,10 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 
 
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear..png");
-	clearSprite = new Goal();
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
+	clearSprite = new Sprite();
 	clearSprite->Initialize("Resources/Sprite/clear.png");
+	//Vector3(0.0f, 0.0f, 0.0f)
 	
 
 }
@@ -134,12 +135,14 @@ void GameScene::Update() {
 
 
 	goal->Update();
+	//clearSprite->Update();
+
 	// ゴールの当たり判定
 	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
 		isGoal = true;
 
 		if (isGoal) {
-			clearSprite->Draw();
+			clearSprite->Update();
 		}
 
 		return;
