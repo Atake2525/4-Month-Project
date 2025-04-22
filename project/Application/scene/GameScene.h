@@ -14,6 +14,8 @@
 #include "Star.h"
 #include "starResult.h"
 #include "Goal.h"
+#include"LightBlock.h"
+#include"switchLight.h"
 
 #pragma once
 
@@ -74,6 +76,8 @@ private:
 
 	bool showCursor = true;
 
-
+	LightBlock* lightBlock = nullptr;
+	switchLight* lightSwitch = nullptr;
+	Transform switchTransform;
 };
 
