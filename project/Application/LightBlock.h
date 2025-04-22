@@ -1,13 +1,13 @@
 #pragma once
 #include"kMath.h"
-#include"Object3dBase.h"
-#include"ModelBase.h"
-#include"ModelManager.h"
+//#include"Object3dBase.h"
+//#include"ModelBase.h"
 #include"Object3d.h"
-#include"DirectXBase.h"
-#include"Camera.h"
-#include"Input.h"
-#include"switchLight.h"
+//#include"Camera.h"
+//#include"Input.h"
+//#include"switchLight.h"
+//#include"Player.h"
+#include"AABB.h"
 
 #include <wrl.h>
 #include <d3d12.h>
@@ -18,16 +18,25 @@ class LightBlock
 {
 public:
 	~LightBlock();
-	void Initialize(Vector3, DirectXBase*, Input*);
+
+	void Initialize(const Vector3& position/*, Camera*, Input**/);
+
 	void Update();
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
+	void Draw();
+	const AABB& GetAABB();
+
 
 private:
 	Object3d* BlockModel;
-	Vector3 blockPosition;
-	Input* input_;
-	DirectXBase* dxcCommon;
-	switchLight* Light;
+	Transform transform;
+	AABB aabb_;
+	//Input* input_;
+	//Camera* camera_;
 
+	//switchLight* Light = nullptr;
+
+
+	//Transform switchPosition;
+	//==========“–‚½‚è”»’è============
 
 };

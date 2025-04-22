@@ -9,10 +9,10 @@ switchLight::~switchLight()
 {
 	delete switchModel;
 }
-void switchLight::Initialize(Vector3 position, DirectXBase* dxc, Input* input)
+void switchLight::Initialize(Transform position, DirectXBase* dxc, Input* input)
 {
 	directX = dxc;
-	switchPosition = position;
+	switchPosition = position.translate;
 	input_ = input;
 
 

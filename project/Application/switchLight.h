@@ -7,6 +7,8 @@
 #include"DirectXBase.h"
 #include"Camera.h"
 #include"Input.h"
+#include"Transform.h"
+#include"Player.h"
 
 #include <wrl.h>
 #include <d3d12.h>
@@ -16,7 +18,7 @@ class switchLight
 {
 public:
 	~switchLight();
-	void Initialize(Vector3, DirectXBase*, Input*);
+	void Initialize(Transform, Input*,Player*);
 	void Update();
 	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
 	bool GetFlag() { return switchFlag; }
