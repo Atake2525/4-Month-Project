@@ -17,9 +17,9 @@ void switchLight::Initialize(Vector3 position)
 
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOff.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOn.obj");
 
 
 	// object3dの初期化(KamataEngineで言うところのModel)
@@ -56,12 +56,12 @@ void switchLight::Update()
 void switchLight::Draw()
 {
 	if (switchFlag) {
-		switchModel->SetModel("box.obj");
+		switchModel->SetModel("switchOn.obj");
 		switchModel->Draw();
 
 	}
 	if (!switchFlag) {
-		switchModel->SetModel("axis.obj");
+		switchModel->SetModel("switchOff.obj");
 		switchModel->Draw();
 
 	}

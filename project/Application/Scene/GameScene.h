@@ -59,7 +59,7 @@ private:
 
 	AABB aabb;
 
-	bool enableLighting = false;
+	bool enableLighting = true;
 
 	Player* player = nullptr;
 

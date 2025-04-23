@@ -16,11 +16,11 @@ void LightBlock::Initialize(Vector3 position)
 
 
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "player.obj");
 
 	/*switch*/
 	Light = new switchLight();
-	Light->Initialize({ 0,0,0 });
+	Light->Initialize({ 15.0f, 0.5f, 6.0f });
 
 	/*model*/
 	BlockModel = new Object3d();
@@ -42,7 +42,7 @@ void LightBlock::Draw()
 	Light->Draw();
 
 	if (Light->GetFlag()) {
-		BlockModel->SetModel("box.obj");
+		BlockModel->SetModel("player.obj");
 		BlockModel->Draw();
 	}
 }
