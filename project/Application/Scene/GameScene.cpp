@@ -5,7 +5,7 @@
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "proStage.obj");
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -19,7 +19,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("stage.obj");
+	object3d->SetModel("proStage.obj");
 
 	sprite = new Sprite();
 	sprite->Initialize("Resources/uvChecker.png");
@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ 8.0f,4.0f,11.0f });
+	goal->Initialize({ 26.0f,12.0f,-18.0f });
 
 	star = new Star();
 	star->Initialize({ 0.0f,0.0f,0.0f });
