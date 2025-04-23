@@ -1,11 +1,13 @@
 #include "GameScene.h"
+#include "Light.h"
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "stage.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "proStage.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -19,7 +21,8 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("stage.obj");
+	object3d->SetModel("proStage.obj");
+
 
 	sprite = new Sprite();
 	sprite->Initialize("Resources/uvChecker.png");
@@ -30,12 +33,12 @@ void GameScene::Initialize() {
 	player->Initialize(camera);
 
 	button = new Button();
-	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/endButton.png");
+	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clear.png");
 
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ 8.0f,4.0f,11.0f });
+	goal->Initialize({ 26.0f,12.0f,-18.0f });
 
 	star = new Star();
 	star->Initialize({ 0.0f,0.0f,0.0f });
@@ -48,6 +51,9 @@ void GameScene::Initialize() {
 	clearSprite = new Sprite();
 	clearSprite->Initialize("Resources/Sprite/clear.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
+
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 10.0f, 1.0f, -5.0f });
 	
 
 }
@@ -77,10 +83,6 @@ void GameScene::Update() {
 	ImGui::End();
 
 	if (input->TriggerKey(DIK_ESCAPE))
-	{
-		finished = true;
-	}
-	if (button->OnButton())
 	{
 		finished = true;
 	}
@@ -131,7 +133,7 @@ void GameScene::Update() {
 		showCursor = !showCursor;
 		input->ShowMouseCursor(showCursor);
 	}
-	if (input->TriggerKey(DIK_0))
+	/*if (input->TriggerKey(DIK_0))
 	{
 		button->SetSprite("Resources/Sprite/button.png");
 	}
@@ -145,7 +147,7 @@ void GameScene::Update() {
 		ta.scale.x += 5.0f;
 		ta.scale.y += 5.0f;
 		button->SetTransform(ta);
-	}
+	}*/
 
 	if (input->TriggerKey(DIK_TAB)) {
 		if (mouseFlag == true) {
@@ -169,8 +171,7 @@ void GameScene::Update() {
 	aabb = object3d->GetAABB();
 	sprite->Update();
 
-	input->Update();
-
+	lightBlock->Update();
 
 	goal->Update();
 	//clearSprite->Update();
@@ -178,14 +179,26 @@ void GameScene::Update() {
 	// ゴールの当たり判定
 	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
 		isGoal = true;
-
-		if (isGoal) {
-			clearSprite->Update();
-		}
-
-		return;
-
 	}
+	if (isGoal) {
+		clearSprite->Update();
+		if (input->TriggerKey(DIK_LSHIFT) || input->TriggerButton(Controller::Menu))
+		{
+			Finalize();
+			showCursor = false;
+			mouseFlag = false;
+			isGoal = false;
+			Light::GetInstance()->SetIntensityDirectionalLight(0.0f);
+			Initialize();
+		}
+	}
+
+	input->Update();
+
+	float di = Light::GetInstance()->GetIntensityDirectionalLight();
+	di += 0.001f;
+	Light::GetInstance()->SetIntensityDirectionalLight(di);
+
 
 	star->Update();
 	if (starResultManager) {
@@ -206,12 +219,12 @@ void GameScene::Draw() {
 	SpriteBase::GetInstance()->ShaderDraw();
 
 	//sprite->Draw();
-  
-	button->Draw();
 
 	if (isGoal)
 	{
 		clearSprite->Draw();
+		button->Draw();
+
 	}
 	Object3dBase::GetInstance()->ShaderDraw();
 
@@ -227,7 +240,7 @@ void GameScene::Draw() {
 		starResultManager->Draw();
 	}
 
-
+	lightBlock->Draw();
 }
 
 void GameScene::Finalize() {
@@ -250,7 +263,7 @@ void GameScene::Finalize() {
 		delete starResultManager;
 	}
 
-
 	delete button;
 
+	delete lightBlock;
 }

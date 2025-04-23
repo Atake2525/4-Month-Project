@@ -36,7 +36,7 @@ void Player::Initialize(Camera* camera)
 	object3d_->SetModel("Player.obj");
 
 	collision = new PlayerCollision();
-	collision->AddCollision("Resources/Model/collision", "stageCollision.obj");
+	collision->AddCollision("Resources/Model/collision", "proStageCollision.obj");
 	/*collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -24.0f}, {12.0f, 10.0f, -24.0f} }, Vector3{ 0.0f, 0.0f, 1.0f });
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
@@ -54,6 +54,8 @@ void Player::Initialize(Camera* camera)
 	modelEnableLighting_ = object3d_->GetEnableLighting();
 	shininess_ = object3d_->GetShininess();
 	modelTransform_.translate.z = -5.0f;
+	modelTransform_.translate.x = 10.0f;
+	modelTransform_.translate.y = 1.0f;
 
 	drawModel = object3d_->GetTransform();
 	drawModel.rotate = object3d_->GetRotateInDegree();

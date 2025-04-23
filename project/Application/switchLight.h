@@ -4,7 +4,6 @@
 #include"ModelBase.h"
 #include"ModelManager.h"
 #include"Object3d.h"
-#include"DirectXBase.h"
 #include"Camera.h"
 #include"Input.h"
 
@@ -16,9 +15,9 @@ class switchLight
 {
 public:
 	~switchLight();
-	void Initialize(Vector3, DirectXBase*, Input*);
+	void Initialize(Vector3);
 	void Update();
-	void Draw(Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>, Microsoft::WRL::ComPtr<ID3D12Resource>);
+	void Draw();
 	bool GetFlag() { return switchFlag; }
 
 private:
@@ -28,9 +27,6 @@ private:
 	Vector3 switchPosition;
 	/*オンオフのフラグ*/
 	bool switchFlag;
-	/*DirectX*/
-	DirectXBase* directX;
-	/*カメラ*/
 	Camera* switchCamera;
 	/*切り替えるために（仮）*/
 	Input* input_;
