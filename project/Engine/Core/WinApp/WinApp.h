@@ -43,10 +43,10 @@ public:
 	const AABB& GetWindowAABB() const;
 
 	// クライアント領域サイズ
-	static const int32_t kClientWidth = 1280;
-	static const int32_t kClientHeight = 720;
+	static const int32_t kClientWidth = 1920;
+	static const int32_t kClientHeight = 1080;
 
-	WindowMode windowMode = WindowMode::Window;
+	WindowMode windowMode = WindowMode::FullScreen;
 
 	// getter
 	HWND GetHwnd() const { return hwnd; }
