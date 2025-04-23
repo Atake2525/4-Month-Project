@@ -10,6 +10,7 @@
 #include "AABB.h"
 #include "Player.h"
 #include "Button.h"
+#include "LightBlock.h"
 
 #include "Star.h"
 #include "starResult.h"
@@ -74,7 +75,8 @@ private:
 
 	bool showCursor = true;
 
-
 	bool mouseFlag = false;
+
+	LightBlock* lightBlock = nullptr;
 };
 

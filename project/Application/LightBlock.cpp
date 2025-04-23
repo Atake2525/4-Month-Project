@@ -9,10 +9,9 @@ LightBlock::~LightBlock()
 
 }
 
-void LightBlock::Initialize(Vector3 position, DirectXBase* dxbase, Input* input)
+void LightBlock::Initialize(Vector3 position)
 {
-	dxcCommon = dxbase;
-	input_ = input;
+	input_ = Input::GetInstance();
 	blockPosition = position;
 
 
@@ -21,7 +20,7 @@ void LightBlock::Initialize(Vector3 position, DirectXBase* dxbase, Input* input)
 
 	/*switch*/
 	Light = new switchLight();
-	Light->Initialize({ 0,0,0 }, dxcCommon, input_);
+	Light->Initialize({ 0,0,0 });
 
 	/*model*/
 	BlockModel = new Object3d();
@@ -38,9 +37,9 @@ void LightBlock::Update()
 
 }
 
-void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)
+void LightBlock::Draw()
 {
-	Light->Draw(directionalLightResource, pointLightResource, spotLightResource);
+	Light->Draw();
 
 	if (Light->GetFlag()) {
 		BlockModel->SetModel("box.obj");

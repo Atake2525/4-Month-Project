@@ -9,11 +9,10 @@ switchLight::~switchLight()
 {
 	delete switchModel;
 }
-void switchLight::Initialize(Vector3 position, DirectXBase* dxc, Input* input)
+void switchLight::Initialize(Vector3 position)
 {
-	directX = dxc;
 	switchPosition = position;
-	input_ = input;
+	input_ = Input::GetInstance();
 
 
 	//モデル読み込み
@@ -54,7 +53,7 @@ void switchLight::Update()
 	ImGui::End();
 }
 
-void switchLight::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)
+void switchLight::Draw()
 {
 	if (switchFlag) {
 		switchModel->SetModel("box.obj");

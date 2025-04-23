@@ -75,7 +75,7 @@ const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const f
 		{
 			continue;
 		}
-		if (playerAABB.max.y > collisionPlate.aabb.max.y)
+		if (playerAABB.min.y + 0.1f > collisionPlate.aabb.max.y)
 		{
 			continue;
 		}
@@ -151,7 +151,7 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 		{
 			continue;
 		}
-		if (playerAABB.max.y > collisionPlate.aabb.max.y)
+		if (playerAABB.min.y + 0.1f > collisionPlate.aabb.max.y)
 		{
 			continue;
 		}
@@ -262,7 +262,7 @@ const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& p
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{
 			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
-			if (collisionPlate.normal.y == 1.0f/* && playerVelocityY < 0.0f*/)
+			if (collisionPlate.normal.y == 1.0f && (playerVelocityY < 0.0f || playerVelocityY > 0.0f))
 			{
 				return true;
 			}

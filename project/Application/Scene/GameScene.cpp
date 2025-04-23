@@ -5,7 +5,7 @@
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "proStage.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "proStage.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -48,6 +48,9 @@ void GameScene::Initialize() {
 	clearSprite = new Sprite();
 	clearSprite->Initialize("Resources/Sprite/clear.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
+
+	lightBlock = new LightBlock();
+	lightBlock->Initialize({ 0.0f, 0.0f, 0.0f });
 	
 
 }
@@ -131,7 +134,7 @@ void GameScene::Update() {
 		showCursor = !showCursor;
 		input->ShowMouseCursor(showCursor);
 	}
-	if (input->TriggerKey(DIK_0))
+	/*if (input->TriggerKey(DIK_0))
 	{
 		button->SetSprite("Resources/Sprite/button.png");
 	}
@@ -145,7 +148,7 @@ void GameScene::Update() {
 		ta.scale.x += 5.0f;
 		ta.scale.y += 5.0f;
 		button->SetTransform(ta);
-	}
+	}*/
 
 	if (input->TriggerKey(DIK_TAB)) {
 		if (mouseFlag == true) {
@@ -168,6 +171,8 @@ void GameScene::Update() {
 	object3d->Update();
 	aabb = object3d->GetAABB();
 	sprite->Update();
+
+	lightBlock->Update();
 
 	input->Update();
 
@@ -227,7 +232,7 @@ void GameScene::Draw() {
 		starResultManager->Draw();
 	}
 
-
+	lightBlock->Draw();
 }
 
 void GameScene::Finalize() {
@@ -250,7 +255,7 @@ void GameScene::Finalize() {
 		delete starResultManager;
 	}
 
-
 	delete button;
 
+	delete lightBlock;
 }
