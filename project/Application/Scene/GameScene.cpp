@@ -60,7 +60,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-	ImGui::Begin("State");
+	/*ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform.translate.x, 0.1f);
 		ImGui::DragFloat3("Rotate", &cameraTransform.rotate.x, 0.1f);
@@ -80,13 +80,13 @@ void GameScene::Update() {
 		ImGui::Checkbox("EnableLihting", &enableLighting);
 		ImGui::TreePop();
 	}
-	ImGui::End();
+	ImGui::End();*/
 
 	if (input->TriggerKey(DIK_ESCAPE))
 	{
 		finished = true;
 	}
-	const float speed = 0.7f;
+	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
 	if (input->PushKey(DIK_W)) {
@@ -127,7 +127,7 @@ void GameScene::Update() {
 	if (input->PushKey(DIK_E)) {
 		cameraTransform.rotate.z += 0.01f;
 
-	}
+	}*/
 	if (input->TriggerKey(DIK_LCONTROL))
 	{
 		showCursor = !showCursor;

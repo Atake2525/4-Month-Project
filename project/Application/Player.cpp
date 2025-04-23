@@ -63,7 +63,7 @@ void Player::Initialize(Camera* camera)
 
 void Player::Update()
 {
-	ImGui::Begin("State");
+	/*ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
 		ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.1f);
@@ -76,7 +76,7 @@ void Player::Update()
 		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
 		ImGui::TreePop();
 	}
-	ImGui::End();
+	ImGui::End();*/
 
 	Rotate();
 
@@ -132,9 +132,9 @@ void Player::Update()
 		onGround_ = false;
 	}
 
-	ImGui::Begin("onGround");
-	ImGui::Checkbox("onGround", &onGround_);
-	ImGui::End();
+	//ImGui::Begin("onGround");
+	//ImGui::Checkbox("onGround", &onGround_);
+	//ImGui::End();
 
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);

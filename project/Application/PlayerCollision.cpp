@@ -346,9 +346,9 @@ const LenXZ& PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& pl
 			return LenXZ::Z;
 		}
 	}
-	ImGui::Begin("collisionDistance");
+	/*ImGui::Begin("collisionDistance");
 	ImGui::DragFloat("Len", &len);
-	ImGui::End();
+	ImGui::End();*/
 	return LenXZ::Z;
 }
 
