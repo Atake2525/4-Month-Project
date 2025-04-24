@@ -61,7 +61,7 @@ void WinApp::Initialize() {
 		// WS_POPUP フルスクリーン
 
 		// ウィンドウの生成
-		hwnd = CreateWindow(wc.lpszClassName, L"Base Engine", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
+		hwnd = CreateWindow(wc.lpszClassName, L"3143_光沢", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
 
 		// ウィンドウを表示する
 		ShowWindow(hwnd, SW_MAXIMIZE);
@@ -73,7 +73,7 @@ void WinApp::Initialize() {
 		// WS_POPUP フルスクリーン
 
 		// ウィンドウの生成
-		hwnd = CreateWindow(wc.lpszClassName, L"Base Engine", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
+		hwnd = CreateWindow(wc.lpszClassName, L"3143_光沢", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
 
 		// ウィンドウを表示する
 		ShowWindow(hwnd, SW_SHOW);
