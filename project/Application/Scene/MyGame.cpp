@@ -6,7 +6,7 @@ void MyGame::Initialize() {
 
 #pragma region 基盤システムの初期化
 
-	WinApp::GetInstance()->Initialize();
+	WinApp::GetInstance()->Initialize(1280, 720, WindowMode::Window, L"3143_光沢");
 
 	directxBase = new DirectXBase();
 	directxBase->Initialize();

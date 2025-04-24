@@ -259,7 +259,7 @@ void DirectXBase::InitializeCommands() {
 
 void DirectXBase::InitializeDepthStenCilView() {
 	// DepthStencilTexutreをウィンドウサイズで作成
-	depthStencilResource = CreateDepthStencilTextureResource(device, WinApp::kClientWidth, WinApp::kClientHeight);
+	depthStencilResource = CreateDepthStencilTextureResource(device, WinApp::GetInstance()->GetkClientWidth(), WinApp::GetInstance()->GetkClientHeight());
 	// DSVの設定
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;        // Format。基本的にはResourceに合わせる
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
@@ -278,8 +278,8 @@ void DirectXBase::InitializeFence() {
 
 void DirectXBase::InitializeViewPortRect() {
 	// クライアント領域の合図と一緒にして画面全体に表示
-	viewPort.Width = WinApp::kClientWidth;
-	viewPort.Height = WinApp::kClientHeight;
+	viewPort.Width = WinApp::GetInstance()->GetkClientWidth();
+	viewPort.Height = WinApp::GetInstance()->GetkClientHeight();
 	viewPort.TopLeftX = 0;
 	viewPort.TopLeftY = 0;
 	viewPort.MinDepth = 0.0f;
@@ -289,9 +289,9 @@ void DirectXBase::InitializeViewPortRect() {
 void DirectXBase::InitializeScissorRect() {
 	// 基本的にビューポートと同じ矩形が構成されるようにする
 	scissorRect.left = 0;
-	scissorRect.right = WinApp::kClientWidth;
+	scissorRect.right = WinApp::GetInstance()->GetkClientWidth();
 	scissorRect.top = 0;
-	scissorRect.bottom = WinApp::kClientHeight;
+	scissorRect.bottom = WinApp::GetInstance()->GetkClientHeight();
 }
 
 void DirectXBase::InitializeImgui() {
@@ -319,8 +319,8 @@ void DirectXBase::CreateDXCCompiler() {
 void DirectXBase::CreateSwapChain() {
 	// スワップチェーンを作成する
 	//DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-	swapChainDesc.Width = WinApp::kClientWidth;                  // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
-	swapChainDesc.Height = WinApp::kClientHeight;                // 画面の高さ。ウィンドウのクライアント量良い気を同じものにしておく
+	swapChainDesc.Width = WinApp::GetInstance()->GetkClientWidth();                  // 画面の幅。ウィンドウのクライアント領域を同じものにしておく
+	swapChainDesc.Height = WinApp::GetInstance()->GetkClientHeight();                // 画面の高さ。ウィンドウのクライアント量良い気を同じものにしておく
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;           // 色の形式
 	swapChainDesc.SampleDesc.Count = 1;                          // マルチサンプルしない
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // 描画ターゲットとして利用する
@@ -333,7 +333,7 @@ void DirectXBase::CreateSwapChain() {
 
 void DirectXBase::CreateDepthBuffer() {
 	// DepthStencilTexutreをウィンドウサイズで作成
-	ComPtr<ID3D12Resource> depthStencilResouce = CreateDepthStencilTextureResource(device, WinApp::kClientWidth, WinApp::kClientHeight);
+	ComPtr<ID3D12Resource> depthStencilResouce = CreateDepthStencilTextureResource(device, WinApp::GetInstance()->GetkClientWidth(), WinApp::GetInstance()->GetkClientHeight());
 	// DSVの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;        // Format。基本的にはResourceに合わせる
