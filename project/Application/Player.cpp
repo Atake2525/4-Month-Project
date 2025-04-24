@@ -1,5 +1,9 @@
 #define NOMINMAX
 #include "Player.h"
+
+#include <iostream>
+#include <algorithm>
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -32,7 +36,7 @@ void Player::Initialize(Camera* camera)
 	object3d_->SetModel("Player.obj");
 
 	collision = new PlayerCollision();
-	collision->AddCollision("Resources/Model/collision", "stageCollision.obj");
+	collision->AddCollision("Resources/Model/collision", "proStageCollision.obj");
 	/*collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -24.0f}, {12.0f, 10.0f, -24.0f} }, Vector3{ 0.0f, 0.0f, 1.0f });
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
@@ -41,21 +45,28 @@ void Player::Initialize(Camera* camera)
 	input_ = Input::GetInstance();
 
 	//camera
-	cameraTransform_.translate = camera->GetTranslate();
-	cameraTransform_.rotate = camera->GetRotate();
+	//cameraTransform_.translate = camera->GetTranslate();
+	//cameraTransform_.rotate = camera->GetRotate();
+	cameraTransform_ = camera->GetTransform();
 	// Model
 	modelTransform_ = object3d_->GetTransform();
 	modelTransform_.rotate = object3d_->GetRotateInDegree();
 	modelColor_ = object3d_->GetColor();
 	modelEnableLighting_ = object3d_->GetEnableLighting();
 	shininess_ = object3d_->GetShininess();
-	modelTransform_.translate.z = 0.0f;
+	modelTransform_.translate.z = -5.0f;
+	modelTransform_.translate.x = 10.0f;
+	modelTransform_.translate.y = 1.0f;
 
+	drawModel = object3d_->GetTransform();
+	drawModel.rotate = object3d_->GetRotateInDegree();
+
+	onGround_ = true;
 }
 
 void Player::Update()
 {
-	ImGui::Begin("State");
+	/*ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
 		ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.1f);
@@ -68,13 +79,19 @@ void Player::Update()
 		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
 		ImGui::TreePop();
 	}
-	ImGui::End();
+	ImGui::End();*/
 
 	Rotate();
 
 	Move();
 
 	Jump();
+
+	object3d_->SetTranslate(modelTransform_.translate);
+	object3d_->Update();
+	drawModel.translate = modelTransform_.translate;
+
+	LenXZ len = collision->GetLenXZ(object3d_->GetAABB(), velocity);
 
 	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
 	{
@@ -90,7 +107,8 @@ void Player::Update()
 		object3d_->SetTranslate(modelTransform_.translate);
 		object3d_->Update();
 	}
-	else if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	else 
+	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
 	{
 		// 衝突判定をするためのもの
 		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
@@ -114,17 +132,27 @@ void Player::Update()
 		JumpVelocity = 0.0f;
 		onGround_ = true;
 	}
+	else if (!collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity))
+	{
+		onGround_ = false;
+	}
+
+	//ImGui::Begin("onGround");
+	//ImGui::Checkbox("onGround", &onGround_);
+	//ImGui::End();
 
 	camera_->SetTranslate(cameraTransform_.translate);
 	camera_->SetRotate(cameraTransform_.rotate);
 
-	object3d_->SetTransform(modelTransform_);
-	object3d_->SetRotateInDegree(modelTransform_.rotate);
+	object3d_->SetTransform(drawModel);
+	object3d_->SetRotateInDegree(drawModel.rotate);
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
 	object3d_->Update();
 
-	object3d_->SetTranslate(modelTransform_.translate);
+	drawModel.translate = modelTransform_.translate;
+
+	object3d_->SetTranslate(drawModel.translate);
 	object3d_->Update();
 
 }
@@ -179,8 +207,32 @@ void Player::Move()
 	}
 	velocity.z = -move.y;
 	velocity.x = move.x;
-	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
+
+
+	// 即席の移動速度安定化
+	Vector3 camRot = cameraTransform_.rotate;
+	camRot.x = 0.0f;
+	Matrix4x4 camworldMatrix = MakeAffineMatrix(cameraTransform_.scale, camRot, cameraTransform_.translate);
+	velocity = TransformNormal(velocity, camworldMatrix);
+	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
 	velocity.y = 0;
+
+	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
+	{
+		velocity.x = 0.0f;
+	}
+	else if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Back && velocity.x > 0.0f)
+	{
+		velocity.x = 0.0f;
+	}
+	if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Front && velocity.z < 0.0f)
+	{
+		velocity.z = 0.0f;
+	}
+	else if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Back && velocity.z > 0.0f)
+	{
+		velocity.z = 0.0f;
+	}*/
 
 	modelTransform_.translate += velocity * speed;
 
@@ -198,70 +250,99 @@ void Player::Move()
 
 void Player::Rotate()
 {
-	const float rotate = 0.05f;
-	Vector3 move{ 0,0 };
-	move = input_->GetRightJoyStickPos3();
-	Vector3 mouse{ 0,0 ,0 };
-	mouse = input_->GetMouseVel3();
-
-	if (move.x >= 0.05f) {
-		move.x = 0.05f;
-	}
-	if (move.x <= -0.05f) {
-		move.x = -0.05f;
-	}
-
-	if (mouse.x >= 0.075f) {
-		mouse.x = 0.075f;
-	}
-	if (mouse.x <= -0.075f) {
-		mouse.x = -0.075f;
-	}
-
-	if (move.x == 0.0f) {
-		modelTransform_.rotate.y += mouse.x;
-		cameraTransform_.rotate.y += mouse.x;
-
+	
+	if (input_->IsMoveRightJoyStick()) {
+		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
 	else {
-		modelTransform_.rotate.y += move.x;
-		cameraTransform_.rotate.y += move.x;
+		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
+		cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
-
-	ImGui::Begin("State");
-	if (ImGui::TreeNode("Mouse")) {
-		ImGui::DragFloat3("Mouse", &mouse.x, 0.1f);
-		ImGui::TreePop();
-	}
-	ImGui::End();
-
+	
+	//cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
+	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
+	//-0.1f 0.9f cameraRotate
+	//0.2f 16.0f cameraTransfrom
 }
 
 void Player::Jump()
 {
-
 	if (onGround_) {
-		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Button::A)) {
+		//OutputDebugStringA("tex");
+		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
 		}
-
 	}
 	else if (onGround_ == false)
 	{
 		JumpVelocity -= kGravityAccleration / 60.0f;
 		JumpVelocity = std::max(JumpVelocity, -kLimitFallSpeed);
 	}
-
 	modelTransform_.translate.y += JumpVelocity;
-
-	/*if (modelTransform_.translate.y <= 1.0f) {
-		modelTransform_.translate.y = 1.0f;
-		onGround_ = true;
-	}*/
-
 }
+void Player::CheckCollsion(LightBlock* block)
+{
 
+	const AABB& blockAABB = block->GetAABB();
+	const AABB& playerAABB = object3d_->GetAABB();
+
+	if (IsCollisionAABB(playerAABB, blockAABB)) {
+		//突き抜けたかについて
+		float overlapLeft = std::abs(playerAABB.max.x - blockAABB.min.x);
+		float overlapRight = std::abs(blockAABB.max.x - playerAABB.min.x);
+		float overlapTop = std::abs(playerAABB.min.y - blockAABB.max.y);
+		float overlapBottom = std::abs(blockAABB.min.y - playerAABB.max.y);
+		float overlapBack = std::abs(playerAABB.max.z - blockAABB.min.z);
+		float overlapFront = std::abs(blockAABB.max.z - playerAABB.min.z);
+
+
+		/*もっとも小さいオーバーラップを優先的に解決*/
+		float minOverlapX = std::min(overlapLeft, overlapRight);
+		float minOverlapY = std::min(overlapTop, overlapBottom);
+		float minOverlapZ = std::min(overlapBack, overlapFront);
+		if (minOverlapX < minOverlapY && minOverlapX <= minOverlapZ) {
+			if (overlapLeft < overlapRight) {
+
+				/*左衝突*/
+				modelTransform_.translate.x -= overlapLeft;
+			}
+			else {
+				/*右衝突*/
+				modelTransform_.translate.x += overlapRight;
+			}
+			velocity.x = 0;
+		}
+		else if (minOverlapY <= minOverlapX && minOverlapY <= minOverlapZ) {
+			if (overlapTop < overlapBottom) {
+				/*上から着地*/
+				modelTransform_.translate.y -= overlapTop;
+				velocity.y = 0;
+
+			}
+			else {
+				/*下からぶつかった*/
+				modelTransform_.translate.y += overlapBottom;
+				velocity.y = 0;
+			}
+		}
+		else {
+			// Z軸方向で解決
+			if (overlapBack < overlapFront) {
+				modelTransform_.translate.z -= overlapBack;
+			}
+			else {
+				modelTransform_.translate.z += overlapFront;
+			}
+			velocity.z = 0;
+		}
+	}
+}
 
 // 衝突判定の実装で追加したもの
 const Vector3& Player::GetPosition() const {
@@ -271,3 +352,15 @@ const Vector3& Player::GetPosition() const {
 	result.z = object3d_->GetWorldMatrix().m[3][2];
 	return result;
 }
+
+
+const bool& Player::IsCollisionAABB(const AABB& a, const AABB& b) {
+	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {
+		return true;
+	}
+	return false;
+}
+
+

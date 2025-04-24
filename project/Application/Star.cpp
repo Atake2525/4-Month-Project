@@ -7,12 +7,9 @@ Star::~Star() {
 	delete starModel_;
 }
 
-void Star::Initialize(const Transform& translate, DirectXBase* dxc) {
+void Star::Initialize(const Transform& translate) {
 	
 	this->transform_ = translate;
-	this->directX_ = dxc;
-
-	ModelManager::GetInstance()->Initialize(directX_);
 
 	// モデル読み込み
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "starResult.obj");
@@ -34,20 +31,25 @@ void Star::Update() {
 	starModel_->SetTransform(transform_);
 
 	// ImGuiで位置確認
-	ImGui::Begin("Star Debug");
+	/*ImGui::Begin("Star Debug");
 	ImGui::DragFloat3("Star Position", &transform_.translate.x, 0.01f);
 	ImGui::Checkbox("Collected", &collected_);
-	ImGui::End();
+	ImGui::End();*/
 }
 
-void Star::Draw(Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource) {
+void Star::Draw() {
 	if (!collected_) {
 		starModel_->Draw();
 	}
 
 }
 
-void Star::OnCollision(const Player* player) {
-	(void)player;  // 未使用警告を回避
-	collected_ = true;  // プレイヤーが取得
+bool Star::OnCollision(Object3d* object3d) {
+
+	if (starModel_->CheckCollision(object3d)) {
+
+		return true;
+	}
+	return false;
+	//collected_ = true;  // プレイヤーが取得
 }

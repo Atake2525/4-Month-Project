@@ -16,18 +16,17 @@ void Input::Finalize() {
 	instance = nullptr;
 }
 
-void Input::Initialize(WinApp* winApp) {
-	winApp_ = winApp;
+void Input::Initialize() {
 	HRESULT result;
 
 	// DirectInputのインスタンス生成 キーボード
-	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
+	result = DirectInput8Create(WinApp::GetInstance()->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
-	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputMouse, nullptr);
+	result = DirectInput8Create(WinApp::GetInstance()->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputMouse, nullptr);
 	assert(SUCCEEDED(result));
 
-	result = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
+	result = DirectInput8Create(WinApp::GetInstance()->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInputGamePad, nullptr);
 	assert(SUCCEEDED(result));
 
 	CreateKeyboardDevice();
@@ -52,7 +51,7 @@ void Input::CreateKeyboardDevice() {
 	result = keyboard->SetDataFormat(&c_dfDIKeyboard);
 	assert(SUCCEEDED(result));
 	// 排他制御レベルセット
-	result = keyboard->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = keyboard->SetCooperativeLevel(WinApp::GetInstance()->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 }
 
@@ -64,12 +63,8 @@ void Input::CreateMouseDevice() {
 	assert(SUCCEEDED(result));
 	// 入力データ形式のセット
 	result = mouse->SetDataFormat(&c_dfDIMouse);
-	assert(SUCCEEDED(result));
 	// 排他制御レベルセット
-	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
-	assert(SUCCEEDED(result));
-	// 排他制御レベルセット
-	result = mouse->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+	result = mouse->SetCooperativeLevel(WinApp::GetInstance()->GetHwnd(), DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	assert(SUCCEEDED(result));
 }
 
@@ -225,6 +220,20 @@ const bool& Input::ReturnMouse(int mouseNumber) const {
 		return true;
 	}
 	return false;
+}
+
+const Vector2& Input::GetMousePos2() const {
+	POINT pos;
+	GetCursorPos(&pos);
+	Vector2 result = { pos.x, pos.y };
+	return result;
+}
+
+const Vector3& Input::GetMousePos3() const {
+	POINT pos;
+	GetCursorPos(&pos);
+	Vector3 result = { pos.x, pos.y, 0.0f };
+	return result;
 }
 
 const Vector2& Input::GetMouseVel2() const {
@@ -523,8 +532,8 @@ const bool& Input::TriggerXButton(DPad dPad) const {
 	return false;
 }
 
-const bool& Input::PushButton(Button button) const {
-	Button result = Button::None;
+const bool& Input::PushButton(Controller button) const {
+	Controller result = Controller::None;
 	for (int i = 0; i < 10; i++)
 	{
 		if (!gamePadState.rgbButtons[i] && 0x80)
@@ -535,62 +544,62 @@ const bool& Input::PushButton(Button button) const {
 		switch (i)
 		{
 		case 0:
-			result = Button::A;
+			result = Controller::A;
 			if (button == result)
 			{
 				return true;
 				break;
 			}
 		case 1:
-			result = Button::B;
+			result = Controller::B;
 			if (button == result)
 			{
 				return true;
 			}
 		case 2:
-			result = Button::X;
+			result = Controller::X;
 			if (button == result)
 			{
 				return true;
 			}
 		case 3:
-			result = Button::Y;
+			result = Controller::Y;
 			if (button == result)
 			{
 				return true;
 			}
 		case 4:
-			result = Button::LB;
+			result = Controller::LB;
 			if (button == result)
 			{
 				return true;
 			}
 		case 5:
-			result = Button::RB;
+			result = Controller::RB;
 			if (button == result)
 			{
 				return true;
 			}
 		case 6:
-			result = Button::View;
+			result = Controller::View;
 			if (button == result)
 			{
 				return true;
 			}
 		case 7:
-			result = Button::Menu;
+			result = Controller::Menu;
 			if (button == result)
 			{
 				return true;
 			}
 		case 8:
-			result = Button::LeftStick;
+			result = Controller::LeftStick;
 			if (button == result)
 			{
 				return true;
 			}
 		case 9:
-			result = Button::RightStick;
+			result = Controller::RightStick;
 			if (button == result)
 			{
 				return true;
@@ -600,7 +609,7 @@ const bool& Input::PushButton(Button button) const {
 	Vector3 joystick = GetLeftJoyStickPos3();
 	if (joystick.z < 0)
 	{
-		result = Button::RT;
+		result = Controller::RT;
 		if (button == result)
 		{
 			return true;
@@ -608,7 +617,7 @@ const bool& Input::PushButton(Button button) const {
 	}
 	else if (joystick.z > 0)
 	{
-		result = Button::LT;
+		result = Controller::LT;
 		if (button == result)
 		{
 			return true;
@@ -617,9 +626,9 @@ const bool& Input::PushButton(Button button) const {
 	return false;
 }
 
-const bool& Input::TriggerButton(Button button) const {
-	Button result = Button::None;
-	Button resultPre = Button::None;
+const bool& Input::TriggerButton(Controller button) const {
+	Controller result = Controller::None;
+	Controller resultPre = Controller::None;
 	for (int i = 0; i < 10; i++)
 	{
 		if (!gamePadState.rgbButtons[i] && 0x80)
@@ -630,61 +639,61 @@ const bool& Input::TriggerButton(Button button) const {
 		switch (i)
 		{
 		case 0:
-			result = Button::A;
+			result = Controller::A;
 			if (button == result)
 			{
 				break;
 			}
 		case 1:
-			result = Button::B;
+			result = Controller::B;
 			if (button == result)
 			{
 				break;
 			}
 		case 2:
-			result = Button::X;
+			result = Controller::X;
 			if (button == result)
 			{
 				break;
 			}
 		case 3:
-			result = Button::Y;
+			result = Controller::Y;
 			if (button == result)
 			{
 				break;
 			}
 		case 4:
-			result = Button::LB;
+			result = Controller::LB;
 			if (button == result)
 			{
 				break;
 			}
 		case 5:
-			result = Button::RB;
+			result = Controller::RB;
 			if (button == result)
 			{
 				break;
 			}
 		case 6:
-			result = Button::View;
+			result = Controller::View;
 			if (button == result)
 			{
 				break;
 			}
 		case 7:
-			result = Button::Menu;
+			result = Controller::Menu;
 			if (button == result)
 			{
 				break;
 			}
 		case 8:
-			result = Button::LeftStick;
+			result = Controller::LeftStick;
 			if (button == result)
 			{
 				break;
 			}
 		case 9:
-			result = Button::RightStick;
+			result = Controller::RightStick;
 			if (button == result)
 			{
 				break;
@@ -702,61 +711,61 @@ const bool& Input::TriggerButton(Button button) const {
 		switch (i)
 		{
 		case 0:
-			resultPre = Button::A;
+			resultPre = Controller::A;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 1:
-			resultPre = Button::B;
+			resultPre = Controller::B;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 2:
-			resultPre = Button::X;
+			resultPre = Controller::X;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 3:
-			resultPre = Button::Y;
+			resultPre = Controller::Y;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 4:
-			resultPre = Button::LB;
+			resultPre = Controller::LB;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 5:
-			resultPre = Button::RB;
+			resultPre = Controller::RB;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 6:
-			resultPre = Button::View;
+			resultPre = Controller::View;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 7:
-			resultPre = Button::Menu;
+			resultPre = Controller::Menu;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 8:
-			resultPre = Button::LeftStick;
+			resultPre = Controller::LeftStick;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 9:
-			resultPre = Button::RightStick;
+			resultPre = Controller::RightStick;
 			if (button == resultPre)
 			{
 				break;
@@ -782,7 +791,7 @@ const bool& Input::TriggerButton(Button button) const {
 
 	if (joystick.z < 0 && joystickPre >= 0)
 	{
-		result = Button::RT;
+		result = Controller::RT;
 		if (button == result)
 		{
 			return true;
@@ -790,7 +799,7 @@ const bool& Input::TriggerButton(Button button) const {
 	}
 	else if (joystick.z > 0 && joystickPre <= 0)
 	{
-		result = Button::LT;
+		result = Controller::LT;
 		if (button == result)
 		{
 			return true;
@@ -799,9 +808,9 @@ const bool& Input::TriggerButton(Button button) const {
 	return false;
 }
 
-const bool& Input::ReturnButton(Button button) const {
-	Button result = Button::None;
-	Button resultPre = Button::None;
+const bool& Input::ReturnButton(Controller button) const {
+	Controller result = Controller::None;
+	Controller resultPre = Controller::None;
 	for (int i = 0; i < 10; i++)
 	{
 		if (!gamePadState.rgbButtons[i] && 0x80)
@@ -812,61 +821,61 @@ const bool& Input::ReturnButton(Button button) const {
 		switch (i)
 		{
 		case 0:
-			result = Button::A;
+			result = Controller::A;
 			if (button == result)
 			{
 				break;
 			}
 		case 1:
-			result = Button::B;
+			result = Controller::B;
 			if (button == result)
 			{
 				break;
 			}
 		case 2:
-			result = Button::X;
+			result = Controller::X;
 			if (button == result)
 			{
 				break;
 			}
 		case 3:
-			result = Button::Y;
+			result = Controller::Y;
 			if (button == result)
 			{
 				break;
 			}
 		case 4:
-			result = Button::LB;
+			result = Controller::LB;
 			if (button == result)
 			{
 				break;
 			}
 		case 5:
-			result = Button::RB;
+			result = Controller::RB;
 			if (button == result)
 			{
 				break;
 			}
 		case 6:
-			result = Button::View;
+			result = Controller::View;
 			if (button == result)
 			{
 				break;
 			}
 		case 7:
-			result = Button::Menu;
+			result = Controller::Menu;
 			if (button == result)
 			{
 				break;
 			}
 		case 8:
-			result = Button::LeftStick;
+			result = Controller::LeftStick;
 			if (button == result)
 			{
 				break;
 			}
 		case 9:
-			result = Button::RightStick;
+			result = Controller::RightStick;
 			if (button == result)
 			{
 				break;
@@ -884,61 +893,61 @@ const bool& Input::ReturnButton(Button button) const {
 		switch (i)
 		{
 		case 0:
-			resultPre = Button::A;
+			resultPre = Controller::A;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 1:
-			resultPre = Button::B;
+			resultPre = Controller::B;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 2:
-			resultPre = Button::X;
+			resultPre = Controller::X;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 3:
-			resultPre = Button::Y;
+			resultPre = Controller::Y;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 4:
-			resultPre = Button::LB;
+			resultPre = Controller::LB;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 5:
-			resultPre = Button::RB;
+			resultPre = Controller::RB;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 6:
-			resultPre = Button::View;
+			resultPre = Controller::View;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 7:
-			resultPre = Button::Menu;
+			resultPre = Controller::Menu;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 8:
-			resultPre = Button::LeftStick;
+			resultPre = Controller::LeftStick;
 			if (button == resultPre)
 			{
 				break;
 			}
 		case 9:
-			resultPre = Button::RightStick;
+			resultPre = Controller::RightStick;
 			if (button == resultPre)
 			{
 				break;
@@ -964,7 +973,7 @@ const bool& Input::ReturnButton(Button button) const {
 
 	if (joystick.z >= 0 && joystickPre < 0)
 	{
-		result = Button::RT;
+		result = Controller::RT;
 		if (button == result)
 		{
 			return true;
@@ -972,7 +981,7 @@ const bool& Input::ReturnButton(Button button) const {
 	}
 	else if (joystick.z <= 0 && joystickPre > 0)
 	{
-		result = Button::LT;
+		result = Controller::LT;
 		if (button == result)
 		{
 			return true;

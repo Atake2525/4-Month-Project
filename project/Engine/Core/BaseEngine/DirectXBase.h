@@ -17,7 +17,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(WinApp* winApp);
+	void Initialize();
 
 	// 描画前処理
 	void PreDraw();
@@ -140,9 +140,6 @@ private:
 	/// 指定番号のGPUデスクリプタハンドルを取得する
 	/// </summary>
 	static D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	// ポインタ
-	WinApp* winApp_ = nullptr;
 
 	HRESULT hr; 
 	// DXGIファクトリー

@@ -6,11 +6,10 @@ void MyGame::Initialize() {
 
 #pragma region 基盤システムの初期化
 
-	winApp = new WinApp();
-	winApp->Initialize();
+	WinApp::GetInstance()->Initialize();
 
 	directxBase = new DirectXBase();
-	directxBase->Initialize(winApp);
+	directxBase->Initialize();
 
 	SpriteBase::GetInstance()->Initialize(directxBase);
 
@@ -26,7 +25,7 @@ void MyGame::Initialize() {
 
 	Light::GetInstance()->Initialize(directxBase);
 
-	Input::GetInstance()->Initialize(winApp);
+	Input::GetInstance()->Initialize();
 
 	//// ↓---- シーンの初期化 ----↓ ////
 
@@ -40,7 +39,7 @@ void MyGame::Initialize() {
 void MyGame::Update() {
 	FrameWork::Update();
 
-	if (winApp->ProcessMessage()) {
+	if (WinApp::GetInstance()->ProcessMessage()) {
 		finished = true;
 	}
 	ImGui_ImplDX12_NewFrame();
@@ -72,8 +71,7 @@ void MyGame::Draw() {
 
 void MyGame::Finalize() {
 
-	winApp->Finalize();
-	delete winApp;
+	WinApp::GetInstance()->Finalize();
 
 	directxBase->Finalize();
 	delete directxBase;

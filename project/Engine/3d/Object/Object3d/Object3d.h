@@ -32,6 +32,8 @@ public: // メンバ関数
 
 	void SetModel(const std::string& filePath);
 
+	void SetModel(const std::string& directoryPath, const std::string& filePath, const bool& enableLighting = false);
+
 	/*void SetDirectionalLight(DirectionalLight* lightData);
 
 	void SetPointLight(PointLight* lightData);

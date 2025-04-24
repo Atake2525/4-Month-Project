@@ -13,6 +13,7 @@
 #include "PlayerCollision.h"
 #include "ModelManager.h"
 
+#include"LightBlock.h"
 // 衝突判定で追加
 #include "AABB.h"
 
@@ -65,6 +66,14 @@ public: // メンバ関数
 		modelTransform_.translate += result; 
 	}
 
+	void CheckCollsion(LightBlock* block);
+	
+	//ゴールの当たり判定で追加
+	 Object3d *GoalObject3d()  { return object3d_; }
+	 // 星の当たり判定で追加
+	 Object3d* StarObject3d() { return object3d_; }
+	 const bool& IsCollisionAABB(const AABB& a, const AABB& b);
+
 private:
 
 	void Move();
@@ -76,6 +85,8 @@ private:
 private: // メンバ変数
 
 	Transform modelTransform_;
+
+	Transform drawModel;
 
 	Object3d* object3d_ = nullptr;
 
@@ -104,7 +115,7 @@ private: // メンバ変数
 	// 最大落下速度
 	static inline const float kLimitFallSpeed = 0.98f;
 
-	float JumpVelocity = 0.0f;
+	static inline float JumpVelocity = 0.0f;
 
 
 	// 追加したクラス

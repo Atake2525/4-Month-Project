@@ -1,49 +1,78 @@
 #include "LightBlock.h"
+#include"ModelManager.h"
 
 LightBlock::~LightBlock()
 {
-	delete BlockModel;
-
-	delete Light;
-
-
+	if (BlockModel)
+	{
+		delete BlockModel;
+	}
 }
 
-void LightBlock::Initialize(Vector3 position, DirectXBase* dxbase, Input* input)
+void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*input*/)
 {
-	dxcCommon = dxbase;
-	input_ = input;
-	blockPosition = position;
+	transform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		position
+	};
+	//input_ = input;
+	//transform.translate = position;
+	//camera_ = camera;
 
 
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
 
-	/*switch*/
-	Light = new switchLight();
-	Light->Initialize({ 0,0,0 }, dxcCommon, input_);
+
+	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "lightBlock.obj");
+
+
+
 
 	/*model*/
 	BlockModel = new Object3d();
 	BlockModel->Initialize();
+	transform.rotate = BlockModel->GetRotateInDegree();
+	transform.scale = BlockModel->GetScale();
 
-	//位置を指定する
-	BlockModel->SetTranslate(blockPosition);
+	BlockModel->SetModel("lightBlock.obj");
+
 }
 
 void LightBlock::Update()
 {
-	Light->Update();
-	BlockModel->Update();
 
+
+
+	BlockModel->Update();
+	//位置を指定する
+	BlockModel->SetTranslate(transform.translate);
+	BlockModel->SetRotateInDegree(transform.rotate);
+	BlockModel->SetScale(transform.scale);
+	BlockModel->SetModel("lightBlock.obj");
 }
 
-void LightBlock::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)
+void LightBlock::Draw(const bool& switchFlag)
 {
-	Light->Draw(directionalLightResource, pointLightResource, spotLightResource);
 
-	if (Light->GetFlag()) {
-		BlockModel->SetModel("box.obj");
+
+
+
+	if (switchFlag)
+	{
 		BlockModel->Draw();
 	}
+
 }
+
+
+const AABB& LightBlock::GetAABB()
+{
+
+	return BlockModel->GetAABB();
+}
+
+
+
+
+
