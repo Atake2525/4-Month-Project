@@ -33,7 +33,7 @@ void GameScene::Initialize() {
 	player->Initialize(camera);
 
 	button = new Button();
-	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clear.png");
+	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
 
 	modelTransform = object3d->GetTransform();
 
@@ -47,9 +47,9 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 
 
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
 	clearSprite = new Sprite();
-	clearSprite->Initialize("Resources/Sprite/clear.png");
+	clearSprite->Initialize("Resources/Sprite/clearShift.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
 
 	lightBlock = new LightBlock();
