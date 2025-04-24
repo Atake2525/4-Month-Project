@@ -218,6 +218,7 @@ void GameScene::Update() {
 
 	// 星の当たり判定
 	if (star->OnCollision(player->StarObject3d())) {
+
 		return;
 	}
 
