@@ -9,18 +9,17 @@ switchLight::~switchLight()
 {
 	delete switchModel;
 }
-void switchLight::Initialize(Vector3 position, DirectXBase* dxc, Input* input)
+void switchLight::Initialize(Vector3 position)
 {
-	directX = dxc;
 	switchPosition = position;
-	input_ = input;
+	input_ = Input::GetInstance();
 
 
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOff.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOn.obj");
 
 
 	// object3dの初期化(KamataEngineで言うところのModel)
@@ -49,20 +48,20 @@ void switchLight::Update()
 	}
 	switchModel->Update();
 	// ImGuiウィンドウの中にチェックボックスを追加
-	ImGui::Begin("Debug Window");
-	ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更
-	ImGui::End();
+	//ImGui::Begin("Debug Window");
+	//ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更
+	//ImGui::End();
 }
 
-void switchLight::Draw(Microsoft::WRL::ComPtr<ID3D12Resource>directionalLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>pointLightResource, Microsoft::WRL::ComPtr<ID3D12Resource>spotLightResource)
+void switchLight::Draw()
 {
 	if (switchFlag) {
-		switchModel->SetModel("box.obj");
+		switchModel->SetModel("switchOn.obj");
 		switchModel->Draw();
 
 	}
 	if (!switchFlag) {
-		switchModel->SetModel("axis.obj");
+		switchModel->SetModel("switchOff.obj");
 		switchModel->Draw();
 
 	}

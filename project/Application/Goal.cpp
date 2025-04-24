@@ -51,10 +51,10 @@ void Goal::Update()
 	//}
 
 	// ImGuiウィンドウの中にチェックボックスを追加
-	ImGui::Begin("Goal Window");
-	ImGui::DragFloat3("Goal Position", &goalPos.x, 0.01f); //ゴールの位置の確認
-	ImGui::Checkbox("Goal Flag", &goalFlag);
-	ImGui::End();
+	//ImGui::Begin("Goal Window");
+	//ImGui::DragFloat3("Goal Position", &goalPos.x, 0.01f); //ゴールの位置の確認
+	//ImGui::Checkbox("Goal Flag", &goalFlag);
+	//ImGui::End();
 
 
 }

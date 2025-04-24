@@ -75,7 +75,7 @@ const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const f
 		{
 			continue;
 		}
-		if (playerAABB.max.y > collisionPlate.aabb.max.y)
+		if (playerAABB.min.y + 0.1f > collisionPlate.aabb.max.y)
 		{
 			continue;
 		}
@@ -105,11 +105,13 @@ const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const f
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
+		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
 		ImGui::End();*/
-		if (dist > collisionDistance)
+		if (dist > objectLen)
 		{
 			continue;
 		}
@@ -143,15 +145,17 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
+		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
 		ImGui::End();*/
-		if (dist > collisionDistance)
+		if (dist > objectLen)
 		{
 			continue;
 		}
-		if (playerAABB.max.y > collisionPlate.aabb.max.y)
+		if (playerAABB.min.y + 0.1f > collisionPlate.aabb.max.y)
 		{
 			continue;
 		}
@@ -177,14 +181,16 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) const {
 	for (const auto& collisionPlate : collisionListPlate)
 	{
+		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
 		ImGui::End();*/
 		AABB plAABB = playerAABB;
 		plAABB.min.x = playerAABB.min.x + playerVelocityZ * speed;
 		plAABB.max.x = playerAABB.max.x + playerVelocityZ * speed;
-		if (dist > collisionDistance)
+		if (dist > objectLen)
 		{
 			continue;
 		}
@@ -212,7 +218,12 @@ const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& pl
 const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& playerVelocityX, const float& speed) const {
 	for (const auto& collisionPlate : collisionListPlate)
 	{
+		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
+		ImGui::End();*/
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
 		ImGui::End();*/
@@ -220,7 +231,7 @@ const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& pl
 		plAABB.min.x = playerAABB.min.x + playerVelocityX * speed;
 		plAABB.max.x = playerAABB.max.x + playerVelocityX * speed;
 
-		if (dist > collisionDistance)
+		if (dist > objectLen)
 		{
 			continue;
 		}
@@ -250,11 +261,13 @@ const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& p
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
+		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
 		ImGui::End();*/
-		if (dist > collisionDistance)
+		if (dist > objectLen)
 		{
 			continue;
 		}
@@ -262,7 +275,7 @@ const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& p
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{
 			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
-			if (collisionPlate.normal.y == 1.0f/* && playerVelocityY < 0.0f*/)
+			if (collisionPlate.normal.y == 1.0f && (playerVelocityY < 0.0f || playerVelocityY > 0.0f))
 			{
 				return true;
 			}
@@ -277,11 +290,13 @@ const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
+		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
 		/*ImGui::Begin("collisionDistance");
 		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
 		ImGui::End();*/
-		if (dist > collisionDistance)
+		if (dist > objectLen)
 		{
 			continue;
 		}
@@ -331,9 +346,9 @@ LenXZ PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVel
 			return LenXZ::Z;
 		}
 	}
-	ImGui::Begin("collisionDistance");
+	/*ImGui::Begin("collisionDistance");
 	ImGui::DragFloat("Len", &len);
-	ImGui::End();
+	ImGui::End();*/
 	return LenXZ::Z;
 }
 
