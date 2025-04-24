@@ -73,7 +73,7 @@ private:
 
 	Button* button = nullptr;
 
-	bool showCursor = true;
+	bool showCursor = false;
 
 	bool mouseFlag = false;
 
