@@ -24,7 +24,7 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 
 
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "lightblock.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "lightBlock.obj");
 
 
 
@@ -35,7 +35,7 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 	transform.rotate = BlockModel->GetRotateInDegree();
 	transform.scale = BlockModel->GetScale();
 
-	BlockModel->SetModel("lightblock.obj");
+	BlockModel->SetModel("lightBlock.obj");
 
 }
 
@@ -49,7 +49,7 @@ void LightBlock::Update()
 	BlockModel->SetTranslate(transform.translate);
 	BlockModel->SetRotateInDegree(transform.rotate);
 	BlockModel->SetScale(transform.scale);
-	BlockModel->SetModel("lightblock.obj");
+	BlockModel->SetModel("lightBlock.obj");
 }
 
 void LightBlock::Draw()
@@ -70,10 +70,6 @@ const AABB& LightBlock::GetAABB()
 }
 
 
-void LightBlock::Draw()
-{
-	
-		BlockModel->Draw();
-	
-}
+
+
 
