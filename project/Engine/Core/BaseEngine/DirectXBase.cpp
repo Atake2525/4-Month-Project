@@ -54,7 +54,7 @@ ComPtr<ID3D12Resource> DirectXBase::CreateDepthStencilTextureResource(Microsoft:
 }
 
 void DirectXBase::InitializeDevice() {
-#ifdef _DEBUG
+#ifdef _DEBUGEngine
 	ComPtr<ID3D12Debug1> debugController = nullptr;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
 		// デバッグレイヤーを有効化する
@@ -108,7 +108,7 @@ void DirectXBase::InitializeDevice() {
 	assert(device != nullptr);
 	Log("Comolete create 3D12Device!!!\n"); // 初期化完了のログを出す
 
-#ifdef _DEBUG
+#ifdef _DEBUGEngine
 
 	ComPtr<ID3D12InfoQueue> infoQueue = nullptr;
 	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
