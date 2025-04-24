@@ -7,7 +7,7 @@
 
 #pragma once
 
-enum class LenXZ {
+enum LenXZ {
 	X,
 	Z,
 };
@@ -45,7 +45,7 @@ public:
 	// 衝突判定Yの下部に衝突しているかをboolで返す
 	const bool& IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) const;
 
-	const LenXZ& GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const;
+	LenXZ GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const;
 	/// <summary>
 	/// 衝突判定の追加(壁)
 	/// </summary>
