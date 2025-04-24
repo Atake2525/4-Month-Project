@@ -7,9 +7,15 @@
 
 #pragma once
 
-enum class LenXZ {
+enum LenXZ {
 	X,
 	Z,
+};
+
+enum ColNormal {
+	None,
+	Front,
+	Back,
 };
 
 class PlayerCollision {
@@ -23,11 +29,15 @@ public:
 	// 衝突判定Xの相手を設定して更新(必要な分移動させる)
 	const Vector3& UpdateCollisionX(const AABB& playerAABB, const float& playerVelocityX) const;
 
+	const ColNormal& IsColX(const AABB& playerAABB, const float& playerVelocityX, const float& speed) const;
+
 	// 衝突判定Yの相手を設定して更新(必要な分移動させる)
 	const Vector3& UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) const;
 
 	// 衝突判定Zの相手を設定して更新(必要な分移動させる)
 	const Vector3& UpdateCollisionZ(const AABB& playerAABB, const float& playerVelocityZ) const;
+
+	const ColNormal& IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) const;
 
 	// 衝突判定Yの上部に衝突しているかをboolで返す
 	const bool& IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) const;
@@ -35,7 +45,7 @@ public:
 	// 衝突判定Yの下部に衝突しているかをboolで返す
 	const bool& IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) const;
 
-	const LenXZ& GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const;
+	LenXZ GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const;
 	/// <summary>
 	/// 衝突判定の追加(壁)
 	/// </summary>

@@ -22,6 +22,7 @@ void LightBlock::Initialize(const Vector3& position/*, Camera*camera, Input*inpu
 
 
 
+
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "lightblock.obj");
 
@@ -61,9 +62,18 @@ void LightBlock::Draw()
 
 }
 
+
 const AABB& LightBlock::GetAABB()
 {
 
 	return BlockModel->GetAABB();
+}
+
+
+void LightBlock::Draw()
+{
+	
+		BlockModel->Draw();
+	
 }
 

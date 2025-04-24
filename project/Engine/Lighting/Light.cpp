@@ -27,7 +27,7 @@ void Light::Initialize(DirectXBase* directxBase) {
 
 	directionalLightData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	directionalLightData->direction = { 0.0f, -1.0f, 0.0f };
-	directionalLightData->intensity = 1.0f;
+	directionalLightData->intensity = 0.0f;
 	directionalLightData->specularColor = { 1.0f, 1.0f, 1.0f };
 
 	pointLightResource = directxBase_->CreateBufferResource(sizeof(PointLight));

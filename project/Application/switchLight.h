@@ -4,8 +4,6 @@
 //#include"ModelBase.h"
 #include"ModelManager.h"
 #include"Object3d.h"
-//#include"DirectXBase.h"
-//#include"Camera.h"
 #include"Input.h"
 #include"AABB.h"
 #include"Transform.h"
@@ -21,7 +19,9 @@ class switchLight
 public:
 	~switchLight();
 
+
 	void Initialize(Transform,/* Camera*, DirectXBase*,*/ Input*, Player*);
+
 
 	void Update();
 	void Draw();
@@ -37,10 +37,7 @@ private:
 	Transform switchTransform;
 	/*オンオフのフラグ*/
 	bool switchFlag;
-	/*DirectX*/
-	//DirectXBase* directX;
-	/*カメラ*/
-	//Camera* switchCamera;
+
 	/*切り替えるために（仮）*/
 	Input* input_;
 

@@ -1,5 +1,6 @@
 #include "switchLight.h"
 #include<iostream>
+#include "Light.h"
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -15,6 +16,7 @@ switchLight::~switchLight()
 	}
 }
 
+
 void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase* dxc*/, Input* input, Player* player)
 {
 	switchTransform = transform;
@@ -26,9 +28,9 @@ void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase*
 
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "axis.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOff.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "box.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOn.obj", true);
 
 
 	// object3dの初期化(KamataEngineで言うところのModel)
@@ -46,14 +48,14 @@ void switchLight::Update()
 	if (!switchFlag) {
 		if (input_->TriggerKey(DIK_1)) {
 			switchFlag = true;
-
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.2f, 1.0f, 1.0f });
 		}
 	}
 	else {
 
 		if (input_->TriggerKey(DIK_1)) {
 			switchFlag = false;
-
+			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		}
 		//}
 	}
@@ -61,10 +63,11 @@ void switchLight::Update()
 	switchModel->Update();
 
 	// ImGuiウィンドウの中にチェックボックスを追加
-	ImGui::Begin("Debug Window");
-	ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更
-	ImGui::End();
+	//ImGui::Begin("Debug Window");
+	//ImGui::Checkbox("Switch Flag", &switchFlag); // フラグの状態を表示＆変更
+	//ImGui::End();
 }
+
 
 const bool& switchLight::IsCollisionAABB(const AABB& a, const AABB& b) {
 	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
@@ -75,15 +78,16 @@ const bool& switchLight::IsCollisionAABB(const AABB& a, const AABB& b) {
 	return false;
 }
 
+
 void switchLight::Draw()
 {
 	if (switchFlag) {
-		switchModel->SetModel("box.obj");
+		switchModel->SetModel("switchOn.obj");
 		switchModel->Draw();
 
 	}
 	if (!switchFlag) {
-		switchModel->SetModel("axis.obj");
+		switchModel->SetModel("switchOff.obj");
 		switchModel->Draw();
 
 	}
