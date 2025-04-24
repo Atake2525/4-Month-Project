@@ -1,5 +1,6 @@
 #include "switchLight.h"
 #include<iostream>
+#include "Light.h"
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -17,9 +18,9 @@ void switchLight::Initialize(Vector3 position)
 
 	//モデル読み込み
 	// 最後にtrueを入力するとenableLightingがtrueになる(あとからでも変更可能)入力はしなくても動く
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOff.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOff.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Debug", "Grid.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOn.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "switchOn.obj", true);
 
 
 	// object3dの初期化(KamataEngineで言うところのModel)
@@ -36,14 +37,14 @@ void switchLight::Update()
 	if (!switchFlag) {
 		if (input_->TriggerKey(DIK_1)) {
 			switchFlag = true;
-
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.2f, 1.0f, 1.0f });
 		}
 	}
 	else {
 
 		if (input_->TriggerKey(DIK_1)) {
 			switchFlag = false;
-
+			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		}
 	}
 	switchModel->Update();

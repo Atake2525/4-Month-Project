@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "Light.h"
+#include <algorithm>
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
@@ -22,6 +23,8 @@ void GameScene::Initialize() {
 	object3d = new Object3d();
 	object3d->Initialize();
 	object3d->SetModel("proStage.obj");
+
+	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
 
 	sprite = new Sprite();
@@ -197,6 +200,7 @@ void GameScene::Update() {
 
 	float di = Light::GetInstance()->GetIntensityDirectionalLight();
 	di += 0.001f;
+	di = std::clamp(di, 0.0f, 1.0f);
 	Light::GetInstance()->SetIntensityDirectionalLight(di);
 
 
