@@ -298,7 +298,7 @@ const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float
 	return false;
 }
 
-const LenXZ& PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const {
+LenXZ PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const {
 	int in = 0;
 	int num = 0;
 	float len = Distance(collisionListPlate.at(1).aabb.max, playerAABB.max);

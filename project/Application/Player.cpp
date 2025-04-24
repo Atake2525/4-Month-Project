@@ -45,8 +45,9 @@ void Player::Initialize(Camera* camera)
 	input_ = Input::GetInstance();
 
 	//camera
-	cameraTransform_.translate = camera->GetTranslate();
-	cameraTransform_.rotate = camera->GetRotate();
+	//cameraTransform_.translate = camera->GetTranslate();
+	//cameraTransform_.rotate = camera->GetRotate();
+	cameraTransform_ = camera->GetTransform();
 	// Model
 	modelTransform_ = object3d_->GetTransform();
 	modelTransform_.rotate = object3d_->GetRotateInDegree();
@@ -59,6 +60,8 @@ void Player::Initialize(Camera* camera)
 
 	drawModel = object3d_->GetTransform();
 	drawModel.rotate = object3d_->GetRotateInDegree();
+
+	onGround_ = true;
 }
 
 void Player::Update()
@@ -84,10 +87,12 @@ void Player::Update()
 
 	Jump();
 
-
 	object3d_->SetTranslate(modelTransform_.translate);
 	object3d_->Update();
 	drawModel.translate = modelTransform_.translate;
+
+	LenXZ len = collision->GetLenXZ(object3d_->GetAABB(), velocity);
+
 	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
 	{
 		// 衝突判定をするためのもの
@@ -202,7 +207,14 @@ void Player::Move()
 	}
 	velocity.z = -move.y;
 	velocity.x = move.x;
-	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
+
+
+	// 即席の移動速度安定化
+	Vector3 camRot = cameraTransform_.rotate;
+	camRot.x = 0.0f;
+	Matrix4x4 camworldMatrix = MakeAffineMatrix(cameraTransform_.scale, camRot, cameraTransform_.translate);
+	velocity = TransformNormal(velocity, camworldMatrix);
+	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
 	velocity.y = 0;
 
 	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
@@ -260,29 +272,20 @@ void Player::Rotate()
 
 void Player::Jump()
 {
-
 	if (onGround_) {
+		//OutputDebugStringA("tex");
 		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
 		}
-
 	}
 	else if (onGround_ == false)
 	{
 		JumpVelocity -= kGravityAccleration / 60.0f;
 		JumpVelocity = std::max(JumpVelocity, -kLimitFallSpeed);
 	}
-
 	modelTransform_.translate.y += JumpVelocity;
-
-	/*if (modelTransform_.translate.y <= 1.0f) {
-		modelTransform_.translate.y = 1.0f;
-		onGround_ = true;
-	}*/
-
 }
-
 
 // 衝突判定の実装で追加したもの
 const Vector3& Player::GetPosition() const {
@@ -292,3 +295,4 @@ const Vector3& Player::GetPosition() const {
 	result.z = object3d_->GetWorldMatrix().m[3][2];
 	return result;
 }
+

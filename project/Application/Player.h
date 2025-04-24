@@ -111,7 +111,7 @@ private: // メンバ変数
 	// 最大落下速度
 	static inline const float kLimitFallSpeed = 0.98f;
 
-	float JumpVelocity = 0.0f;
+	static inline float JumpVelocity = 0.0f;
 
 
 	// 追加したクラス
