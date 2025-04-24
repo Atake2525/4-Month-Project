@@ -30,11 +30,7 @@ void Star::Update() {
 	transform_.rotate.y += 0.01f;
 	starModel_->SetTransform(transform_);
 
-	// ImGuiで位置確認
-	/*ImGui::Begin("Star Debug");
-	ImGui::DragFloat3("Star Position", &transform_.translate.x, 0.01f);
-	ImGui::Checkbox("Collected", &collected_);
-	ImGui::End();*/
+	
 }
 
 void Star::Draw() {
@@ -51,5 +47,4 @@ bool Star::OnCollision(Object3d* object3d) {
 		return true;
 	}
 	return false;
-	//collected_ = true;  // プレイヤーが取得
 }

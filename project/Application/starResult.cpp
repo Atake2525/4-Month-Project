@@ -10,8 +10,7 @@ starResult::~starResult() {
 }
 
 void starResult::Initialize() { //Vector3 position,
-    //directX_ = dxc;
-    //starPos_ = position;
+  
 
     // 3つの星を配置
     Vector3 positions[] = {
@@ -31,11 +30,7 @@ void starResult::Initialize() { //Vector3 position,
     }
 
 
-   /* for (int i = 0; i < 3; i++) {
-        Star* newStar = new Star();
-        newStar->Initialize(positions[i], directX_);
-        stars_.push_back(newStar);
-    }*/
+  
 }
 
 void starResult::Update() {
@@ -44,15 +39,6 @@ void starResult::Update() {
         star->Update();
     }
 
-    //for (Star* star : stars_) {
-    //    star->Update();
-    //    if (!star->IsCollected()) {
-    //        star->OnCollision(nullptr); // 衝突処理
-    //        if (star->IsCollected()) {
-    //            score_ += 10; // スコア加算
-    //        }
-    //    }
-    //}
 
 }
 

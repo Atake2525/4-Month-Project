@@ -10,7 +10,6 @@ public:
 	void Update();
 	void Draw();
 
-	//int GetScore() const { return score_; }
 
 private:
 	std::vector<Star*> stars_;  // 星のリスト
