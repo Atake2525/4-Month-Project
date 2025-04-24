@@ -56,6 +56,11 @@ void GameScene::Initialize() {
 	//switch
 	// 
 	lightSwitch = new switchLight();
+	switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{15.0f, 0.5f, 6.0f}
+	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
@@ -164,16 +169,6 @@ void GameScene::Update() {
 		button->SetTransform(ta);
 	}*/
 
-	if (input->TriggerKey(DIK_TAB)) {
-		if (mouseFlag == true) {
-			mouseFlag = false;
-		}
-		else {
-			mouseFlag = true;
-		}
-		input->ShowMouseCursor(mouseFlag);
-	}
-
 	player->Update();
 
 	//camera->SetTranslate(cameraTransform.translate);
@@ -201,12 +196,12 @@ void GameScene::Update() {
 		{
 			Finalize();
 			showCursor = false;
-			mouseFlag = false;
 			isGoal = false;
 			Light::GetInstance()->SetIntensityDirectionalLight(0.0f);
 			Initialize();
 		}
 	}
+	lightSwitch->Update();
 
 	input->Update();
 
@@ -256,7 +251,9 @@ void GameScene::Draw() {
 		starResultManager->Draw();
 	}
 
-	lightBlock->Draw();
+	lightSwitch->Draw();
+
+	lightBlock->Draw(lightSwitch->GetFlag());
 }
 
 void GameScene::Finalize() {

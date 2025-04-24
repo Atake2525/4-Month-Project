@@ -10,7 +10,6 @@
 #include "AABB.h"
 #include "Player.h"
 #include "Button.h"
-#include "LightBlock.h"
 
 #include "Star.h"
 #include "starResult.h"
@@ -77,10 +76,8 @@ private:
 
 	bool showCursor = false;
 
-
 	LightBlock* lightBlock = nullptr;
 	switchLight* lightSwitch = nullptr;
 	Transform switchTransform;
-
 };
 
