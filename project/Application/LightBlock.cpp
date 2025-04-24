@@ -52,13 +52,16 @@ void LightBlock::Update()
 	BlockModel->SetModel("lightBlock.obj");
 }
 
-void LightBlock::Draw()
+void LightBlock::Draw(const bool& switchFlag)
 {
 
 
 
 
-	BlockModel->Draw();
+	if (switchFlag)
+	{
+		BlockModel->Draw();
+	}
 
 }
 

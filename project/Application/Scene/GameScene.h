@@ -60,7 +60,7 @@ private:
 
 	AABB aabb;
 
-	bool enableLighting = false;
+	bool enableLighting = true;
 
 	Player* player = nullptr;
 
@@ -74,7 +74,7 @@ private:
 
 	Button* button = nullptr;
 
-	bool showCursor = true;
+	bool showCursor = false;
 
 	LightBlock* lightBlock = nullptr;
 	switchLight* lightSwitch = nullptr;

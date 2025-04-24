@@ -57,8 +57,10 @@ void GameScene::Initialize() {
 	// 
 	lightSwitch = new switchLight();
 	switchTransform = {
-
-	}
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{15.0f, 0.5f, 6.0f}
+	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
@@ -199,6 +201,7 @@ void GameScene::Update() {
 			Initialize();
 		}
 	}
+	lightSwitch->Update();
 
 	input->Update();
 
@@ -248,7 +251,9 @@ void GameScene::Draw() {
 		starResultManager->Draw();
 	}
 
-	lightBlock->Draw();
+	lightSwitch->Draw();
+
+	lightBlock->Draw(lightSwitch->GetFlag());
 }
 
 void GameScene::Finalize() {
