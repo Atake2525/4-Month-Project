@@ -88,7 +88,7 @@ void switchLight::Draw()
 
 	}
 }
-
+//
 
 AABB switchLight::GetAAbb()
 {
