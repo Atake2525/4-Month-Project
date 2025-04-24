@@ -1,3 +1,4 @@
+#define _DEBUG
 #include "GameScene.h"
 #include "Light.h"
 #include <algorithm>
@@ -5,6 +6,7 @@
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
+
 
 void GameScene::Initialize() {
 
@@ -69,7 +71,9 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-	/*ImGui::Begin("State");
+#ifdef _DEBUGState
+
+	ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform.translate.x, 0.1f);
 		ImGui::DragFloat3("Rotate", &cameraTransform.rotate.x, 0.1f);
@@ -89,7 +93,9 @@ void GameScene::Update() {
 		ImGui::Checkbox("EnableLihting", &enableLighting);
 		ImGui::TreePop();
 	}
-	ImGui::End();*/
+	ImGui::End();
+
+#endif // _DEBUG
 
 	if (input->TriggerKey(DIK_ESCAPE))
 	{
