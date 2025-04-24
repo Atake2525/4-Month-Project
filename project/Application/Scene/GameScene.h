@@ -10,7 +10,6 @@
 #include "AABB.h"
 #include "Player.h"
 #include "Button.h"
-#include "LightBlock.h"
 
 #include "Star.h"
 #include "starResult.h"
@@ -61,7 +60,7 @@ private:
 
 	AABB aabb;
 
-	bool enableLighting = true;
+	bool enableLighting = false;
 
 	Player* player = nullptr;
 
@@ -75,12 +74,10 @@ private:
 
 	Button* button = nullptr;
 
-	bool showCursor = false;
-
+	bool showCursor = true;
 
 	LightBlock* lightBlock = nullptr;
 	switchLight* lightSwitch = nullptr;
 	Transform switchTransform;
-
 };
 
