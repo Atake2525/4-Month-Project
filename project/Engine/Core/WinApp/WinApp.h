@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <cstdint>
 #include "AABB.h"
+#include <string>
 
 #pragma comment(lib, "winmm.lib")
 #pragma once
@@ -30,7 +31,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(const int32_t& width = 1280, const uint32_t& height = 720, WindowMode windowMode = WindowMode::Window, const wchar_t* windowname = L"Base Engine");
 
 	void Update();
 
@@ -43,8 +44,11 @@ public:
 	const AABB& GetWindowAABB() const;
 
 	// クライアント領域サイズ
-	static const int32_t kClientWidth = 1920;
-	static const int32_t kClientHeight = 1080;
+	int32_t kClientWidth = 1920;
+	int32_t kClientHeight = 1080;
+
+	const int32_t& GetkClientWidth() const { return kClientWidth; }
+	const int32_t& GetkClientHeight() const { return kClientHeight; }
 
 	WindowMode windowMode = WindowMode::FullScreen;
 

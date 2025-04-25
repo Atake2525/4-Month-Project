@@ -5,7 +5,7 @@
 Camera::Camera() 
 	: transform({ {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} })
 	, fovY(0.45f)
-	, aspect(float(WinApp::kClientWidth) / float(WinApp::kClientHeight))
+	, aspect(float(WinApp::GetInstance()->GetkClientWidth()) / float(WinApp::GetInstance()->GetkClientHeight()))
 	, nearClipDistance(0.1f)
 	, farClipDistance(100.0f)
 	, worldMatrix(MakeAffineMatrix(transform.scale, transform.rotate, transform.translate))

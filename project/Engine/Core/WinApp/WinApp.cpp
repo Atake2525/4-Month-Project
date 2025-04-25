@@ -30,7 +30,12 @@ LRESULT CALLBACK WinApp::windowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void WinApp::Initialize() {
+void WinApp::Initialize(const int32_t& width, const uint32_t& height, WindowMode windowMode, const wchar_t* windowname) {
+
+	kClientWidth = width;
+	kClientHeight = height;
+	this->windowMode = windowMode;
+
 
 	// システムタイマーの分解能を上げる
 	timeBeginPeriod(1);
@@ -61,7 +66,7 @@ void WinApp::Initialize() {
 		// WS_POPUP フルスクリーン
 
 		// ウィンドウの生成
-		hwnd = CreateWindow(wc.lpszClassName, L"Base Engine", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
+		hwnd = CreateWindow(wc.lpszClassName, windowname, WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
 
 		// ウィンドウを表示する
 		ShowWindow(hwnd, SW_MAXIMIZE);
@@ -73,7 +78,7 @@ void WinApp::Initialize() {
 		// WS_POPUP フルスクリーン
 
 		// ウィンドウの生成
-		hwnd = CreateWindow(wc.lpszClassName, L"Base Engine", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
+		hwnd = CreateWindow(wc.lpszClassName, windowname, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, wrc.right - wrc.left, wrc.bottom - wrc.top, nullptr, nullptr, wc.hInstance, nullptr);
 
 		// ウィンドウを表示する
 		ShowWindow(hwnd, SW_SHOW);
