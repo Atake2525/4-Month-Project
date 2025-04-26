@@ -90,7 +90,7 @@ void Object3d::Initialize() {
 
 	camera = Object3dBase::GetInstance()->GetDefaultCamera();
 
-
+	Update();
 }
 
 void Object3d::Update() {

@@ -22,9 +22,12 @@ void GameScene::Initialize() {
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 
-	object3d = new Object3d();
+	/*object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("proStage.obj");
+	object3d->SetModel("proStage.obj");*/
+
+	stageObject->AddObject("Resources/Model/obj", "box.obj", true);
+	stageObject->AddObject("proStage.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -40,7 +43,7 @@ void GameScene::Initialize() {
 	button = new Button();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
 
-	modelTransform = object3d->GetTransform();
+	//modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
 	goal->Initialize({ 26.0f,12.0f,-18.0f });
@@ -175,10 +178,11 @@ void GameScene::Update() {
 	//camera->SetRotate(cameraTransform.rotate);
 	camera = player->GetCamera();
 	camera->Update();
-	object3d->SetTransform(modelTransform);
+	/*object3d->SetTransform(modelTransform);
 	object3d->SetEnableLighting(enableLighting);
-	object3d->Update();
-	aabb = object3d->GetAABB();
+	object3d->Update();*/
+	stageObject->Update();
+	//aabb = object3d->GetAABB();
 	sprite->Update();
 
 	lightBlock->Update();
@@ -239,7 +243,8 @@ void GameScene::Draw() {
 	}
 	Object3dBase::GetInstance()->ShaderDraw();
 
-	object3d->Draw();
+	//object3d->Draw();
+	stageObject->Draw();
 
 	player->Draw();
 
@@ -260,7 +265,8 @@ void GameScene::Finalize() {
 
 	delete camera;
 
-	delete object3d;
+	//delete object3d;
+	delete stageObject;
 
 	delete sprite;
 

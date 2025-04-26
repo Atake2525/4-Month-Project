@@ -10,6 +10,7 @@
 #include "AABB.h"
 #include "Player.h"
 #include "Button.h"
+#include "StageObject.h"
 
 #include "Star.h"
 #include "starResult.h"
@@ -45,7 +46,9 @@ public:
 	const bool& isFinished() const { return finished; }
 
 private:
-	Object3d* object3d = nullptr;
+	//Object3d* object3d = nullptr;
+
+	StageObject* stageObject = nullptr;
 
 	Sprite* sprite = nullptr;
 
