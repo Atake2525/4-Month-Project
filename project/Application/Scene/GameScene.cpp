@@ -10,7 +10,7 @@
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "proStage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("proStage.obj");
+	object3d->SetModel("test.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
