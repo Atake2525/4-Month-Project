@@ -35,10 +35,6 @@ void Model::Initialize(std::string directoryPath, std::string filename, bool ena
 	materialData->shininess = 70.0f;
 	materialData->specularColor = {1.0f, 1.0f, 1.0f};
 
-	// テクスチャ読み込み
-	TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
-	// 読み込んだテクスチャの番号尾を取得
-	modelData.material.textureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath(modelData.material.textureFilePath);
 }
 
 void Model::SetIA() {
@@ -51,9 +47,14 @@ void Model::Draw() {
 	// wvp用のCBufferの場所を設定
 	ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 
-	ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelData.material.textureIndex));
+	for (uint32_t i = 0; i < modelData.material.size(); i++)
+	{
+		// checkerBoadのmodelが描画されない
+		// 頂点情報が正しく読めていない可能性あり
+		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelData.material.at(i).textureIndex));
 
-	ModelBase::GetInstance()->GetDxBase()->GetCommandList()->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
+		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->DrawInstanced(UINT(modelData.matVertexData.at(i).vertices.size()), 1, 0, 0);
+	}
 }
 
 MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {
@@ -92,6 +93,7 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 	Assimp::Importer importer;
 	std::string filePath = directoryPath + "/" + filename;
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
+	modelData.matVertexData.resize(scene->mNumMaterials - 1);
 	assert(scene->HasMeshes()); // メッシュが無いのは対応しない
 
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex)
@@ -120,96 +122,52 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 				vertex.position.x *= -1.0f;
 				vertex.normal.x *= -1.0f;
 				modelData.vertices.push_back(vertex);
+				if (mesh->mMaterialIndex == 0)
+				{
+					continue;
+				}
+				modelData.matVertexData.at(mesh->mMaterialIndex - 1).vertices.push_back(vertex);
 			}
 
 		}
 	}
 	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex)
 	{
+		if (materialIndex == 0)
+		{
+			continue;
+		}
+
 		aiMaterial* material = scene->mMaterials[materialIndex];
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0)
 		{
 			aiString textureFilePath;
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
+
+			MaterialData matData;
+			matData.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
+
+			// テクスチャ読み込み
+			TextureManager::GetInstance()->LoadTexture(matData.textureFilePath);
+			// 読み込んだテクスチャの番号尾を取得
+			matData.textureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath(matData.textureFilePath);
+
+			modelData.material.push_back(matData);
 		}
 		else
 		{
-			modelData.material.textureFilePath = "Resources/Debug/white1x1.png";
+			MaterialData matData;
+			matData.textureFilePath = "Resources/Debug/white1x1.png";
+
+			// テクスチャ読み込み
+			TextureManager::GetInstance()->LoadTexture(matData.textureFilePath);
+			// 読み込んだテクスチャの番号尾を取得
+			matData.textureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath(matData.textureFilePath);
+
+			modelData.material.push_back(matData);
 		}
 	}
 	return modelData;
-	//// 1. 中で必要となる変数の宣言
-	//std::vector<Vector4> positions; // 位置
-	//std::vector<Vector3> normals;   // 法線
-	//std::vector<Vector2> texcoords; // テクスチャ座標
-	//std::string line;               // ファイルから読んだ1行を格納するもの
-
-	//// 2. ファイルを開く
-	//std::ifstream file(directoryPath + "/" + filename); // ファイルを開く
-	//assert(file.is_open());                             // とりあえず開けなかったら止める
-	//// 3. 実際にファイルを読み、ModelDataを構築していく
-	//while (std::getline(file, line)) {
-	//	std::string identifier;
-	//	std::istringstream s(line);
-	//	s >> identifier; // 先頭の識別子を読む
-
-	//	// identifierに応じた処理
-	//	if (identifier == "v") {
-	//		Vector4 position;
-	//		s >> position.x >> position.y >> position.z;
-	//		position.w = 1.0f;
-	//		positions.push_back(position);
-	//	} else if (identifier == "vt") {
-	//		Vector2 texcoord;
-	//		s >> texcoord.x >> texcoord.y;
-	//		texcoords.push_back(texcoord);
-	//	} else if (identifier == "vn") {
-	//		Vector3 normal;
-	//		s >> normal.x >> normal.y >> normal.z;
-	//		normals.push_back(normal);
-	//	} else if (identifier == "f") {
-	//		VertexData triangle[3];
-
-	//		// 面は三角形限定。その他は未対応
-	//		for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
-	//			std::string vertexDefinition;
-	//			s >> vertexDefinition;
-	//			// 頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してIndexを取得する
-	//			std::istringstream v(vertexDefinition);
-	//			uint32_t elementIndices[3];
-	//			for (int32_t element = 0; element < 3; ++element) {
-	//				std::string index;
-	//				std::getline(v, index, '/'); // /区切りでインデックスを読んでいく
-	//				elementIndices[element] = std::stoi(index);
-	//			}
-	//			// 要素へのIndexから、実際の要素を値を取得して、頂点を構築する
-	//			Vector4 position = positions[elementIndices[0] - 1];
-	//			Vector2 texcoord = texcoords[elementIndices[1] - 1];
-	//			Vector3 normal = normals[elementIndices[2] - 1];
-	//			// VertexData vertex = { position, texcoord, normal };
-	//			// modelData.vertices.push_back(vertex);
-	//			position.x *= -1.0f;
-	//			//position.y *= -1.0f;
-	//			normal.x *= -1.0f;
-	//			texcoord.y = 1.0f - texcoord.y;
-
-	//			triangle[faceVertex] = {position, texcoord, normal};
-	//		}
-	//		// 頂点を逆順で登録することで、周り順を逆にする
-	//		modelData.vertices.push_back(triangle[2]);
-	//		modelData.vertices.push_back(triangle[1]);
-	//		modelData.vertices.push_back(triangle[0]);
-	//	} else if (identifier == "mtllib") {
-	//		// materialTemplateLibraryファイルの名前を取得する
-	//		std::string materialFilename;
-	//		s >> materialFilename;
-	//		// 基本的にobjファイルと同一階層にmtlは存在させるので、ディレクトリ名とファイル名を渡す
-	//		modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
-	//	}
-	//}
-	//// 4. ModelDataを返す
-	//return modelData;
 }
 
 void Model::CreateVertexResource() {
