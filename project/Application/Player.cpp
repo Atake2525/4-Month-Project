@@ -75,9 +75,9 @@ void Player::Update()
 	}
 	ImGui::End();
 
-	Rotate();
-
 	Move();
+
+	Rotate();
 
 	Jump();
 
