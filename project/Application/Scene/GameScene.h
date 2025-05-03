@@ -65,7 +65,7 @@ private:
 	Player* player = nullptr;
 
 
-	Star* star = nullptr;
+	//Star* star = nullptr;
 	starResult* starResultManager = nullptr;
 	Goal* goal = nullptr;
 	bool isGoal = false;

@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Star.h"
 #include <vector>
+#include "DirectXBase.h"
+
 
 class starResult {
 public:
@@ -10,10 +12,12 @@ public:
 	void Update();
 	void Draw();
 
-	//int GetScore() const { return score_; }
+	// starResult.h に追加
+	std::vector<Star*>& GetStars() { return stars_; }
+
 
 private:
 	std::vector<Star*> stars_;  // 星のリスト
 	DirectXBase* directX_;
-	//int score_ = 0;
+
 };

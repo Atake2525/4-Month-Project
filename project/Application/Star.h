@@ -1,38 +1,34 @@
 ﻿#pragma once
-#include "Vector3.h"  
-#include "Object3d.h"
-#include "ModelManager.h"
 
-class Player;
+#include "Object3d.h"
+#include "AABB.h"
 
 class Star {
 public:
-	~Star();
+    // 初期化
+    void Initialize(const Vector3& pos);
 
-	// 初期化
-	void Initialize(const Transform& translate);
+    // 更新
+    void Update();
 
-	// 更新
-	void Update();
+    // 描画
+    void Draw();
 
-	// 描画
-	void Draw();
+    // 衝突判定（プレイヤーとの）
+    bool OnCollision(Object3d* target);
 
-	// 当たり判定
-	bool OnCollision(Object3d* object3d);
+    // Object3d 取得
+    Object3d* GetObject3d() { return object3d_; }
 
-	bool IsCollected() const { return collected_; }
+    // 取得済みかどうか
+    bool IsCollected() const { return isCollected_; }
 
-	const Vector3& GetPosition() const { return transform_.translate; }
-
-
+    // 星を取得済みにする
+    void Collect() { isCollected_ = true; }
 
 private:
-	DirectXBase* directX_;
-	Object3d* starModel_;  // 星のモデル
+    Object3d* object3d_ = nullptr;
+    AABB aabb_;
 
-	Transform transform_;  // 位置、回転、スケール
-
-
-	bool collected_ = false; // 取得フラグ
+    bool isCollected_ = false; // 星を取得したかどうかのフラグ
 };
