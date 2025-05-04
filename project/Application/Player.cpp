@@ -36,7 +36,7 @@ void Player::Initialize(Camera* camera)
 	object3d_->SetModel("Player.obj");
 
 	collision = new PlayerCollision();
-	collision->AddCollision("Resources/Model/collision", "proStageCollision.obj");
+	collision->AddCollision("Resources/Model/collision", "01StageCollision.obj");
 	/*collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -24.0f}, {12.0f, 10.0f, -24.0f} }, Vector3{ 0.0f, 0.0f, 1.0f });
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
@@ -54,8 +54,8 @@ void Player::Initialize(Camera* camera)
 	modelColor_ = object3d_->GetColor();
 	modelEnableLighting_ = object3d_->GetEnableLighting();
 	shininess_ = object3d_->GetShininess();
-	modelTransform_.translate.z = -5.0f;
-	modelTransform_.translate.x = 10.0f;
+	/*modelTransform_.translate.z = -5.0f;
+	modelTransform_.translate.x = 10.0f;*/
 	modelTransform_.translate.y = 1.0f;
 
 	drawModel = object3d_->GetTransform();
@@ -66,7 +66,7 @@ void Player::Initialize(Camera* camera)
 
 void Player::Update()
 {
-	/*ImGui::Begin("State");
+	ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
 		ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.1f);
@@ -79,7 +79,7 @@ void Player::Update()
 		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
 		ImGui::TreePop();
 	}
-	ImGui::End();*/
+	ImGui::End();
 
 	Rotate();
 
@@ -99,7 +99,7 @@ void Player::Update()
 		modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
 
 		object3d_->SetTranslate(modelTransform_.translate);
-		object3d_->Update();
+ 		object3d_->Update();
 
 		// 衝突判定をするためのもの
 		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
