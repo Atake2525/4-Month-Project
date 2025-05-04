@@ -10,6 +10,7 @@
 #include "AABB.h"
 #include "Player.h"
 #include "Button.h"
+#include "Audio.h"
 
 #include "Star.h"
 #include "starResult.h"
@@ -79,5 +80,7 @@ private:
 	LightBlock* lightBlock = nullptr;
 	switchLight* lightSwitch = nullptr;
 	Transform switchTransform;
+
+	SoundData soundData;
 };
 

@@ -23,6 +23,8 @@ void MyGame::Initialize() {
 
 	ModelManager::GetInstance()->Initialize(directxBase);
 
+	Audio::GetInstance()->Initialize();
+
 	Light::GetInstance()->Initialize(directxBase);
 
 	Input::GetInstance()->Initialize();
