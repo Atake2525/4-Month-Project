@@ -117,7 +117,6 @@ void Player::Move()
 	velocity.x = 0.0f;
 	velocity.z = 0.0f;
 	const float speed = 0.5f;
-	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
 	if (input_->IsMoveLeftJoyStick()) {
 		move = input_->GetLeftJoyStickPos2();
@@ -156,20 +155,13 @@ void Player::Move()
 
 	modelTransform_.translate += velocity * speed;
 
-	offSet = TransformNormal(offSet,
-		Multiply(Multiply(
-			MakeRotateXMatrix(modelTransform_.rotate.x),
-			MakeRotateYMatrix(modelTransform_.rotate.y)),
-			MakeRotateZMatrix(modelTransform_.rotate.z)
-		));
-
-	cameraTransform_.translate = modelTransform_.translate + offSet;
 
 
 }
 
 void Player::Rotate()
 {
+	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 	
 	if (input_->IsMoveRightJoyStick()) {
 		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
@@ -184,6 +176,15 @@ void Player::Rotate()
 		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
 	
+	offSet = TransformNormal(offSet,
+		Multiply(Multiply(
+			MakeRotateXMatrix(modelTransform_.rotate.x),
+			MakeRotateYMatrix(modelTransform_.rotate.y)),
+			MakeRotateZMatrix(modelTransform_.rotate.z)
+		));
+
+	cameraTransform_.translate = modelTransform_.translate + offSet;
+
 	//cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
 	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
 	//-0.1f 0.9f cameraRotate
