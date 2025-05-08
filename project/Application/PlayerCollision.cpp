@@ -68,7 +68,7 @@ const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const f
 		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
 		float dist = Distance(collisionPlate.aabb.max, playerAABB.max);
 		/*ImGui::Begin("collisionDistance");
-		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat(" cdist", &dist);
 		ImGui::DragFloat("objectLen", &objectLen);
 		ImGui::End();*/
 		if (dist > objectLen)

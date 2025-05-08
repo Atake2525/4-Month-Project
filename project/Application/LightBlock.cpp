@@ -1,5 +1,16 @@
 #include "LightBlock.h"
 #include"ModelManager.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include "kMath.h"
+#include <cassert>
+#define NOMINMAX
+
+#include "externels/imgui/imgui.h"
+#include "externels/imgui/imgui_impl_dx12.h"
+#include "externels/imgui/imgui_impl_win32.h"
+
 
 LightBlock::~LightBlock()
 {
@@ -70,6 +81,22 @@ const AABB& LightBlock::GetAABB()
 {
 
 	return BlockModel->GetAABB();
+}
+
+void LightBlock::MakeAABB(const std::string& directoryPath, const std::string& filename)
+{
+
+	const float epsilon = 1e-6;
+
+	std::vector<VertexData> vertices;
+	AABB aabb;
+	
+	Vector3 collisionNormal = { 0.0f, 0.0f, 0.0f };
+	Assimp::Importer importer;
+	std::string filePath = directoryPath + "/" + filename;
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
+	assert(scene->HasMeshes()); // メッシュが無いのは対応しない
+
 }
 
 

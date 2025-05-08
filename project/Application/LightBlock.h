@@ -22,9 +22,13 @@ public:
 	void Update();
 	void Draw(const bool& switchFlag);
 	const AABB& GetAABB();
-
+	void MakeAABB(const std::string& directoryPath, const std::string& filename);
 
 private:
+	struct VertexData {
+		Vector4 position;
+		Vector3 normal;
+	};
 	Object3d* BlockModel;
 	Transform transform;
 	AABB aabb_;
