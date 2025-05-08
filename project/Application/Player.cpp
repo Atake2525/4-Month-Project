@@ -80,6 +80,7 @@ void Player::Update()
 		ImGui::TreePop();
 	}
 	ImGui::End();*/
+	
 
 	Rotate();
 

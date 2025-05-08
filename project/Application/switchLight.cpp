@@ -39,6 +39,8 @@ void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase*
 	switchModel->SetModel("Grid.obj");
 	//位置を指定する
 	switchModel->SetTranslate(switchTransform.translate);
+
+	switchModel->Update();
 }
 
 void switchLight::Update()

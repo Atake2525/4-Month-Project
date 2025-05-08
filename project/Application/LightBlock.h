@@ -20,7 +20,7 @@ public:
 	void Initialize(const Vector3& position/*, Camera*, Input**/);
 
 	void Update();
-	void Draw();
+	void Draw(const bool& switchFlag);
 	const AABB& GetAABB();
 
 
