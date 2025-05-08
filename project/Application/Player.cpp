@@ -116,7 +116,7 @@ void Player::Move()
 	Vector2 move{0,0};
 	velocity.x = 0.0f;
 	velocity.z = 0.0f;
-	const float speed = 0.5f;
+	const float speed = 0.3f;
 
 	if (input_->IsMoveLeftJoyStick()) {
 		move = input_->GetLeftJoyStickPos2();
@@ -150,7 +150,8 @@ void Player::Move()
 	}
 	velocity.z = -move.y;
 	velocity.x = move.x;
-	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
+	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
+	velocity = Normalize(velocity);
 	velocity.y = 0;
 
 	modelTransform_.translate += velocity * speed;
