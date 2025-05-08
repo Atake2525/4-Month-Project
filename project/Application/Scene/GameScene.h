@@ -14,8 +14,7 @@
 #include "Star.h"
 #include "starResult.h"
 #include "Goal.h"
-#include "Title.h"
-#include "GameClear.h"
+
 
 #include"LightBlock.h"
 #include"switchLight.h"
@@ -73,7 +72,7 @@ private:
 	Goal* goal = nullptr;
 	bool isGoal = false;
 
-	Title* titleScene = nullptr;
+
 	bool isGameStarted = false;
 
 	Sprite* clearSprite = nullptr;

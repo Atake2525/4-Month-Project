@@ -146,8 +146,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Scene\MyGame.cpp" />
     <ClCompile Include="Engine\Lighting\Light.cpp" />
     <ClCompile Include="Application\Goal.cpp" />
-    <ClCompile Include="GameClear.cpp" />
-    <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\DebugMode.h" />
@@ -196,8 +194,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Scene\MyGame.h" />
     <ClInclude Include="Engine\Lighting\Light.h" />
     <ClInclude Include="Application\Goal.h" />
-    <ClInclude Include="GameClear.h" />
-    <ClInclude Include="Title.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externels\imgui\LICENSE.txt" />
