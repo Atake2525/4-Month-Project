@@ -45,8 +45,8 @@ void GameScene::Initialize() {
 	goal = new Goal();
 	goal->Initialize({ -10.0f,8.0f,10.0f });
 
-	star = new Star();
-	star->Initialize({ 0.0f,0.0f,0.0f });
+	/*star = new Star();
+	star->Initialize({ 0.0f,0.0f,0.0f });*/
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
@@ -211,15 +211,19 @@ void GameScene::Update() {
 	Light::GetInstance()->SetIntensityDirectionalLight(di);
 
 
-	star->Update();
+	//star->Update();
 	if (starResultManager) {
 		starResultManager->Update();  // プレイヤー情報を渡す player
 	}
 
-	// 星の当たり判定
-	if (star->OnCollision(player->StarObject3d())) {
-		return;
+	// 星との当たり判定（取得）
+	for (Star* s : starResultManager->GetStars()) {
+		if (!s->IsCollected() && s->OnCollision(player->StarObject3d())) {
+			s->Collect(); // 取得済みにする
+			// TODO: ここで音やエフェクトなど入れても良い
+		}
 	}
+
 
 
 
@@ -228,8 +232,6 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
-
-	//sprite->Draw();
 
 	if (isGoal)
 	{
@@ -245,7 +247,7 @@ void GameScene::Draw() {
 
 	goal->Draw();
 
-	star->Draw();
+	//star->Draw();
 	// starResultManager とその中の星を描画
 	if (starResultManager) {
 		starResultManager->Draw();
@@ -271,7 +273,7 @@ void GameScene::Finalize() {
 
 	delete clearSprite;
 
-	delete star;
+	//delete star;
 	if (starResultManager) {
 		delete starResultManager;
 	}

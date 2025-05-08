@@ -1,55 +1,56 @@
 ﻿#include "Star.h"
-//#include "Player.h"
-#include "externels/imgui/imgui.h"
 
-// デストラクタ
-Star::~Star() {
-	delete starModel_;
-}
+void Star::Initialize(const Vector3& pos) {
+    object3d_ = new Object3d();
+    object3d_->Initialize();
+    object3d_->SetModel("Resources/Model/obj", "starResult.obj");  // 使用するモデル名に応じて変更してください
+    Transform t;
+    t.translate = pos;
+    t.scale = Vector3(0.5f, 0.5f, 0.5f); // 必要に応じてスケール調整
+    t.rotate = Vector3(0.0f, 0.0f, 0.0f);
+    object3d_->SetTransform(t);
+    aabb_ = object3d_->GetAABB();
 
-void Star::Initialize(const Transform& translate) {
-	
-	this->transform_ = translate;
-
-	// モデル読み込み
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "starResult.obj");
-
-	// Object3dの初期化
-	starModel_ = new Object3d();
-	starModel_->Initialize();
-	starModel_->SetModel("starResult.obj");
-	starModel_->SetTranslate(transform_.translate);
-
+    isCollected_ = false;
 }
 
 void Star::Update() {
+    if (isCollected_) {
+        return; // 取得済みなら更新しない
+    }
 
-	starModel_->Update();
+    object3d_->Update();
 
-	// 星のY軸回転
-	transform_.rotate.y += 0.01f;
-	starModel_->SetTransform(transform_);
+    // 星をくるくる回転させたい場合などに
+    Transform t = object3d_->GetTransform();
+    t.rotate.y += 0.05f;
+    object3d_->SetTransform(t);
 
-	// ImGuiで位置確認
-	/*ImGui::Begin("Star Debug");
-	ImGui::DragFloat3("Star Position", &transform_.translate.x, 0.01f);
-	ImGui::Checkbox("Collected", &collected_);
-	ImGui::End();*/
+    aabb_ = object3d_->GetAABB();
 }
 
 void Star::Draw() {
-	if (!collected_) {
-		starModel_->Draw();
-	}
+    if (isCollected_) {
+        return; // 取得済みなら描画しない
+    }
 
+    object3d_->Draw();
 }
 
-bool Star::OnCollision(Object3d* object3d) {
+bool Star::OnCollision(Object3d* target) {
+    if (isCollected_) {
+        return false;
+    }
 
-	if (starModel_->CheckCollision(object3d)) {
+    AABB targetAABB = target->GetAABB();
+    bool isHit =
+        aabb_.min.x <= targetAABB.max.x && aabb_.max.x >= targetAABB.min.x &&
+        aabb_.min.y <= targetAABB.max.y && aabb_.max.y >= targetAABB.min.y &&
+        aabb_.min.z <= targetAABB.max.z && aabb_.max.z >= targetAABB.min.z;
 
-		return true;
-	}
-	return false;
-	//collected_ = true;  // プレイヤーが取得
+    if (isHit) {
+        isCollected_ = true;
+    }
+
+    return isHit;
 }
