@@ -150,7 +150,6 @@ void Player::Move()
 	}
 	velocity.z = -move.y;
 	velocity.x = move.x;
-	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
 	velocity = Normalize(velocity);
 	velocity.y = 0;
 
