@@ -71,8 +71,6 @@ private:
 	Goal* goal = nullptr;
 	bool isGoal = false;
 
-	Sprite* clearSprite = nullptr;
-
 	Button* button = nullptr;
 
 	bool showCursor = false;

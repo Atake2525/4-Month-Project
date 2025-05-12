@@ -333,6 +333,9 @@ LenXZ PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVel
 
 	// 衝突判定用のAABBの作成
 	AABB centerAABB = { center, center };
+	ImGui::Begin("collisionDistance");
+	ImGui::DragFloat("Len", &len);
+	ImGui::End();
 	// 衝突判定をAABBとAABBでとる
 	if (CollisionAABB(playerAABB, centerAABB))
 	{
@@ -346,9 +349,6 @@ LenXZ PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVel
 			return LenXZ::Z;
 		}
 	}
-	/*ImGui::Begin("collisionDistance");
-	ImGui::DragFloat("Len", &len);
-	ImGui::End();*/
 	return LenXZ::Z;
 }
 

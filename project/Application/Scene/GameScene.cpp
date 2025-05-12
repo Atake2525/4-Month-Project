@@ -9,7 +9,7 @@
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "testStage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -23,10 +23,9 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("testStage.obj");
+	object3d->SetModel("01Stage.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
-
 
 	sprite = new Sprite();
 	sprite->Initialize("Resources/uvChecker.png");
@@ -42,10 +41,7 @@ void GameScene::Initialize() {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ 26.0f,12.0f,-18.0f });
-
-	star = new Star();
-	star->Initialize({ 0.0f,0.0f,0.0f });
+	goal->Initialize({ -10.0f,8.0f,10.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
@@ -58,14 +54,9 @@ void GameScene::Initialize() {
 	switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{15.0f, 0.5f, 6.0f}
+		{0.0f, 0.5f, 4.0f}
 	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
-
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
-	clearSprite = new Sprite();
-	clearSprite->Initialize("Resources/Sprite/clearShift.png");
-	//Vector3(0.0f, 0.0f, 0.0f)
 
 	lightBlock = new LightBlock();
 	lightBlock->Initialize({ 10.0f, 1.0f, -5.0f });
@@ -104,10 +95,10 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	if (input->TriggerKey(DIK_ESCAPE))
+	/*if (input->TriggerKey(DIK_ESCAPE))
 	{
 		finished = true;
-	}
+	}*/
 	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
@@ -191,14 +182,13 @@ void GameScene::Update() {
 	lightBlock->Update();
 
 	goal->Update();
-	//clearSprite->Update();
 
 	// ゴールの当たり判定
 	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
 		isGoal = true;
 	}
 	if (isGoal) {
-		clearSprite->Update();
+		finished = true;
 		if (input->TriggerKey(DIK_LSHIFT) || input->TriggerButton(Controller::Menu))
 		{
 			Finalize();
@@ -218,15 +208,19 @@ void GameScene::Update() {
 	Light::GetInstance()->SetIntensityDirectionalLight(di);
 
 
-	star->Update();
+	//star->Update();
 	if (starResultManager) {
 		starResultManager->Update();  // プレイヤー情報を渡す player
 	}
 
-	// 星の当たり判定
-	if (star->OnCollision(player->StarObject3d())) {
-		return;
+	// 星との当たり判定（取得）
+	for (Star* s : starResultManager->GetStars()) {
+		if (!s->IsCollected() && s->OnCollision(player->StarObject3d())) {
+			s->Collect(); // 取得済みにする
+			// TODO: ここで音やエフェクトなど入れても良い
+		}
 	}
+
 
 
 
@@ -236,14 +230,6 @@ void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
 
-	//sprite->Draw();
-
-	if (isGoal)
-	{
-		clearSprite->Draw();
-		button->Draw();
-
-	}
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
@@ -252,7 +238,6 @@ void GameScene::Draw() {
 
 	goal->Draw();
 
-	star->Draw();
 	// starResultManager とその中の星を描画
 	if (starResultManager) {
 		starResultManager->Draw();
@@ -273,12 +258,8 @@ void GameScene::Finalize() {
 
 	delete player;
 
-
 	delete goal;
 
-	delete clearSprite;
-
-	delete star;
 	if (starResultManager) {
 		delete starResultManager;
 	}

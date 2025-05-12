@@ -50,7 +50,7 @@ void switchLight::Update()
 	if (!switchFlag) {
 		if (input_->TriggerKey(DIK_1)) {
 			switchFlag = true;
-			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.2f, 1.0f, 1.0f });
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
 		}
 	}
 	else {
