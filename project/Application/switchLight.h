@@ -47,4 +47,7 @@ private:
 
 	float radius;
 
+	// スイッチが反応するプレイヤーの最大距離
+	float distance = 8.0f;
+
 };
