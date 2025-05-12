@@ -146,6 +146,8 @@ private: // メンバ変数
 	// ライト用の衝突判定用PlayerCollision
 	PlayerCollision* lightCollision = nullptr;
 
+	bool collisionLightBlock = false;
+
 	bool switchFlag = false;
 };
 

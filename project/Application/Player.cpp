@@ -364,8 +364,9 @@ void Player::UpdateStageCollision() {
 		if (!onGround_ && collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
 			JumpVelocity = 0.0f;
 			onGround_ = true;
+			collisionLightBlock = false;
 		}
-		else if (!collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity))
+		else if (!collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && !collisionLightBlock)
 		{
 			onGround_ = false;
 		}
@@ -417,8 +418,9 @@ void Player::UpdateLightCollision() {
 		if (!onGround_ && lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
 			JumpVelocity = 0.0f;
 			onGround_ = true;
+			collisionLightBlock = true;
 		}
-		else if (!lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity))
+		else if (!lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && collisionLightBlock)
 		{
 			onGround_ = false;
 		}
