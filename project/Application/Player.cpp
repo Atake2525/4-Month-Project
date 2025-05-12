@@ -113,6 +113,7 @@ Camera* Player::GetCamera()
 
 void Player::Move()
 {
+
 	Vector2 move{0,0};
 	velocity.x = 0.0f;
 	velocity.z = 0.0f;
@@ -154,7 +155,6 @@ void Player::Move()
 	velocity.y = 0;
 
 	modelTransform_.translate += velocity * speed;
-
 
 
 }
