@@ -133,6 +133,7 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 				{
 					continue;
 				}
+				// 頂点情報を割り当てられているマテリアル番号に格納
 				modelData.matVertexData.at(mesh->mMaterialIndex - 1).vertices.push_back(vertex);
 			}
 
@@ -161,7 +162,7 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 
 			modelData.material.push_back(matData);
 		}
-		else
+		else // マテリアルが割り当てられていない場合はwhite1x1を割り当てる
 		{
 			MaterialData matData;
 			matData.textureFilePath = "Resources/Debug/white1x1.png";
