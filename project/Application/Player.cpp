@@ -322,11 +322,75 @@ void Player::CheckCollsion(LightBlock* block)
 }
 
 void Player::UpdateStageCollision() {
+	//if (collision->GetCollisionListSize() > 0)
+	//{
+	//	LenXZ len = collision->GetLenXZ(object3d_->GetAABB(), velocity);
+
+	//	if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+	//	{
+	//		// 衝突判定をするためのもの
+	//		modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+	//		object3d_->SetTranslate(modelTransform_.translate);
+	//		object3d_->Update();
+
+	//		// 衝突判定をするためのもの
+	//		modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+	//		object3d_->SetTranslate(modelTransform_.translate);
+	//		object3d_->Update();
+	//	}
+	//	else
+	//		if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	//		{
+	//			// 衝突判定をするためのもの
+	//			modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+	//			object3d_->SetTranslate(modelTransform_.translate);
+	//			object3d_->Update();
+	//			// 衝突判定をするためのもの
+	//			modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+	//			object3d_->SetTranslate(modelTransform_.translate);
+	//			object3d_->Update();
+	//		}
+
+	//	// 衝突判定をするためのもの
+	//	modelTransform_.translate += collision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
+
+	//	if (!onGround_ && collision->IsColYUnderside(object3d_->GetAABB(), JumpVelocity)) {
+	//		JumpVelocity = 0.0f;
+	//	}
+	//	if (!onGround_ && collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
+	//		JumpVelocity = 0.0f;
+	//		onGround_ = true;
+	//		collisionLightBlock = false;
+	//	}
+	//	else if (!collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && !collisionLightBlock)
+	//	{
+	//		onGround_ = false;
+	//	}
+	//}
+	bool X = false;
+	bool Z = false;
+	collision->GetLenXZVelocity(velocity);
+	LenXZ len = collision->GetLenXZ();
+
+	if (len == LenXZ::X)
+	{
+		Z = false;	
+		X = true;
+	}
+	else
+	{
+		X = false;
+		Z = true;
+	}
+
 	if (collision->GetCollisionListSize() > 0)
 	{
-		LenXZ len = collision->GetLenXZ(object3d_->GetAABB(), velocity);
 
-		if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+		if (len == LenXZ::X)
 		{
 			// 衝突判定をするためのもの
 			modelTransform_.translate += collision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
@@ -341,7 +405,7 @@ void Player::UpdateStageCollision() {
 			object3d_->Update();
 		}
 		else
-			if (collision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+			if (len == LenXZ::Z)
 			{
 				// 衝突判定をするためのもの
 				modelTransform_.translate += collision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
@@ -370,17 +434,71 @@ void Player::UpdateStageCollision() {
 		{
 			onGround_ = false;
 		}
+		ImGui::Begin("Len");
+		ImGui::Checkbox("X", &X);
+		ImGui::Checkbox("Z", &Z);
+		ImGui::End();
 	}
 }
 
 void Player::SetSwitchFlag(const bool flag) { switchFlag = flag; }
 
 void Player::UpdateLightCollision() {
+	//if (lightCollision->GetCollisionListSize() > 0 && switchFlag == true)
+	//{
+	//	LenXZ len = lightCollision->GetLenXZ(object3d_->GetAABB(), velocity);
+
+	//	if (lightCollision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+	//	{
+	//		// 衝突判定をするためのもの
+	//		modelTransform_.translate += lightCollision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+	//		object3d_->SetTranslate(modelTransform_.translate);
+	//		object3d_->Update();
+
+	//		// 衝突判定をするためのもの
+	//		modelTransform_.translate += lightCollision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+	//		object3d_->SetTranslate(modelTransform_.translate);
+	//		object3d_->Update();
+	//	}
+	//	else
+	//		if (lightCollision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
+	//		{
+	//			// 衝突判定をするためのもの
+	//			modelTransform_.translate += lightCollision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+
+	//			object3d_->SetTranslate(modelTransform_.translate);
+	//			object3d_->Update();
+	//			// 衝突判定をするためのもの
+	//			modelTransform_.translate += lightCollision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+
+	//			object3d_->SetTranslate(modelTransform_.translate);
+	//			object3d_->Update();
+	//		}
+
+	//	// 衝突判定をするためのもの
+	//	modelTransform_.translate += lightCollision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
+
+	//	if (!onGround_ && lightCollision->IsColYUnderside(object3d_->GetAABB(), JumpVelocity)) {
+	//		JumpVelocity = 0.0f;
+	//	}
+	//	if (!onGround_ && lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
+	//		JumpVelocity = 0.0f;
+	//		onGround_ = true;
+	//		collisionLightBlock = true;
+	//	}
+	//	else if (!lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && collisionLightBlock)
+	//	{
+	//		onGround_ = false;
+	//	}
+	//}
 	if (lightCollision->GetCollisionListSize() > 0 && switchFlag == true)
 	{
-		LenXZ len = lightCollision->GetLenXZ(object3d_->GetAABB(), velocity);
+		lightCollision->GetLenXZVelocity(velocity);
+		LenXZ len = collision->GetLenXZ();
 
-		if (lightCollision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::X)
+		if (len == LenXZ::X)
 		{
 			// 衝突判定をするためのもの
 			modelTransform_.translate += lightCollision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
@@ -394,20 +512,19 @@ void Player::UpdateLightCollision() {
 			object3d_->SetTranslate(modelTransform_.translate);
 			object3d_->Update();
 		}
-		else
-			if (lightCollision->GetLenXZ(object3d_->GetAABB(), velocity) == LenXZ::Z)
-			{
-				// 衝突判定をするためのもの
-				modelTransform_.translate += lightCollision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
+		else if (len == LenXZ::Z)
+		{
+			// 衝突判定をするためのもの
+			modelTransform_.translate += lightCollision->UpdateCollisionZ(object3d_->GetAABB(), velocity.z);
 
-				object3d_->SetTranslate(modelTransform_.translate);
-				object3d_->Update();
-				// 衝突判定をするためのもの
-				modelTransform_.translate += lightCollision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
+			object3d_->SetTranslate(modelTransform_.translate);
+			object3d_->Update();
+			// 衝突判定をするためのもの
+			modelTransform_.translate += lightCollision->UpdateCollisionX(object3d_->GetAABB(), velocity.x);
 
-				object3d_->SetTranslate(modelTransform_.translate);
-				object3d_->Update();
-			}
+			object3d_->SetTranslate(modelTransform_.translate);
+			object3d_->Update();
+		}
 
 		// 衝突判定をするためのもの
 		modelTransform_.translate += lightCollision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
