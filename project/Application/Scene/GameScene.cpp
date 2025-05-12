@@ -173,10 +173,6 @@ void GameScene::Update() {
 	}*/
 
 	player->Update();
-	if (lightSwitch->GetFlag())
-	{
-		player->CheckCollsion(lightBlock);
-	}
 
 	//camera->SetTranslate(cameraTransform.translate);
 	//camera->SetRotate(cameraTransform.rotate);
