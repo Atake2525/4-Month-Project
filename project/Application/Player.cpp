@@ -77,9 +77,9 @@ void Player::Update()
 
 	Move();
 
-	Rotate();
-
 	Jump();
+
+	Rotate();
 
 	drawModel.translate = modelTransform_.translate;
 
@@ -152,6 +152,7 @@ void Player::Move()
 	velocity.z = -move.y;
 	velocity.x = move.x;
 	velocity = Normalize(velocity);
+	velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
 	velocity.y = 0;
 
 	modelTransform_.translate += velocity * speed;
