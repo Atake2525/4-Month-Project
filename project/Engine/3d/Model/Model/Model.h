@@ -17,6 +17,10 @@ struct VertexData {
 	Vector3 normal;
 };
 
+struct MaterialVertexData {
+	std::vector<VertexData> vertices;
+};
+
 struct Material {
 	Vector4 color;
 	int32_t enableLighting;
@@ -32,8 +36,9 @@ struct MaterialData {
 };
 
 struct ModelData {
-	std::vector<VertexData> vertices;
-	MaterialData material;
+	std::vector<VertexData> vertices; 
+	std::vector<MaterialVertexData> matVertexData;
+	std::vector<MaterialData> material;
 };
 
 class Model {
@@ -72,11 +77,11 @@ public:
 private:
 
 	// 頂点データのバッファリソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
+	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> vertexResource;
 	// 頂点データのバッファリソース内のデータを指すポインタ
-	VertexData* vertexData = nullptr;
+	std::vector<VertexData*> vertexData;
 	// バッファリソースの使い道を指定するバッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
+	std::vector<D3D12_VERTEX_BUFFER_VIEW> vertexBufferView;
 
 	// Objファイルのデータ
 	ModelData modelData;
@@ -99,4 +104,7 @@ private:
 
 	// VertexBufferViewを作成する(値を設定するだけ)
 	void CreateVertexBufferView();
+public:
+
+	Model() = default;
 };

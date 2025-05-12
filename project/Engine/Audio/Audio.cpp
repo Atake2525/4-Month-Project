@@ -44,6 +44,11 @@ void Audio::Initialize() {
 	xAudio2.Reset();
 	HRESULT hr = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
 	hr = xAudio2->CreateMasteringVoice(&masterVoice);
+
+	// mp3読み込みのためのMedia Foundationの初期化
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 }
 
 SoundData Audio::SoundLoadWave(const char* filename) {
@@ -142,6 +147,71 @@ void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
 	audioList.push_back(list);
 	// 指定したsourceVoiceよりも多くpush_backしたらassert
 	assert(audioList.size() < maxSourceVoiceCount);
+}
+
+void Audio::SoundPlayMp3(const std::wstring& filename) {
+	// ソースリーダーの作成
+	MFCreateSourceReaderFromURL(filename.c_str(), NULL, &pMFSourceReader);
+
+	// メディアタイプの取得
+	// ソースリーダーにPCMで読み込むために
+	// MF_MT_MAJOR_TYPEにMFMediaType_Audio, MF_MT_SUBTYPEにMFAudioFormat_PCM
+	// を指定してからソースリーダーからメディアタイプを取得
+	// 参考 https://qiita.com/ryo_shiraishi6352/items/d4a40521bdb09c838e9d
+
+	IMFMediaType* pMFMediaType{ nullptr };
+	MFCreateMediaType(&pMFMediaType);
+	pMFMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+	pMFMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
+	pMFSourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, nullptr, pMFMediaType);
+
+	pMFMediaType->Release();
+	pMFMediaType = nullptr;
+	pMFSourceReader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, &pMFMediaType);
+
+	WAVEFORMATEX* waveFormat{ nullptr };
+	MFCreateWaveFormatExFromMFMediaType(pMFMediaType, &waveFormat, nullptr);
+
+	std::vector<BYTE> mediaData;
+	while (true)
+	{
+		IMFSample* pMFSample{ nullptr };
+		DWORD dwStreamFlags{ 0 };
+		pMFSourceReader->ReadSample(MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &dwStreamFlags, nullptr, &pMFSample);
+
+		if (dwStreamFlags && MF_SOURCE_READERF_ENDOFSTREAM)
+		{
+			break;
+		}
+
+		IMFMediaBuffer* pMFMediaBuffer{ nullptr };
+		pMFSample->ConvertToContiguousBuffer(&pMFMediaBuffer);
+
+		BYTE* pBuffer{ nullptr };
+		DWORD cbCurrentLength{ 0 };
+
+		pMFMediaBuffer->Lock(&pBuffer, nullptr, &cbCurrentLength);
+
+		mediaData.resize(mediaData.size() + cbCurrentLength);
+		memcpy(mediaData.data() + mediaData.size() - cbCurrentLength, pBuffer, cbCurrentLength);
+
+		pMFMediaBuffer->Unlock();
+
+	}
+
+	IXAudio2SourceVoice* pSourceVoice{ nullptr };
+	xAudio2->CreateSourceVoice(&pSourceVoice, waveFormat);
+
+	HRESULT result;
+
+	XAUDIO2_BUFFER buffer{};
+	buffer.pAudioData = mediaData.data();
+	buffer.AudioBytes = sizeof(BYTE) * static_cast<UINT32>(mediaData.size());
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	result = pSourceVoice->SubmitSourceBuffer(&buffer);
+	result = pSourceVoice->SetVolume(0.2f);
+	result = pSourceVoice->Start();
+
 }
 
 // 全ての音声停止

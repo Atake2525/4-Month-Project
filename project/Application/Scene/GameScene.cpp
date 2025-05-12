@@ -1,4 +1,3 @@
-//#define _DEBUG
 #include "GameScene.h"
 #include "Light.h"
 #include <algorithm>
@@ -63,6 +62,9 @@ void GameScene::Initialize() {
 	lightBlock->Initialize({ 10.0f, 1.0f, -5.0f });
 	
 
+	 //Audio::GetInstance()->SoundPlayMp3(L"Resources/sekiranun.mp3");
+
+	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 }
 
 void GameScene::Update() {
@@ -159,6 +161,11 @@ void GameScene::Update() {
 		ta.scale.y += 5.0f;
 		button->SetTransform(ta);
 	}*/
+
+	if (input->TriggerKey(DIK_2))
+	{
+		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
+	}
 
 	player->Update();
 
