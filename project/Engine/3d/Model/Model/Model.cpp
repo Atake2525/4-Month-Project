@@ -12,18 +12,24 @@ void Model::Initialize(std::string directoryPath, std::string filename, bool ena
 	// モデル読み込み
 	modelData = LoadModelFile(directoryPath, filename);
 
+	vertexResource.resize(modelData.matVertexData.size());
 	// Resourceの作成
 	CreateVertexResource();
 	CreateMaterialResouce();
 
+	vertexBufferView.resize(modelData.matVertexData.size());
 	// BufferResourceの作成
 	CreateVertexBufferView();
 
 	// VertexResourceにデータを書き込むためのアドレスを取得してvertexDataに割り当てる
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size()); // 頂点データをリソースにコピー
+	//for (uint32_t i = 0; i < modelData.material.size(); i++)
+	//{
+	//	vertexResource.at(i)->Map(0, nullptr, reinterpret_cast<void**>(&vertexData[i]));
+	//	std::memcpy(vertexData[i], modelData.matVertexData.at(i).vertices.data(), sizeof(VertexData) * modelData.matVertexData.at(i).vertices.size()); // 頂点データをリソースにコピー
+	//}
 	//  書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+
 
 	// データを書き込む
 	// 今回は赤を書き込んでみる
@@ -37,12 +43,8 @@ void Model::Initialize(std::string directoryPath, std::string filename, bool ena
 
 }
 
-void Model::SetIA() {
-	// ModelTerrain
-	ModelBase::GetInstance()->GetDxBase()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView); // VBVを設定
-}
-
 void Model::Draw() {
+
 
 	// wvp用のCBufferの場所を設定
 	ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
@@ -51,6 +53,10 @@ void Model::Draw() {
 	{
 		// checkerBoadのmodelが描画されない
 		// 頂点情報が正しく読めていない可能性あり
+		// 
+		// ModelTerrain
+		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView.at(i)); // VBVを設定
+
 		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelData.material.at(i).textureIndex));
 
 		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->DrawInstanced(UINT(modelData.matVertexData.at(i).vertices.size()), 1, 0, 0);
@@ -171,15 +177,24 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 }
 
 void Model::CreateVertexResource() {
-	// 頂点リソースの作成
-	vertexResource = ModelBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(VertexData) * modelData.vertices.size());
+	for (uint32_t i = 0; i < modelData.material.size(); i++)
+	{
+		// 頂点リソースの作成
+		Microsoft::WRL::ComPtr<ID3D12Resource> vResource = ModelBase::GetInstance()->GetDxBase()->CreateBufferResource(sizeof(VertexData) * modelData.matVertexData.at(i).vertices.size());
+		vertexResource[i] = vResource;
+	}
 }
 
 void Model::CreateVertexBufferView() {
-	// 頂点バッファビューを作成する
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size()); // 使用するリソースのサイズは頂点サイズ
-	vertexBufferView.StrideInBytes = sizeof(VertexData);                                 // １頂点あたりのサイズ
+	for (uint32_t i = 0; i < modelData.material.size(); i++)
+	{
+		// 頂点バッファビューを作成する
+		D3D12_VERTEX_BUFFER_VIEW vBV;
+		vBV.BufferLocation = vertexResource.at(i)->GetGPUVirtualAddress();
+		vBV.SizeInBytes = UINT(sizeof(VertexData) * modelData.matVertexData.at(i).vertices.size()); // 使用するリソースのサイズは頂点サイズ
+		vBV.StrideInBytes = sizeof(VertexData);                                 // １頂点あたりのサイズ
+		vertexBufferView[i] = vBV;
+	}
 }
 
 void Model::CreateMaterialResouce() { 

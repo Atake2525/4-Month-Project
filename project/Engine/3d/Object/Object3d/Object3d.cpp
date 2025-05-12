@@ -122,10 +122,6 @@ void Object3d::Update() {
 }
 
 void Object3d::Draw() {
-	
-	if (model_) {
-		model_->SetIA();
-	}
 
 	Object3dBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(4, Light::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 

@@ -71,7 +71,7 @@ void GameScene::Initialize() {
 	lightBlock->Initialize({ 10.0f, 1.0f, -5.0f });
 	
 
-	 Audio::GetInstance()->SoundPlayMp3(L"Resources/sekiranun.mp3");
+	 //Audio::GetInstance()->SoundPlayMp3(L"Resources/sekiranun.mp3");
 
 	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 }
