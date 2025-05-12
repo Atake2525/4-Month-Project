@@ -93,10 +93,10 @@ void GameScene::Update() {
 
 #endif // _DEBUG
 
-	if (input->TriggerKey(DIK_ESCAPE))
+	/*if (input->TriggerKey(DIK_ESCAPE))
 	{
 		finished = true;
-	}
+	}*/
 	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
