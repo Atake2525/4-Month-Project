@@ -21,12 +21,13 @@ void Model::Initialize(std::string directoryPath, std::string filename, bool ena
 	// BufferResourceの作成
 	CreateVertexBufferView();
 
+	vertexData.resize(modelData.matVertexData.size());
 	// VertexResourceにデータを書き込むためのアドレスを取得してvertexDataに割り当てる
-	//for (uint32_t i = 0; i < modelData.material.size(); i++)
-	//{
-	//	vertexResource.at(i)->Map(0, nullptr, reinterpret_cast<void**>(&vertexData[i]));
-	//	std::memcpy(vertexData[i], modelData.matVertexData.at(i).vertices.data(), sizeof(VertexData) * modelData.matVertexData.at(i).vertices.size()); // 頂点データをリソースにコピー
-	//}
+	for (uint32_t i = 0; i < modelData.material.size(); i++)
+	{
+		vertexResource.at(i)->Map(0, nullptr, reinterpret_cast<void**>(&vertexData[i]));
+		std::memcpy(vertexData[i], modelData.matVertexData.at(i).vertices.data(), sizeof(VertexData) * modelData.matVertexData.at(i).vertices.size()); // 頂点データをリソースにコピー
+	}
 	//  書き込むためのアドレスを取得
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
 
