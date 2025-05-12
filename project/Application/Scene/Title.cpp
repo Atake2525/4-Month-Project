@@ -19,8 +19,8 @@ void Title::Initialize() {
 void Title::Update() {
 	input->Update();
 
-	// Enterキーでタイトル終了（ルール画面へ）
-	if (input->TriggerKey(DIK_RETURN)) {
+	// SPACEキーでタイトル終了（ルール画面へ）
+	if (input->TriggerKey(DIK_SPACE)) {
 		finished = true;
 	}
 }

@@ -1,6 +1,6 @@
 #include "Rule.h"
 #include "TextureManager.h"
-#include <dinput.h>]
+#include <dinput.h>
 
 void Rule::Initialize()
 {
@@ -19,8 +19,8 @@ void Rule::Initialize()
 void Rule::Update() {
 	input->Update();
 
-	// Enterキーでタイトル終了（ゲーム画面へ）
-	if (input->TriggerKey(DIK_RETURN)) {
+	// SPACEキーでタイトル終了（ゲーム画面へ）
+	if (input->TriggerKey(DIK_SPACE)) {
 		finished = true;
 	}
 }

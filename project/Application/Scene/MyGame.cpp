@@ -42,6 +42,10 @@ void MyGame::Initialize() {
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
+	// ゲームクリアシーンの初期化
+	gameClear = new GameClear();
+	gameClear->Initialize();
+
 	//// ↑---- シーンの初期化 ----↑ ////
 }
 
@@ -89,9 +93,32 @@ void MyGame::Update() {
 	case Scene::Game:
 		gameScene->Update();
 		if (gameScene->isFinished()) {
-			finished = true;
+			// ゲーム終了 → ゲームクリアへ
+			gameScene->Finalize();
+			delete gameScene;
+			gameScene = nullptr;
+			// ゲームクリアシーンの初期化
+			gameClear = new GameClear();
+			gameClear->Initialize();
+			currentScene = Scene::GameClear;
 		}
 		break;
+
+		// ゲームクリアシーンの更新
+	case Scene::GameClear:
+		gameClear->Update();
+		if (gameClear->isFinished()) {
+			// ゲームクリア終了 → タイトルへ
+			gameClear->Finalize();
+			delete gameClear;
+			gameClear = nullptr;
+			// タイトルシーンの初期化
+			title = new Title();
+			title->Initialize();
+			currentScene = Scene::Title;
+		}
+		break;
+
 
 
 	}
@@ -118,6 +145,10 @@ void MyGame::Draw() {
 		// ゲームシーンの描画
 	case Scene::Game:
 		gameScene->Draw();
+		break;
+		// ゲームクリアシーンの描画
+	case Scene::GameClear:
+		gameClear->Draw();
 		break;
 	}
 
@@ -166,6 +197,11 @@ void MyGame::Finalize() {
 	if (gameScene) {
 		gameScene->Finalize();
 		delete gameScene;
+	}
+	// ゲームクリアシーンの解放
+	if (gameClear) {
+		gameClear->Finalize();
+		delete gameClear;
 	}
 
 	//// ↑---- シーンの解放 ----↑ ////
