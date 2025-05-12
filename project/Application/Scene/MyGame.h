@@ -19,6 +19,8 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #include "GameScene.h"
+#include "Title.h"
+#include "Rule.h"
 
 #pragma once
 
@@ -52,6 +54,15 @@ private:
 
 	bool finished = false;
 
+	Title* title = nullptr;
+	Rule* rule = nullptr;
 	GameScene* gameScene = nullptr;
+
+	enum class Scene {
+		Title,
+		Rule,
+		Game
+	};
+	Scene currentScene = Scene::Title; // 初期シーンはTitle
 
 };

@@ -26,11 +26,20 @@ void MyGame::Initialize() {
 	Light::GetInstance()->Initialize(directxBase);
 
 	Input::GetInstance()->Initialize();
+	Input::GetInstance()->ShowMouseCursor(true);
 
 	//// ↓---- シーンの初期化 ----↓ ////
 
-	gameScene = new GameScene();
+	 // タイトルシーンの初期化
+	title = new Title();
+	title->Initialize();
 
+	// ルールシーンの初期化
+	rule = new Rule();
+	rule->Initialize();
+
+	// ゲームシーンの初期化
+	gameScene = new GameScene();
 	gameScene->Initialize();
 
 	//// ↑---- シーンの初期化 ----↑ ////
@@ -46,12 +55,48 @@ void MyGame::Update() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	gameScene->Update();
+	// 入力の更新
+	switch (currentScene) {
+		// タイトルシーンの更新
+	case Scene::Title:
+		title->Update();
+		if (title->isFinished()) {
+			// タイトル終了 → ルール開始
+			title->Finalize();
+			delete title;
+			title = nullptr;
+			// ルールシーンの初期化
+			rule = new Rule();
+			rule->Initialize();
+			currentScene = Scene::Rule;
+		}
+		break;
+		// ルールシーンの更新
+	case Scene::Rule:
+		rule->Update();
+		if (rule->isFinished()) {
+			// ルール終了 → ゲームへ
+			rule->Finalize();
+			delete rule;
+			rule = nullptr;
+			// ゲームシーンの初期化
+			gameScene = new GameScene();
+			gameScene->Initialize();
+			currentScene = Scene::Game;
+		}
+		break;
+		// ゲームシーンの更新
+	case Scene::Game:
+		gameScene->Update();
+		if (gameScene->isFinished()) {
+			finished = true;
+		}
+		break;
 
-	if (gameScene->isFinished())
-	{
-		finished = true;
+
 	}
+
+
 }
 
 void MyGame::Draw() {
@@ -61,7 +106,20 @@ void MyGame::Draw() {
 
 	directxBase->PreDraw();
 
-	gameScene->Draw();
+	switch (currentScene) {
+		// タイトルシーンの描画
+	case Scene::Title:
+		title->Draw();
+		break;
+		// ルールシーンの描画
+	case Scene::Rule:
+		rule->Draw();
+		break;
+		// ゲームシーンの描画
+	case Scene::Game:
+		gameScene->Draw();
+		break;
+	}
 
 	// 実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directxBase->GetCommandList().Get());
@@ -94,8 +152,21 @@ void MyGame::Finalize() {
 
 	//// ↓---- シーンの解放 ----↓ ////
 
-	gameScene->Finalize();
-	delete gameScene;
+	// タイトルシーンの解放
+	if (title) {
+		title->Finalize();
+		delete title;
+	}
+	// ルールシーンの解放
+	if (rule) {
+		rule->Finalize();
+		delete rule;
+	}
+	// ゲームシーンの解放
+	if (gameScene) {
+		gameScene->Finalize();
+		delete gameScene;
+	}
 
 	//// ↑---- シーンの解放 ----↑ ////
 

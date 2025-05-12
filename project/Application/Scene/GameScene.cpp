@@ -1,4 +1,4 @@
-#define _DEBUG
+//#define _DEBUG
 #include "GameScene.h"
 #include "Light.h"
 #include <algorithm>
