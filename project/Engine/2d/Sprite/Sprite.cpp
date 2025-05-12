@@ -167,7 +167,7 @@ void Sprite::Draw() {
 
 	// マテリアルCBufferの場所を設定
 	SpriteBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
-	// TransformationMatrixCBbufferの場所を設定
+	// TransformationMatrixCBBufferの場所を設定
 	SpriteBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource->GetGPUVirtualAddress());
 	SpriteBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
 	// 描画

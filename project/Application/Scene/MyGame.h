@@ -18,7 +18,11 @@
 #include "externels/DirectXTex/DirectXTex.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+
+#include "Title.h"
+#include "Rule.h"
 #include "GameScene.h"
+#include "GameClear.h"
 
 #pragma once
 
@@ -52,6 +56,17 @@ private:
 
 	bool finished = false;
 
+	Title* title = nullptr;
+	Rule* rule = nullptr;
 	GameScene* gameScene = nullptr;
+	GameClear* gameClear = nullptr;
+
+	enum class Scene {
+		Title,
+		Rule,
+		Game,
+		GameClear,
+	};
+	Scene currentScene = Scene::Title; // 初期シーンはTitle
 
 };

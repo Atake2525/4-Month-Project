@@ -1,4 +1,4 @@
-#define _DEBUG
+//#define _DEBUG
 #include "GameScene.h"
 #include "Light.h"
 #include <algorithm>
@@ -28,7 +28,6 @@ void GameScene::Initialize() {
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
-
 	sprite = new Sprite();
 	sprite->Initialize("Resources/uvChecker.png");
 
@@ -45,9 +44,6 @@ void GameScene::Initialize() {
 	goal = new Goal();
 	goal->Initialize({ -10.0f,8.0f,10.0f });
 
-	/*star = new Star();
-	star->Initialize({ 0.0f,0.0f,0.0f });*/
-
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
@@ -62,11 +58,6 @@ void GameScene::Initialize() {
 		{0.0f, 0.5f, 4.0f}
 	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
-
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
-	clearSprite = new Sprite();
-	clearSprite->Initialize("Resources/Sprite/clearShift.png");
-	//Vector3(0.0f, 0.0f, 0.0f)
 
 	lightBlock = new LightBlock();
 	lightBlock->Initialize({ 10.0f, 1.0f, -5.0f });
@@ -184,14 +175,13 @@ void GameScene::Update() {
 	lightBlock->Update();
 
 	goal->Update();
-	//clearSprite->Update();
 
 	// ゴールの当たり判定
 	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
 		isGoal = true;
 	}
 	if (isGoal) {
-		clearSprite->Update();
+		finished = true;
 		if (input->TriggerKey(DIK_LSHIFT) || input->TriggerButton(Controller::Menu))
 		{
 			Finalize();
@@ -233,12 +223,6 @@ void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
 
-	if (isGoal)
-	{
-		clearSprite->Draw();
-		button->Draw();
-
-	}
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
@@ -247,7 +231,6 @@ void GameScene::Draw() {
 
 	goal->Draw();
 
-	//star->Draw();
 	// starResultManager とその中の星を描画
 	if (starResultManager) {
 		starResultManager->Draw();
@@ -268,12 +251,8 @@ void GameScene::Finalize() {
 
 	delete player;
 
-
 	delete goal;
 
-	delete clearSprite;
-
-	//delete star;
 	if (starResultManager) {
 		delete starResultManager;
 	}

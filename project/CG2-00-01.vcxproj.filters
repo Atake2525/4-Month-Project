@@ -47,6 +47,9 @@
     <ClCompile Include="Engine\Lighting\Light.cpp" />
     <ClCompile Include="Application\Goal.cpp" />
     <ClCompile Include="Engine\UI\Button.cpp" />
+    <ClCompile Include="Application\Scene\Title.cpp" />
+    <ClCompile Include="Application\Scene\GameClear.cpp" />
+    <ClCompile Include="Application\Scene\Rule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\DebugMode.h" />
@@ -95,6 +98,9 @@
     <ClInclude Include="Engine\Lighting\Light.h" />
     <ClInclude Include="Application\Goal.h" />
     <ClInclude Include="Engine\UI\Button.h" />
+    <ClInclude Include="Application\Scene\Title.h" />
+    <ClInclude Include="Application\Scene\GameClear.h" />
+    <ClInclude Include="Application\Scene\Rule.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
