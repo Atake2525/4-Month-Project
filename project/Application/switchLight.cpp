@@ -88,10 +88,9 @@ void switchLight::Draw()
 		switchModel->Draw();
 
 	}
-	if (!switchFlag) {
+	else {
 		switchModel->SetModel("switchOff.obj");
 		switchModel->Draw();
-
 	}
 }
 //

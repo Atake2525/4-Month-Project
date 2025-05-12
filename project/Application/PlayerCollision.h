@@ -53,6 +53,13 @@ public:
 	/// <param name="filename">ファイルの名前</param>
 	void AddCollision(const std::string& directoryPath, const std::string& filename);
 
+	/// <summary>
+	/// 衝突判定の削除
+	/// </summary>
+	void ClearCollisionList();
+
+	const uint32_t GetCollisionListSize() const { return collisionListPlate.size(); }
+
 private:
 
 	struct VertexData {

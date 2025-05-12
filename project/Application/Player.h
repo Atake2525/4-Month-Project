@@ -45,6 +45,26 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	// ステージの衝突判定の追加
+	void AddStageCollision(const std::string& directoryPath, const std::string& filename);
+
+	// ステージの衝突判定の削除
+	void ClearStageCollision();
+
+	// ライトブロックの衝突判定の追加
+	void AddLightBlockCollision(const std::string& directoryPath, const std::string& filename);
+
+	// ライトブロックの衝突判定の削除
+	void ClearLightBlockCollision();
+
+	// ステージの衝突判定更新
+	void UpdateStageCollision();
+
+	// ライトブロックの衝突判定更新
+	void UpdateLightCollision();
+
+	void SetSwitchFlag(const bool flag);
+
 	Camera* GetCamera();
 
 
@@ -122,5 +142,10 @@ private: // メンバ変数
 	PlayerCollision* collision = nullptr;
 
 	bool mouseFlag = true;
+
+	// ライト用の衝突判定用PlayerCollision
+	PlayerCollision* lightCollision = nullptr;
+
+	bool switchFlag = false;
 };
 

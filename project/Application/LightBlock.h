@@ -4,7 +4,7 @@
 //#include"ModelBase.h"
 #include"Object3d.h"
 #include"AABB.h"
-
+#include <string>
 
 #include <wrl.h>
 #include <d3d12.h>
@@ -17,7 +17,7 @@ public:
 	~LightBlock();
 
 
-	void Initialize(const Vector3& position/*, Camera*, Input**/);
+	void Initialize(const std::string& directoryPath, const std::string& filename);
 
 	void Update();
 	void Draw(const bool& switchFlag);

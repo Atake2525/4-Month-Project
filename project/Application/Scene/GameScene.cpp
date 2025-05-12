@@ -10,7 +10,7 @@
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "proStage.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("01Stage.obj");
+	object3d->SetModel("proStage.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -36,6 +36,8 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
+	player->AddStageCollision("Resources/Model/collision", "proStageCollision.obj");
+	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 
 	button = new Button();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -52,7 +54,7 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0.0f, 24.0f, -19.0f }/*, camera, input*/);
+	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	//switch
 	// 
 	lightSwitch = new switchLight();
@@ -67,10 +69,6 @@ void GameScene::Initialize() {
 	clearSprite = new Sprite();
 	clearSprite->Initialize("Resources/Sprite/clearShift.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
-
-	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 10.0f, 1.0f, -5.0f });
-	
 
 }
 
@@ -98,6 +96,7 @@ void GameScene::Update() {
 		ImGui::Checkbox("EnableLihting", &enableLighting);
 		ImGui::TreePop();
 	}
+
 	ImGui::End();
 
 #endif // _DEBUG
@@ -105,6 +104,10 @@ void GameScene::Update() {
 	if (input->TriggerKey(DIK_ESCAPE))
 	{
 		finished = true;
+	}
+	if (input->TriggerKey(DIK_4))
+	{
+		player->ClearStageCollision();
 	}
 	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
@@ -170,6 +173,10 @@ void GameScene::Update() {
 	}*/
 
 	player->Update();
+	if (lightSwitch->GetFlag())
+	{
+		player->CheckCollsion(lightBlock);
+	}
 
 	//camera->SetTranslate(cameraTransform.translate);
 	//camera->SetRotate(cameraTransform.rotate);
@@ -202,6 +209,7 @@ void GameScene::Update() {
 		}
 	}
 	lightSwitch->Update();
+	player->SetSwitchFlag(lightSwitch->GetFlag());
 
 	input->Update();
 
