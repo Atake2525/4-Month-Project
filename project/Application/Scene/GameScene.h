@@ -9,7 +9,7 @@
 #include "Sprite.h"
 #include "AABB.h"
 #include "Player.h"
-#include "Button.h"
+#include "UI.h"
 #include "Audio.h"
 
 #include "Star.h"
@@ -71,7 +71,7 @@ private:
 	Goal* goal = nullptr;
 	bool isGoal = false;
 
-	Button* button = nullptr;
+	UI* button = nullptr;
 
 	bool showCursor = false;
 

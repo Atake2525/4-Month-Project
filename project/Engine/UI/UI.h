@@ -26,9 +26,9 @@ enum Origin {
 	RightCenter,
 };
 
-class Button {
+class UI {
 public:
-	~Button();
+	~UI();
 	/// <summary>
 	/// ボタンの追加
 	/// </summary>

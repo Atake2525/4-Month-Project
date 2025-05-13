@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 	player = new Player();
 	player->Initialize(camera);
 
-	button = new Button();
+	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
 
 	modelTransform = object3d->GetTransform();
