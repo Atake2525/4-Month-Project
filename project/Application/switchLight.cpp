@@ -45,22 +45,28 @@ void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase*
 
 void switchLight::Update()
 {
+	Vector3 pPos = player_->GetPosition();
+	float dist = Distance(pPos, switchTransform.translate);
 	//if (IsCollisionAABB(player_->GetAABB(), GetAAbb())) {
 		//falseの時におしたらtrueになる
 	if (!switchFlag) {
-		if (input_->TriggerKey(DIK_1)) {
+		if (input_->TriggerKey(DIK_1) && dist < distance) {
 			switchFlag = true;
 			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
 		}
 	}
 	else {
 
-		if (input_->TriggerKey(DIK_1)) {
+		if (input_->TriggerKey(DIK_1) && dist < distance) {
 			switchFlag = false;
 			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		}
 		//}
 	}
+
+	ImGui::Begin("SwitchDist");
+	ImGui::DragFloat("Dist", &dist, 0.1f);
+	ImGui::End();
 
 	switchModel->Update();
 
@@ -88,10 +94,9 @@ void switchLight::Draw()
 		switchModel->Draw();
 
 	}
-	if (!switchFlag) {
+	else {
 		switchModel->SetModel("switchOff.obj");
 		switchModel->Draw();
-
 	}
 }
 //

@@ -313,7 +313,7 @@ const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float
 	return false;
 }
 
-LenXZ PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const {
+LenXZ PlayerCollision::GetLenXZPos(const AABB& playerAABB, const Vector3& playerVelocity) const {
 	int in = 0;
 	int num = 0;
 	float len = Distance(collisionListPlate.at(1).aabb.max, playerAABB.max);
@@ -350,6 +350,22 @@ LenXZ PlayerCollision::GetLenXZ(const AABB& playerAABB, const Vector3& playerVel
 		}
 	}
 	return LenXZ::Z;
+}
+
+void PlayerCollision::GetLenXZVelocity(const Vector3& playerVelocity)
+{
+	Vector3 absVelocity = { 0.0f, 0.0f, 0.0f };
+	absVelocity.x = std::abs(playerVelocity.x);
+	absVelocity.z = std::abs(playerVelocity.z);
+
+	if (absVelocity.x > absVelocity.z)
+	{
+		lenXz = LenXZ::X;
+	}
+	else if (absVelocity.x < absVelocity.z)
+	{
+		lenXz = LenXZ::Z;
+	}
 }
 
 // 衝突判定の追加(壁)
@@ -451,6 +467,10 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 		}
 	}
 
+}
+
+void PlayerCollision::ClearCollisionList() {
+	collisionListPlate.clear();
 }
 
 const bool& PlayerCollision::CollisionAABB(const AABB& a, const AABB& b) const {
