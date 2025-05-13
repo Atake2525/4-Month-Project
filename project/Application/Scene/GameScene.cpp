@@ -9,7 +9,7 @@
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage2", "Stage2.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -23,7 +23,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("01Stage.obj");
+	object3d->SetModel("Stage2.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -41,7 +41,7 @@ void GameScene::Initialize() {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -10.0f,8.0f,10.0f });
+	goal->Initialize({ 12.0f,12.0f,10.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },

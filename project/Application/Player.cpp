@@ -36,7 +36,7 @@ void Player::Initialize(Camera* camera)
 	object3d_->SetModel("Player.obj");
 
 	collision = new PlayerCollision();
-	collision->AddCollision("Resources/Model/collision", "01StageCollision.obj");
+	collision->AddCollision("Resources/Model/collision", "Stage2Collision.obj");
 	/*collision->AddCollision(AABB{ {-12.0f, 0.0f, -50.0f}, {-12.0f, 10.0f, 50.0f} }, Vector3{ 1.0f, 0.0f, 0.0f });
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, -24.0f}, {12.0f, 10.0f, -24.0f} }, Vector3{ 0.0f, 0.0f, 1.0f });
 	collision->AddCollision(AABB{ {12.0f, 0.0f, -50.0f}, {12.0f, 10.0f, 50.0f} }, Vector3{ -1.0f, 0.0f, 0.0f });
