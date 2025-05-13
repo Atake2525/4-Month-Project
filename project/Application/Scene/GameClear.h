@@ -6,19 +6,19 @@
 class GameClear
 {
 public:
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Initialize();
 
-	// XV
+	// æ›´æ–°
 	void Update();
 
-	// •`‰æ
+	// æç”»
 	void Draw();
 
-	// I—¹ˆ—
+	// çµ‚äº†å‡¦ç†
 	void Finalize();
 
-	// ƒQ[ƒ€ŠJnƒtƒ‰ƒO
+	// ã‚²ãƒ¼ãƒ é–‹å§‹ãƒ•ãƒ©ã‚°
 	const bool& isFinished() const { return finished; }
 
 private:

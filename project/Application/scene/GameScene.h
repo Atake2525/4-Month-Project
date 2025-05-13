@@ -15,8 +15,6 @@
 #include "Star.h"
 #include "starResult.h"
 #include "Goal.h"
-
-
 #include"LightBlock.h"
 #include"switchLight.h"
 
@@ -73,12 +71,6 @@ private:
 	Goal* goal = nullptr;
 	bool isGoal = false;
 
-
-	bool isGameStarted = false;
-
-	Sprite* clearSprite = nullptr;
-
-	Button* button = nullptr;
 	UI* button = nullptr;
 
 	bool showCursor = false;

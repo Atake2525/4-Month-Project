@@ -63,8 +63,8 @@ void GameScene::Initialize() {
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
-	clearSprite = new Sprite();
-	clearSprite->Initialize("Resources/Sprite/clearShift.png");
+	//clearSprite = new Sprite();
+	//clearSprite->Initialize("Resources/Sprite/clearShift.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
 
 
