@@ -83,7 +83,7 @@ public:
 
 private:
 
-	// 最大SRV数(最大テクスチャ枚数)
+	// 最大同時再生数
 	static const uint32_t maxSourceVoiceCount;
 
 	// audio test

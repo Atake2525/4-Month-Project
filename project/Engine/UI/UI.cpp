@@ -60,20 +60,24 @@ void UI::CreateButton(const Vector2& spritePosition, const Origin& origin, const
 
 const bool& UI::OnButton() const {
 	sprite->Update();
-	Vector2 spriteOrigin = sprite->GetTextureLeftTop();
+	// スプライトのサイズ
 	Vector2 spriteSize = sprite->GetScale();
+	// スプライトの位置
 	Vector2 spritePos = sprite->GetPosition();
-	Vector3 mousePos = input->GetMousePos3();
+	// マウスの位置
+	Vector3 mousePos = input->GetWindowMousePos3();
+	// スプライトのAABBを計算する
 	AABB spriteAABB = {
-		{spritePos.x + spriteSize.x * spriteOrigin.x, spritePos.y + spriteSize.y * spriteOrigin.y, 0.0f},
+		{spritePos.x, spritePos.y, 0.0f},
 		{spritePos.x + spriteSize.x, spritePos.y + spriteSize.y, 0.0f},
 	};
-	AABB windowAABB = WinApp::GetInstance()->GetWindowAABB();
+	// ウィンドウ内のMousePositionをAABBで計算する
 	AABB mousePosAABB = {
-		{mousePos.x - windowAABB.min.x - 8.0f, mousePos.y - windowAABB.min.y - 30.0f},
-		{mousePos.x - windowAABB.min.x - 8.0f, mousePos.y - windowAABB.min.y - 30.0f},
+		{mousePos.x, mousePos.y},
+		{mousePos.x, mousePos.y},
 	};
 
+	// スプライトのAABB内にマウスポインタがある状態で左クリックをする
 	if (CollisionAABB(spriteAABB, mousePosAABB) == true && GetAsyncKeyState(VK_LBUTTON) == -32768)
 	{
 		return true;
