@@ -45,13 +45,24 @@ public:
 	// 衝突判定Yの下部に衝突しているかをboolで返す
 	const bool& IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) const;
 
-	LenXZ GetLenXZ(const AABB& playerAABB, const Vector3& playerVelocity) const;
+	LenXZ GetLenXZPos(const AABB& playerAABB, const Vector3& playerVelocity) const;
+
+	void GetLenXZVelocity(const Vector3& playerVelocity);
+
+	const LenXZ GetLenXZ() const { return lenXz; }
 	/// <summary>
 	/// 衝突判定の追加(壁)
 	/// </summary>
 	/// <param name="directoryPath">ディレクトリのパス</param>
 	/// <param name="filename">ファイルの名前</param>
 	void AddCollision(const std::string& directoryPath, const std::string& filename);
+
+	/// <summary>
+	/// 衝突判定の削除
+	/// </summary>
+	void ClearCollisionList();
+
+	const uint32_t GetCollisionListSize() const { return collisionListPlate.size(); }
 
 private:
 
@@ -75,5 +86,7 @@ private:
 	float collisionDistance = 1000.0f;
 
 	std::vector<Plate> collisionListPlate;
+
+	LenXZ lenXz = LenXZ::X;
 };
 

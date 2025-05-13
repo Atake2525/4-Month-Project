@@ -10,6 +10,7 @@
 void GameScene::Initialize() {
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -34,6 +35,9 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
+	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	//player->AddStageCollision("Resources/Debug", "test.obj");
+	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -47,7 +51,7 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 0.0f, 24.0f, -19.0f }/*, camera, input*/);
+	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	//switch
 	// 
 	lightSwitch = new switchLight();
@@ -58,11 +62,11 @@ void GameScene::Initialize() {
 	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
-	lightBlock = new LightBlock();
-	lightBlock->Initialize({ 10.0f, 1.0f, -5.0f });
-	
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
+	//clearSprite = new Sprite();
+	//clearSprite->Initialize("Resources/Sprite/clearShift.png");
+	//Vector3(0.0f, 0.0f, 0.0f)
 
-	 //Audio::GetInstance()->SoundPlayMp3(L"Resources/sekiranun.mp3");
 
 	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 }
@@ -95,6 +99,7 @@ void GameScene::Update() {
 		ImGui::Checkbox("EnableLihting", &enableLighting);
 		ImGui::TreePop();
 	}
+  
 	ImGui::DragFloat2("M2", &posM2.x, 0.1f);
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();
@@ -205,6 +210,7 @@ void GameScene::Update() {
 		}
 	}
 	lightSwitch->Update();
+	player->SetSwitchFlag(lightSwitch->GetFlag());
 
 	input->Update();
 

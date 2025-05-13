@@ -7,10 +7,10 @@ void GameClear::Initialize()
 	input = Input::GetInstance();
 	input->ShowMouseCursor(true);
 
-	// ƒeƒNƒXƒ`ƒƒ“Ç‚Ýž‚Ý
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
 
-	// ƒXƒvƒ‰ƒCƒg¶¬
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç”Ÿæˆ
 	clearSprite = new Sprite();
 	clearSprite->Initialize("Resources/Sprite/clear.png");
 
@@ -20,7 +20,7 @@ void GameClear::Update()
 {
 	input->Update();
 
-	// EnterƒL[‚Åƒ^ƒCƒgƒ‹I—¹iƒ^ƒCƒgƒ‹‰æ–Ê‚Öj
+	// Enterã‚­ãƒ¼ã§ã‚¿ã‚¤ãƒˆãƒ«çµ‚äº†ï¼ˆã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã¸ï¼‰
 	if (input->TriggerKey(DIK_RETURN)) {
 		finished = true;
 	}
