@@ -7,10 +7,10 @@ void Rule::Initialize()
 	input = Input::GetInstance();
 	input->ShowMouseCursor(true);
 
-	// ƒeƒNƒXƒ`ƒƒ“Ç‚Ýž‚Ý
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/rule.png");
 
-	// ƒXƒvƒ‰ƒCƒg¶¬
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç”Ÿæˆ
 	ruleSprite = new Sprite();
 	ruleSprite->Initialize("Resources/Sprite/rule.png");
 
@@ -19,7 +19,7 @@ void Rule::Initialize()
 void Rule::Update() {
 	input->Update();
 
-	// SPACEƒL[‚Åƒ^ƒCƒgƒ‹I—¹iƒQ[ƒ€‰æ–Ê‚Öj
+	// SPACEã‚­ãƒ¼ã§ã‚¿ã‚¤ãƒˆãƒ«çµ‚äº†ï¼ˆã‚²ãƒ¼ãƒ ç”»é¢ã¸ï¼‰
 	if (input->TriggerKey(DIK_SPACE)) {
 		finished = true;
 	}
