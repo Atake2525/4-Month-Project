@@ -10,8 +10,8 @@
 
 void GameScene::Initialize() {
 
-	//ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "proStage.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
@@ -25,7 +25,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("test.obj");
+	object3d->SetModel("01Stage.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -37,8 +37,8 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
-	//player->AddStageCollision("Resources/Model/collision", "proStageCollision.obj");
-	player->AddStageCollision("Resources/Debug", "test.obj");
+	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	//player->AddStageCollision("Resources/Debug", "test.obj");
 	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 
 	button = new Button();
