@@ -76,6 +76,7 @@ private:
 
 	bool showCursor = true;
 
+
 	LightBlock* lightBlock = nullptr;
 	switchLight* lightSwitch = nullptr;
 	Transform switchTransform;
