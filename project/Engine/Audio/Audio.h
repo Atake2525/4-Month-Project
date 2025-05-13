@@ -3,6 +3,15 @@
 #include <wrl.h>
 #include <vector>
 
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
+
+#pragma comment(lib, "Mf.lib")
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "Mfreadwrite.lib")
+#pragma comment(lib, "mfuuid.lib")
+
 #pragma once
 
 #pragma comment(lib, "xaudio2.lib")
@@ -57,6 +66,9 @@ public:
 	// 音声読み込み
 	SoundData SoundLoadWave(const char* filename);
 
+	// mp3再生
+	void SoundPlayMp3(const std::wstring& filename);
+
 	// 音声再生
 	void SoundPlayWave(const SoundData& soundData, float volume);
 
@@ -81,4 +93,8 @@ private:
 	std::vector<AudioList> audioList;
 
 	int frameTime = 0;
+
+	// Media Foundation SourceReader
+	Microsoft::WRL::ComPtr<IMFSourceReader> pMFSourceReader{ nullptr };
+
 };

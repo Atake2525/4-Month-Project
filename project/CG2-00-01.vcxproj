@@ -111,7 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Player.cpp" />
     <ClCompile Include="Application\PlayerCollision.cpp" />
     <ClCompile Include="Application\switchLight.cpp" />
-    <ClCompile Include="Engine\UI\Button.cpp" />
+    <ClCompile Include="Engine\UI\UI.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\2d\SpriteBase\SpriteBase.cpp" />
     <ClCompile Include="Engine\3d\Camera\Camera.cpp" />
@@ -146,6 +146,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Scene\MyGame.cpp" />
     <ClCompile Include="Engine\Lighting\Light.cpp" />
     <ClCompile Include="Application\Goal.cpp" />
+    <ClCompile Include="Application\Scene\GameClear.cpp" />
+    <ClCompile Include="Application\Scene\Rule.cpp" />
+    <ClCompile Include="Application\Scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\DebugMode.h" />
@@ -153,7 +156,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Player.h" />
     <ClInclude Include="Application\PlayerCollision.h" />
     <ClInclude Include="Application\switchLight.h" />
-    <ClInclude Include="Engine\UI\Button.h" />
+    <ClInclude Include="Engine\UI\UI.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="Engine\2d\SpriteBase\SpriteBase.h" />
     <ClInclude Include="Engine\3d\Camera\Camera.h" />
@@ -194,6 +197,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Scene\MyGame.h" />
     <ClInclude Include="Engine\Lighting\Light.h" />
     <ClInclude Include="Application\Goal.h" />
+    <ClInclude Include="Application\Scene\GameClear.h" />
+    <ClInclude Include="Application\Scene\Rule.h" />
+    <ClInclude Include="Application\Scene\Title.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externels\imgui\LICENSE.txt" />

@@ -1,4 +1,4 @@
-#include "Button.h"
+#include "UI.h"
 #include "SpriteBase.h"
 #include "TextureManager.h"
 #include "WinApp.h"
@@ -7,17 +7,17 @@
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
-Button::~Button() {
+UI::~UI() {
 	delete sprite;
 }
 
-void Button::SetSprite(const std::string& filename) {
+void UI::SetSprite(const std::string& filename) {
 	TextureManager::GetInstance()->LoadTexture(filename);
 
 	sprite->SetTexture(filename);
 }
 
-void Button::CreateButton(const Vector2& spritePosition, const Origin& origin, const std::string& filename) {
+void UI::CreateButton(const Vector2& spritePosition, const Origin& origin, const std::string& filename) {
 	input = Input::GetInstance();
 
 	TextureManager::GetInstance()->LoadTexture(filename);
@@ -58,7 +58,7 @@ void Button::CreateButton(const Vector2& spritePosition, const Origin& origin, c
 	}
 }
 
-const bool& Button::OnButton() const {
+const bool& UI::OnButton() const {
 	sprite->Update();
 	Vector2 spriteOrigin = sprite->GetTextureLeftTop();
 	Vector2 spriteSize = sprite->GetScale();
@@ -85,11 +85,11 @@ const bool& Button::OnButton() const {
 	return false;
 }
 
-void Button::Draw() {
+void UI::Draw() {
 	sprite->Draw();
 }
 
-const bool& Button::CollisionAABB(const AABB& a, const AABB& b) const {
+const bool& UI::CollisionAABB(const AABB& a, const AABB& b) const {
 	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
 		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
 		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {

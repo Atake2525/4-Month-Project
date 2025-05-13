@@ -1,4 +1,3 @@
-#define _DEBUG
 #include "GameScene.h"
 #include "Light.h"
 #include <algorithm>
@@ -29,7 +28,6 @@ void GameScene::Initialize() {
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
-
 	sprite = new Sprite();
 	sprite->Initialize("Resources/uvChecker.png");
 
@@ -41,16 +39,13 @@ void GameScene::Initialize() {
 	//player->AddStageCollision("Resources/Debug", "test.obj");
 	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 
-	button = new Button();
+	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
 
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
 	goal->Initialize({ -10.0f,8.0f,10.0f });
-
-	/*star = new Star();
-	star->Initialize({ 0.0f,0.0f,0.0f });*/
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
@@ -72,11 +67,17 @@ void GameScene::Initialize() {
 	clearSprite->Initialize("Resources/Sprite/clearShift.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
 
+
+	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 }
 
 void GameScene::Update() {
 
-#ifdef _DEBUGState
+	Vector2 posM2 = input->GetWindowMousePos2();
+
+	Vector3 posM3 = input->GetWindowMousePos3();
+
+//#ifdef _DEBUGState
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
@@ -98,19 +99,17 @@ void GameScene::Update() {
 		ImGui::Checkbox("EnableLihting", &enableLighting);
 		ImGui::TreePop();
 	}
-
+  
+	ImGui::DragFloat2("M2", &posM2.x, 0.1f);
+	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();
 
-#endif // _DEBUG
+//#endif _DEBUGState
 
-	if (input->TriggerKey(DIK_ESCAPE))
+	/*if (input->TriggerKey(DIK_ESCAPE))
 	{
 		finished = true;
-	}
-	if (input->TriggerKey(DIK_4))
-	{
-		player->ClearStageCollision();
-	}
+	}*/
 	/*const float speed = 0.7f;
 	Vector3 velocity(0.0f, 0.0f, speed);
 	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
@@ -174,6 +173,11 @@ void GameScene::Update() {
 		button->SetTransform(ta);
 	}*/
 
+	if (input->TriggerKey(DIK_2))
+	{
+		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
+	}
+
 	player->Update();
 
 	//camera->SetTranslate(cameraTransform.translate);
@@ -189,14 +193,13 @@ void GameScene::Update() {
 	lightBlock->Update();
 
 	goal->Update();
-	//clearSprite->Update();
 
 	// ゴールの当たり判定
 	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
 		isGoal = true;
 	}
 	if (isGoal) {
-		clearSprite->Update();
+		finished = true;
 		if (input->TriggerKey(DIK_LSHIFT) || input->TriggerButton(Controller::Menu))
 		{
 			Finalize();
@@ -239,12 +242,6 @@ void GameScene::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
 
-	if (isGoal)
-	{
-		clearSprite->Draw();
-		button->Draw();
-
-	}
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
@@ -253,7 +250,6 @@ void GameScene::Draw() {
 
 	goal->Draw();
 
-	//star->Draw();
 	// starResultManager とその中の星を描画
 	if (starResultManager) {
 		starResultManager->Draw();
@@ -274,12 +270,8 @@ void GameScene::Finalize() {
 
 	delete player;
 
-
 	delete goal;
 
-	delete clearSprite;
-
-	//delete star;
 	if (starResultManager) {
 		delete starResultManager;
 	}
