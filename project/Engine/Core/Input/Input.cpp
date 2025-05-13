@@ -236,6 +236,40 @@ const Vector3& Input::GetMousePos3() const {
 	return result;
 }
 
+const Vector2& Input::GetWindowMousePos2() const
+{
+	Vector2 pos = GetMousePos2();
+	Vector2 mousePos = { 0.0f, 0.0f };
+	if (WinApp::GetInstance()->windowMode == WindowMode::Window)
+	{
+		Vector3 window = WinApp::GetInstance()->GetWindowAABB().min;
+		mousePos = { pos.x - window.x - 8.0f, pos.y - window.y - 30.0f };
+	}
+	else
+	{
+		Vector3 window = WinApp::GetInstance()->GetWindowAABB().min;
+		mousePos = { pos.x - window.x, pos.y - window.y };
+	}
+	return mousePos;
+}
+
+const Vector3& Input::GetWindowMousePos3() const
+{
+	Vector3 pos = GetMousePos3();
+	Vector3 mousePos = { 0.0f, 0.0f, 0.0f };
+	if (WinApp::GetInstance()->windowMode == WindowMode::Window)
+	{
+		Vector3 window = WinApp::GetInstance()->GetWindowAABB().min;
+		mousePos = {pos.x - window.x - 8.0f, pos.y - window.y - 30.0f};
+	}
+	else
+	{
+		Vector3 window = WinApp::GetInstance()->GetWindowAABB().min;
+		mousePos = { pos.x - window.x, pos.y - window.y };
+	}
+	return mousePos;
+}
+
 const Vector2& Input::GetMouseVel2() const {
 	Vector2 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY) };
 	return result;

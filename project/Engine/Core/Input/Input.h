@@ -122,6 +122,10 @@ public:
 
 	const Vector3& GetMousePos3() const;
 
+	const Vector2& GetWindowMousePos2() const;
+
+	const Vector3& GetWindowMousePos3() const;
+
 	// マウスの移動量を取得(Vector2)
 	const Vector2& GetMouseVel2() const;
 
@@ -206,7 +210,7 @@ private:
 	// 前回の全マウスの状態
 	DIMOUSESTATE mouseStatePre = {};
 	// マウスカーソル表示
-	bool showCursor = false;
+	bool showCursor = true;
 	
 	// コントローラーデバイス
 	ComPtr<IDirectInputDevice8> gamePad;
