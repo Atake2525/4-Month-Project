@@ -22,6 +22,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg
 
 #include "Title.h"
 #include "Rule.h"
+#include "Setting.h"
 #include "GameScene.h"
 #include "GameClear.h"
 
@@ -59,12 +60,14 @@ private:
 
 	Title* title = nullptr;
 	Rule* rule = nullptr;
+	Setting* setting = nullptr;
 	GameScene* gameScene = nullptr;
 	GameClear* gameClear = nullptr;
 
 	enum class Scene {
 		Title,
 		Rule,
+		Setting,
 		Game,
 		GameClear,
 	};
