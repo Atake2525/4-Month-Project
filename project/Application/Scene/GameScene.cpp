@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 	player = new Player();
 	player->Initialize(camera);
 
-	button = new Button();
+	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
 
 	modelTransform = object3d->GetTransform();
@@ -69,7 +69,11 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-#ifdef _DEBUGState
+	Vector2 posM2 = input->GetWindowMousePos2();
+
+	Vector3 posM3 = input->GetWindowMousePos3();
+
+//#ifdef _DEBUGState
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
@@ -91,9 +95,11 @@ void GameScene::Update() {
 		ImGui::Checkbox("EnableLihting", &enableLighting);
 		ImGui::TreePop();
 	}
+	ImGui::DragFloat2("M2", &posM2.x, 0.1f);
+	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();
 
-#endif // _DEBUG
+//#endif _DEBUGState
 
 	/*if (input->TriggerKey(DIK_ESCAPE))
 	{
