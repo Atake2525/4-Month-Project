@@ -8,30 +8,54 @@ void Title::Initialize() {
 
 	// テクスチャ読み込み
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/title.png");
-
-	// スプライト生成
 	titleSprite = new Sprite();
 	titleSprite->Initialize("Resources/Sprite/title.png");
 
+	// 各ボタンの画像をロード
+	gameStartButton.CreateButton({ 200, 300 }, Origin::Center, "Resources/Sprite/startButton.png");
+	settingButton.CreateButton({ 200, 400 }, Origin::Center, "Resources/Sprite/settingButton.png");
+	ruleButton.CreateButton({ 200, 500 }, Origin::Center, "Resources/Sprite/ruleButton.png");
 
 }
 
 void Title::Update() {
 	input->Update();
 
-	// SPACEキーでタイトル終了（ルール画面へ）
-	if (input->TriggerKey(DIK_SPACE)) {
+	// スプライト更新
+	if (gameStartButton.OnButton()) {
+		goToGame = true;
+	}
+	if (settingButton.OnButton()) {
+		goToSetting = true;
+	}
+	if (ruleButton.OnButton()) {
+		goToRule = true;
+	}
+
+	// とりあえずどれか押されたら終了
+	if (goToGame || goToSetting || goToRule) {
 		finished = true;
 	}
+
+	//// SPACEキーでタイトル終了（ルール画面へ）
+	//if (input->TriggerKey(DIK_SPACE)) {
+	//	finished = true;
+	//}
+
+
+
 }
 
 void Title::Draw() {
-
 	SpriteBase::GetInstance()->ShaderDraw();
 
 	if (titleSprite) {
 		titleSprite->Draw();
 	}
+	gameStartButton.Draw();
+	settingButton.Draw();
+	ruleButton.Draw();
+
 }
 
 void Title::Finalize() {

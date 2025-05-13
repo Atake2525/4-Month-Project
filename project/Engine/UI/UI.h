@@ -58,7 +58,6 @@ private:
 	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
 
 	Sprite* sprite = nullptr;
-
 	Input* input = nullptr;
 };
 

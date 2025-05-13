@@ -40,6 +40,10 @@ void MyGame::Initialize() {
 	rule = new Rule();
 	rule->Initialize();
 
+	// 設定シーンの初期化
+	setting = new Setting();
+	setting->Initialize();
+
 	// ゲームシーンの初期化
 	gameScene = new GameScene();
 	gameScene->Initialize();
@@ -57,76 +61,114 @@ void MyGame::Update() {
 	if (WinApp::GetInstance()->ProcessMessage()) {
 		finished = true;
 	}
+
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
 	// 入力の更新
 	switch (currentScene) {
-		// タイトルシーンの更新
+
 	case Scene::Title:
 		title->Update();
+
 		if (title->isFinished()) {
-			// タイトル終了 → ルール開始
-			title->Finalize();
-			delete title;
-			title = nullptr;
-			// ルールシーンの初期化
-			rule = new Rule();
-			rule->Initialize();
-			currentScene = Scene::Rule;
-		}
-		break;
-		// ルールシーンの更新
-	case Scene::Rule:
-		rule->Update();
-		if (rule->isFinished()) {
-			// ルール終了 → ゲームへ
-			rule->Finalize();
-			delete rule;
-			rule = nullptr;
-			// ゲームシーンの初期化
-			gameScene = new GameScene();
-			gameScene->Initialize();
-			currentScene = Scene::Game;
-		}
-		break;
-		// ゲームシーンの更新
-	case Scene::Game:
-		gameScene->Update();
-		if (gameScene->isFinished()) {
-			// ゲーム終了 → ゲームクリアへ
-			gameScene->Finalize();
-			delete gameScene;
-			gameScene = nullptr;
-			// ゲームクリアシーンの初期化
-			gameClear = new GameClear();
-			gameClear->Initialize();
-			currentScene = Scene::GameClear;
+
+			if (title->IsGameStartSelected()) {
+				// タイトル終了 → ゲーム開始
+				title->Finalize();
+				delete title;
+				title = nullptr;
+
+				gameScene = new GameScene();
+				gameScene->Initialize();
+				currentScene = Scene::Game;
+			}
+			else if (title->IsRuleSelected()) {
+				// タイトル終了 → ルール説明へ
+				title->Finalize();
+				delete title;
+				title = nullptr;
+
+				rule = new Rule();
+				rule->Initialize();
+				currentScene = Scene::Rule;
+			}
+			else if (title->IsSettingSelected()) {
+				// タイトル終了 → 設定へ
+				title->Finalize();
+				delete title;
+				title = nullptr;
+
+				setting = new Setting();
+				setting->Initialize();
+				currentScene = Scene::Setting;
+			}
 		}
 		break;
 
-		// ゲームクリアシーンの更新
-	case Scene::GameClear:
-		gameClear->Update();
-		if (gameClear->isFinished()) {
-			// ゲームクリア終了 → タイトルへ
-			gameClear->Finalize();
-			delete gameClear;
-			gameClear = nullptr;
-			// タイトルシーンの初期化
+	case Scene::Rule:
+		rule->Update();
+
+		if (rule->isFinished()) {
+			// ルール終了 → ゲーム開始
+			rule->Finalize();
+			delete rule;
+			rule = nullptr;
+
 			title = new Title();
 			title->Initialize();
 			currentScene = Scene::Title;
 		}
 		break;
 
+	case Scene::Game:
+		gameScene->Update();
 
+		if (gameScene->isFinished()) {
+			// ゲーム終了 → ゲームクリア
+			gameScene->Finalize();
+			delete gameScene;
+			gameScene = nullptr;
 
+			gameClear = new GameClear();
+			gameClear->Initialize();
+			currentScene = Scene::GameClear;
+		}
+		break;
+
+	case Scene::GameClear:
+		gameClear->Update();
+
+		if (gameClear->isFinished()) {
+			// ゲームクリア終了 → タイトルへ
+			gameClear->Finalize();
+			delete gameClear;
+			gameClear = nullptr;
+
+			title = new Title();
+			title->Initialize();
+			currentScene = Scene::Title;
+		}
+		break;
+
+	case Scene::Setting:
+		setting->Update();
+
+		if (setting->isFinished()) {
+			// 設定終了 → タイトルへ戻る
+			setting->Finalize();
+			delete setting;
+			setting = nullptr;
+
+			title = new Title();
+			title->Initialize();
+			currentScene = Scene::Title;
+		}
+		break;
 	}
-
-
 }
+
 
 void MyGame::Draw() {
 
@@ -143,6 +185,9 @@ void MyGame::Draw() {
 		// ルールシーンの描画
 	case Scene::Rule:
 		rule->Draw();
+		break;
+	case Scene::Setting:
+		setting->Draw();
 		break;
 		// ゲームシーンの描画
 	case Scene::Game:
@@ -194,6 +239,11 @@ void MyGame::Finalize() {
 	if (rule) {
 		rule->Finalize();
 		delete rule;
+	}
+	// Settingシーンの解放
+	if (setting) {
+		setting->Finalize();
+		delete setting;
 	}
 	// ゲームシーンの解放
 	if (gameScene) {

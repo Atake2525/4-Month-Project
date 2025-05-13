@@ -149,6 +149,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Scene\GameClear.cpp" />
     <ClCompile Include="Application\Scene\Rule.cpp" />
     <ClCompile Include="Application\Scene\Title.cpp" />
+    <ClCompile Include="Setting.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\DebugMode.h" />
@@ -200,6 +201,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Scene\GameClear.h" />
     <ClInclude Include="Application\Scene\Rule.h" />
     <ClInclude Include="Application\Scene\Title.h" />
+    <ClInclude Include="Setting.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externels\imgui\LICENSE.txt" />
