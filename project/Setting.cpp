@@ -9,8 +9,6 @@ void Setting::Initialize()
 
 	// テクスチャ読み込み
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/setting.png");
-
-	// スプライト生成
 	settingSprite = new Sprite();
 	settingSprite->Initialize("Resources/Sprite/setting.png");
 }
@@ -19,7 +17,7 @@ void Setting::Update()
 {
 	input->Update();
 
-	// SPACEキーでタイトル終了（ゲーム画面へ）
+	// SPACEキーでタイトル終了
 	if (input->TriggerKey(DIK_SPACE)) {
 		finished = true;
 	}

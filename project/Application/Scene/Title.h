@@ -41,7 +41,7 @@ private:
 	UI settingButton;
 	UI ruleButton;
 
-	// 押下フラグ（仮で用意）
+	// 押下フラグ
 	bool goToGame = false;
 	bool goToSetting = false;
 	bool goToRule = false;
