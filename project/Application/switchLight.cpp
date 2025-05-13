@@ -53,13 +53,15 @@ void switchLight::Update()
 		if (input_->TriggerKey(DIK_1) && dist < distance) {
 			switchFlag = true;
 			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
+			Light::GetInstance()->SetIntensityDirectionalLight(0.3f);
 		}
 	}
 	else {
 
 		if (input_->TriggerKey(DIK_1) && dist < distance) {
 			switchFlag = false;
-			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+			Light::GetInstance()->SetColorDirectionalLight({ 0.4f, 0.4f, 0.4f, 1.0f });
+			Light::GetInstance()->SetIntensityDirectionalLight(0.7f);
 		}
 		//}
 	}
