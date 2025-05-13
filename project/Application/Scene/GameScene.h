@@ -80,5 +80,18 @@ private:
 	Transform switchTransform;
 
 	SoundData soundData;
+
+
+	// ポーズ用
+	bool isPaused = false;
+	UI resumeButton;
+	UI restartButton;
+	UI returnToTitleButton;
+	bool goToRestart = false;
+	bool goToTitle = false;
+
+
+
+
 };
 
