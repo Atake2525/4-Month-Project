@@ -17,6 +17,14 @@ void UI::SetSprite(const std::string& filename) {
 	sprite->SetTexture(filename);
 }
 
+//–¾‚é‚³“_–Å
+void UI::SetSpriteAlpha(float alpha)
+{
+if (sprite) {
+		sprite->SetColor({ 1.0f, 1.0f, 1.0f, alpha });  
+	}
+}
+
 void UI::CreateButton(const Vector2& spritePosition, const Origin& origin, const std::string& filename) {
 	input = Input::GetInstance();
 

@@ -8,10 +8,10 @@ void Rule::Initialize()
 	input->ShowMouseCursor(true);
 
 	// テクスチャ読み込み
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/rule.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/rule.png");
 
 	ruleSprite = new Sprite();
-	ruleSprite->Initialize("Resources/Sprite/rule.png");
+	ruleSprite->Initialize("Resources/Sprite/scene/rule.png");
 
 }
 
