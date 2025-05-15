@@ -54,6 +54,9 @@ public:
 
 	void SetSprite(const std::string& filename);
 
+	// 追加
+	void SetSpriteAlpha(float alpha);
+
 private:
 	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
 
