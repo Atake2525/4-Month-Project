@@ -9,7 +9,6 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "WinApp.h"
-#include "kMath.h"
 #include "PlayerCollision.h"
 #include "ModelManager.h"
 
@@ -149,5 +148,8 @@ private: // メンバ変数
 	bool collisionLightBlock = false;
 
 	bool switchFlag = false;
+
+	Vector3 cameraOffset = { 0.0f, 10.0f, -20.0f };
+
 };
 

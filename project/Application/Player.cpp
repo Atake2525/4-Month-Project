@@ -42,6 +42,9 @@ void Player::ClearLightBlockCollision() {
 void Player::Initialize(Camera* camera)
 {
 	camera_ = camera;
+	//camera->SetTranslate({ 0.0f, 10.0f, -20.0f });
+	cameraTransform_ = camera->GetTransform();
+	cameraTransform_.translate = cameraOffset;
 
 	// 追加したクラス
 
@@ -66,7 +69,6 @@ void Player::Initialize(Camera* camera)
 	//camera
 	//cameraTransform_.translate = camera->GetTranslate();
 	//cameraTransform_.rotate = camera->GetRotate();
-	cameraTransform_ = camera->GetTransform();
 	// Model
 	modelTransform_ = object3d_->GetTransform();
 	modelTransform_.rotate = object3d_->GetRotateInDegree();
@@ -85,6 +87,77 @@ void Player::Initialize(Camera* camera)
 
 void Player::Update()
 {
+
+	Rotate();
+
+	Move();
+
+	Jump();
+
+	object3d_->SetTranslate(modelTransform_.translate);
+	object3d_->Update();
+	drawModel.translate = modelTransform_.translate;
+
+
+	UpdateStageCollision();
+
+	UpdateLightCollision();
+
+	//ImGui::Begin("onGround");
+	//ImGui::Checkbox("onGround", &onGround_);
+	//ImGui::End();
+
+	//camera_->SetTranslate(cameraTransform_.translate);
+	//camera_->SetRotate(cameraTransform_.rotate);
+
+	object3d_->SetTransform(drawModel);
+	object3d_->SetRotateInDegree(drawModel.rotate);
+	object3d_->SetColor(modelColor_);
+	object3d_->SetEnableLighting(modelEnableLighting_);
+	object3d_->Update();
+
+
+	drawModel.translate = modelTransform_.translate;
+
+	object3d_->SetTranslate(drawModel.translate);
+	object3d_->Update();
+
+
+	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, modelTransform_.translate);
+
+	/*object3d_->SetTransform(modelTransform_);
+	object3d_->Update();
+
+	Matrix4x4 cameraWorldMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+
+	Matrix4x4 mathMatrix = Multiply(object3d_->GetWorldMatrix(), cameraWorldMatrix);
+
+	camera_->SetParent(worldMatrix);
+
+	Vector3 position = { mathMatrix.m[3][0], mathMatrix.m[3][1], mathMatrix.m[3][2] };*/
+
+	cameraTransform_.translate = camera_->GetTransform().translate;
+
+	Vector3 normalizeCamera = TransformNormal(cameraOffset, worldMatrix);
+
+	cameraTransform_.translate = normalizeCamera + modelTransform_.translate;
+
+	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
+
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+
+	if (cameraTransform_.translate.y >= 1.0f && cameraTransform_.translate.y <= modelTransform_.translate.y + 21.0f)
+	{
+		camera_->SetParent(cameraMatrix);
+	}
+	else
+	{
+		camera_->SetTranslateParent(cameraMatrix);
+	}
+
+
+	//camera_->SetTranslate(cameraTransform_.translate);
+
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
@@ -98,39 +171,8 @@ void Player::Update()
 		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
 		ImGui::TreePop();
 	}
+	//ImGui::DragFloat3("CameraTranslate", &position.x, 0.1f);
 	ImGui::End();
-
-	Rotate();
-
-	Move();
-
-	Jump();
-
-	object3d_->SetTranslate(modelTransform_.translate);
-	object3d_->Update();
-	drawModel.translate = modelTransform_.translate;
-
-	UpdateStageCollision();
-
-	UpdateLightCollision();
-
-	//ImGui::Begin("onGround");
-	//ImGui::Checkbox("onGround", &onGround_);
-	//ImGui::End();
-
-	camera_->SetTranslate(cameraTransform_.translate);
-	camera_->SetRotate(cameraTransform_.rotate);
-
-	object3d_->SetTransform(drawModel);
-	object3d_->SetRotateInDegree(drawModel.rotate);
-	object3d_->SetColor(modelColor_);
-	object3d_->SetEnableLighting(modelEnableLighting_);
-	object3d_->Update();
-
-	drawModel.translate = modelTransform_.translate;
-
-	object3d_->SetTranslate(drawModel.translate);
-	object3d_->Update();
 
 }
 
@@ -187,12 +229,12 @@ void Player::Move()
 
 
 	// 即席の移動速度安定化
-	Vector3 camRot = cameraTransform_.rotate;
-	camRot.x = 0.0f;
-	Matrix4x4 camworldMatrix = MakeAffineMatrix(cameraTransform_.scale, camRot, cameraTransform_.translate);
-	velocity = TransformNormal(velocity, camworldMatrix);
+	Vector3 rot = modelTransform_.rotate;
+	rot.x = 0.0f;
+	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, rot, modelTransform_.translate);
+	velocity = TransformNormal(velocity, worldMatrix);
 	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
-	velocity.y = 0;
+	//velocity.y = 0;
 
 	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
 	{
@@ -213,14 +255,14 @@ void Player::Move()
 
 	modelTransform_.translate += velocity * speed;
 
-	offSet = TransformNormal(offSet,
+	/*offSet = TransformNormal(offSet,
 		Multiply(Multiply(
 			MakeRotateXMatrix(modelTransform_.rotate.x),
 			MakeRotateYMatrix(modelTransform_.rotate.y)),
 			MakeRotateZMatrix(modelTransform_.rotate.z)
-		));
+		));*/
 
-	cameraTransform_.translate = modelTransform_.translate + offSet;
+	//cameraTransform_.translate = modelTransform_.translate + offSet;
 
 
 }
@@ -231,16 +273,16 @@ void Player::Rotate()
 	if (input_->IsMoveRightJoyStick()) {
 		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
 		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
-		cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
-		cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		//cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		//cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
 	else {
 		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
 		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
-		cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
-		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
+		//cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		//cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
-	
+	modelTransform_.rotate.x = std::clamp(modelTransform_.rotate.x, -0.45f, 0.75f);
 	//cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
 	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
 	//-0.1f 0.9f cameraRotate
@@ -390,6 +432,9 @@ void Player::UpdateStageCollision() {
 	if (collision->GetCollisionListSize() > 0)
 	{
 
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
+
 		if (len == LenXZ::X)
 		{
 			// 衝突判定をするためのもの
@@ -419,13 +464,11 @@ void Player::UpdateStageCollision() {
 				object3d_->Update();
 			}
 
-		// 衝突判定をするためのもの
-		modelTransform_.translate += collision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
 
 		if (!onGround_ && collision->IsColYUnderside(object3d_->GetAABB(), JumpVelocity)) {
 			JumpVelocity = 0.0f;
 		}
-		if (!onGround_ && collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
+		if (!onGround_ && collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && JumpVelocity < 0.0f) {
 			JumpVelocity = 0.0f;
 			onGround_ = true;
 			collisionLightBlock = false;
@@ -495,6 +538,10 @@ void Player::UpdateLightCollision() {
 	//}
 	if (lightCollision->GetCollisionListSize() > 0 && switchFlag == true)
 	{
+
+		// 衝突判定をするためのもの
+		modelTransform_.translate += lightCollision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
+
 		lightCollision->GetLenXZVelocity(velocity);
 		LenXZ len = collision->GetLenXZ();
 
@@ -526,13 +573,11 @@ void Player::UpdateLightCollision() {
 			object3d_->Update();
 		}
 
-		// 衝突判定をするためのもの
-		modelTransform_.translate += lightCollision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
 
 		if (!onGround_ && lightCollision->IsColYUnderside(object3d_->GetAABB(), JumpVelocity)) {
 			JumpVelocity = 0.0f;
 		}
-		if (!onGround_ && lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
+		if (!onGround_ && lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && JumpVelocity < 0.0f) {
 			JumpVelocity = 0.0f;
 			onGround_ = true;
 			collisionLightBlock = true;

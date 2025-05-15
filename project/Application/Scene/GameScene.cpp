@@ -69,6 +69,7 @@ void GameScene::Initialize() {
 
 
 	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+
 }
 
 void GameScene::Update() {
@@ -177,13 +178,13 @@ void GameScene::Update() {
 	{
 		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
 	}
+	input->Update();
 
 	player->Update();
+	camera->Update();
 
 	//camera->SetTranslate(cameraTransform.translate);
 	//camera->SetRotate(cameraTransform.rotate);
-	camera = player->GetCamera();
-	camera->Update();
 	object3d->SetTransform(modelTransform);
 	object3d->SetEnableLighting(enableLighting);
 	object3d->Update();
@@ -212,7 +213,6 @@ void GameScene::Update() {
 	lightSwitch->Update();
 	player->SetSwitchFlag(lightSwitch->GetFlag());
 
-	input->Update();
 
 	float di = Light::GetInstance()->GetIntensityDirectionalLight();
 	di += 0.001f;
