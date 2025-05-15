@@ -62,6 +62,9 @@ public: // メンバ関数
 	// ライトブロックの衝突判定更新
 	void UpdateLightCollision();
 
+	// カメラの衝突判定更新
+	void UpdateCameraCollision();
+
 	void SetSwitchFlag(const bool flag);
 
 	Camera* GetCamera();
@@ -150,6 +153,12 @@ private: // メンバ変数
 	bool switchFlag = false;
 
 	Vector3 cameraOffset = { 0.0f, 10.0f, -20.0f };
+
+	AABB cameraAABB;
+	AABB firstCameraAABB;
+
+	Vector3 cameraVelocityPre = { 0.0f, 0.0f, 0.0f };
+	Vector3 cameraVelocity = { 0.0f, 0.0f, 0.0f };
 
 };
 

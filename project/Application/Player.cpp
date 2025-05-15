@@ -55,6 +55,8 @@ void Player::Initialize(Camera* camera)
 	object3d_ = new Object3d();
 	object3d_->Initialize();
 	object3d_->SetModel("Player.obj");
+	firstCameraAABB = object3d_->GetAABB();
+	cameraAABB = object3d_->GetAABB();
 
 	collision = new PlayerCollision();
 
@@ -136,6 +138,21 @@ void Player::Update()
 
 	Vector3 position = { mathMatrix.m[3][0], mathMatrix.m[3][1], mathMatrix.m[3][2] };*/
 
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+
+	cameraVelocity.x = std::abs(cameraTransform_.translate.x) - std::abs(cameraVelocityPre.x);
+	cameraVelocity.y = std::abs(cameraTransform_.translate.y) - std::abs(cameraVelocityPre.y);
+	cameraVelocity.z = std::abs(cameraTransform_.translate.z) - std::abs(cameraVelocityPre.z);
+	cameraVelocity.x *= -1;
+	cameraVelocity.z *= -1;
+
+	Vector3 worldPos = { cameraMatrix.m[3][0], cameraMatrix.m[3][1], cameraMatrix.m[3][2] };
+
+	cameraAABB.min = firstCameraAABB.min + worldPos;
+	cameraAABB.max = firstCameraAABB.max + worldPos;
+
+	UpdateCameraCollision();
+
 	cameraTransform_.translate = camera_->GetTransform().translate;
 
 	Vector3 normalizeCamera = TransformNormal(cameraOffset, worldMatrix);
@@ -144,7 +161,7 @@ void Player::Update()
 
 	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
 
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+	cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
 
 	if (cameraTransform_.translate.y >= 1.0f && cameraTransform_.translate.y <= modelTransform_.translate.y + 21.0f)
 	{
@@ -155,6 +172,8 @@ void Player::Update()
 		camera_->SetTranslateParent(cameraMatrix);
 	}
 
+
+	cameraVelocityPre = cameraTransform_.translate;
 
 	//camera_->SetTranslate(cameraTransform_.translate);
 
@@ -171,7 +190,7 @@ void Player::Update()
 		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
 		ImGui::TreePop();
 	}
-	//ImGui::DragFloat3("CameraTranslate", &position.x, 0.1f);
+	ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x, 0.1f);
 	ImGui::End();
 
 }
@@ -586,6 +605,39 @@ void Player::UpdateLightCollision() {
 		{
 			onGround_ = false;
 		}
+	}
+}
+
+void Player::UpdateCameraCollision() {
+	if (collision->GetCollisionListSize() > 0)
+	{
+		cameraOffset = { 0.0f, 10.0f, -20.0f };
+
+		// 衝突判定をするためのもの
+		cameraOffset += collision->UpdateCollisionY(cameraAABB, cameraVelocity.y);
+
+		LenXZ len = collision->GetLenXZ();
+
+		if (len == LenXZ::X)
+		{
+			// 衝突判定をするためのもの
+			cameraOffset += collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
+
+
+			// 衝突判定をするためのもの
+			cameraOffset += collision->UpdateCollisionZ(cameraAABB, cameraVelocity.z);
+
+		}
+		else if (len == LenXZ::Z)
+		{
+			// 衝突判定をするためのもの
+			cameraOffset += collision->UpdateCollisionZ(cameraAABB, cameraVelocity.z);
+
+			// 衝突判定をするためのもの
+			cameraOffset += collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
+
+		}
+
 	}
 }
 
