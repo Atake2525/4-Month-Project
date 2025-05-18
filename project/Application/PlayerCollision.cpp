@@ -220,6 +220,7 @@ const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, co
 			float moveAmount = collisionPlate.aabb.max.z - cameraAABB.min.z;
 			result.z = moveAmount;
 		}
+		// 判定対象からプレイヤーまでの距離を求める
 
 
 
