@@ -62,7 +62,11 @@ public:
 	/// </summary>
 	void ClearCollisionList();
 
+	// 登録されている衝突判定のサイズを取得
 	const uint32_t GetCollisionListSize() const { return collisionListPlate.size(); }
+
+	// カメラ用の衝突判定
+	const Vector3& UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) const;
 
 private:
 
@@ -79,6 +83,10 @@ private:
 	};
 
 	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
+
+	const bool& CollisionAABBMin(const AABB& a, const AABB& b) const;
+
+	const bool& CollisionAABBMax(const AABB& a, const AABB& b) const;
 
 	const bool& IsCollisionOBB(const OBB& obb1, const OBB& obb2) const;
 

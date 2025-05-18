@@ -574,6 +574,12 @@ float Distance(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
+const Vector3& CenterAABB(const AABB& aabb)
+{
+	Vector3 result = (aabb.max - aabb.min) / 2 + aabb.min;
+	return result;
+}
+
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result{
 		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],

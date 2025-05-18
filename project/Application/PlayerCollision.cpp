@@ -178,6 +178,137 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 	return result;
 }
 
+const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) const {
+	Vector3 result = { 0.0f, 0.0f, 0.0f };
+
+	// cameraOffsetをNormalize(正規化)しておく
+	Vector3 normalCameraOffset = Normalize(cameraOffset);
+	// プレイヤーとカメラの距離を計算
+	// AABBではなく中心座標からの距離が欲しいので中心座標を計算する
+	Vector3 plCenterPos = CenterAABB(playerAABB);
+	Vector3 camCenterPos = CenterAABB(cameraAABB);
+
+	float plcamDist = Distance(plCenterPos, camCenterPos);
+
+	// cameraOffsetの要素の割合を計算する
+	Vector3 cameraRate = { 0.0f, std::abs(cameraOffset.y) / std::abs(cameraOffset.z), std::abs(cameraOffset.z) / std::abs(cameraOffset.y) };
+	// 壁の衝突判定
+	for (const auto& collisionPlate : collisionListPlate)
+	{
+		//float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
+		Vector3 collisionPlateCenterPos = CenterAABB(collisionPlate.aabb);
+		Vector3 collisionPlateSize = (collisionPlate.aabb.max - collisionPlate.aabb.min) / 2;
+		// 判定対象とプレイヤーとの距離を計算
+		float dist = Distance(collisionPlateCenterPos + collisionPlateSize, plCenterPos);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
+		ImGui::End();*/
+		// 判定対象がプレイヤーとカメラの距離
+		/*if (dist > plcamDist)
+		{
+			continue;
+		}*/
+		if (cameraAABB.min.y + 0.1f > collisionPlate.aabb.max.y)
+		{
+			continue;
+		}
+
+		// プレイヤーから最も近い判定対象に対して衝突判定をとる
+		if (CollisionAABB(cameraAABB, collisionPlate.aabb))
+		{
+			float moveAmount = collisionPlate.aabb.max.z - cameraAABB.min.z;
+			result.z = moveAmount;
+		}
+
+
+
+		// Z
+		//if (collisionPlate.normal.z == 1.0f && cameraVelocity.z < 0.0f)
+		//{
+		//	AABB colAABB = collisionPlate.aabb;
+		//	colAABB.max.z = collisionPlate.aabb.max.z +  dist;
+		//	if (CollisionAABB(cameraAABB, colAABB))
+		//	{
+		//		float moveAmount = collisionPlate.aabb.max.z - cameraAABB.min.z;
+		//		result.z = moveAmount;
+		//	}
+		//}
+		//else if (collisionPlate.normal.z == -1.0f && cameraVelocity.z > 0.0f)
+		//{
+		//	AABB colAABB = collisionPlate.aabb;
+		//	colAABB.min.z = collisionPlate.aabb.min.z - dist;
+		//	if (CollisionAABB(cameraAABB, colAABB))
+		//	{
+		//		float moveAmount = playerAABB.max.z - collisionPlate.aabb.max.z;
+		//		result.z = -moveAmount;
+		//	}
+		//}
+		//// Y
+		//else if (collisionPlate.normal.y == 1.0f && cameraVelocity.y < 0.0f)
+		//{
+		//	AABB colAABB = collisionPlate.aabb;
+		//	colAABB.max.y = collisionPlate.aabb.max.y + dist;
+		//	if (CollisionAABB(cameraAABB, colAABB))
+		//	{
+		//		float moveAmount = collisionPlate.aabb.max.y - playerAABB.min.y;
+		//		result.y = moveAmount - 0.01f;
+		//	}
+		//	
+		//}
+		//else if (collisionPlate.normal.y == -1.0f && cameraVelocity.y > 0.0f)
+		//{
+		//	AABB colAABB = collisionPlate.aabb;
+		//	colAABB.min.y = collisionPlate.aabb.min.y - dist;
+		//	if (CollisionAABB(cameraAABB, colAABB))
+		//	{
+		//		float moveAmount = playerAABB.max.y - collisionPlate.aabb.max.y;
+		//		result.y = -moveAmount;
+		//	}
+		//	
+		//}
+		//// X
+		//else if (collisionPlate.normal.x == 1.0f && cameraVelocity.x < 0.0f)
+		//{
+		//	AABB colAABB = collisionPlate.aabb;
+		//	colAABB.max.x = collisionPlate.aabb.max.x + dist;
+		//	if (CollisionAABB(cameraAABB, colAABB))
+		//	{
+		//		float moveAmount = collisionPlate.aabb.max.x - playerAABB.min.x;
+		//		result.x = moveAmount;
+		//	}
+		//}
+		//else if (collisionPlate.normal.x == -1.0f && cameraVelocity.x > 0.0f)
+		//{
+		//	AABB colAABB = collisionPlate.aabb;
+		//	colAABB.min.x = collisionPlate.aabb.min.x - dist;
+		//	if (CollisionAABB(cameraAABB, colAABB))
+		//	{
+		//		float moveAmount = playerAABB.max.x - collisionPlate.aabb.max.x;
+		//		result.x = -moveAmount;
+		//	}
+		//	
+		//}
+
+		// 衝突判定をAABBとAABBでとる
+		//if (CollisionAABB(playerAABB, collisionPlate.aabb))
+		//{
+		//	//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
+		//	if (collisionPlate.normal.z == 1.0f && playerVelocityZ < 0.0f)
+		//	{
+		//		float moveAmount = collisionPlate.aabb.max.z - playerAABB.min.z;
+		//		result.z = moveAmount;
+		//	}
+		//	else if (collisionPlate.normal.z == -1.0f && playerVelocityZ > 0.0f)
+		//	{
+		//		float moveAmount = playerAABB.max.z - collisionPlate.aabb.max.z;
+		//		result.z = -moveAmount;
+		//	}
+		//}
+	}
+	return result;
+}
+
 const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) const {
 	for (const auto& collisionPlate : collisionListPlate)
 	{
@@ -477,6 +608,24 @@ const bool& PlayerCollision::CollisionAABB(const AABB& a, const AABB& b) const {
 	if ((a.min.x < b.max.x && a.max.x > b.min.x) &&
 		(a.min.y < b.max.y && a.max.y > b.min.y) &&
 		(a.min.z < b.max.z && a.max.z > b.min.z)) {
+		return true;
+	}
+	return false;
+}
+
+const bool& PlayerCollision::CollisionAABBMin(const AABB& a, const AABB& b) const {
+	if ((a.max.x > b.min.x) &&
+		(a.max.y > b.min.y) &&
+		(a.max.z > b.min.z)) {
+		return true;
+	}
+	return false;
+}
+
+const bool& PlayerCollision::CollisionAABBMax(const AABB& a, const AABB& b) const {
+	if ((a.min.x < b.max.x) &&
+		(a.min.y < b.max.y) &&
+		(a.min.z < b.max.z)) {
 		return true;
 	}
 	return false;

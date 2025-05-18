@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Quaternion.h"
+#include "AABB.h"
 #include <cmath>
 #include <cassert>
 #define _USE_MATH_DEFINES
@@ -132,6 +133,9 @@ float SwapRadian(float degree);
 float Length(const Vector3& v);
 
 float Distance(const Vector3& v1, const Vector3& v2);
+
+// AABBから中心座標を計算
+const Vector3& CenterAABB(const AABB& aabb);
 
 // ベクトル変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
