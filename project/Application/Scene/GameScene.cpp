@@ -18,7 +18,7 @@ void GameScene::Initialize() {
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 
 	input = Input::GetInstance();
-	input->ShowMouseCursor(showCursor);
+	//input->ShowMouseCursor(showCursor);
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 

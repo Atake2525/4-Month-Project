@@ -7,7 +7,7 @@ void Setting::Initialize()
 	input = Input::GetInstance();
 	input->ShowMouseCursor(true);
 
-	// テクスチャ読み込み
+	// 繝�繧ｯ繧ｹ繝√Ε隱ｭ縺ｿ霎ｼ縺ｿ
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/setting.png");
 	settingSprite = new Sprite();
 	settingSprite->Initialize("Resources/Sprite/setting.png");
@@ -17,7 +17,7 @@ void Setting::Update()
 {
 	input->Update();
 
-	// SPACEキーでタイトル終了
+	// SPACE繧ｭ繝ｼ縺ｧ繧ｿ繧､繝医Ν邨ゆｺ�
 	if (input->TriggerKey(DIK_SPACE)) {
 		finished = true;
 	}

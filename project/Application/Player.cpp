@@ -674,6 +674,7 @@ void Player::UpdateCameraCollision() {
 
 		//}
 		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset);
+		cameraOffset = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset);
 
 		//cameraOffset += off;
 

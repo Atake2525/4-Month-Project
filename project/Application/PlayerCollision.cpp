@@ -2,6 +2,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "Plane.h"
+#include "Segment.h"
 #include "kMath.h"
 #include <cassert>
 #define NOMINMAX
@@ -179,7 +181,7 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 }
 
 const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) const {
-	Vector3 result = { 0.0f, 0.0f, 0.0f };
+	Vector3 result = cameraOffset;
 
 	// cameraOffsetをNormalize(正規化)しておく
 	Vector3 normalCameraOffset = Normalize(cameraOffset);
@@ -217,11 +219,10 @@ const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, co
 		// プレイヤーから最も近い判定対象に対して衝突判定をとる
 		if (CollisionAABB(cameraAABB, collisionPlate.aabb))
 		{
-			float moveAmount = collisionPlate.aabb.max.z - cameraAABB.min.z;
-			result.z = moveAmount;
+			result.z = (Distance(collisionPlateCenterPos, plCenterPos) * -1.0f) - 2.0f;
 		}
 		// 判定対象からプレイヤーまでの距離を求める
-
+		result.y = result.z * cameraRate.y * -1.0f;
 
 
 		// Z

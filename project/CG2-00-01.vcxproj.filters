@@ -103,6 +103,7 @@
     <ClInclude Include="Application\Scene\GameClear.h" />
     <ClInclude Include="Application\Scene\Rule.h" />
     <ClInclude Include="Setting.h" />
+    <ClInclude Include="Engine\Math\Segment.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
