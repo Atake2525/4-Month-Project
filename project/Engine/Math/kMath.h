@@ -139,3 +139,15 @@ const Vector3& CenterAABB(const AABB& aabb);
 
 // ベクトル変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
+// ease In-Out x1 : 開始点  x2 : 目標点
+float easeInOut(float t, float x1, float x2);
+
+// ease In-Out x1 : 開始点  x2 : 目標点
+int easeInOut(float t, unsigned int x1, unsigned int x2);
+
+// easeOutQuint
+float easeOutQuint(float t, float x1, float x2);
+
+// easeInBack
+float easeInBack(float t, float x1, float x2);

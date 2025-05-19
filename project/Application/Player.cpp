@@ -628,7 +628,13 @@ void Player::UpdateLightCollision() {
 void Player::UpdateCameraCollision() {
 	if (collision->GetCollisionListSize() > 0)
 	{
-		//cameraOffset = { 0.0f, 10.0f, -20.0f };
+
+		// cameraOffsetの要素の割合を計算する
+		//Vector3 cameraRate = { 0.0f, std::abs(cameraOffset.y) / std::abs(cameraOffset.z), std::abs(cameraOffset.z) / std::abs(cameraOffset.y) };
+
+		//cameraOffset.z -= 0.1f;
+		//cameraOffset.z = std::clamp(cameraOffset.z, -20.0f, 0.0f);
+		//cameraOffset.y = cameraOffset.z * cameraRate.y * -1.0f;
 
 		// 衝突判定をするためのもの
 		//cameraOffset += collision->UpdateCollisionY(cameraAABB, cameraVelocity.y);

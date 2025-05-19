@@ -3,6 +3,7 @@
 #include "OBB.h"
 #include "AABB.h"
 #include "vector"
+#include "Segment.h"
 #include <string>
 
 #pragma once
@@ -89,6 +90,8 @@ private:
 	const bool& CollisionAABBMax(const AABB& a, const AABB& b) const;
 
 	const bool& IsCollisionOBB(const OBB& obb1, const OBB& obb2) const;
+
+	const bool& IsCollision(const AABB& aabb, const Segment& segment) const;
 
 	// 衝突判定が計算される距離
 	float collisionDistance = 1000.0f;

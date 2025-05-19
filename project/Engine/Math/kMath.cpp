@@ -1,4 +1,5 @@
 ﻿#include "kMath.h"
+#include <algorithm>
 
 const Vector3 operator*(const Vector3& v, const float f) {
 	Vector3 result;
@@ -588,3 +589,53 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	};
 	return result;
 }
+
+// ease In-Out x1 : 開始点  x2 : 目標点
+float easeInOut(float t, float x1, float x2) {
+	float T = t;
+	T = std::clamp(T, 0.0f, 1.0f);
+	float x;
+	// easeOut
+	float easedT = -(cos(float(M_PI * T)) - 1.0f) / 2.0f;
+
+	x = (1.0f - easedT) * x1 + easedT * x2;
+	return x;
+};
+
+// ease In-Out x1 : 開始点  x2 : 目標点
+int easeInOut(float t, unsigned int x1, unsigned int x2) {
+	float T = t;
+	T = std::clamp(T, 0.0f, 1.0f);
+	int x;
+	// easeOut
+	int easedT = -int((cos(float(M_PI * int(T))) - 1.0f) / 2.0f);
+
+	x = (1 - easedT) * x1 + easedT * x2;
+	return x;
+};
+
+// easeOutQuint
+float easeOutQuint(float t, float x1, float x2) {
+	float T = t;
+	T = std::clamp(T, 0.0f, 1.0f);
+	float x;
+	// easeOut
+	float easedT = 1.0f - pow(1.0f - T, 5.0f);
+
+	x = (1.0f - easedT) * x1 + easedT * x2;
+	return x;
+};
+
+// easeInBack
+float easeInBack(float t, float x1, float x2) {
+	float T = t;
+	T = std::clamp(T, 0.0f, 1.0f);
+	float x;
+	const float c1 = 1.70158f;
+	const float c3 = c1 + 1;
+	// easeOut
+	float easedT = c3 * T * T * T - c1 * T * T;
+
+	x = (1.0f - easedT) * x1 + easedT * x2;
+	return x;
+};

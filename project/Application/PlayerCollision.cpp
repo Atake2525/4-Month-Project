@@ -3,7 +3,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "Plane.h"
-#include "Segment.h"
 #include "kMath.h"
 #include <cassert>
 #define NOMINMAX
@@ -183,17 +182,29 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) const {
 	Vector3 result = cameraOffset;
 
+
 	// cameraOffsetをNormalize(正規化)しておく
 	Vector3 normalCameraOffset = Normalize(cameraOffset);
+	// cameraOffsetの要素の割合を計算する
+	Vector3 cameraRate = { 0.0f, std::abs(10.0f) / std::abs(-20.0f), std::abs(-20.0f) / std::abs(10.0f) };
 	// プレイヤーとカメラの距離を計算
 	// AABBではなく中心座標からの距離が欲しいので中心座標を計算する
 	Vector3 plCenterPos = CenterAABB(playerAABB);
 	Vector3 camCenterPos = CenterAABB(cameraAABB);
 
+	Vector3 origin;
+	origin.x = 0.0f;
+	origin.z = camCenterPos.z - 5.0f;
+	origin.y = camCenterPos.z * cameraRate.y * -1.0;
+
+	Vector3 diff = plCenterPos - camCenterPos;
+	Segment segment = {
+		.origin = camCenterPos + cameraVelocity,
+		.diff = diff,
+	};
+
 	float plcamDist = Distance(plCenterPos, camCenterPos);
 
-	// cameraOffsetの要素の割合を計算する
-	Vector3 cameraRate = { 0.0f, std::abs(cameraOffset.y) / std::abs(cameraOffset.z), std::abs(cameraOffset.z) / std::abs(cameraOffset.y) };
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
@@ -217,96 +228,29 @@ const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, co
 		}
 
 		// プレイヤーから最も近い判定対象に対して衝突判定をとる
-		if (CollisionAABB(cameraAABB, collisionPlate.aabb))
+		//if (CollisionAABB(cameraAABB, collisionPlate.aabb))
+		//{
+		//	result.z = (Distance(collisionPlateCenterPos, plCenterPos) * -1.0f) - 2.0f;
+		//}
+		//// 判定対象からプレイヤーまでの距離を求める
+		//result.y = result.z * cameraRate.y * -1.0f;
+
+		if (IsCollision(collisionPlate.aabb, segment)) 
 		{
-			result.z = (Distance(collisionPlateCenterPos, plCenterPos) * -1.0f) - 2.0f;
+			Vector3 closestPoint;
+			closestPoint.x = std::clamp(plCenterPos.x, collisionPlate.aabb.min.x, collisionPlate.aabb.max.x);
+			closestPoint.y = std::clamp(plCenterPos.y, collisionPlate.aabb.min.y, collisionPlate.aabb.max.y);
+			closestPoint.z = std::clamp(plCenterPos.z, collisionPlate.aabb.min.z, collisionPlate.aabb.max.z);
+			result.z = (Distance(closestPoint, plCenterPos) * -1.0f);
+			//result.z = closestPoint.z;
+
 		}
+		result.x = std::max(result.x, cameraOffset.x);
+		result.y = std::max(result.y, cameraOffset.y);
+		result.z = std::max(result.z, cameraOffset.z);
 		// 判定対象からプレイヤーまでの距離を求める
 		result.y = result.z * cameraRate.y * -1.0f;
 
-
-		// Z
-		//if (collisionPlate.normal.z == 1.0f && cameraVelocity.z < 0.0f)
-		//{
-		//	AABB colAABB = collisionPlate.aabb;
-		//	colAABB.max.z = collisionPlate.aabb.max.z +  dist;
-		//	if (CollisionAABB(cameraAABB, colAABB))
-		//	{
-		//		float moveAmount = collisionPlate.aabb.max.z - cameraAABB.min.z;
-		//		result.z = moveAmount;
-		//	}
-		//}
-		//else if (collisionPlate.normal.z == -1.0f && cameraVelocity.z > 0.0f)
-		//{
-		//	AABB colAABB = collisionPlate.aabb;
-		//	colAABB.min.z = collisionPlate.aabb.min.z - dist;
-		//	if (CollisionAABB(cameraAABB, colAABB))
-		//	{
-		//		float moveAmount = playerAABB.max.z - collisionPlate.aabb.max.z;
-		//		result.z = -moveAmount;
-		//	}
-		//}
-		//// Y
-		//else if (collisionPlate.normal.y == 1.0f && cameraVelocity.y < 0.0f)
-		//{
-		//	AABB colAABB = collisionPlate.aabb;
-		//	colAABB.max.y = collisionPlate.aabb.max.y + dist;
-		//	if (CollisionAABB(cameraAABB, colAABB))
-		//	{
-		//		float moveAmount = collisionPlate.aabb.max.y - playerAABB.min.y;
-		//		result.y = moveAmount - 0.01f;
-		//	}
-		//	
-		//}
-		//else if (collisionPlate.normal.y == -1.0f && cameraVelocity.y > 0.0f)
-		//{
-		//	AABB colAABB = collisionPlate.aabb;
-		//	colAABB.min.y = collisionPlate.aabb.min.y - dist;
-		//	if (CollisionAABB(cameraAABB, colAABB))
-		//	{
-		//		float moveAmount = playerAABB.max.y - collisionPlate.aabb.max.y;
-		//		result.y = -moveAmount;
-		//	}
-		//	
-		//}
-		//// X
-		//else if (collisionPlate.normal.x == 1.0f && cameraVelocity.x < 0.0f)
-		//{
-		//	AABB colAABB = collisionPlate.aabb;
-		//	colAABB.max.x = collisionPlate.aabb.max.x + dist;
-		//	if (CollisionAABB(cameraAABB, colAABB))
-		//	{
-		//		float moveAmount = collisionPlate.aabb.max.x - playerAABB.min.x;
-		//		result.x = moveAmount;
-		//	}
-		//}
-		//else if (collisionPlate.normal.x == -1.0f && cameraVelocity.x > 0.0f)
-		//{
-		//	AABB colAABB = collisionPlate.aabb;
-		//	colAABB.min.x = collisionPlate.aabb.min.x - dist;
-		//	if (CollisionAABB(cameraAABB, colAABB))
-		//	{
-		//		float moveAmount = playerAABB.max.x - collisionPlate.aabb.max.x;
-		//		result.x = -moveAmount;
-		//	}
-		//	
-		//}
-
-		// 衝突判定をAABBとAABBでとる
-		//if (CollisionAABB(playerAABB, collisionPlate.aabb))
-		//{
-		//	//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
-		//	if (collisionPlate.normal.z == 1.0f && playerVelocityZ < 0.0f)
-		//	{
-		//		float moveAmount = collisionPlate.aabb.max.z - playerAABB.min.z;
-		//		result.z = moveAmount;
-		//	}
-		//	else if (collisionPlate.normal.z == -1.0f && playerVelocityZ > 0.0f)
-		//	{
-		//		float moveAmount = playerAABB.max.z - collisionPlate.aabb.max.z;
-		//		result.z = -moveAmount;
-		//	}
-		//}
 	}
 	return result;
 }
@@ -631,4 +575,63 @@ const bool& PlayerCollision::CollisionAABBMax(const AABB& a, const AABB& b) cons
 		return true;
 	}
 	return false;
+}
+
+const bool& PlayerCollision::IsCollision(const AABB& aabb, const Segment& segment) const {
+	Vector3 seg1 = segment.origin;
+	Vector3 seg2 = segment.origin + segment.diff;
+
+	float tMin = 0.0f;
+	float tMax = 1.0f;
+
+	// X軸方向での判定
+	if (std::abs(segment.diff.x) < 1e-8) {
+		if (seg1.x < aabb.min.x || seg1.x > aabb.max.x) {
+			return false;
+		}
+	}
+	else {
+		float od = 1.0f / segment.diff.x;
+		float t1 = (aabb.min.x - seg1.x) * od;
+		float t2 = (aabb.max.x - seg1.x) * od;
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tMin) tMin = t1;
+		if (t2 < tMax) tMax = t2;
+		if (tMin > tMax) return false;
+	}
+
+	// Y軸方向での判定
+	if (std::abs(segment.diff.y) < 1e-8) {
+		if (seg1.y < aabb.min.y || seg1.y > aabb.max.y) {
+			return false;
+		}
+	}
+	else {
+		float od = 1.0f / segment.diff.y;
+		float t1 = (aabb.min.y - seg1.y) * od;
+		float t2 = (aabb.max.y - seg1.y) * od;
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tMin) tMin = t1;
+		if (t2 < tMax) tMax = t2;
+		if (tMin > tMax) return false;
+	}
+
+	// Z軸方向での判定
+	if (std::abs(segment.diff.z) < 1e-8) {
+		if (seg1.z < aabb.min.z || seg1.z > aabb.max.z) {
+			return false;
+		}
+	}
+	else {
+		float od = 1.0f / segment.diff.z;
+		float t1 = (aabb.min.z - seg1.z) * od;
+		float t2 = (aabb.max.z - seg1.z) * od;
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tMin) tMin = t1;
+		if (t2 < tMax) tMax = t2;
+		if (tMin > tMax) return false;
+	}
+
+	// すべての軸方向での判定を通過した場合、衝突している
+	return true;
 }
