@@ -82,6 +82,7 @@ void MyGame::Update() {
 
 				gameScene = new GameScene();
 				gameScene->Initialize();
+				gameScene->Update();
 				currentScene = Scene::Game;
 			}
 			else if (title->IsRuleSelected()) {
@@ -92,6 +93,7 @@ void MyGame::Update() {
 
 				rule = new Rule();
 				rule->Initialize();
+				rule->Update();
 				currentScene = Scene::Rule;
 			}
 			else if (title->IsSettingSelected()) {
@@ -118,6 +120,7 @@ void MyGame::Update() {
 
 			title = new Title();
 			title->Initialize();
+			title->Update();
 			currentScene = Scene::Title;
 		}
 		break;
@@ -125,18 +128,38 @@ void MyGame::Update() {
 	case Scene::Game:
 		gameScene->Update();
 
-		if (gameScene->isFinished()) {
-			// ゲーム終了 → ゲームクリア
+		// リスタートが要求されている場合
+		if (gameScene->ShouldRestart()) {
+			gameScene->Finalize();
+			delete gameScene;
+			//gameScene = nullptr;
+			gameScene = new GameScene();
+			gameScene->Initialize();
+			gameScene -> Update();  // ゲームシーンの更新を行う
+			break;  // 他の処理をせず終了
+		}
+		else if (gameScene->ShouldReturnToTitle()) {
+			gameScene->Finalize();
+			delete gameScene;
+			gameScene = nullptr;
+
+			title = new Title();
+			title->Initialize();
+			title->Update();
+			currentScene = Scene::Title;
+		}
+		else if (gameScene->isFinished()) {
+			// ゲーム終了 → クリア
 			gameScene->Finalize();
 			delete gameScene;
 			gameScene = nullptr;
 
 			gameClear = new GameClear();
 			gameClear->Initialize();
+			gameClear->Update();
 			currentScene = Scene::GameClear;
 		}
 		break;
-
 	case Scene::GameClear:
 		gameClear->Update();
 
@@ -148,6 +171,7 @@ void MyGame::Update() {
 
 			title = new Title();
 			title->Initialize();
+			title->Update();
 			currentScene = Scene::Title;
 		}
 		break;
@@ -163,6 +187,7 @@ void MyGame::Update() {
 
 			title = new Title();
 			title->Initialize();
+			title->Update();
 			currentScene = Scene::Title;
 		}
 		break;

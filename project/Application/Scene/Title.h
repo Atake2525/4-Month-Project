@@ -46,6 +46,7 @@ private:
 	bool goToSetting = false;
 	bool goToRule = false;
 
-
+	//文字点滅用
+float blinkTimer = 0.0f;
 
 };

@@ -17,6 +17,14 @@ void UI::SetSprite(const std::string& filename) {
 	sprite->SetTexture(filename);
 }
 
+//–¾‚é‚³“_–Å
+void UI::SetSpriteAlpha(float alpha)
+{
+if (sprite) {
+		sprite->SetColor({ 1.0f, 1.0f, 1.0f, alpha });  
+	}
+}
+
 void UI::CreateButton(const Vector2& spritePosition, const Origin& origin, const std::string& filename) {
 	input = Input::GetInstance();
 
@@ -65,7 +73,7 @@ const bool& UI::OnButton() const {
 	Vector2 spritePos = sprite->GetPosition();
 	Vector3 mousePos = input->GetMousePos3();
 	AABB spriteAABB = {
-		{spritePos.x + spriteSize.x * spriteOrigin.x, spritePos.y + spriteSize.y * spriteOrigin.y, 0.0f},
+		{spritePos.x , spritePos.y , 0.0f},
 		{spritePos.x + spriteSize.x, spritePos.y + spriteSize.y, 0.0f},
 	};
 	AABB windowAABB = WinApp::GetInstance()->GetWindowAABB();

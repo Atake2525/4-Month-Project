@@ -7,19 +7,28 @@ void Title::Initialize() {
 	input->ShowMouseCursor(true);
 
 	// テクスチャ読み込み
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/title.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/title.png");
 	titleSprite = new Sprite();
-	titleSprite->Initialize("Resources/Sprite/title.png");
+	titleSprite->Initialize("Resources/Sprite/scene/title.png");
 
 	// 各ボタンの画像をロード
-	gameStartButton.CreateButton({ 200, 300 }, Origin::Center, "Resources/Sprite/startButton.png");
-	settingButton.CreateButton({ 200, 400 }, Origin::Center, "Resources/Sprite/settingButton.png");
-	ruleButton.CreateButton({ 200, 500 }, Origin::Center, "Resources/Sprite/ruleButton.png");
+	gameStartButton.CreateButton({ 200, 300 }, Origin::Center, "Resources/Sprite/titleUI/startButton.png");
+	settingButton.CreateButton({ 200, 400 }, Origin::Center, "Resources/Sprite/titleUI/settingButton.png");
+	ruleButton.CreateButton({ 200, 500 }, Origin::Center, "Resources/Sprite/titleUI/ruleButton.png");
 
 }
 
 void Title::Update() {
 	input->Update();
+
+// 点滅タイマー更新
+	blinkTimer += 1.0f / 60.0f;
+	float alpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
+
+	// UIボタンに透明度を適用（SetSpriteAlphaがUIにある前提）
+	gameStartButton.SetSpriteAlpha(alpha);
+	settingButton.SetSpriteAlpha(alpha);
+	ruleButton.SetSpriteAlpha(alpha);
 
 	// スプライト更新
 	if (gameStartButton.OnButton()) {
