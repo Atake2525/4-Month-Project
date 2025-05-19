@@ -73,7 +73,7 @@ const bool& UI::OnButton() const {
 	Vector2 spritePos = sprite->GetPosition();
 	Vector3 mousePos = input->GetMousePos3();
 	AABB spriteAABB = {
-		{spritePos.x + spriteSize.x * spriteOrigin.x, spritePos.y + spriteSize.y * spriteOrigin.y, 0.0f},
+		{spritePos.x , spritePos.y , 0.0f},
 		{spritePos.x + spriteSize.x, spritePos.y + spriteSize.y, 0.0f},
 	};
 	AABB windowAABB = WinApp::GetInstance()->GetWindowAABB();
