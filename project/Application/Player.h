@@ -11,6 +11,7 @@
 #include "WinApp.h"
 #include "kMath.h"
 #include "PlayerCollision.h"
+#include"JampEffect.h"
 #include "ModelManager.h"
 
 #include"LightBlock.h"
@@ -94,6 +95,8 @@ public: // メンバ関数
 	 Object3d* StarObject3d() { return object3d_; }
 	 const bool& IsCollisionAABB(const AABB& a, const AABB& b);
 
+	 void EffectBorn(Vector3 position);
+
 private:
 
 	void Move();
@@ -149,5 +152,9 @@ private: // メンバ変数
 	bool collisionLightBlock = false;
 
 	bool switchFlag = false;
+
+	//ジャンプエフェクトクラス
+	std::list<JampEffect*>effects_;
+
 };
 
