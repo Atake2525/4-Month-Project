@@ -37,7 +37,7 @@ void Title::Update() {
 	// 前回と違うボタンに乗ったらタイマーリセット
 	if (hoveredButton != prevHoveredButton) {
 		blinkTimer = 0.0f;
-		prevHoveredButton = hoveredButton;  // 更新
+		prevHoveredButton = hoveredButton; 
 	}
 
 	// 点滅タイマー更新
