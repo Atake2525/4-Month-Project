@@ -152,13 +152,19 @@ private: // メンバ変数
 
 	bool switchFlag = false;
 
-	Vector3 cameraOffset = { 0.0f, 10.0f, -20.0f };
+	Vector3 defaultCameraOffset = { 0.0f, 10.0f, -20.0f };
+	Vector3 cameraOffset;
 
 	AABB cameraAABB;
 	AABB firstCameraAABB;
 
 	Vector3 cameraVelocityPre = { 0.0f, 0.0f, 0.0f };
 	Vector3 cameraVelocity = { 0.0f, 0.0f, 0.0f };
+
+	bool cameraZoomIn = false;
+	bool cameraZoomOut = false;
+
+	float cameraEasingTime = 0.0f;
 
 };
 

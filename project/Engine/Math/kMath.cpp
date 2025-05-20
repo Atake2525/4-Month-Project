@@ -591,8 +591,8 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 }
 
 // ease In-Out x1 : 開始点  x2 : 目標点
-float easeInOut(float t, float x1, float x2) {
-	float T = t;
+float easeInOut(float time, float x1, float x2) {
+	float T = time;
 	T = std::clamp(T, 0.0f, 1.0f);
 	float x;
 	// easeOut
@@ -638,4 +638,39 @@ float easeInBack(float t, float x1, float x2) {
 
 	x = (1.0f - easedT) * x1 + easedT * x2;
 	return x;
+};
+
+// ease In-Out x1 : 開始点  x2 : 目標点
+Vector3 easeInOut(float time, Vector3 x1, Vector3 x2) {
+
+	Vector3 result;
+
+	result.x = easeInOut(time, x1.x, x2.x);
+	result.y = easeInOut(time, x1.y, x2.y);
+	result.z = easeInOut(time, x1.z, x2.z);
+
+	return result;;
+};
+
+// easeOutQuint
+Vector3 easeOutQuint(float t, Vector3 x1, Vector3 x2) {
+
+	Vector3 result;
+
+	result.x = easeOutQuint(t, x1.x, x2.x);
+	result.y = easeOutQuint(t, x1.y, x2.y);
+	result.z = easeOutQuint(t, x1.z, x2.z);
+
+	return result;;
+};
+
+// easeInBack
+Vector3 easeInBack(float t, Vector3 x1, Vector3 x2) {
+	Vector3 result;
+
+	result.x = easeInBack(t, x1.x, x2.x);
+	result.y = easeInBack(t, x1.y, x2.y);
+	result.z = easeInBack(t, x1.z, x2.z);
+
+	return result;;
 };

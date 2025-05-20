@@ -45,6 +45,7 @@ void Player::Initialize(Camera* camera)
 	//camera->SetTranslate({ 0.0f, 10.0f, -20.0f });
 	cameraTransform_ = camera->GetTransform();
 	cameraTransform_.translate = cameraOffset;
+	cameraOffset = defaultCameraOffset;
 
 	// 追加したクラス
 
@@ -658,29 +659,48 @@ void Player::UpdateCameraCollision() {
 		Vector3 col;
 		Vector3 zcol;
 
-		//if (len == LenXZ::X)
-		//{
-		//	// 衝突判定をするためのもの
-		//	//cameraOffset += collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
-		//	col = collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
-
-		//	// 衝突判定をするためのもの
-		//	//cameraOffset += collision->UpdateCollisionZ(cameraAABB, cameraVelocity.z);
-		//	zcol = collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
-		//}
-		//else if (len == LenXZ::Z)
-		//{
-		//	// 衝突判定をするためのもの
-		//	//cameraOffset += collision->UpdateCollisionZ(cameraAABB, cameraVelocity.z);
-		//	col = collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
-
-		//	// 衝突判定をするためのもの
-		//	//cameraOffset += collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
-		//	zcol = collision->UpdateCollisionX(cameraAABB, cameraVelocity.x);
-
-		//}
+		// 衝突判定処理
 		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset);
-		cameraOffset = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset);
+		// 初期のカメラオフセットからの判定処理も行っておく
+		Vector3 defOff = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, defaultCameraOffset);
+		// offの値とcameraOffsetの値が違えばeasingを使用してoffの値に置換する
+		if ((off.x != cameraOffset.x || off.y != cameraOffset.y || off.z != cameraOffset.z) && !cameraZoomIn)
+		{
+			cameraZoomIn = true;
+			cameraZoomOut = false;
+			cameraEasingTime = 0.0f;
+		}
+		else if ((off.x != defOff.x || off.y != defOff.y || off.z != defOff.z ) && !cameraZoomOut)
+		{
+			cameraZoomOut = true;
+			cameraZoomIn = false;
+			cameraEasingTime = 0.0f;
+		}
+		// イージング処理
+		if (cameraZoomIn)
+		{
+			Vector3 camOff = cameraOffset;
+			cameraEasingTime++;
+			float time = cameraEasingTime / 60 / 0.8f;
+			cameraOffset = easeInOut(time, camOff, off);
+			if (time > 0.8f)
+			{
+				cameraZoomIn = false;
+				cameraEasingTime = 0.0f;
+			}
+		}
+		else if (cameraZoomOut)
+		{
+			Vector3 camOff = cameraOffset;
+			cameraEasingTime++;
+			float time = cameraEasingTime / 60 / 2.0f;
+			cameraOffset = easeInOut(time, camOff, defOff);
+			if (time > 2.0f)
+			{
+				cameraZoomOut = false;
+				cameraEasingTime = 0.0f;
+			}
+		}
 
 		//cameraOffset += off;
 
@@ -692,6 +712,7 @@ void Player::UpdateCameraCollision() {
 		ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x);
 		ImGui::DragFloat3("cameraMin", &cameraAABB.min.x);
 		ImGui::DragFloat3("cameraMax", &cameraAABB.max.x);
+		ImGui::DragFloat("easingTime", &cameraEasingTime);
 		ImGui::End();
 	}
 }

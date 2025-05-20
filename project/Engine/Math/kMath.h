@@ -141,7 +141,7 @@ const Vector3& CenterAABB(const AABB& aabb);
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
 // ease In-Out x1 : 開始点  x2 : 目標点
-float easeInOut(float t, float x1, float x2);
+float easeInOut(float time, float x1, float x2);
 
 // ease In-Out x1 : 開始点  x2 : 目標点
 int easeInOut(float t, unsigned int x1, unsigned int x2);
@@ -151,3 +151,12 @@ float easeOutQuint(float t, float x1, float x2);
 
 // easeInBack
 float easeInBack(float t, float x1, float x2);
+
+// ease In-Out x1 : 開始点  x2 : 目標点
+Vector3 easeInOut(float time, Vector3 x1, Vector3 x2);
+
+// easeOutQuint
+Vector3 easeOutQuint(float t, Vector3 x1, Vector3 x2);
+
+// easeInBack
+Vector3 easeInBack(float t, Vector3 x1, Vector3 x2);
