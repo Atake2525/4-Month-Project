@@ -21,34 +21,38 @@ void Title::Initialize() {
 void Title::Update() {
 	input->Update();
 
-// 点滅タイマー更新
+	// ボタンの alpha を設定
+	UI* hoveredButton = nullptr;
+	// どのボタンにカーソルが当たっているか取得
+	if (gameStartButton.InCursor()) {
+		hoveredButton = &gameStartButton;
+	}
+	else if (settingButton.InCursor()) {
+		hoveredButton = &settingButton;
+	}
+	else if (ruleButton.InCursor()) {
+		hoveredButton = &ruleButton;
+
+	}
+	// 前回と違うボタンに乗ったらタイマーリセット
+	if (hoveredButton != prevHoveredButton) {
+		blinkTimer = 0.0f;
+		prevHoveredButton = hoveredButton;  // 更新
+	}
+
+	// 点滅タイマー更新
 	blinkTimer += 1.0f / 60.0f;
 	float alpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
 
-	// UIボタンに透明度を適用（SetSpriteAlphaがUIにある前提）
-	gameStartButton.SetSpriteAlpha(alpha);
-	settingButton.SetSpriteAlpha(alpha);
-	ruleButton.SetSpriteAlpha(alpha); 
+	// 最初にすべてのボタンの alpha を 1.0f に戻
+	gameStartButton.SetSpriteAlpha(1.0f);
+	settingButton.SetSpriteAlpha(1.0f);
+	ruleButton.SetSpriteAlpha(1.0f);
 
-	//// UIボタンに透明度を適用（SetSpriteAlphaがUIにある前提）
-	//if (gameStartButton.OnButton()) {
-	//	gameStartButton.SetSpriteAlpha(alpha);
-	//}
-	//else {
-	//	gameStartButton.SetSpriteAlpha(1.0f);
-	//}
-	//if (settingButton.OnButton()) {
-	//	settingButton.SetSpriteAlpha(alpha);
-	//}
-	//else {
-	//	settingButton.SetSpriteAlpha(1.0f);
-	//}
-	//if (ruleButton.OnButton()) {
-	//	ruleButton.SetSpriteAlpha(alpha);
-	//}
-	//else {
-	//	ruleButton.SetSpriteAlpha(1.0f);
-	//}
+	// 対象ボタンだけ点滅
+	if (hoveredButton) {
+		hoveredButton->SetSpriteAlpha(alpha);
+	}
 
 	// スプライト更新
 	if (gameStartButton.OnButton()) {
@@ -65,7 +69,6 @@ void Title::Update() {
 	if (goToGame || goToSetting || goToRule) {
 		finished = true;
 	}
-
 
 
 

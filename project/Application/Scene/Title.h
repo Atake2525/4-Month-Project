@@ -47,6 +47,8 @@ private:
 	bool goToRule = false;
 
 	//文字点滅用
-float blinkTimer = 0.0f;
+	float blinkTimer = 0.0f;
+	UI* prevHoveredButton = nullptr;  // 前フレームでカーソルが乗っていたボタン
+
 
 };
