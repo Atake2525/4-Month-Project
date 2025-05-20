@@ -4,6 +4,7 @@
 #include "AABB.h"
 #include "vector"
 #include "Segment.h"
+#include "Sphere.h"
 #include <string>
 
 #pragma once
@@ -92,6 +93,9 @@ private:
 	bool IsCollisionOBB(const OBB& obb1, const OBB& obb2);
 
 	bool IsCollision(const AABB& aabb, const Segment& segment);
+
+	bool IsCollision(const AABB& aabb, const Sphere& sphere);
+
 
 	// 衝突判定が計算される距離
 	float collisionDistance = 1000.0f;

@@ -203,6 +203,10 @@ Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AAB
 		.diff = diff,
 	};
 
+	Sphere sphere;
+	sphere.center = camCenterPos;
+	sphere.radius = 2.0f;
+
 	float plcamDist = Distance(plCenterPos, camCenterPos);
 
 	// 壁の衝突判定
@@ -243,11 +247,20 @@ Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AAB
 			closestPoint.z = std::clamp(plCenterPos.z, collisionPlate.aabb.min.z, collisionPlate.aabb.max.z);
 			result.z = (Distance(closestPoint, plCenterPos) * -1.0f);
 			//result.z = closestPoint.z;
+		}
+		if (IsCollision(collisionPlate.aabb, sphere))
+		{
+			Vector3 closestPoint;
+			closestPoint.x = std::clamp(plCenterPos.x, collisionPlate.aabb.min.x, collisionPlate.aabb.max.x);
+			closestPoint.y = std::clamp(plCenterPos.y, collisionPlate.aabb.min.y, collisionPlate.aabb.max.y);
+			closestPoint.z = std::clamp(plCenterPos.z, collisionPlate.aabb.min.z, collisionPlate.aabb.max.z);
+			result.z = (Distance(closestPoint, plCenterPos) * -1.0f);
+			//result.z = closestPoint.z;
 
 		}
 		result.x = std::max(result.x, cameraOffset.x);
 		result.y = std::max(result.y, cameraOffset.y);
-		result.z = std::max(result.z, cameraOffset.z);
+		result.z = std::clamp(result.z, cameraOffset.z, -2.0f);
 		// 判定対象からプレイヤーまでの距離を求める
 		result.y = result.z * cameraRate.y * -1.0f;
 
@@ -639,4 +652,22 @@ bool PlayerCollision::IsCollision(const AABB& aabb, const Segment& segment) {
 
 	// すべての軸方向での判定を通過した場合、衝突している
 	return true;
+}
+
+bool PlayerCollision::IsCollision(const AABB& aabb, const Sphere& sphere) {
+	//　最近接点を求める
+	Vector3 closestPoint{
+		std::clamp(sphere.center.x,aabb.min.x,aabb.max.x),
+		std::clamp(sphere.center.y,aabb.min.y,aabb.max.y),
+		std::clamp(sphere.center.z,aabb.min.z,aabb.max.z),
+	};
+	// 最近接点と弾の中心との距離を求める
+	float distance = Distance(closestPoint, sphere.center);
+
+	// 距離が半径よりも小さければ衝突
+	if (distance <= sphere.radius) {
+		// 衝突
+		return true;
+	}
+	return false;
 }
