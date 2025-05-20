@@ -334,10 +334,30 @@ void Player::Rotate()
 void Player::Jump()
 {
 	if (onGround_) {
+
 		//OutputDebugStringA("tex");
 		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
+		}
+		if(rand()%20==0){
+			/*位置*/
+		Vector3 position = {modelTransform_.translate.x+distrubution(randomEngine) ,modelTransform_.translate.y+ distrubution(randomEngine) , 0.0f};
+		
+		/*パーティクルの生成*/
+		EffectBorn(position);
+		for (Particle* particle_ : particles_) {
+			//	// パーティクル
+			//	particle_->Update();
+			//}
+			//// 終了フラグのたったパーティクルを削除
+			// particles_.remove_if([](Particle* particle) {
+			//	if (particle->GetDeathFlag()) {
+			//		delete particle;
+			//		return true;
+			//	}
+			//	return false;
+			// });
 		}
 	}
 	else if (onGround_ == false)
@@ -747,13 +767,16 @@ bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 
 void Player::EffectBorn(Vector3 position)
 {
-	/*生成*/
-	JampEffect* effect = new JampEffect();
-	Vector3 velocity = { distrubution(randomEngine),distrubution(randomEngine),0.0f };
-	Normalize(velocity);
-	/*初期化*/
-	effect
+	for (int i = 0; i < 150; i++) {
+		/*生成*/
+		JampEffect* effect = new JampEffect();
+		Vector3 velocity = { distrubution(randomEngine),distrubution(randomEngine),0.0f };
+		Normalize(velocity);
 
+		/*初期化*/
+		effect->Intialize(position, velocity, "Resources/Model/obj", "Player.obj");
+		effects_.push_back(effect);
+	}
 }
 
 
