@@ -102,10 +102,11 @@ private:
 
 	//UIの点滅用
 	float blinkTimer = 0.0f;
+	UI* prevHoveredButton = nullptr;  // 前フレームでカーソルが乗っていたボタン
 
-	//UIの文字線画用
-	Sprite* hoverLine = nullptr;
-
+	Sprite* fadeSprite = nullptr;
+	float fadeAlpha = 1.0f; // 最初は真っ黒
+	bool isFadingIn = true;
 
 };
 

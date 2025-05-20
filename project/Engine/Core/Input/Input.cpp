@@ -177,28 +177,28 @@ void Input::Update() {
 
 }
 
-const bool& Input::PushKey(BYTE keyNumber) const {
+bool Input::PushKey(BYTE keyNumber) {
 	if (keys[keyNumber]) {
 		return true;
 	}
 	return false;
 }
 
-const bool& Input::TriggerKey(BYTE keyNumber) const {
+bool Input::TriggerKey(BYTE keyNumber) {
 	if (keys[keyNumber] && !keyPres[keyNumber]) {
 		return true;
 	}
 	return false;
 }
 
-const bool& Input::ReturnKey(BYTE keyNumber) const {
+bool Input::ReturnKey(BYTE keyNumber) {
 	if (!keys[keyNumber] && keyPres[keyNumber]) {
 		return true;
 	}
 	return false;
 }
 
-const bool& Input::PressMouse(int mouseNumber) const {
+bool Input::PressMouse(int mouseNumber) {
 	if (mouseState.rgbButtons[mouseNumber] && (0x80))
 	{
 		return true;
@@ -206,7 +206,7 @@ const bool& Input::PressMouse(int mouseNumber) const {
 	return false;
 }
 
-const bool& Input::TriggerMouse(int mouseNumber) const {
+bool Input::TriggerMouse(int mouseNumber) {
 	if (mouseState.rgbButtons[mouseNumber] && !mouseStatePre.rgbButtons[mouseNumber] && (0x80))
 	{
 		return true;
@@ -214,7 +214,7 @@ const bool& Input::TriggerMouse(int mouseNumber) const {
 	return false;
 }
 
-const bool& Input::ReturnMouse(int mouseNumber) const {
+bool Input::ReturnMouse(int mouseNumber) {
 	if (!mouseState.rgbButtons[mouseNumber] && mouseStatePre.rgbButtons[mouseNumber] && (0x80))
 	{
 		return true;
@@ -222,22 +222,21 @@ const bool& Input::ReturnMouse(int mouseNumber) const {
 	return false;
 }
 
-const Vector2& Input::GetMousePos2() const {
+Vector2 Input::GetMousePos2() {
 	POINT pos;
 	GetCursorPos(&pos);
-	Vector2 result = { pos.x, pos.y };
+	Vector2 result = { float(pos.x), float(pos.y) };
 	return result;
 }
 
-const Vector3& Input::GetMousePos3() const {
+Vector3 Input::GetMousePos3() {
 	POINT pos;
 	GetCursorPos(&pos);
-	Vector3 result = { pos.x, pos.y, 0.0f };
+	Vector3 result = { float(pos.x), float(pos.y), 0.0f };
 	return result;
 }
 
-const Vector2& Input::GetWindowMousePos2() const
-{
+Vector2 Input::GetWindowMousePos2() {
 	Vector2 pos = GetMousePos2();
 	Vector2 mousePos = { 0.0f, 0.0f };
 	if (WinApp::GetInstance()->windowMode == WindowMode::Window)
@@ -253,8 +252,7 @@ const Vector2& Input::GetWindowMousePos2() const
 	return mousePos;
 }
 
-const Vector3& Input::GetWindowMousePos3() const
-{
+Vector3 Input::GetWindowMousePos3() {
 	Vector3 pos = GetMousePos3();
 	Vector3 mousePos = { 0.0f, 0.0f, 0.0f };
 	if (WinApp::GetInstance()->windowMode == WindowMode::Window)
@@ -270,17 +268,17 @@ const Vector3& Input::GetWindowMousePos3() const
 	return mousePos;
 }
 
-const Vector2& Input::GetMouseVel2() const {
+Vector2 Input::GetMouseVel2() {
 	Vector2 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY) };
 	return result;
 }
 
-const Vector3& Input::GetMouseVel3() const {
+Vector3 Input::GetMouseVel3() {
 	Vector3 result = { static_cast<float>(mouseState.lX), static_cast<float>(mouseState.lY), static_cast<float>(mouseState.lZ) };
 	return result;
 }
 
-const Vector2& Input::GetLeftJoyStickPos2() const {
+Vector2 Input::GetLeftJoyStickPos2() {
 	Vector2 result = { 0.0f, 0.0f };
 	if (gamePadState.lX < -unresponsiveRange)
 	{
@@ -302,7 +300,7 @@ const Vector2& Input::GetLeftJoyStickPos2() const {
 	return result;
 }
 
-const Vector3& Input::GetLeftJoyStickPos3() const {
+Vector3 Input::GetLeftJoyStickPos3() {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 	if (gamePadState.lX < -unresponsiveRange)
 	{
@@ -333,7 +331,7 @@ const Vector3& Input::GetLeftJoyStickPos3() const {
 	return result;
 }
 
-const Vector2& Input::GetRightJoyStickPos2() const {
+Vector2 Input::GetRightJoyStickPos2() {
 	Vector2 result = { 0.0f, 0.0f };
 	if (gamePadState.lRx < -unresponsiveRange)
 	{
@@ -355,7 +353,7 @@ const Vector2& Input::GetRightJoyStickPos2() const {
 	return result;
 }
 
-const Vector3& Input::GetRightJoyStickPos3() const {
+Vector3 Input::GetRightJoyStickPos3() {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 	if (gamePadState.lRx < -unresponsiveRange)
 	{
@@ -386,7 +384,7 @@ const Vector3& Input::GetRightJoyStickPos3() const {
 	return result;
 }
 
-const bool& Input::IsMoveLeftJoyStick() const{
+bool Input::IsMoveLeftJoyStick() {
 	if (gamePadState.lX < -unresponsiveRange)
 	{
 		return true;
@@ -411,7 +409,7 @@ const bool& Input::IsMoveLeftJoyStick() const{
 	return false;
 }
 
-const bool& Input::IsMoveRightJoyStick() const {
+bool Input::IsMoveRightJoyStick() {
 	if (gamePadState.lRx < -unresponsiveRange)
 	{
 		return true;
@@ -436,7 +434,7 @@ const bool& Input::IsMoveRightJoyStick() const {
 	return false;
 }
 
-const bool& Input::PushXButton(DPad dPad) const {
+bool Input::PushXButton(DPad dPad) {
 	DPad result = DPad::None;
 	switch (gamePadState.rgdwPOV[0])
 	{
@@ -482,7 +480,7 @@ const bool& Input::PushXButton(DPad dPad) const {
 	return false;
 }
 
-const bool& Input::TriggerXButton(DPad dPad) const {
+bool Input::TriggerXButton(DPad dPad) {
 	DPad result = DPad::None;
 	switch (gamePadState.rgdwPOV[0])
 	{
@@ -566,7 +564,7 @@ const bool& Input::TriggerXButton(DPad dPad) const {
 	return false;
 }
 
-const bool& Input::PushButton(Controller button) const {
+bool Input::PushButton(Controller button) {
 	Controller result = Controller::None;
 	for (int i = 0; i < 10; i++)
 	{
@@ -660,7 +658,7 @@ const bool& Input::PushButton(Controller button) const {
 	return false;
 }
 
-const bool& Input::TriggerButton(Controller button) const {
+bool Input::TriggerButton(Controller button) {
 	Controller result = Controller::None;
 	Controller resultPre = Controller::None;
 	for (int i = 0; i < 10; i++)
@@ -842,7 +840,7 @@ const bool& Input::TriggerButton(Controller button) const {
 	return false;
 }
 
-const bool& Input::ReturnButton(Controller button) const {
+bool Input::ReturnButton(Controller button) {
 	Controller result = Controller::None;
 	Controller resultPre = Controller::None;
 	for (int i = 0; i < 10; i++)

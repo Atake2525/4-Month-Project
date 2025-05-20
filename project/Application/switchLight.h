@@ -28,7 +28,7 @@ public:
 	bool GetFlag() { return switchFlag; }
 	AABB GetAAbb();
 
-	const bool& IsCollisionAABB(const AABB& a, const AABB& b);
+	bool IsCollisionAABB(const AABB& a, const AABB& b);
 
 private:
 	/*モデル*/

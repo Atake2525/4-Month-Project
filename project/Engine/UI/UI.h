@@ -46,7 +46,13 @@ public:
 	/// ボタンが押されたかどうか
 	/// </summary>
 	/// <returns>押下のbool</returns>
-	const bool& OnButton() const;
+	bool OnButton();
+
+	/// <summary>
+	/// ボタンにカーソルが合わせられているかどうか
+	/// </summary>
+	/// <returns>衝突判定のbool</returns>
+	const bool& InCursor() const;
 
 	void SetTransform(const Transform& transform) { sprite->SetTransform(transform); }
 
@@ -58,7 +64,7 @@ public:
 	void SetSpriteAlpha(float alpha);
 
 private:
-	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
+	bool CollisionAABB(const AABB& a, const AABB& b) const;
 
 	Sprite* sprite = nullptr;
 	Input* input = nullptr;

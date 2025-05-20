@@ -55,7 +55,7 @@ public:
 	// Getter(Color)
 	const Vector4& GetColor() const { return materialData->color; }
 	// Getter(EnableLighting)
-	const bool& GetEnableLighting() const { return materialData->enableLighting; }
+	const bool GetEnableLighting() const { return materialData->enableLighting; }
 	// Getter(SpecularColor)
 	//const Vector3& GetSpecularColor() const { return materialData->specularColor; }
 	// Getter(Shininess)

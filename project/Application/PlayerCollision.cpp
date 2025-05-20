@@ -2,6 +2,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "Plane.h"
 #include "kMath.h"
 #include <cassert>
 #define NOMINMAX
@@ -10,7 +11,7 @@
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
-const bool& PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) const {
+bool PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) {
 
 	// 分離軸リスト
 	Vector3 axes[15];
@@ -59,7 +60,7 @@ const bool& PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) co
 
 
 // 衝突判定の相手を設定して更新
-const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const float& playerVelocityX) const {
+Vector3 PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const float& playerVelocityX) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
 	// 壁の衝突判定
@@ -99,7 +100,7 @@ const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const f
 }
 
 // 衝突判定の相手を設定して更新
-const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) const {
+Vector3 PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
 	// 壁の衝突判定
@@ -139,7 +140,7 @@ const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const f
 }
 
 // 衝突判定の相手を設定して更新
-const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const float& playerVelocityZ) const {
+Vector3 PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const float& playerVelocityZ) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
 	// 壁の衝突判定
@@ -178,7 +179,101 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 	return result;
 }
 
-const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) const {
+Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) {
+	Vector3 result = cameraOffset;
+
+
+	// cameraOffsetをNormalize(正規化)しておく
+	Vector3 normalCameraOffset = Normalize(cameraOffset);
+	// cameraOffsetの要素の割合を計算する
+	Vector3 cameraRate = { 0.0f, std::abs(10.0f) / std::abs(-20.0f), std::abs(-20.0f) / std::abs(10.0f) };
+	// プレイヤーとカメラの距離を計算
+	// AABBではなく中心座標からの距離が欲しいので中心座標を計算する
+	Vector3 plCenterPos = CenterAABB(playerAABB);
+	Vector3 camCenterPos = CenterAABB(cameraAABB);
+
+	Vector3 origin;
+	origin.x = 0.0f;
+	origin.z = camCenterPos.z - 5.0f;
+	origin.y = camCenterPos.z * cameraRate.y * -1.0f;
+
+	Vector3 diff = plCenterPos - camCenterPos;
+	Segment segment = {
+		.origin = camCenterPos + cameraVelocity,
+		.diff = diff,
+	};
+
+	Sphere sphere;
+	sphere.center = camCenterPos;
+	sphere.radius = 2.0f;
+
+	float plcamDist = Distance(plCenterPos, camCenterPos);
+
+	// 壁の衝突判定
+	for (const auto& collisionPlate : collisionListPlate)
+	{
+		//float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
+		Vector3 collisionPlateCenterPos = CenterAABB(collisionPlate.aabb);
+		Vector3 collisionPlateSize = (collisionPlate.aabb.max - collisionPlate.aabb.min) / 2;
+		// 判定対象とプレイヤーとの距離を計算
+		float dist = Distance(collisionPlateCenterPos + collisionPlateSize, plCenterPos);
+		/*ImGui::Begin("collisionDistance");
+		ImGui::DragFloat("dist", &dist);
+		ImGui::DragFloat("objectLen", &objectLen);
+		ImGui::End();*/
+		// 判定対象がプレイヤーとカメラの距離
+		/*if (dist > plcamDist)
+		{
+			continue;
+		}*/
+		if (cameraAABB.min.y + 0.1f > collisionPlate.aabb.max.y)
+		{
+			continue;
+		}
+
+		// プレイヤーから最も近い判定対象に対して衝突判定をとる
+		//if (CollisionAABB(cameraAABB, collisionPlate.aabb))
+		//{
+		//	result.z = (Distance(collisionPlateCenterPos, plCenterPos) * -1.0f) - 2.0f;
+		//}
+		//// 判定対象からプレイヤーまでの距離を求める
+		//result.y = result.z * cameraRate.y * -1.0f;
+
+		if (IsCollision(collisionPlate.aabb, segment)) 
+		{
+			Vector3 closestPoint;
+			closestPoint.x = std::clamp(plCenterPos.x, collisionPlate.aabb.min.x, collisionPlate.aabb.max.x);
+			closestPoint.y = std::clamp(plCenterPos.y, collisionPlate.aabb.min.y, collisionPlate.aabb.max.y);
+			closestPoint.z = std::clamp(plCenterPos.z, collisionPlate.aabb.min.z, collisionPlate.aabb.max.z);
+			result.z = (Distance(closestPoint, plCenterPos) * -1.0f);
+			//result.z = closestPoint.z;
+		}
+		if (IsCollision(collisionPlate.aabb, sphere))
+		{
+			Vector3 closestPoint;
+			closestPoint.x = std::clamp(plCenterPos.x, collisionPlate.aabb.min.x, collisionPlate.aabb.max.x);
+			closestPoint.y = std::clamp(plCenterPos.y, collisionPlate.aabb.min.y, collisionPlate.aabb.max.y);
+			closestPoint.z = std::clamp(plCenterPos.z, collisionPlate.aabb.min.z, collisionPlate.aabb.max.z);
+			result.z = (Distance(closestPoint, plCenterPos) * -1.0f);
+			//result.z = closestPoint.z;
+
+		}
+		result.x = std::max(result.x, cameraOffset.x);
+		result.y = std::max(result.y, cameraOffset.y);
+		result.z = std::clamp(result.z, cameraOffset.z, -2.0f);
+		// 判定対象からプレイヤーまでの距離を求める
+		result.y = result.z * cameraRate.y * -1.0f;
+
+		if (CollisionAABB(cameraAABB, collisionPlate.aabb))
+		{
+			return result;
+		}
+
+	}
+	return result;
+}
+
+ColNormal PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) {
 	for (const auto& collisionPlate : collisionListPlate)
 	{
 		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
@@ -215,7 +310,7 @@ const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& pl
 	return ColNormal::None;
 }
 
-const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& playerVelocityX, const float& speed) const {
+ColNormal PlayerCollision::IsColX(const AABB& playerAABB, const float& playerVelocityX, const float& speed) {
 	for (const auto& collisionPlate : collisionListPlate)
 	{
 		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
@@ -257,7 +352,7 @@ const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& pl
 }
 
 // 衝突判定Yの上部に衝突しているかをboolで返す
-const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) const {
+bool PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) {
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
@@ -285,7 +380,7 @@ const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& p
 }
 
 // 衝突判定Yの下部に衝突しているかをboolで返す
-const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) const {
+bool PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) {
 
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
@@ -313,7 +408,7 @@ const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float
 	return false;
 }
 
-LenXZ PlayerCollision::GetLenXZPos(const AABB& playerAABB, const Vector3& playerVelocity) const {
+LenXZ PlayerCollision::GetLenXZPos(const AABB& playerAABB, const Vector3& playerVelocity) {
 	int in = 0;
 	int num = 0;
 	float len = Distance(collisionListPlate.at(1).aabb.max, playerAABB.max);
@@ -371,7 +466,7 @@ void PlayerCollision::GetLenXZVelocity(const Vector3& playerVelocity)
 // 衝突判定の追加(壁)
 void PlayerCollision::AddCollision(const std::string& directoryPath, const std::string& filename) {
 
-	const float epsilon = 1e-6;
+	//const float epsilon = 1e-6;
 
 	std::vector<VertexData> vertices;
 	AABB aabb;
@@ -402,7 +497,7 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
 				VertexData vertex;
 				// 数字が極めて小さい時ほぼ0に変換する
-				if (fabs(position.x) < epsilon)
+				/*if (fabs(position.x) < epsilon)
 				{
 					position.x = 0.00000f;
 				}
@@ -413,7 +508,7 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 				if (fabs(position.z) < epsilon)
 				{
 					position.z = 0.00000f;
-				}
+				}*/
 				vertex.position = { position.x, position.y, position.z, 1.0f };
 				vertex.normal = { normal.x, normal.y, normal.z };
 				// aiProcess_MakeLeftHandedはz*=-1で、右手->左手に変換するので手動で対処
@@ -473,10 +568,105 @@ void PlayerCollision::ClearCollisionList() {
 	collisionListPlate.clear();
 }
 
-const bool& PlayerCollision::CollisionAABB(const AABB& a, const AABB& b) const {
+bool PlayerCollision::CollisionAABB(const AABB& a, const AABB& b) {
 	if ((a.min.x < b.max.x && a.max.x > b.min.x) &&
 		(a.min.y < b.max.y && a.max.y > b.min.y) &&
 		(a.min.z < b.max.z && a.max.z > b.min.z)) {
+		return true;
+	}
+	return false;
+}
+
+bool PlayerCollision::CollisionAABBMin(const AABB& a, const AABB& b) {
+	if ((a.max.x > b.min.x) &&
+		(a.max.y > b.min.y) &&
+		(a.max.z > b.min.z)) {
+		return true;
+	}
+	return false;
+}
+
+bool PlayerCollision::CollisionAABBMax(const AABB& a, const AABB& b) {
+	if ((a.min.x < b.max.x) &&
+		(a.min.y < b.max.y) &&
+		(a.min.z < b.max.z)) {
+		return true;
+	}
+	return false;
+}
+
+bool PlayerCollision::IsCollision(const AABB& aabb, const Segment& segment) {
+	Vector3 seg1 = segment.origin;
+	Vector3 seg2 = segment.origin + segment.diff;
+
+	float tMin = 0.0f;
+	float tMax = 1.0f;
+
+	// X軸方向での判定
+	if (std::abs(segment.diff.x) < 1e-8) {
+		if (seg1.x < aabb.min.x || seg1.x > aabb.max.x) {
+			return false;
+		}
+	}
+	else {
+		float od = 1.0f / segment.diff.x;
+		float t1 = (aabb.min.x - seg1.x) * od;
+		float t2 = (aabb.max.x - seg1.x) * od;
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tMin) tMin = t1;
+		if (t2 < tMax) tMax = t2;
+		if (tMin > tMax) return false;
+	}
+
+	// Y軸方向での判定
+	if (std::abs(segment.diff.y) < 1e-8) {
+		if (seg1.y < aabb.min.y || seg1.y > aabb.max.y) {
+			return false;
+		}
+	}
+	else {
+		float od = 1.0f / segment.diff.y;
+		float t1 = (aabb.min.y - seg1.y) * od;
+		float t2 = (aabb.max.y - seg1.y) * od;
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tMin) tMin = t1;
+		if (t2 < tMax) tMax = t2;
+		if (tMin > tMax) return false;
+	}
+
+	// Z軸方向での判定
+	if (std::abs(segment.diff.z) < 1e-8) {
+		if (seg1.z < aabb.min.z || seg1.z > aabb.max.z) {
+			return false;
+		}
+	}
+	else {
+		float od = 1.0f / segment.diff.z;
+		float t1 = (aabb.min.z - seg1.z) * od;
+		float t2 = (aabb.max.z - seg1.z) * od;
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tMin) tMin = t1;
+		if (t2 < tMax) tMax = t2;
+		if (tMin > tMax) return false;
+	}
+
+	// すべての軸方向での判定を通過した場合、衝突している
+	return true;
+}
+
+bool PlayerCollision::IsCollision(const AABB& aabb, const Sphere& sphere) {
+	//　最近接点を求める
+	Vector3 closestPoint{
+		std::clamp(sphere.center.x,aabb.min.x,aabb.max.x),
+		std::clamp(sphere.center.y,aabb.min.y,aabb.max.y),
+		std::clamp(sphere.center.z,aabb.min.z,aabb.max.z),
+	};
+	// 最近接点と弾の中心との距離を求める
+	float distance = Distance(closestPoint, sphere.center);
+
+	// 距離が半径よりも小さければ衝突
+	if (distance <= sphere.radius) {
+		// 衝突
 		return true;
 	}
 	return false;

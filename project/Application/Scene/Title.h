@@ -47,6 +47,14 @@ private:
 	bool goToRule = false;
 
 	//文字点滅用
-float blinkTimer = 0.0f;
+	float blinkTimer = 0.0f;
+	UI* prevHoveredButton = nullptr;  // 前フレームでカーソルが乗っていたボタン
+
+	// フェード用
+	Sprite* fadeSprite = nullptr;       // 黒フェード用スプライト
+	bool isFadingOut = false;          // フェード開始フラグ
+	bool isFadingIn = false; // フェードインを開始したか
+	float fadeAlpha = 0.0f;  
+
 
 };

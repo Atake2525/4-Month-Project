@@ -41,7 +41,7 @@ public:
 	// メッセージの処理
 	bool ProcessMessage();
 
-	const AABB& GetWindowAABB() const;
+	const AABB GetWindowAABB() const;
 
 	// クライアント領域サイズ
 	int32_t kClientWidth = 1920;

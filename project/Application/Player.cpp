@@ -49,6 +49,10 @@ void Player::ClearLightBlockCollision() {
 void Player::Initialize(Camera* camera)
 {
 	camera_ = camera;
+	//camera->SetTranslate({ 0.0f, 10.0f, -20.0f });
+	cameraTransform_ = camera->GetTransform();
+	cameraTransform_.translate = cameraOffset;
+	cameraOffset = defaultCameraOffset;
 
 	// 追加したクラス
 
@@ -59,6 +63,9 @@ void Player::Initialize(Camera* camera)
 	object3d_ = new Object3d();
 	object3d_->Initialize();
 	object3d_->SetModel("Player.obj");
+	object3d_->Update();
+	firstCameraAABB = object3d_->GetAABB();
+	cameraAABB = object3d_->GetAABB();
 
 	collision = new PlayerCollision();
 
@@ -73,7 +80,6 @@ void Player::Initialize(Camera* camera)
 	//camera
 	//cameraTransform_.translate = camera->GetTranslate();
 	//cameraTransform_.rotate = camera->GetRotate();
-	cameraTransform_ = camera->GetTransform();
 	// Model
 	modelTransform_ = object3d_->GetTransform();
 	modelTransform_.rotate = object3d_->GetRotateInDegree();
@@ -92,6 +98,102 @@ void Player::Initialize(Camera* camera)
 
 void Player::Update()
 {
+
+	Rotate();
+
+	Move();
+
+	Jump();
+
+	object3d_->SetTranslate(modelTransform_.translate);
+	object3d_->Update();
+	drawModel.translate = modelTransform_.translate;
+
+
+	UpdateStageCollision();
+
+	UpdateLightCollision();
+
+	//ImGui::Begin("onGround");
+	//ImGui::Checkbox("onGround", &onGround_);
+	//ImGui::End();
+
+	//camera_->SetTranslate(cameraTransform_.translate);
+	//camera_->SetRotate(cameraTransform_.rotate);
+
+	object3d_->SetTransform(drawModel);
+	object3d_->SetRotateInDegree(drawModel.rotate);
+	object3d_->SetColor(modelColor_);
+	object3d_->SetEnableLighting(modelEnableLighting_);
+	object3d_->Update();
+
+
+	drawModel.translate = modelTransform_.translate;
+
+	object3d_->SetTranslate(drawModel.translate);
+	object3d_->Update();
+
+
+	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, modelTransform_.translate);
+
+	/*object3d_->SetTransform(modelTransform_);
+	object3d_->Update();
+
+	Matrix4x4 cameraWorldMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+
+	Matrix4x4 mathMatrix = Multiply(object3d_->GetWorldMatrix(), cameraWorldMatrix);
+
+	camera_->SetParent(worldMatrix);
+
+	Vector3 position = { mathMatrix.m[3][0], mathMatrix.m[3][1], mathMatrix.m[3][2] };*/
+
+	// AABBの更新
+	cameraAABB.min = firstCameraAABB.min + cameraTransform_.translate;
+	cameraAABB.max = firstCameraAABB.max + cameraTransform_.translate;
+
+	//cameraTransform_.translate = camera_->GetTransform().translate;
+
+	// cameraWorldMatrixの生成
+	//Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+
+	// TransformNormalの計算でcameraTransformにカメラの位置を代入
+	// プレイヤーのTransformが向いている方向からcameraOffset分を足す
+	Vector3 normalizeCamera = TransformNormal(cameraOffset, worldMatrix);
+	// カメラをプレイヤーの位置に合わせる
+	cameraTransform_.translate = normalizeCamera + modelTransform_.translate;
+	// 前回の座標と照合して移動量を計算  std::abs(絶対値)
+	cameraVelocity.x = std::abs(cameraTransform_.translate.x) - std::abs(cameraVelocityPre.x);
+	cameraVelocity.y = std::abs(cameraTransform_.translate.y) - std::abs(cameraVelocityPre.y);
+	cameraVelocity.z = std::abs(cameraTransform_.translate.z) - std::abs(cameraVelocityPre.z);
+	cameraVelocity.x *= -1;
+	cameraVelocity.z *= -1;
+
+
+	// カメラの衝突判定を更新
+	UpdateCameraCollision();
+
+
+	// 高度制限clamp
+	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
+
+	// カメラのworldMatrixを更新
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+
+	// 高度制限が発生しているときは平行移動のみカメラとparentする
+	if (cameraTransform_.translate.y >= 1.0f && cameraTransform_.translate.y <= modelTransform_.translate.y + 21.0f)
+	{
+		camera_->SetParent(cameraMatrix);
+	}
+	else
+	{
+		camera_->SetTranslateParent(cameraMatrix);
+	}
+
+	// 前回フレームのカメラの位置を格納(CameraVelocity計算のため)
+	cameraVelocityPre = cameraTransform_.translate;
+
+	//camera_->SetTranslate(cameraTransform_.translate);
+
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
@@ -105,39 +207,14 @@ void Player::Update()
 		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("PlayerDrawModel")) {
+		ImGui::DragFloat3("Tranlate", &drawModel.translate.x, 0.1f);
+		ImGui::DragFloat3("Rotate", &drawModel.rotate.x, 0.1f);
+		ImGui::DragFloat3("Scale", &drawModel.scale.x, 0.1f);
+		ImGui::TreePop();
+	}
+	ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x, 0.1f);
 	ImGui::End();
-
-	Rotate();
-
-	Move();
-
-	Jump();
-
-	object3d_->SetTranslate(modelTransform_.translate);
-	object3d_->Update();
-	drawModel.translate = modelTransform_.translate;
-
-	UpdateStageCollision();
-
-	UpdateLightCollision();
-
-	//ImGui::Begin("onGround");
-	//ImGui::Checkbox("onGround", &onGround_);
-	//ImGui::End();
-
-	camera_->SetTranslate(cameraTransform_.translate);
-	camera_->SetRotate(cameraTransform_.rotate);
-
-	object3d_->SetTransform(drawModel);
-	object3d_->SetRotateInDegree(drawModel.rotate);
-	object3d_->SetColor(modelColor_);
-	object3d_->SetEnableLighting(modelEnableLighting_);
-	object3d_->Update();
-
-	drawModel.translate = modelTransform_.translate;
-
-	object3d_->SetTranslate(drawModel.translate);
-	object3d_->Update();
 
 }
 
@@ -194,12 +271,12 @@ void Player::Move()
 
 
 	// 即席の移動速度安定化
-	Vector3 camRot = cameraTransform_.rotate;
-	camRot.x = 0.0f;
-	Matrix4x4 camworldMatrix = MakeAffineMatrix(cameraTransform_.scale, camRot, cameraTransform_.translate);
-	velocity = TransformNormal(velocity, camworldMatrix);
+	Vector3 rot = modelTransform_.rotate;
+	rot.x = 0.0f;
+	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, rot, modelTransform_.translate);
+	velocity = TransformNormal(velocity, worldMatrix);
 	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
-	velocity.y = 0;
+	//velocity.y = 0;
 
 	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
 	{
@@ -220,14 +297,14 @@ void Player::Move()
 
 	modelTransform_.translate += velocity * speed;
 
-	offSet = TransformNormal(offSet,
+	/*offSet = TransformNormal(offSet,
 		Multiply(Multiply(
 			MakeRotateXMatrix(modelTransform_.rotate.x),
 			MakeRotateYMatrix(modelTransform_.rotate.y)),
 			MakeRotateZMatrix(modelTransform_.rotate.z)
-		));
+		));*/
 
-	cameraTransform_.translate = modelTransform_.translate + offSet;
+	//cameraTransform_.translate = modelTransform_.translate + offSet;
 
 
 }
@@ -238,16 +315,16 @@ void Player::Rotate()
 	if (input_->IsMoveRightJoyStick()) {
 		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
 		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
-		cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
-		cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		//cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
+		//cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
 	else {
-		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
-		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
-		cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
-		cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
+		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005f;
+		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005f;
+		//cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
+		//cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
-	
+	modelTransform_.rotate.x = std::clamp(modelTransform_.rotate.x, -0.45f, 0.75f);
 	//cameraTransform_.rotate.x = std::clamp(cameraTransform_.rotate.x, -0.1f, 0.9f);
 	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
 	//-0.1f 0.9f cameraRotate
@@ -270,6 +347,7 @@ void Player::Jump()
 	}
 	modelTransform_.translate.y += JumpVelocity;
 }
+
 void Player::CheckCollsion(LightBlock* block)
 {
 
@@ -397,6 +475,9 @@ void Player::UpdateStageCollision() {
 	if (collision->GetCollisionListSize() > 0)
 	{
 
+		// 衝突判定をするためのもの
+		modelTransform_.translate += collision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
+
 		if (len == LenXZ::X)
 		{
 			// 衝突判定をするためのもの
@@ -426,13 +507,11 @@ void Player::UpdateStageCollision() {
 				object3d_->Update();
 			}
 
-		// 衝突判定をするためのもの
-		modelTransform_.translate += collision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
 
 		if (!onGround_ && collision->IsColYUnderside(object3d_->GetAABB(), JumpVelocity)) {
 			JumpVelocity = 0.0f;
 		}
-		if (!onGround_ && collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
+		if (!onGround_ && collision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && JumpVelocity < 0.0f) {
 			JumpVelocity = 0.0f;
 			onGround_ = true;
 			collisionLightBlock = false;
@@ -502,6 +581,10 @@ void Player::UpdateLightCollision() {
 	//}
 	if (lightCollision->GetCollisionListSize() > 0 && switchFlag == true)
 	{
+
+		// 衝突判定をするためのもの
+		modelTransform_.translate += lightCollision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
+
 		lightCollision->GetLenXZVelocity(velocity);
 		LenXZ len = collision->GetLenXZ();
 
@@ -533,13 +616,11 @@ void Player::UpdateLightCollision() {
 			object3d_->Update();
 		}
 
-		// 衝突判定をするためのもの
-		modelTransform_.translate += lightCollision->UpdateCollisionY(object3d_->GetAABB(), JumpVelocity);
 
 		if (!onGround_ && lightCollision->IsColYUnderside(object3d_->GetAABB(), JumpVelocity)) {
 			JumpVelocity = 0.0f;
 		}
-		if (!onGround_ && lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity)) {
+		if (!onGround_ && lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && JumpVelocity < 0.0f) {
 			JumpVelocity = 0.0f;
 			onGround_ = true;
 			collisionLightBlock = true;
@@ -548,11 +629,105 @@ void Player::UpdateLightCollision() {
 		{
 			onGround_ = false;
 		}
+
+
+	}
+}
+
+void Player::UpdateCameraCollision() {
+	if (collision->GetCollisionListSize() > 0)
+	{
+
+		// cameraOffsetの要素の割合を計算する
+		//Vector3 cameraRate = { 0.0f, std::abs(cameraOffset.y) / std::abs(cameraOffset.z), std::abs(cameraOffset.z) / std::abs(cameraOffset.y) };
+
+		//cameraOffset.z -= 0.1f;
+		//cameraOffset.z = std::clamp(cameraOffset.z, -20.0f, 0.0f);
+		//cameraOffset.y = cameraOffset.z * cameraRate.y * -1.0f;
+
+		// 衝突判定をするためのもの
+		//cameraOffset += collision->UpdateCollisionY(cameraAABB, cameraVelocity.y);
+		collision->GetLenXZVelocity(cameraVelocity);
+		LenXZ len = collision->GetLenXZ();
+
+		bool X = false;
+		bool Z = false;
+
+		if (len == LenXZ::X)
+		{
+			Z = false;
+			X = true;
+		}
+		else
+		{
+			X = false;
+			Z = true;
+		}
+
+
+		// 衝突判定処理
+		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset);
+		// 初期のカメラオフセットからの判定処理も行っておく
+		Vector3 defOff = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, defaultCameraOffset);
+		// offの値とcameraOffsetの値が違えばeasingを使用してoffの値に置換する
+		if ((off.y != cameraOffset.y || off.z != cameraOffset.z) && !cameraZoomIn)
+		{
+			cameraZoomIn = true;
+			cameraZoomOut = false;
+			cameraEasingTime = 0.0f;
+			beforCameraOffset = off;
+		}
+		else if ((off.y != defOff.y || off.z != defOff.z ) && !cameraZoomOut)
+		{
+			cameraZoomOut = true;
+			cameraZoomIn = false;
+			cameraEasingTime = 0.0f;
+		}
+		// イージング処理
+		if (cameraZoomIn)
+		{
+			Vector3 camOff = cameraOffset;
+			cameraEasingTime++;
+			float time = cameraEasingTime / 60 / 0.8f;
+			cameraOffset = easeInOut(time, camOff, off);
+			if (time > 0.8f)
+			{
+				cameraZoomIn = false;
+				cameraEasingTime = 0.0f;
+			}
+		}
+		else if (cameraZoomOut)
+		{
+			Vector3 camOff = cameraOffset;
+			cameraEasingTime++;
+			float time = cameraEasingTime / 60 / 2.0f;
+			cameraOffset = easeInOut(time, camOff, defOff);
+			if (time > 2.0f)
+			{
+				cameraZoomOut = false;
+				cameraEasingTime = 0.0f;
+			}
+		}
+
+		//cameraOffset += off;
+
+		ImGui::Begin("CameraLen");
+		ImGui::Checkbox("X", &X);
+		ImGui::Checkbox("Z", &Z);
+		ImGui::DragFloat3("cameraOffset", &cameraOffset.x, 0.1f);
+		ImGui::DragFloat3("cameraCollision", &off.x);
+		ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x);
+		ImGui::DragFloat3("cameraMin", &cameraAABB.min.x);
+		ImGui::DragFloat3("cameraMax", &cameraAABB.max.x);
+		ImGui::DragFloat("easingTime", &cameraEasingTime);
+		ImGui::DragFloat3("defOff", &defOff.x);
+		ImGui::DragFloat3("beforCamOff", &beforCameraOffset.x);
+		ImGui::End();
 	}
 }
 
 // 衝突判定の実装で追加したもの
-const Vector3& Player::GetPosition() const {
+Vector3 Player::GetPosition() {
 	Vector3 result;
 	result.x = object3d_->GetWorldMatrix().m[3][0];
 	result.y = object3d_->GetWorldMatrix().m[3][1];
@@ -561,7 +736,7 @@ const Vector3& Player::GetPosition() const {
 }
 
 
-const bool& Player::IsCollisionAABB(const AABB& a, const AABB& b) {
+bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
 		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
 		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {

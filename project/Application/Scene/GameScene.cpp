@@ -18,7 +18,7 @@ void GameScene::Initialize() {
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 
 	input = Input::GetInstance();
-	input->ShowMouseCursor(showCursor);
+	//input->ShowMouseCursor(showCursor);
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 
@@ -100,6 +100,16 @@ void GameScene::Initialize() {
 	escHintSprite->SetScale({ 100.0f, 100.0f });
 	escHintSprite->Update();
 
+	//フェードアウト用スプライトの初期化
+	fadeSprite = new Sprite();
+	fadeSprite->Initialize("Resources/black1x1.png");
+	fadeSprite->SetPosition({ 0.0f, 0.0f });
+	fadeSprite->SetScale({ 1280.0f, 720.0f });
+	fadeSprite->SetAnchorPoint({ 0.0f, 0.0f });
+	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
+
+
+	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
 }
 
@@ -186,6 +196,14 @@ void GameScene::Update() {
 		}*/
 
 
+	if (isFadingIn) {
+		fadeAlpha -= 1.0f / (60.0f * 3.0f); // 3秒で明るく
+		if (fadeAlpha <= 0.0f) {
+			fadeAlpha = 0.0f;
+			isFadingIn = false;
+		}
+		fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
+	}
 
 		// ポーズ切り替え
 	if (input->PushKey(DIK_ESCAPE)) {
@@ -201,16 +219,42 @@ void GameScene::Update() {
 
 	// ポーズ中の処理
 	if (isPaused) {
+
+		// ボタンの alpha を設定
+		UI* hoveredButton = nullptr;
+		// どのボタンにカーソルが当たっているか取得
+		if (resumeButton.InCursor()) {
+			hoveredButton = &resumeButton;
+		}
+		else if (restartButton.InCursor()) {
+			hoveredButton = &restartButton;
+		}
+		else if (returnToTitleButton.InCursor()) {
+			hoveredButton = &returnToTitleButton;
+
+		}
+
+		// 前回と違うボタンに乗ったらタイマーリセット
+		if (hoveredButton != prevHoveredButton) {
+			blinkTimer = 0.0f;
+			prevHoveredButton = hoveredButton;  // 更新
+		}
+
 		// 毎フレーム進める 1/60秒
 		blinkTimer += 1.0f / 60.0f;
 		// アルファ値を 0.5 ～ 1.0 の範囲（周期 2秒）
 		float alpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
 
-		resumeButton.SetSpriteAlpha(alpha);
-		restartButton.SetSpriteAlpha(alpha);
-		returnToTitleButton.SetSpriteAlpha(alpha);
+		resumeButton.SetSpriteAlpha(1.0f);
+		restartButton.SetSpriteAlpha(1.0f);
+		returnToTitleButton.SetSpriteAlpha(1.0f);
 
 		input->ShowMouseCursor(true);
+
+// 対象ボタンだけ点滅
+		if (hoveredButton) {
+			hoveredButton->SetSpriteAlpha(alpha);
+		}
 
 		if (resumeButton.OnButton()) {
 			isPaused = false;
@@ -220,11 +264,12 @@ void GameScene::Update() {
 			goToRestart = true;
 			isPaused = false;
 			Update();
-
 		}
 		if (returnToTitleButton.OnButton()) {
 			goToTitle = true;
 		}
+
+		
 
 		return;  // ゲーム本体の更新を止める
 	}
@@ -255,13 +300,13 @@ void GameScene::Update() {
 	{
 		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
 	}
+	input->Update();
 
 	player->Update();
+	camera->Update();
 
 	//camera->SetTranslate(cameraTransform.translate);
 	//camera->SetRotate(cameraTransform.rotate);
-	camera = player->GetCamera();
-	camera->Update();
 	object3d->SetTransform(modelTransform);
 	object3d->SetEnableLighting(enableLighting);
 	object3d->Update();
@@ -290,7 +335,6 @@ void GameScene::Update() {
 	lightSwitch->Update();
 	player->SetSwitchFlag(lightSwitch->GetFlag());
 
-	input->Update();
 
 	float di = Light::GetInstance()->GetIntensityDirectionalLight();
 	di += 0.001f;
@@ -351,6 +395,8 @@ void GameScene::Draw() {
 		restartButton.Draw();
 		returnToTitleButton.Draw();
 	}
+
+	if (fadeSprite) fadeSprite->Draw();
 
 }
 

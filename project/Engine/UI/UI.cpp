@@ -66,14 +66,14 @@ void UI::CreateButton(const Vector2& spritePosition, const Origin& origin, const
 	}
 }
 
-const bool& UI::OnButton() const {
+bool UI::OnButton() {
 	sprite->Update();
 	Vector2 spriteOrigin = sprite->GetTextureLeftTop();
 	Vector2 spriteSize = sprite->GetScale();
 	Vector2 spritePos = sprite->GetPosition();
 	Vector3 mousePos = input->GetMousePos3();
 	AABB spriteAABB = {
-		{spritePos.x , spritePos.y , 0.0f},
+		{spritePos.x, spritePos.y, 0.0f},
 		{spritePos.x + spriteSize.x, spritePos.y + spriteSize.y, 0.0f},
 	};
 	AABB windowAABB = WinApp::GetInstance()->GetWindowAABB();
@@ -93,11 +93,38 @@ const bool& UI::OnButton() const {
 	return false;
 }
 
+const bool& UI::InCursor() const {
+	sprite->Update();
+	Vector2 spriteOrigin = sprite->GetTextureLeftTop();
+	Vector2 spriteSize = sprite->GetScale();
+	Vector2 spritePos = sprite->GetPosition();
+	Vector3 mousePos = input->GetMousePos3();
+	AABB spriteAABB = {
+		{spritePos.x, spritePos.y, 0.0f},
+		{spritePos.x + spriteSize.x, spritePos.y + spriteSize.y, 0.0f},
+	};
+	AABB windowAABB = WinApp::GetInstance()->GetWindowAABB();
+	AABB mousePosAABB = {
+		{mousePos.x - windowAABB.min.x - 8.0f, mousePos.y - windowAABB.min.y - 30.0f},
+		{mousePos.x - windowAABB.min.x - 8.0f, mousePos.y - windowAABB.min.y - 30.0f},
+	};
+
+	if (CollisionAABB(spriteAABB, mousePosAABB) == true)
+	{
+		return true;
+	}
+	ImGui::Begin("Button");
+	ImGui::DragFloat2("mousePos", &mousePosAABB.min.x, 0.1f);
+	ImGui::End();
+
+	return false;
+}
+
 void UI::Draw() {
 	sprite->Draw();
 }
 
-const bool& UI::CollisionAABB(const AABB& a, const AABB& b) const {
+bool UI::CollisionAABB(const AABB& a, const AABB& b) const {
 	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
 		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
 		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {
