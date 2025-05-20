@@ -3,10 +3,17 @@
 
 #include <iostream>
 #include <algorithm>
+#include<random>
+
 
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
+
+std::random_device seedGenerator;
+std::mt19937 randomEngine(seedGenerator());
+std::uniform_real_distribution<float> distrubution(0.0f, 3.0f);
+
 
 Player::Player()
 {
@@ -736,6 +743,13 @@ bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 		return true;
 	}
 	return false;
+}
+
+void Player::EffectBorn(Vector3 position)
+{
+	/*生成*/
+	JampEffect* effect = new JampEffect();
+
 }
 
 

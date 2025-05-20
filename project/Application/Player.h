@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "WinApp.h"
 #include "PlayerCollision.h"
-//#include "ModelManager.h"
+#include"JampEffect.h"
 
 #include"LightBlock.h"
 // 衝突判定で追加
@@ -96,6 +96,8 @@ public: // メンバ関数
 	 Object3d* StarObject3d() { return object3d_; }
 	 bool IsCollisionAABB(const AABB& a, const AABB& b);
 
+	 void EffectBorn(Vector3 position);
+
 private:
 
 	void Move();
@@ -169,6 +171,8 @@ private: // メンバ変数
 	bool cameraZoomOut = false;
 
 	float cameraEasingTime = 0.0f;
+	//ジャンプエフェクトクラス
+	std::list<JampEffect*>effects_;
 
 };
 

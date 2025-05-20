@@ -45,6 +45,11 @@ public:
 
 	const bool& isFinished() const { return finished; }
 
+	//ポーズ画面の表示
+	bool ShouldRestart() const { return goToRestart; }
+	bool ShouldReturnToTitle() const { return goToTitle; }
+
+
 private:
 	Object3d* object3d = nullptr;
 
@@ -80,5 +85,25 @@ private:
 	Transform switchTransform;
 
 	SoundData soundData;
+
+
+	// ポーズ用
+	bool isPaused = false;
+	bool tabReleased = true;  // TABキーを離したかどうか
+	UI resumeButton;
+	UI restartButton;
+	UI returnToTitleButton;
+	bool goToRestart = false;
+	bool goToTitle = false;
+	//ポーズ画面の背景
+	Sprite* pauseBg = nullptr;
+	//ESCキーを押したときのヒント表示用
+	Sprite* escHintSprite = nullptr;
+
+	//UIの点滅用
+	float blinkTimer = 0.0f;
+	UI* prevHoveredButton = nullptr;  // 前フレームでカーソルが乗っていたボタン
+
+
 };
 

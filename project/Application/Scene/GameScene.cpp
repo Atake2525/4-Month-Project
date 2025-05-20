@@ -67,6 +67,39 @@ void GameScene::Initialize() {
 	//clearSprite->Initialize("Resources/Sprite/clearShift.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
 
+	resumeButton.CreateButton({ 540, 250 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
+	restartButton.CreateButton({ 540, 320 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
+	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
+
+
+	soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+
+	isPaused = false;
+	//ポーズUIの背景
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/gameUI/bg.png");
+	// スプライト生成
+	pauseBg = new Sprite();
+	pauseBg->Initialize("Resources/Sprite/gameUI/bg.png");
+	pauseBg->SetScale({ 320.0f, 320.0f });               // 画像サイズ
+	pauseBg->SetAnchorPoint({ 0.5f, 0.5f });             // 原点：中心
+	pauseBg->SetTextureLeftTop({ 0.5f, 0.5f });
+	pauseBg->SetPosition({ 640.0f, 360.0f });            // ウィンドウ中心
+	pauseBg->SetColor({ 1.0f, 1.0f, 1.0f, 0.75f });      // 半透明
+	pauseBg->Update();
+
+	// テクスチャ読み込み（ESCアイコン）
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/gameUI/ESC.png");
+	// スプライト生成
+	escHintSprite = new Sprite();
+	escHintSprite->Initialize("Resources/Sprite/gameUI/ESC.png");
+	// 原点
+	escHintSprite->SetAnchorPoint({ 0.0f, 0.0f });
+	// 位置
+	escHintSprite->SetPosition({ 50.0f, 50.0f });
+	// スケール
+	escHintSprite->SetScale({ 100.0f, 100.0f });
+	escHintSprite->Update();
+
 
 	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
@@ -78,7 +111,7 @@ void GameScene::Update() {
 
 	Vector3 posM3 = input->GetWindowMousePos3();
 
-//#ifdef _DEBUGState
+	//#ifdef _DEBUGState
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
@@ -100,59 +133,132 @@ void GameScene::Update() {
 		ImGui::Checkbox("EnableLihting", &enableLighting);
 		ImGui::TreePop();
 	}
-  
+
 	ImGui::DragFloat2("M2", &posM2.x, 0.1f);
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();
 
-//#endif _DEBUGState
+	//#endif _DEBUGState
 
-	/*if (input->TriggerKey(DIK_ESCAPE))
-	{
-		finished = true;
-	}*/
-	/*const float speed = 0.7f;
-	Vector3 velocity(0.0f, 0.0f, speed);
-	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
-	if (input->PushKey(DIK_W)) {
-		cameraTransform.translate += velocity;
-	}
-	if (input->PushKey(DIK_S)) {
-		cameraTransform.translate -= velocity;
-	}
-	velocity = { speed, 0.0f, 0.0f };
-	velocity = TransformNormal(velocity, camera->GetWorldMatrix());
-	if (input->PushKey(DIK_A)) {
-		cameraTransform.translate -= velocity;
-	}
-	if (input->PushKey(DIK_D)) {
-		cameraTransform.translate += velocity;
-	}
-	if (input->PushKey(DIK_SPACE)) {
-		cameraTransform.translate.y += 1.0f;
-	}
-	if (input->PushKey(DIK_LSHIFT)) {
-		cameraTransform.translate.y -= 1.0f;
-	}
-	if (input->PushKey(DIK_LEFT)) {
-		cameraTransform.rotate.y -= 0.03f;
-	}
-	if (input->PushKey(DIK_RIGHT)) {
-		cameraTransform.rotate.y += 0.03f;
-	}
-	if (input->PushKey(DIK_UP)) {
-		cameraTransform.rotate.x -= 0.03f;
-	}
-	if (input->PushKey(DIK_DOWN)) {
-		cameraTransform.rotate.x += 0.03f;
-	}
-	if (input->PushKey(DIK_Q)) {
-		cameraTransform.rotate.z -= 0.01f;
-	}
-	if (input->PushKey(DIK_E)) {
-		cameraTransform.rotate.z += 0.01f;
+		/*if (input->TriggerKey(DIK_ESCAPE))
+		{
+			finished = true;
+		}*/
+		/*const float speed = 0.7f;
+		Vector3 velocity(0.0f, 0.0f, speed);
+		velocity = TransformNormal(velocity, camera->GetWorldMatrix());
+		if (input->PushKey(DIK_W)) {
+			cameraTransform.translate += velocity;
+		}
+		if (input->PushKey(DIK_S)) {
+			cameraTransform.translate -= velocity;
+		}
+		velocity = { speed, 0.0f, 0.0f };
+		velocity = TransformNormal(velocity, camera->GetWorldMatrix());
+		if (input->PushKey(DIK_A)) {
+			cameraTransform.translate -= velocity;
+		}
+		if (input->PushKey(DIK_D)) {
+			cameraTransform.translate += velocity;
+		}
+		if (input->PushKey(DIK_SPACE)) {
+			cameraTransform.translate.y += 1.0f;
+		}
+		if (input->PushKey(DIK_LSHIFT)) {
+			cameraTransform.translate.y -= 1.0f;
+		}
+		if (input->PushKey(DIK_LEFT)) {
+			cameraTransform.rotate.y -= 0.03f;
+		}
+		if (input->PushKey(DIK_RIGHT)) {
+			cameraTransform.rotate.y += 0.03f;
+		}
+		if (input->PushKey(DIK_UP)) {
+			cameraTransform.rotate.x -= 0.03f;
+		}
+		if (input->PushKey(DIK_DOWN)) {
+			cameraTransform.rotate.x += 0.03f;
+		}
+		if (input->PushKey(DIK_Q)) {
+			cameraTransform.rotate.z -= 0.01f;
+		}
+		if (input->PushKey(DIK_E)) {
+			cameraTransform.rotate.z += 0.01f;
 
-	}*/
+		}*/
+
+
+
+		// ポーズ切り替え
+	if (input->PushKey(DIK_ESCAPE)) {
+		if (tabReleased) {
+			isPaused = !isPaused;
+			tabReleased = false;  // 押された直後に反応したらフラグを下げる
+		}
+	}
+	else {
+		// TABが離されたらフラグを戻す
+		tabReleased = true;
+	}
+
+	// ポーズ中の処理
+	if (isPaused) {
+
+		// ボタンの alpha を設定
+		UI* hoveredButton = nullptr;
+		// どのボタンにカーソルが当たっているか取得
+		if (resumeButton.InCursor()) {
+			hoveredButton = &resumeButton;
+		}
+		else if (restartButton.InCursor()) {
+			hoveredButton = &restartButton;
+		}
+		else if (returnToTitleButton.InCursor()) {
+			hoveredButton = &returnToTitleButton;
+
+		}
+
+		// 前回と違うボタンに乗ったらタイマーリセット
+		if (hoveredButton != prevHoveredButton) {
+			blinkTimer = 0.0f;
+			prevHoveredButton = hoveredButton;  // 更新
+		}
+
+		// 毎フレーム進める 1/60秒
+		blinkTimer += 1.0f / 60.0f;
+		// アルファ値を 0.5 ～ 1.0 の範囲（周期 2秒）
+		float alpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
+
+		resumeButton.SetSpriteAlpha(1.0f);
+		restartButton.SetSpriteAlpha(1.0f);
+		returnToTitleButton.SetSpriteAlpha(1.0f);
+
+		input->ShowMouseCursor(true);
+
+// 対象ボタンだけ点滅
+		if (hoveredButton) {
+			hoveredButton->SetSpriteAlpha(alpha);
+		}
+
+		if (resumeButton.OnButton()) {
+			isPaused = false;
+			input->ShowMouseCursor(false);
+		}
+		if (restartButton.OnButton()) {
+			goToRestart = true;
+			isPaused = false;
+			Update();
+		}
+		if (returnToTitleButton.OnButton()) {
+			goToTitle = true;
+		}
+
+		
+
+		return;  // ゲーム本体の更新を止める
+	}
+
+
 	if (input->TriggerKey(DIK_LCONTROL))
 	{
 		showCursor = !showCursor;
@@ -258,6 +364,22 @@ void GameScene::Draw() {
 	lightSwitch->Draw();
 
 	lightBlock->Draw(lightSwitch->GetFlag());
+
+	// ESCヒントスプライトの描画（
+	if (escHintSprite) {
+		escHintSprite->Draw();
+	}
+
+	//ポーズ中のUI描画
+	if (isPaused) {
+		if (pauseBg) {
+			pauseBg->Draw();
+		}
+		resumeButton.Draw();
+		restartButton.Draw();
+		returnToTitleButton.Draw();
+	}
+
 }
 
 void GameScene::Finalize() {
@@ -279,4 +401,9 @@ void GameScene::Finalize() {
 	delete button;
 
 	delete lightBlock;
+
+	if (pauseBg) {
+		delete pauseBg;
+		pauseBg = nullptr;
+	}
 }

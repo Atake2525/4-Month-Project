@@ -8,11 +8,11 @@ void GameClear::Initialize()
 	input->ShowMouseCursor(true);
 
 	// テクスチャ読み込み
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clear.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/clear.png");
 
 	// スプライト生成
 	clearSprite = new Sprite();
-	clearSprite->Initialize("Resources/Sprite/clear.png");
+	clearSprite->Initialize("Resources/Sprite/scene/clear.png");
 
 }
 
