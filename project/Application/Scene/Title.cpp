@@ -28,7 +28,7 @@ void Title::Update() {
 	// UIボタンに透明度を適用（SetSpriteAlphaがUIにある前提）
 	gameStartButton.SetSpriteAlpha(alpha);
 	settingButton.SetSpriteAlpha(alpha);
-	ruleButton.SetSpriteAlpha(alpha);
+	ruleButton.SetSpriteAlpha(alpha); 
 
 	//// UIボタンに透明度を適用（SetSpriteAlphaがUIにある前提）
 	//if (gameStartButton.OnButton()) {
