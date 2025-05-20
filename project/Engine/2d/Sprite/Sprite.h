@@ -143,7 +143,7 @@ public:
 	// Getter(TextureSize)
 	const Vector2& GetTextureSize() const { return textureSize; }
 	// Getter(Transform)
-	const Transform& GetTransform() const;
+	const Transform GetTransform() const;
 
 	// Setter(Position)
 	void SetPosition(const Vector2& pos) { position = pos; }

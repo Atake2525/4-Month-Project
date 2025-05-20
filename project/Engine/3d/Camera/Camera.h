@@ -52,10 +52,34 @@ public:
 	void SetParent(const Matrix4x4& worldMatrix) { 
 		parent = worldMatrix; 
 		isParent = true;
+		isTranslateParent = false;
+		isRotateParent = false;
 	}
 	// Delete Parent(Parent 解除)
 	void DeleteParent() {
 		isParent = false;
+	}
+	// Setter(Parent)
+	void SetTranslateParent(const Matrix4x4& worldMatrix) {
+		translateParent = worldMatrix;
+		isTranslateParent = true;
+		isParent = false;
+		isRotateParent = false;
+	}
+	// Delete Parent(Parent 解除)
+	void DeleteTranslateParent() {
+		isTranslateParent = false;
+	}
+	// Setter(Parent)
+	void SetRotateParent(const Matrix4x4& worldMatrix) {
+		rotateParent = worldMatrix;
+		isRotateParent = true;
+		isTranslateParent = false;
+		isParent = false;
+	}
+	// Delete Parent(Parent 解除)
+	void DeleteRotateParent() {
+		isRotateParent = false;
 	}
 
 private:
@@ -65,6 +89,10 @@ private:
 
 	Matrix4x4 parent;
 	bool isParent = false;
+	Matrix4x4 translateParent;
+	bool isTranslateParent = false;
+	Matrix4x4 rotateParent;
+	bool isRotateParent = false;
 
 	Matrix4x4 projectionMatrix;
 	float fovY;

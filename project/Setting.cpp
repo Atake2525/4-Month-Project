@@ -8,6 +8,7 @@ void Setting::Initialize()
 	input->ShowMouseCursor(true);
 
 	// テクスチャ読み込み
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/setting.png");
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/setting.png");
 	settingSprite = new Sprite();
 	settingSprite->Initialize("Resources/Sprite/scene/setting.png");
