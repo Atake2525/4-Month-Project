@@ -201,16 +201,42 @@ void GameScene::Update() {
 
 	// ポーズ中の処理
 	if (isPaused) {
+
+		// ボタンの alpha を設定
+		UI* hoveredButton = nullptr;
+		// どのボタンにカーソルが当たっているか取得
+		if (resumeButton.InCursor()) {
+			hoveredButton = &resumeButton;
+		}
+		else if (restartButton.InCursor()) {
+			hoveredButton = &restartButton;
+		}
+		else if (returnToTitleButton.InCursor()) {
+			hoveredButton = &returnToTitleButton;
+
+		}
+
+		// 前回と違うボタンに乗ったらタイマーリセット
+		if (hoveredButton != prevHoveredButton) {
+			blinkTimer = 0.0f;
+			prevHoveredButton = hoveredButton;  // 更新
+		}
+
 		// 毎フレーム進める 1/60秒
 		blinkTimer += 1.0f / 60.0f;
 		// アルファ値を 0.5 ～ 1.0 の範囲（周期 2秒）
 		float alpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
 
-		resumeButton.SetSpriteAlpha(alpha);
-		restartButton.SetSpriteAlpha(alpha);
-		returnToTitleButton.SetSpriteAlpha(alpha);
+		resumeButton.SetSpriteAlpha(1.0f);
+		restartButton.SetSpriteAlpha(1.0f);
+		returnToTitleButton.SetSpriteAlpha(1.0f);
 
 		input->ShowMouseCursor(true);
+
+// 対象ボタンだけ点滅
+		if (hoveredButton) {
+			hoveredButton->SetSpriteAlpha(alpha);
+		}
 
 		if (resumeButton.OnButton()) {
 			isPaused = false;
@@ -220,11 +246,12 @@ void GameScene::Update() {
 			goToRestart = true;
 			isPaused = false;
 			Update();
-
 		}
 		if (returnToTitleButton.OnButton()) {
 			goToTitle = true;
 		}
+
+		
 
 		return;  // ゲーム本体の更新を止める
 	}
