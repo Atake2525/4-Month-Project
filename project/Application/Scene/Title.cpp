@@ -25,10 +25,30 @@ void Title::Update() {
 	blinkTimer += 1.0f / 60.0f;
 	float alpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
 
+	//// UIボタンに透明度を適用（SetSpriteAlphaがUIにある前提）
+	//gameStartButton.SetSpriteAlpha(alpha);
+	//settingButton.SetSpriteAlpha(alpha);
+	//ruleButton.SetSpriteAlpha(alpha);
+
 	// UIボタンに透明度を適用（SetSpriteAlphaがUIにある前提）
-	gameStartButton.SetSpriteAlpha(alpha);
-	settingButton.SetSpriteAlpha(alpha);
-	ruleButton.SetSpriteAlpha(alpha);
+	if (gameStartButton.OnButton()) {
+		gameStartButton.SetSpriteAlpha(alpha);
+	}
+	else {
+		gameStartButton.SetSpriteAlpha(1.0f);
+	}
+	if (settingButton.OnButton()) {
+		settingButton.SetSpriteAlpha(alpha);
+	}
+	else {
+		settingButton.SetSpriteAlpha(1.0f);
+	}
+	if (ruleButton.OnButton()) {
+		ruleButton.SetSpriteAlpha(alpha);
+	}
+	else {
+		ruleButton.SetSpriteAlpha(1.0f);
+	}
 
 	// スプライト更新
 	if (gameStartButton.OnButton()) {
@@ -46,10 +66,6 @@ void Title::Update() {
 		finished = true;
 	}
 
-	//// SPACEキーでタイトル終了（ルール画面へ）
-	//if (input->TriggerKey(DIK_SPACE)) {
-	//	finished = true;
-	//}
 
 
 
