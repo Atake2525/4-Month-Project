@@ -40,6 +40,7 @@ private:
 	UI gameStartButton;
 	UI settingButton;
 	UI ruleButton;
+	UI finishButton;
 
 	// 押下フラグ
 	bool goToGame = false;

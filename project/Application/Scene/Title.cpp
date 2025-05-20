@@ -12,9 +12,10 @@ void Title::Initialize() {
     titleSprite->Initialize("Resources/Sprite/scene/title.png");
 
     // UIボタン
-    gameStartButton.CreateButton({ 200, 300 }, Origin::Center, "Resources/Sprite/titleUI/startButton.png");
-    settingButton.CreateButton({ 200, 400 }, Origin::Center, "Resources/Sprite/titleUI/settingButton.png");
-    ruleButton.CreateButton({ 200, 500 }, Origin::Center, "Resources/Sprite/titleUI/ruleButton.png");
+    gameStartButton.CreateButton({ 200, 200 }, Origin::Center, "Resources/Sprite/titleUI/startButton.png");
+    settingButton.CreateButton({ 200, 300 }, Origin::Center, "Resources/Sprite/titleUI/settingButton.png");
+    ruleButton.CreateButton({ 200, 400 }, Origin::Center, "Resources/Sprite/titleUI/ruleButton.png");
+    finishButton.CreateButton({ 200, 500 }, Origin::Center, "Resources/Sprite/titleUI/finish.png");
 
     // 黒フェードスプライト
     fadeSprite = new Sprite();
@@ -44,18 +45,20 @@ void Title::Update() {
     if (gameStartButton.InCursor()) hoveredButton = &gameStartButton;
     else if (settingButton.InCursor()) hoveredButton = &settingButton;
     else if (ruleButton.InCursor()) hoveredButton = &ruleButton;
+	else if (finishButton.InCursor()) hoveredButton = &finishButton;
 
     if (hoveredButton != prevHoveredButton) {
         blinkTimer = 0.0f;
         prevHoveredButton = hoveredButton;
     }
 
-    blinkTimer += 1.0f / 60.0f;
+    blinkTimer += 1.0f / 60.0f*2.0f;
     float blinkAlpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
 
     gameStartButton.SetSpriteAlpha(1.0f);
     settingButton.SetSpriteAlpha(1.0f);
     ruleButton.SetSpriteAlpha(1.0f);
+	finishButton.SetSpriteAlpha(1.0f);
     if (hoveredButton) hoveredButton->SetSpriteAlpha(blinkAlpha);
 
     // ボタン押下 → フェードアウト開始
@@ -74,6 +77,12 @@ void Title::Update() {
         goToRule = true;
         finished = true;
     }
+    // 終了ボタンが押されたらアプリ終了
+    if (finishButton.OnButton()) {
+        PostQuitMessage(0); // Windowsのメッセージループを終了
+        return;
+    }
+
 }
 
 void Title::Draw() {
@@ -84,6 +93,7 @@ void Title::Draw() {
     gameStartButton.Draw();
     settingButton.Draw();
     ruleButton.Draw();
+    finishButton.Draw();
 
     if (fadeSprite) {
         fadeSprite->Draw();
