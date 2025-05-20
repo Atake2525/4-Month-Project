@@ -46,7 +46,7 @@ public:
 	/// ボタンが押されたかどうか
 	/// </summary>
 	/// <returns>押下のbool</returns>
-	const bool& OnButton() const;
+	bool OnButton();
 
 	void SetTransform(const Transform& transform) { sprite->SetTransform(transform); }
 
@@ -55,7 +55,7 @@ public:
 	void SetSprite(const std::string& filename);
 
 private:
-	const bool& CollisionAABB(const AABB& a, const AABB& b) const;
+	bool CollisionAABB(const AABB& a, const AABB& b) const;
 
 	Sprite* sprite = nullptr;
 	Input* input = nullptr;

@@ -11,7 +11,7 @@
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
-const bool& PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) const {
+bool PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) {
 
 	// 分離軸リスト
 	Vector3 axes[15];
@@ -60,7 +60,7 @@ const bool& PlayerCollision::IsCollisionOBB(const OBB& obb1, const OBB& obb2) co
 
 
 // 衝突判定の相手を設定して更新
-const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const float& playerVelocityX) const {
+Vector3 PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const float& playerVelocityX) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
 	// 壁の衝突判定
@@ -100,7 +100,7 @@ const Vector3& PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const f
 }
 
 // 衝突判定の相手を設定して更新
-const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) const {
+Vector3 PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
 	// 壁の衝突判定
@@ -140,7 +140,7 @@ const Vector3& PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const f
 }
 
 // 衝突判定の相手を設定して更新
-const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const float& playerVelocityZ) const {
+Vector3 PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const float& playerVelocityZ) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
 	// 壁の衝突判定
@@ -179,7 +179,7 @@ const Vector3& PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const f
 	return result;
 }
 
-const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) const {
+Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) {
 	Vector3 result = cameraOffset;
 
 
@@ -195,7 +195,7 @@ const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, co
 	Vector3 origin;
 	origin.x = 0.0f;
 	origin.z = camCenterPos.z - 5.0f;
-	origin.y = camCenterPos.z * cameraRate.y * -1.0;
+	origin.y = camCenterPos.z * cameraRate.y * -1.0f;
 
 	Vector3 diff = plCenterPos - camCenterPos;
 	Segment segment = {
@@ -251,11 +251,16 @@ const Vector3& PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, co
 		// 判定対象からプレイヤーまでの距離を求める
 		result.y = result.z * cameraRate.y * -1.0f;
 
+		if (CollisionAABB(cameraAABB, collisionPlate.aabb))
+		{
+			return result;
+		}
+
 	}
 	return result;
 }
 
-const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) const {
+ColNormal PlayerCollision::IsColZ(const AABB& playerAABB, const float& playerVelocityZ, const float& speed) {
 	for (const auto& collisionPlate : collisionListPlate)
 	{
 		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
@@ -292,7 +297,7 @@ const ColNormal& PlayerCollision::IsColZ(const AABB& playerAABB, const float& pl
 	return ColNormal::None;
 }
 
-const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& playerVelocityX, const float& speed) const {
+ColNormal PlayerCollision::IsColX(const AABB& playerAABB, const float& playerVelocityX, const float& speed) {
 	for (const auto& collisionPlate : collisionListPlate)
 	{
 		float objectLen = Distance(collisionPlate.aabb.min, collisionPlate.aabb.max);
@@ -334,7 +339,7 @@ const ColNormal& PlayerCollision::IsColX(const AABB& playerAABB, const float& pl
 }
 
 // 衝突判定Yの上部に衝突しているかをboolで返す
-const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) const {
+bool PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& playerVelocityY) {
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
@@ -362,7 +367,7 @@ const bool& PlayerCollision::IsColYUpside(const AABB& playerAABB, const float& p
 }
 
 // 衝突判定Yの下部に衝突しているかをboolで返す
-const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) const {
+bool PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float& playerVelocityY) {
 
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
@@ -390,7 +395,7 @@ const bool& PlayerCollision::IsColYUnderside(const AABB& playerAABB, const float
 	return false;
 }
 
-LenXZ PlayerCollision::GetLenXZPos(const AABB& playerAABB, const Vector3& playerVelocity) const {
+LenXZ PlayerCollision::GetLenXZPos(const AABB& playerAABB, const Vector3& playerVelocity) {
 	int in = 0;
 	int num = 0;
 	float len = Distance(collisionListPlate.at(1).aabb.max, playerAABB.max);
@@ -448,7 +453,7 @@ void PlayerCollision::GetLenXZVelocity(const Vector3& playerVelocity)
 // 衝突判定の追加(壁)
 void PlayerCollision::AddCollision(const std::string& directoryPath, const std::string& filename) {
 
-	const float epsilon = 1e-6;
+	//const float epsilon = 1e-6;
 
 	std::vector<VertexData> vertices;
 	AABB aabb;
@@ -479,7 +484,7 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
 				VertexData vertex;
 				// 数字が極めて小さい時ほぼ0に変換する
-				if (fabs(position.x) < epsilon)
+				/*if (fabs(position.x) < epsilon)
 				{
 					position.x = 0.00000f;
 				}
@@ -490,7 +495,7 @@ void PlayerCollision::AddCollision(const std::string& directoryPath, const std::
 				if (fabs(position.z) < epsilon)
 				{
 					position.z = 0.00000f;
-				}
+				}*/
 				vertex.position = { position.x, position.y, position.z, 1.0f };
 				vertex.normal = { normal.x, normal.y, normal.z };
 				// aiProcess_MakeLeftHandedはz*=-1で、右手->左手に変換するので手動で対処
@@ -550,7 +555,7 @@ void PlayerCollision::ClearCollisionList() {
 	collisionListPlate.clear();
 }
 
-const bool& PlayerCollision::CollisionAABB(const AABB& a, const AABB& b) const {
+bool PlayerCollision::CollisionAABB(const AABB& a, const AABB& b) {
 	if ((a.min.x < b.max.x && a.max.x > b.min.x) &&
 		(a.min.y < b.max.y && a.max.y > b.min.y) &&
 		(a.min.z < b.max.z && a.max.z > b.min.z)) {
@@ -559,7 +564,7 @@ const bool& PlayerCollision::CollisionAABB(const AABB& a, const AABB& b) const {
 	return false;
 }
 
-const bool& PlayerCollision::CollisionAABBMin(const AABB& a, const AABB& b) const {
+bool PlayerCollision::CollisionAABBMin(const AABB& a, const AABB& b) {
 	if ((a.max.x > b.min.x) &&
 		(a.max.y > b.min.y) &&
 		(a.max.z > b.min.z)) {
@@ -568,7 +573,7 @@ const bool& PlayerCollision::CollisionAABBMin(const AABB& a, const AABB& b) cons
 	return false;
 }
 
-const bool& PlayerCollision::CollisionAABBMax(const AABB& a, const AABB& b) const {
+bool PlayerCollision::CollisionAABBMax(const AABB& a, const AABB& b) {
 	if ((a.min.x < b.max.x) &&
 		(a.min.y < b.max.y) &&
 		(a.min.z < b.max.z)) {
@@ -577,7 +582,7 @@ const bool& PlayerCollision::CollisionAABBMax(const AABB& a, const AABB& b) cons
 	return false;
 }
 
-const bool& PlayerCollision::IsCollision(const AABB& aabb, const Segment& segment) const {
+bool PlayerCollision::IsCollision(const AABB& aabb, const Segment& segment) {
 	Vector3 seg1 = segment.origin;
 	Vector3 seg2 = segment.origin + segment.diff;
 

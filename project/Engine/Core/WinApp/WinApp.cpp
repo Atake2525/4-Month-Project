@@ -88,7 +88,7 @@ void WinApp::Initialize(const int32_t& width, const uint32_t& height, WindowMode
 	HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
 }
 
-const AABB& WinApp::GetWindowAABB() const {
+const AABB WinApp::GetWindowAABB() const {
 	RECT windowRect;
 	RECT rt;
 	if (GetWindowRect(hwnd, &windowRect)) {

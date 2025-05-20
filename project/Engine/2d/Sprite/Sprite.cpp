@@ -11,7 +11,7 @@ void Sprite::SetTransform(const Transform& transform){
 	scale.y = transform.scale.y;
 }
 
-const Transform& Sprite::GetTransform() const {
+const Transform Sprite::GetTransform() const {
 	Transform result;
 	result.translate = { position.x, position.y, 0.0f };
 	result.rotate = {0.0f, 0.0f, rotation };

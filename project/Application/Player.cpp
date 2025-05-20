@@ -312,8 +312,8 @@ void Player::Rotate()
 		//cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
 	else {
-		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
-		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
+		modelTransform_.rotate.y += input_->GetMouseVel3().x * 0.005f;
+		modelTransform_.rotate.x += input_->GetMouseVel3().y * 0.005f;
 		//cameraTransform_.rotate.y += input_->GetMouseVel3().x * 0.005;
 		//cameraTransform_.rotate.x += input_->GetMouseVel3().y * 0.005;
 	}
@@ -340,6 +340,7 @@ void Player::Jump()
 	}
 	modelTransform_.translate.y += JumpVelocity;
 }
+
 void Player::CheckCollsion(LightBlock* block)
 {
 
@@ -656,21 +657,20 @@ void Player::UpdateCameraCollision() {
 			Z = true;
 		}
 
-		Vector3 col;
-		Vector3 zcol;
 
 		// 衝突判定処理
 		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset);
 		// 初期のカメラオフセットからの判定処理も行っておく
 		Vector3 defOff = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, defaultCameraOffset);
 		// offの値とcameraOffsetの値が違えばeasingを使用してoffの値に置換する
-		if ((off.x != cameraOffset.x || off.y != cameraOffset.y || off.z != cameraOffset.z) && !cameraZoomIn)
+		if ((off.y != cameraOffset.y || off.z != cameraOffset.z) && !cameraZoomIn)
 		{
 			cameraZoomIn = true;
 			cameraZoomOut = false;
 			cameraEasingTime = 0.0f;
+			beforCameraOffset = off;
 		}
-		else if ((off.x != defOff.x || off.y != defOff.y || off.z != defOff.z ) && !cameraZoomOut)
+		else if ((off.y != defOff.y || off.z != defOff.z ) && !cameraZoomOut)
 		{
 			cameraZoomOut = true;
 			cameraZoomIn = false;
@@ -713,12 +713,14 @@ void Player::UpdateCameraCollision() {
 		ImGui::DragFloat3("cameraMin", &cameraAABB.min.x);
 		ImGui::DragFloat3("cameraMax", &cameraAABB.max.x);
 		ImGui::DragFloat("easingTime", &cameraEasingTime);
+		ImGui::DragFloat3("defOff", &defOff.x);
+		ImGui::DragFloat3("beforCamOff", &beforCameraOffset.x);
 		ImGui::End();
 	}
 }
 
 // 衝突判定の実装で追加したもの
-const Vector3& Player::GetPosition() const {
+Vector3 Player::GetPosition() {
 	Vector3 result;
 	result.x = object3d_->GetWorldMatrix().m[3][0];
 	result.y = object3d_->GetWorldMatrix().m[3][1];
@@ -727,7 +729,7 @@ const Vector3& Player::GetPosition() const {
 }
 
 
-const bool& Player::IsCollisionAABB(const AABB& a, const AABB& b) {
+bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
 		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
 		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {

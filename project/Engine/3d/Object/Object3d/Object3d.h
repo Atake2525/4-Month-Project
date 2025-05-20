@@ -127,11 +127,11 @@ public:
 	// Getter(Rotate)
 	const Vector3& GetRotate() const { return transform.rotate; }
 	// Getter(Rotate Degree)
-	const Vector3& GetRotateInDegree() const;
+	const Vector3 GetRotateInDegree() const;
 	// Gettre(Color)
 	const Vector4& GetColor() const;
 	// Getter(EnableLighting)
-	const bool& GetEnableLighting() const;
+	const bool GetEnableLighting() const;
 	// Getter(specularColor)
 	//const Vector3& GetSpecularColor() const;
 	// Getter(shininess)
@@ -169,7 +169,7 @@ public:
 
 public:
 	// 衝突チェック(AABBとAABB)
-	const bool& CheckCollision(Object3d* object) const;
+	const bool CheckCollision(Object3d* object) const;
 
 	//const bool& CheckCollisionSphere(const Sphere& sphere) const;
 

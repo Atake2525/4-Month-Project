@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "WinApp.h"
 #include "PlayerCollision.h"
-#include "ModelManager.h"
+//#include "ModelManager.h"
 
 #include"LightBlock.h"
 // 衝突判定で追加
@@ -71,15 +71,15 @@ public: // メンバ関数
 
 
 	// 衝突判定作成で追加した者たち
-	const bool& GetOnGround() const { return onGround_; }
+	bool GetOnGround() { return onGround_; }
 
 	void SetOnGround(const bool& onGround) { onGround_ = onGround; }
 
-	const Vector3& GetVelocity() const { return velocity; }
+	Vector3 GetVelocity() { return velocity; }
 
 	void SetVelocity(const Vector3& vel) { velocity = vel; }
 
-	const Vector3& GetPosition() const;
+	Vector3 GetPosition();
 
 	const AABB& GetAABB() const { return object3d_->GetAABB(); }
 
@@ -94,7 +94,7 @@ public: // メンバ関数
 	 Object3d *GoalObject3d()  { return object3d_; }
 	 // 星の当たり判定で追加
 	 Object3d* StarObject3d() { return object3d_; }
-	 const bool& IsCollisionAABB(const AABB& a, const AABB& b);
+	 bool IsCollisionAABB(const AABB& a, const AABB& b);
 
 private:
 
@@ -152,8 +152,12 @@ private: // メンバ変数
 
 	bool switchFlag = false;
 
+	// 初期のカメラオフセット
 	Vector3 defaultCameraOffset = { 0.0f, 10.0f, -20.0f };
+	// カメラオフセット(プレイヤーからのカメラ距離)
 	Vector3 cameraOffset;
+	// 変更時のカメラオフセット
+	Vector3 beforCameraOffset;
 
 	AABB cameraAABB;
 	AABB firstCameraAABB;

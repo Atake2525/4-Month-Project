@@ -575,7 +575,7 @@ float Distance(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-const Vector3& CenterAABB(const AABB& aabb)
+const Vector3 CenterAABB(const AABB& aabb)
 {
 	Vector3 result = (aabb.max - aabb.min) / 2 + aabb.min;
 	return result;

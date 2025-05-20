@@ -135,7 +135,7 @@ float Length(const Vector3& v);
 float Distance(const Vector3& v1, const Vector3& v2);
 
 // AABBから中心座標を計算
-const Vector3& CenterAABB(const AABB& aabb);
+const Vector3 CenterAABB(const AABB& aabb);
 
 // ベクトル変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
