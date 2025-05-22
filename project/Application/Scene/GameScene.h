@@ -105,5 +105,10 @@ private:
 	UI* prevHoveredButton = nullptr;  // 前フレームでカーソルが乗っていたボタン
 
 
+	bool isFadingIn = true;
+
+	Sprite* fadeSprite = nullptr;
+
+	float fadeAlpha = 1.0f;
 };
 
