@@ -175,7 +175,9 @@ void Title::Update() {
 
 
 
-//
+/// <summary>
+/// 
+/// </summary>
 void Title::Draw() {
     SpriteBase::GetInstance()->ShaderDraw();
 
