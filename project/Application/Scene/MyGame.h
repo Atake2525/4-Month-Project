@@ -22,7 +22,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg
 
 #include "Title.h"
 #include "Rule.h"
-#include "Setting.h"
+#include "SetScene.h"
 #include "GameScene.h"
 #include "GameClear.h"
 

@@ -1,4 +1,4 @@
-#include "Setting.h"
+#include "SetScene.h"
 #include "TextureManager.h"
 #include <dinput.h>
 

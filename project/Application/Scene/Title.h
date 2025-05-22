@@ -57,5 +57,12 @@ private:
 	bool isFadingIn = false; // フェードインを開始したか
 	float fadeAlpha = 0.0f;  
 
+	UI* hoveredButton = nullptr;        // 現在マウスカーソルが乗っているUI
+
+	int selectedIndex = 0; // 0:ゲーム 1:設定 2:ルール 3:終了
+	int prevSelectedIndex = -1;
+	int buttonCount = 4;   // ボタン数
+	bool inputLocked = false; // キーの連続押し防止
+
 
 };
