@@ -221,6 +221,11 @@ void Player::Update()
 void Player::Draw()
 {
 	object3d_->Draw();
+	for (JampEffect* effect_ : effects_) {
+		// パーティクル
+		effect_->Draw();
+	}
+	
 }
 
 Camera* Player::GetCamera()
@@ -339,26 +344,28 @@ void Player::Jump()
 		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
+			if (rand() % 20 == 0) {
+				/*位置*/
+				Vector3 position = { modelTransform_.translate.x + distrubution(randomEngine) ,modelTransform_.translate.y + distrubution(randomEngine) , 0.0f };
+
+				/*パーティクルの生成*/
+				EffectBorn(position);
+			}
+			for (JampEffect* effect_ : effects_) {
+				// パーティクル
+				effect_->Update();
+			}
+			// 終了フラグのたったパーティクルを削除
+			effects_.remove_if([](JampEffect* effect) {
+				if (effect->IsFinished()) {
+					delete effect;
+					return true;
+				}
+				return false;
+				});
 		}
-		if(rand()%20==0){
-			/*位置*/
-		Vector3 position = {modelTransform_.translate.x+distrubution(randomEngine) ,modelTransform_.translate.y+ distrubution(randomEngine) , 0.0f};
 		
-		/*パーティクルの生成*/
-		EffectBorn(position);
-		for (Particle* particle_ : particles_) {
-			//	// パーティクル
-			//	particle_->Update();
-			//}
-			//// 終了フラグのたったパーティクルを削除
-			// particles_.remove_if([](Particle* particle) {
-			//	if (particle->GetDeathFlag()) {
-			//		delete particle;
-			//		return true;
-			//	}
-			//	return false;
-			// });
-		}
+		
 	}
 	else if (onGround_ == false)
 	{
