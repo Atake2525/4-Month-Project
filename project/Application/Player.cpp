@@ -27,9 +27,9 @@ void Player::Initialize(Camera* camera)
 
 	// 追加したクラス
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Player.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
 
-	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
 	object3d_ = new Object3d();
 	object3d_->Initialize();
