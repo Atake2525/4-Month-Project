@@ -17,6 +17,14 @@ void UI::SetSprite(const std::string& filename) {
 	sprite->SetTexture(filename);
 }
 
+//–¾‚é‚³“_–Å
+void UI::SetSpriteAlpha(float alpha)
+{
+if (sprite) {
+		sprite->SetColor({ 1.0f, 1.0f, 1.0f, alpha });  
+	}
+}
+
 void UI::CreateButton(const Vector2& spritePosition, const Origin& origin, const std::string& filename) {
 	input = Input::GetInstance();
 
@@ -75,6 +83,33 @@ bool UI::OnButton() {
 	};
 
 	if (CollisionAABB(spriteAABB, mousePosAABB) == true && GetAsyncKeyState(VK_LBUTTON) == -32768)
+	{
+		return true;
+	}
+	ImGui::Begin("Button");
+	ImGui::DragFloat2("mousePos", &mousePosAABB.min.x, 0.1f);
+	ImGui::End();
+
+	return false;
+}
+
+const bool& UI::InCursor() const {
+	sprite->Update();
+	Vector2 spriteOrigin = sprite->GetTextureLeftTop();
+	Vector2 spriteSize = sprite->GetScale();
+	Vector2 spritePos = sprite->GetPosition();
+	Vector3 mousePos = input->GetMousePos3();
+	AABB spriteAABB = {
+		{spritePos.x, spritePos.y, 0.0f},
+		{spritePos.x + spriteSize.x, spritePos.y + spriteSize.y, 0.0f},
+	};
+	AABB windowAABB = WinApp::GetInstance()->GetWindowAABB();
+	AABB mousePosAABB = {
+		{mousePos.x - windowAABB.min.x - 8.0f, mousePos.y - windowAABB.min.y - 30.0f},
+		{mousePos.x - windowAABB.min.x - 8.0f, mousePos.y - windowAABB.min.y - 30.0f},
+	};
+
+	if (CollisionAABB(spriteAABB, mousePosAABB) == true)
 	{
 		return true;
 	}

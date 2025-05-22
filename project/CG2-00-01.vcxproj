@@ -149,6 +149,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Scene\GameClear.cpp" />
     <ClCompile Include="Application\Scene\Rule.cpp" />
     <ClCompile Include="Application\Scene\Title.cpp" />
+    <ClCompile Include="Application\JampEffect.cpp" />
     <ClCompile Include="Setting.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +203,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Scene\GameClear.h" />
     <ClInclude Include="Application\Scene\Rule.h" />
     <ClInclude Include="Application\Scene\Title.h" />
+    <ClInclude Include="Application\JampEffect.h" />
     <ClInclude Include="Setting.h" />
   </ItemGroup>
   <ItemGroup>

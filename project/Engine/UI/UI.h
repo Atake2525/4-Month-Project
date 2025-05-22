@@ -48,11 +48,20 @@ public:
 	/// <returns>押下のbool</returns>
 	bool OnButton();
 
+	/// <summary>
+	/// ボタンにカーソルが合わせられているかどうか
+	/// </summary>
+	/// <returns>衝突判定のbool</returns>
+	const bool& InCursor() const;
+
 	void SetTransform(const Transform& transform) { sprite->SetTransform(transform); }
 
 	const Transform& GetTransform() const { return sprite->GetTransform(); }
 
 	void SetSprite(const std::string& filename);
+
+	// 追加
+	void SetSpriteAlpha(float alpha);
 
 private:
 	bool CollisionAABB(const AABB& a, const AABB& b) const;

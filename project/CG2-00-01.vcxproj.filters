@@ -51,6 +51,7 @@
     <ClCompile Include="Application\Scene\GameClear.cpp" />
     <ClCompile Include="Application\Scene\Rule.cpp" />
     <ClCompile Include="Setting.cpp" />
+    <ClCompile Include="Application\JampEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\DebugMode.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="Application\Scene\Rule.h" />
     <ClInclude Include="Setting.h" />
     <ClInclude Include="Engine\Math\Segment.h" />
+    <ClInclude Include="Application\JampEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
