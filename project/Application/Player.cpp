@@ -131,8 +131,11 @@ void Player::Update()
 	drawModel.translate = modelTransform_.translate;
 	//drawModel.rotate.y = modelTransform_.rotate.y;
 
-	/*object3d_->SetTranslate(drawModel.translate);*/
-	object3d_->SetTransform(drawModel);
+
+
+	object3d_->SetTranslate(drawModel.translate);
+
+	//object3d_->SetTransform(drawModel);
 	object3d_->Update();
 
 
@@ -201,15 +204,19 @@ void Player::Move()
 	if (input_->IsMoveLeftJoyStick() == false) {
 		if (input_->PushKey(DIK_W)) {
 			move.y = -speed;
+			plRotateDegree = 0.0f;
 		}
 		if (input_->PushKey(DIK_S)) {
 			move.y = speed;
+			plRotateDegree = std::numbers::pi_v<float>;
 		}
 		if (input_->PushKey(DIK_A)) {
 			move.x = -speed;
+			plRotateDegree = std::numbers::pi_v<float> * 3.0f / 4.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			move.x = speed;
+			plRotateDegree = std::numbers::pi_v<float> / 4.0f;
 		}
 	}
 	velocity.z = -move.y;
@@ -221,36 +228,33 @@ void Player::Move()
 	rot.x = 0.0f;
 	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, rot, modelTransform_.translate);
 	velocity = TransformNormal(velocity, worldMatrix);
-	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
-	//velocity.y = 0;
 
-	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
+
+	// プレイヤーの移動に応じてモデルを回転させる
+	Vector3 modelRotate;
+	modelRotate.y = SwapDegree(modelTransform_.rotate.y);
+
+	float rotateRadian = plRotateDegree - modelTransform_.rotate.y;
+
+	rotateRadian = std::fmod(rotateRadian, std::numbers::pi_v<float> * 2);
+	rotateRadian = std::fmod(rotateRadian, std::numbers::pi_v<float> * -2);
+
+	if (rotateRadian > 0.0f)
 	{
-		velocity.x = 0.0f;
+		rotateRadian = rotateRadian - std::numbers::pi_v<float> *2;
 	}
-	else if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Back && velocity.x > 0.0f)
+	else if (rotateRadian <= 0.0f)
 	{
-		velocity.x = 0.0f;
+		rotateRadian = rotateRadian + std::numbers::pi_v<float> *2;
 	}
-	if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Front && velocity.z < 0.0f)
-	{
-		velocity.z = 0.0f;
-	}
-	else if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Back && velocity.z > 0.0f)
-	{
-		velocity.z = 0.0f;
-	}*/
+
+
+
+	ImGui::Begin("rotateDegree");
+	ImGui::DragFloat("roate", &rotateRadian);
+	ImGui::End();
 
 	modelTransform_.translate += velocity * speed;
-
-	/*offSet = TransformNormal(offSet,
-		Multiply(Multiply(
-			MakeRotateXMatrix(modelTransform_.rotate.x),
-			MakeRotateYMatrix(modelTransform_.rotate.y)),
-			MakeRotateZMatrix(modelTransform_.rotate.z)
-		));*/
-
-	//cameraTransform_.translate = modelTransform_.translate + offSet;
 
 
 }

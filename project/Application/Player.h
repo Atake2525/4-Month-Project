@@ -174,5 +174,8 @@ private: // メンバ変数
 	//ジャンプエフェクトクラス
 	std::list<JampEffect*>effects_;
 
+	// プレイヤーの回転に必要な変数
+	float plRotateDegree = 0.0f;
+
 };
 
