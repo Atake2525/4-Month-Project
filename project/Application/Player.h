@@ -96,7 +96,7 @@ public: // メンバ関数
 	 Object3d* StarObject3d() { return object3d_; }
 	 bool IsCollisionAABB(const AABB& a, const AABB& b);
 
-	 void EffectBorn(Vector3 position);
+	 void EffectBorn();
 
 private:
 

@@ -12,7 +12,8 @@
 
 std::random_device seedGenerator;
 std::mt19937 randomEngine(seedGenerator());
-std::uniform_real_distribution<float> distrubution(0.0f, 3.0f);
+std::uniform_real_distribution<float> distrubution(0.0f, 0.5f);
+std::uniform_real_distribution<float> posdistrubution(-1.0f, 1.0f);
 
 
 Player::Player()
@@ -57,7 +58,7 @@ void Player::Initialize(Camera* camera)
 	// 追加したクラス
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Player.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "effectParticle.obj");
+	
 	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
 
 	object3d_ = new Object3d();
@@ -193,6 +194,32 @@ void Player::Update()
 	cameraVelocityPre = cameraTransform_.translate;
 
 	//camera_->SetTranslate(cameraTransform_.translate);
+	
+
+	//effect
+	if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
+		
+		if (rand() % 20 == 0) {
+			/*位置*/
+			Vector3 position = { modelTransform_.translate.x+posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f};
+
+			/*パーティクルの生成*/
+			EffectBorn();
+		}
+	}
+	for (JampEffect* effect_ : effects_) {
+		// パーティクル
+		effect_->Update();
+	}
+	// 終了フラグのたったパーティクルを削除
+	effects_.remove_if([](JampEffect* effect) {
+		if (effect->IsFinished()) {
+			delete effect;
+			return true;
+		}
+		return false;
+		});
+
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
@@ -344,25 +371,7 @@ void Player::Jump()
 		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
-			if (rand() % 20 == 0) {
-				/*位置*/
-				Vector3 position = { modelTransform_.translate.x + distrubution(randomEngine) ,modelTransform_.translate.y + distrubution(randomEngine) , 0.0f };
-
-				/*パーティクルの生成*/
-				EffectBorn(position);
-			}
-			for (JampEffect* effect_ : effects_) {
-				// パーティクル
-				effect_->Update();
-			}
-			// 終了フラグのたったパーティクルを削除
-			effects_.remove_if([](JampEffect* effect) {
-				if (effect->IsFinished()) {
-					delete effect;
-					return true;
-				}
-				return false;
-				});
+			
 		}
 		
 		
@@ -371,6 +380,8 @@ void Player::Jump()
 	{
 		JumpVelocity -= kGravityAccleration / 60.0f;
 		JumpVelocity = std::max(JumpVelocity, -kLimitFallSpeed);
+		
+		
 	}
 	modelTransform_.translate.y += JumpVelocity;
 }
@@ -772,16 +783,20 @@ bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 	return false;
 }
 
-void Player::EffectBorn(Vector3 position)
+void Player::EffectBorn()
 {
-	for (int i = 0; i < 150; i++) {
+	for (int i = 0; i < 40; i++) {
 		/*生成*/
 		JampEffect* effect = new JampEffect();
-		Vector3 velocity = { distrubution(randomEngine),distrubution(randomEngine),0.0f };
+		/*位置*/
+		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
+
+		Vector3 velocity = { 0.0f,distrubution(randomEngine),0.0f };
 		Normalize(velocity);
+		velocity.y *= distrubution(randomEngine);
 
 		/*初期化*/
-		effect->Intialize(position, velocity, "Resources/Model/obj", "Player.obj");
+		effect->Intialize(position, velocity);
 		effects_.push_back(effect);
 	}
 }
