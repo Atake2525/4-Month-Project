@@ -68,7 +68,7 @@ public:
 	const size_t GetCollisionListSize() const { return collisionListPlate.size(); }
 
 	// カメラ用の衝突判定
-	Vector3 UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset);
+	Vector3 UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset, const Vector3& defaultCameraOffset);
 
 private:
 
