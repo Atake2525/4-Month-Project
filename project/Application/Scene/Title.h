@@ -25,7 +25,7 @@ public:
 	// ゲーム開始フラグ
 	const bool& isFinished() const { return finished; }
 
-	// 各ボタンが押されたかどうか取得
+	// 各ボタンが押されたかどうか
 	bool IsGameStartSelected() const { return goToGame; }
 	bool IsSettingSelected() const { return goToSetting; }
 	bool IsRuleSelected() const { return goToRule; }
