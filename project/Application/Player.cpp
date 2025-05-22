@@ -752,7 +752,7 @@ void Player::EffectBorn(Vector3 position)
 	Vector3 velocity = { distrubution(randomEngine),distrubution(randomEngine),0.0f };
 	Normalize(velocity);
 	/*初期化*/
-	effect
+	effect;
 
 }
 
