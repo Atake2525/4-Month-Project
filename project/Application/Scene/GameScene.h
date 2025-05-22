@@ -49,6 +49,8 @@ public:
 	bool ShouldRestart() const { return goToRestart; }
 	bool ShouldReturnToTitle() const { return goToTitle; }
 
+	//ポーズ画面の表示
+	void PauseUpdate();
 
 private:
 	Object3d* object3d = nullptr;
@@ -104,6 +106,21 @@ private:
 	float blinkTimer = 0.0f;
 	UI* prevHoveredButton = nullptr;  // 前フレームでカーソルが乗っていたボタン
 
+	// フェード用
+	Sprite* fadeSprite = nullptr;       // 黒フェード用スプライト
+	bool isFadingOut = false;          // フェード開始フラグ
+	bool isFadingIn = false; // フェードインを開始したか
+	float fadeAlpha = 0.0f;
 
+
+	UI* hoveredPauseButton = nullptr;
+	UI* prevHoveredPauseButton = nullptr;
+
+	int pauseSelectedIndex = 0;
+	int prevPauseSelectedIndex = -1;
+	int pauseButtonCount = 3;
+
+	float pauseBlinkTimer = 0.0f;
+	bool pauseInputLocked = false;
 };
 

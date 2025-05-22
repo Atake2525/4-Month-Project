@@ -25,7 +25,7 @@ public:
 	// ゲーム開始フラグ
 	const bool& isFinished() const { return finished; }
 
-	// 各ボタンが押されたかどうか取得
+	// 各ボタンが押されたかどうか
 	bool IsGameStartSelected() const { return goToGame; }
 	bool IsSettingSelected() const { return goToSetting; }
 	bool IsRuleSelected() const { return goToRule; }
@@ -40,6 +40,7 @@ private:
 	UI gameStartButton;
 	UI settingButton;
 	UI ruleButton;
+	UI finishButton;
 
 	// 押下フラグ
 	bool goToGame = false;
@@ -49,6 +50,19 @@ private:
 	//文字点滅用
 	float blinkTimer = 0.0f;
 	UI* prevHoveredButton = nullptr;  // 前フレームでカーソルが乗っていたボタン
+
+	// フェード用
+	Sprite* fadeSprite = nullptr;       // 黒フェード用スプライト
+	bool isFadingOut = false;          // フェード開始フラグ
+	bool isFadingIn = false; // フェードインを開始したか
+	float fadeAlpha = 0.0f;  
+
+	UI* hoveredButton = nullptr;        // 現在マウスカーソルが乗っているUI
+
+	int selectedIndex = 0; // 0:ゲーム 1:設定 2:ルール 3:終了
+	int prevSelectedIndex = -1;
+	int buttonCount = 4;   // ボタン数
+	bool inputLocked = false; // キーの連続押し防止
 
 
 };

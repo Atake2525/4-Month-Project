@@ -50,7 +50,7 @@
     <ClCompile Include="Application\Scene\Title.cpp" />
     <ClCompile Include="Application\Scene\GameClear.cpp" />
     <ClCompile Include="Application\Scene\Rule.cpp" />
-    <ClCompile Include="Setting.cpp" />
+    <ClCompile Include="SetScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\DebugMode.h" />
@@ -102,7 +102,7 @@
     <ClInclude Include="Application\Scene\Title.h" />
     <ClInclude Include="Application\Scene\GameClear.h" />
     <ClInclude Include="Application\Scene\Rule.h" />
-    <ClInclude Include="Setting.h" />
+    <ClInclude Include="SetScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="externels\assimp\lib\Release\assimp-vc143-mtd.lib" />
