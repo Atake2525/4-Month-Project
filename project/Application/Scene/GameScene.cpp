@@ -206,9 +206,14 @@ void GameScene::Update() {
 	}
 
 		// ポーズ切り替え
-	if (input->PushKey(DIK_ESCAPE)) {
-		if (tabReleased) {
-			isPaused = !isPaused;
+	if (input->TriggerKey(DIK_ESCAPE) && isDraw) {
+		if (isPaused)
+		{
+			isPaused = false;
+			input->ShowMouseCursor(false);
+		}
+		else if (tabReleased) {
+			isPaused = true;
 			tabReleased = false;  // 押された直後に反応したらフラグを下げる
 		}
 	}
@@ -217,9 +222,9 @@ void GameScene::Update() {
 		tabReleased = true;
 	}
 
+
 	// ポーズ中の処理
 	if (isPaused) {
-
 		// ボタンの alpha を設定
 		UI* hoveredButton = nullptr;
 		// どのボタンにカーソルが当たっているか取得
@@ -270,7 +275,7 @@ void GameScene::Update() {
 		}
 
 		
-
+		input->Update();
 		return;  // ゲーム本体の更新を止める
 	}
 
@@ -300,7 +305,6 @@ void GameScene::Update() {
 	{
 		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
 	}
-	input->Update();
 
 	player->Update();
 	camera->Update();
@@ -357,7 +361,7 @@ void GameScene::Update() {
 
 
 
-
+	input->Update();
 }
 
 void GameScene::Draw() {
@@ -397,6 +401,8 @@ void GameScene::Draw() {
 	}
 
 	if (fadeSprite) fadeSprite->Draw();
+
+	isDraw = true;
 
 }
 
