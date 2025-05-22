@@ -110,5 +110,7 @@ private:
 	Sprite* fadeSprite = nullptr;
 
 	float fadeAlpha = 1.0f;
+
+	bool isDraw = false;
 };
 
