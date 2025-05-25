@@ -51,7 +51,7 @@ void Audio::Initialize() {
 	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 }
 
-SoundData Audio::SoundLoadWave(const char* filename) {
+SoundData Audio::SoundLoadWave(const char* filename, const float volume, const bool isLoop) {
 	/// ファイルオープン
 
 	// ファイル入力ストリームのインスタンス
@@ -120,12 +120,14 @@ SoundData Audio::SoundLoadWave(const char* filename) {
 	soundData.bufferSize = data.size;
 	soundData.filename = filename;
 	soundData.playTime = time;
+	soundData.volume = volume;
+	soundData.loop = isLoop;
 
 	return soundData;
 }
 
 // 音声再生
-void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
+void Audio::SoundPlayWave(const SoundData& soundData) {
 	HRESULT result;
 
 	// 波形フォーマットをもとにSourceVoiceの生成
@@ -141,7 +143,7 @@ void Audio::SoundPlayWave(const SoundData& soundData, float volume) {
 
 	// 波形データの再生
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
-	result = pSourceVoice->SetVolume(volume);
+	result = pSourceVoice->SetVolume(soundData.volume);
 	result = pSourceVoice->Start();
 	AudioList list = { pSourceVoice, soundData, frameTime };
 	audioList.push_back(list);
@@ -263,6 +265,13 @@ void Audio::Update() {
 			list.sourceVoice->Stop();
 			list.sourceVoice->DestroyVoice();
 			audioList.erase(audioList.begin() + index);
+			if (list.soundData.loop)
+			{
+				if (frameTime >= list.soundData.playTime * 60 + list.startFrameTime)
+				{ // ループ再生がonになっている時前から再生時間が過ぎたら再び再生
+					SoundPlayWave(list.soundData);
+				}
+			}
 			break;
 		}
 		index++;

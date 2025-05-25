@@ -28,6 +28,10 @@ struct SoundData {
 	const char* filename;
 	// ファイルの再生時間
 	int playTime;
+	// 音量
+	float volume;
+	// ループ再生
+	bool loop;
 };
 
 struct AudioList
@@ -64,13 +68,16 @@ public:
 	void Finalize();
 
 	// 音声読み込み
-	SoundData SoundLoadWave(const char* filename);
+	SoundData SoundLoadWave(const char* filename, const float volume = 1.0f, const bool isLoop = false);
 
 	// mp3再生
 	void SoundPlayMp3(const std::wstring& filename);
 
+	// 音量設定
+	//void SetVolumeWave(const SoundData& soundData);
+
 	// 音声再生
-	void SoundPlayWave(const SoundData& soundData, float volume);
+	void SoundPlayWave(const SoundData& soundData);
 
 	// 全ての音声停止
 	void SoundStopWaveAll();
