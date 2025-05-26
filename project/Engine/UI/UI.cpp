@@ -17,7 +17,7 @@ void UI::SetSprite(const std::string& filename) {
 	sprite->SetTexture(filename);
 }
 
-//–¾‚é‚³“_–Å
+//æ˜Žã‚‹ã•ç‚¹æ»…
 void UI::SetSpriteAlpha(float alpha)
 {
 if (sprite) {
@@ -93,7 +93,7 @@ bool UI::OnButton() {
 	return false;
 }
 
-const bool& UI::InCursor() const {
+const bool UI::InCursor() const {
 	sprite->Update();
 	Vector2 spriteOrigin = sprite->GetTextureLeftTop();
 	Vector2 spriteSize = sprite->GetScale();

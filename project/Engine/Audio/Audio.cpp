@@ -406,7 +406,7 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 		mediaBuffer->Unlock();
 	}
 
-	int time = mp3AudioData.size() / pWaveFormat->nAvgBytesPerSec;
+	int time = static_cast<int>(mp3AudioData.size() / pWaveFormat->nAvgBytesPerSec);
 	CoTaskMemFree(pWaveFormat);
 	// 0.0f ~ 1.0fにclampする
 	float vol = std::clamp(volume, 0.0f, 1.0f);
