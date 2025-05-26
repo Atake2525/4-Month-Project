@@ -173,6 +173,7 @@ private: // メンバ変数
 	float cameraEasingTime = 0.0f;
 	//ジャンプエフェクトクラス
 	std::list<JampEffect*>effects_;
-
+	bool effectFlag = false;
+	float effectTimer;
 };
 

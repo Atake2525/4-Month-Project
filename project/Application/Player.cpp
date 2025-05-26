@@ -12,9 +12,9 @@
 
 std::random_device seedGenerator;
 std::mt19937 randomEngine(seedGenerator());
-std::uniform_real_distribution<float> distrubution(0.0f, 0.5f);
+std::uniform_real_distribution<float> distrubution(-0.3f, 0.3f);
 std::uniform_real_distribution<float> posdistrubution(-1.0f, 1.0f);
-
+std::uniform_real_distribution<float> randomFloat(0.0f, 1.0f);
 
 Player::Player()
 {
@@ -99,7 +99,7 @@ void Player::Initialize(Camera* camera)
 
 void Player::Update()
 {
-
+	
 	Rotate();
 
 	Move();
@@ -195,22 +195,32 @@ void Player::Update()
 
 	//camera_->SetTranslate(cameraTransform_.translate);
 	
-
-	//effect
-	if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
+	
+		if (input_->TriggerKey(DIK_SPACE)) {
+			//effect
+			effectFlag = true;
+			effectTimer = 5;
+		}
+	
+	if (effectFlag) {
+		/*位置*/
+		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
+		/*パーティクルの生成*/
+		EffectBorn();
 		
-		if (rand() % 20 == 0) {
-			/*位置*/
-			Vector3 position = { modelTransform_.translate.x+posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f};
-
-			/*パーティクルの生成*/
-			EffectBorn();
+	}
+	if (effectTimer > 0) {
+		effectTimer--;
+		if (effectTimer == 0) {
+			effectFlag = false;
 		}
 	}
+
 	for (JampEffect* effect_ : effects_) {
 		// パーティクル
 		effect_->Update();
 	}
+	
 	// 終了フラグのたったパーティクルを削除
 	effects_.remove_if([](JampEffect* effect) {
 		if (effect->IsFinished()) {
@@ -239,6 +249,7 @@ void Player::Update()
 		ImGui::DragFloat3("Rotate", &drawModel.rotate.x, 0.1f);
 		ImGui::DragFloat3("Scale", &drawModel.scale.x, 0.1f);
 		ImGui::TreePop();
+		
 	}
 	ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x, 0.1f);
 	ImGui::End();
@@ -380,7 +391,7 @@ void Player::Jump()
 	{
 		JumpVelocity -= kGravityAccleration / 60.0f;
 		JumpVelocity = std::max(JumpVelocity, -kLimitFallSpeed);
-		
+
 		
 	}
 	modelTransform_.translate.y += JumpVelocity;
@@ -785,15 +796,20 @@ bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 
 void Player::EffectBorn()
 {
-	for (int i = 0; i < 40; i++) {
+	for (int i = 0; i < 25; i++) {
 		/*生成*/
 		JampEffect* effect = new JampEffect();
 		/*位置*/
-		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
+		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f};
 
-		Vector3 velocity = { 0.0f,distrubution(randomEngine),0.0f };
+		Vector3 velocity = {
+			distrubution(randomEngine),               // X方向ランダム
+			std::abs(distrubution(randomEngine)) - 0.01f, // Yは上方向に最低1.5確保
+			distrubution(randomEngine)                // Z方向ランダム
+		};
+
 		Normalize(velocity);
-		velocity.y *= distrubution(randomEngine);
+		velocity = velocity * (0.5f + 1.5f * randomFloat(randomEngine));
 
 		/*初期化*/
 		effect->Intialize(position, velocity);
