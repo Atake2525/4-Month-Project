@@ -55,9 +55,9 @@ private:
 	Sprite* fadeSprite = nullptr;       // 黒フェード用スプライト
 	bool isFadingOut = false;          // フェード開始フラグ
 	bool isFadingIn = false; // フェードインを開始したか
-	float fadeAlpha = 0.0f;  
+	float fadeAlpha = 0.0f;
 
-	UI* hoveredButton = nullptr;        // 現在マウスカーソルが乗っているUI
+	UI* hoveredButton = nullptr;      // 現在マウスカーソルが乗っているUI
 
 	int selectedIndex = 0; // 0:ゲーム 1:設定 2:ルール 3:終了
 	int prevSelectedIndex = -1;
