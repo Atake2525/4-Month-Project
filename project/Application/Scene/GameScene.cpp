@@ -310,19 +310,20 @@ void GameScene::Update() {
 	}
 	if (input->TriggerKey(DIK_3))
 	{
-		Audio::GetInstance()->Play("sekiranun");
+		Audio::GetInstance()->Play("sekiranun", true);
+		//Audio::GetInstance()->PlayMp3(true);
 	}
 	if (input->TriggerKey(DIK_4))
 	{
-		Audio::GetInstance()->SoundStopWave("Alart");
+		Audio::GetInstance()->SoundStopWave("sekiranun");
 	}
 	if (input->TriggerKey(DIK_5))
 	{
-		Audio::GetInstance()->SetVolumeWave("Alart", 1.0f);
+		Audio::GetInstance()->SetVolumeWave("sekiranun", 1.0f);
 	}
 	if (input->TriggerKey(DIK_6))
 	{
-		Audio::GetInstance()->SetVolumeWave("Alart", 0.0f);
+		Audio::GetInstance()->SetVolumeWave("sekiranun", 0.2f);
 	}
 
 	player->Update();

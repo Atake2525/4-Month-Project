@@ -41,6 +41,7 @@ struct AudioList
 	int startFrameTime;
 };
 
+
 class Audio {
 private:
 	// シングルトンパターンを適用
@@ -82,6 +83,8 @@ public:
 	// 音声再生
 	void Play(const std::string soundName, const bool loop = false);
 
+	void PlayMp3(const bool loop = false, const float volume = 1.0f);
+
 	// 全ての音声停止
 	void SoundStopWaveAll();
 
@@ -103,6 +106,11 @@ private:
 	std::vector<AudioList> audioList;
 
 	std::map<std::string, SoundData> soundMap;
+
+	// オーディオデータ
+	std::vector<BYTE> mp3AudioData;
+	// WAVEフォーマット
+	WAVEFORMATEX mp3waveFormat;
 
 	int frameTime = 0;
 

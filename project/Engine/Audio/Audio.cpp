@@ -193,8 +193,8 @@ void Audio::Play(const std::string soundName, const bool loop) {
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundMap[soundName].pBuffer;
 	buf.AudioBytes = soundMap[soundName].bufferSize;
+	buf.pAudioData = soundMap[soundName].pBuffer;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	if (loop)
 	{
@@ -211,7 +211,52 @@ void Audio::Play(const std::string soundName, const bool loop) {
 	assert(audioList.size() < maxSourceVoiceCount);
 }
 
+void Audio::PlayMp3(const bool loop, const float volume) {
+	HRESULT result;
+	// 波形フォーマットをもとにSourceVoiceの生成
+	IXAudio2SourceVoice* pSourceVoice = nullptr;
+	result = xAudio2->CreateSourceVoice(&pSourceVoice, &mp3waveFormat);
+	assert(SUCCEEDED(result));
+	// バッファの設定
+	XAUDIO2_BUFFER buffer = {};
+	buffer.AudioBytes = static_cast<UINT32>(mp3AudioData.size());
+	buffer.pAudioData = mp3AudioData.data();
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+
+	// ループ設定
+	if (loop) {
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
+
+	// バッファの登録
+	HRESULT hr = pSourceVoice->SubmitSourceBuffer(&buffer);
+	if (FAILED(hr)) {
+		return;
+	}
+
+	// ボリュームの設定
+	pSourceVoice->SetVolume(volume);
+
+	// 再生開始
+	pSourceVoice->Start();
+}
+
 bool Audio::LoadMP3(const std::string filePath, const std::string soundName, const float volume) {
+	// 登録する名前が重複していたらfalseでreturn
+	if (soundMap.contains(soundName))
+	{
+		return false;
+		Log("this name already registered");
+	}
+	// 登録する音声が重複していたらfalseでreturn
+	for (auto it = soundMap.begin(); it != soundMap.end(); ++it)
+	{
+		if (it->second.filename == filePath)
+		{
+			Log("this file loaded\n");
+			return false;
+		}
+	}
 	// Media Foundationオブジェクト
 	Microsoft::WRL::ComPtr<IMFSourceReader> sourceReader;
 	Microsoft::WRL::ComPtr<IMFMediaType> mediaType;
@@ -280,14 +325,18 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 		return false;
 	}
 
-	SoundData soundData;
+	
 
 	// WAVEフォーマットをコピー
-	memcpy(&soundData.wfex, pWaveFormat, sizeof(WAVEFORMATEX));
-	CoTaskMemFree(pWaveFormat);
+	memcpy(&mp3waveFormat, pWaveFormat, sizeof(WAVEFORMATEX));
+
+	// WAVEフォーマットをコピー
+	/*memcpy(&mp3WaveFormat, pWaveFormat, sizeof(WAVEFORMATEX));
+	CoTaskMemFree(pWaveFormat);*/
 
 	// オーディオデータの読み込み
 	//audioData.clear();
+
 
 	while (true) {
 		// サンプルの読み込み
@@ -327,28 +376,49 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 		}
 
 		//int time = bufferSize / pWaveFormat->nAvgBytesPerSec;
-		
-		// 0.0f ~ 1.0fにclampする
-		float vol = std::clamp(volume, 0.0f, 1.0f);
+	
 
 		// データをコピー
-		//size_t offset = audioData.size();
-		//audioData.resize(offset + bufferSize);
-		soundData.bufferSize += bufferSize;
+		size_t offset = mp3AudioData.size();
+		mp3AudioData.resize(offset + bufferSize);
+		memcpy(mp3AudioData.data() + offset, audioBuffer, bufferSize);
+		/*soundData.bufferSize += bufferSize;
 		soundData.pBuffer = audioBuffer;
 		soundData.filename = filePath;
-		soundData.volume = vol;
+		soundData.volume = vol;*/
 		//soundData.playTime = time;
-		//memcpy(audioData.data() + offset, audioBuffer, bufferSize);
+		// 
+		// 
 		 // データをコピー
 
-		soundMap[soundName] = soundData;
+		  // データをコピー
+		//offset += bufferSize;
+		//memcpy(soundData.pBuffer, audioBuffer, bufferSize);
+		/*if (!collect)
+		{
+			buf = audioBuffer;
+			collect = true;
+		}*/
 
-		audioList.data()
+		//soundMap[soundName] = soundData;
 
 		// バッファのロックを解除
 		mediaBuffer->Unlock();
 	}
+
+	int time = mp3AudioData.size() / pWaveFormat->nAvgBytesPerSec;
+	CoTaskMemFree(pWaveFormat);
+	// 0.0f ~ 1.0fにclampする
+	float vol = std::clamp(volume, 0.0f, 1.0f);
+	SoundData soundData;
+	soundData.wfex = mp3waveFormat;
+	soundData.bufferSize = static_cast<UINT32>(mp3AudioData.size());
+	soundData.pBuffer = mp3AudioData.data();
+	soundData.filename = filePath;
+	soundData.volume = vol;
+	soundData.playTime = time;
+
+	soundMap[soundName] = soundData;
 
 	return true;
 }
