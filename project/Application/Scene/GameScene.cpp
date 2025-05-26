@@ -109,6 +109,17 @@ void GameScene::Initialize() {
 	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
 
 
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/star.png");
+
+	for (int i = 0; i < 3; ++i) {
+		Sprite* icon = new Sprite();
+		icon->Initialize("Resources/Sprite/star.png");
+		icon->SetScale({ 32.0f, 32.0f });
+		icon->SetAnchorPoint({ 0.0f, 0.0f });
+		starIcons.push_back(icon);
+	}
+
+
 }
 
 void GameScene::PauseUpdate()
@@ -389,7 +400,25 @@ void GameScene::Draw() {
 		returnToTitleButton.Draw();
 	}
 
+	// ポーズ中のカーソル位置に応じたボタンの描画
 	if (fadeSprite) fadeSprite->Draw();
+
+	// 星アイコンの描画（星が取得された場合のみ）
+	if (starResultManager) {
+		int collectedCount = 0;
+		for (Star* s : starResultManager->GetStars()) {
+			if (s->IsCollected() && collectedCount < (int)starIcons.size()) {
+				float x = 1280.0f - 40.0f - (collectedCount * 36.0f);
+				float y = 20.0f;
+				starIcons[collectedCount]->SetPosition({ x, y });
+				starIcons[collectedCount]->Update();
+				starIcons[collectedCount]->Draw();
+				++collectedCount;
+			}
+		}
+	}
+
+
 
 }
 
@@ -419,4 +448,10 @@ void GameScene::Finalize() {
 		delete pauseBg;
 		pauseBg = nullptr;
 	}
+
+	for (Sprite* s : starIcons) {
+		delete s;
+	}
+	starIcons.clear();
+
 }

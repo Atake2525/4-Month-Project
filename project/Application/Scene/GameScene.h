@@ -122,5 +122,11 @@ private:
 
 	float pauseBlinkTimer = 0.0f;
 	bool pauseInputLocked = false;
+
+	// 星アイコンのスプライト
+	Sprite* starIcon = nullptr;
+	std::vector<Sprite*> starIcons;  // 星のUIを最大3つ分持つ
+
+
 };
 
