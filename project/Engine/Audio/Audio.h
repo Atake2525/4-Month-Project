@@ -2,6 +2,7 @@
 #include <fstream>
 #include <wrl.h>
 #include <vector>
+#include <map>
 
 #include <mfapi.h>
 #include <mfidl.h>
@@ -25,19 +26,18 @@ struct SoundData {
 	// バッファのサイズ
 	unsigned int bufferSize;
 	// ファイルの名前
-	const char* filename;
+	std::string filename;
 	// ファイルの再生時間
 	int playTime;
 	// 音量
 	float volume;
-	// ループ再生
-	bool loop;
 };
 
 struct AudioList
 {
 	IXAudio2SourceVoice* sourceVoice;
 	SoundData soundData;
+	XAUDIO2_BUFFER buf{};
 	int startFrameTime;
 };
 
@@ -68,25 +68,28 @@ public:
 	void Finalize();
 
 	// 音声読み込み
-	SoundData SoundLoadWave(const char* filename, const float volume = 1.0f, const bool isLoop = false);
+	bool LoadWave(const std::string filePath, const std::string soundName, const float volume = 1.0f);
 
 	// mp3再生
-	void SoundPlayMp3(const std::wstring& filename);
+	bool LoadMP3(const std::string filePath, const std::string soundName, const float volume = 1.0f);
 
 	// 音量設定
-	//void SetVolumeWave(const SoundData& soundData);
+	void SetVolumeWave(const std::string soundName, const float volume);
+
+	// 主音量設定
+	void SetMasterVolume( const float volume);
 
 	// 音声再生
-	void SoundPlayWave(const SoundData& soundData);
+	void Play(const std::string soundName, const bool loop = false);
 
 	// 全ての音声停止
 	void SoundStopWaveAll();
 
 	// 音声停止
-	void SoundStopWave(const SoundData& soundData);
+	void SoundStopWave(const std::string soundName);
 
 	// 音声データ解放
-	void SoundUnload(SoundData* soundData);
+	void SoundUnload(const std::string soundName);
 
 private:
 
@@ -98,6 +101,8 @@ private:
 	IXAudio2MasteringVoice* masterVoice = nullptr;
 
 	std::vector<AudioList> audioList;
+
+	std::map<std::string, SoundData> soundMap;
 
 	int frameTime = 0;
 

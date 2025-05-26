@@ -72,7 +72,9 @@ void GameScene::Initialize() {
 	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
 
-	soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav", 0.4f, true);
+	Audio::GetInstance()->LoadWave("Resources/Alarm01.wav", "Alart", 0.4f);
+	Audio::GetInstance()->LoadWave("Resources/Alarm01.wav", "Al", 0.4f);
+	Audio::GetInstance()->LoadMP3("Resources/sekiranun.mp3", "sekiranun", 1.0f);
 
 	isPaused = false;
 	//ポーズUIの背景
@@ -304,7 +306,23 @@ void GameScene::Update() {
 
 	if (input->TriggerKey(DIK_2))
 	{
-		Audio::GetInstance()->SoundPlayWave(soundData);
+		Audio::GetInstance()->Play("Alart", true);
+	}
+	if (input->TriggerKey(DIK_3))
+	{
+		Audio::GetInstance()->Play("sekiranun");
+	}
+	if (input->TriggerKey(DIK_4))
+	{
+		Audio::GetInstance()->SoundStopWave("Alart");
+	}
+	if (input->TriggerKey(DIK_5))
+	{
+		Audio::GetInstance()->SetVolumeWave("Alart", 1.0f);
+	}
+	if (input->TriggerKey(DIK_6))
+	{
+		Audio::GetInstance()->SetVolumeWave("Alart", 0.0f);
 	}
 
 	player->Update();
