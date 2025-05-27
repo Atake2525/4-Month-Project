@@ -301,10 +301,10 @@ void GameScene::Update() {
 	}
 
 
-	/*if (input->TriggerKey(DIK_2))
-	{
-		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
-	}*/
+	//if (input->TriggerKey(DIK_2))
+	//{
+	//	Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
+	//}
 
 	player->Update();
 
