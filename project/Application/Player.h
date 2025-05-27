@@ -180,9 +180,21 @@ private: // メンバ変数
 	std::list<JampEffect*>effects_;
 
 	// プレイヤーの回転に必要な変数
-	float plRotateDegree = 0.0f;
+	float plRotate = 0.0f;
 
 	float prot = 0.0f;
+
+	// 回転イージングのフラグ
+	bool rotateEasing = false;
+
+	// 回転イージングのフレーム
+	float rotateFrame = 0.0f;
+
+	// 回転イージングの終了フレーム
+	const float rotateEndFrame = 0.4f;
+
+	// 初期の回転角の格納
+	float startRotate = 0.0f;
 
 };
 

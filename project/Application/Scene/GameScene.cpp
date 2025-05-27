@@ -396,6 +396,8 @@ void GameScene::Draw() {
 		returnToTitleButton.Draw();
 	}
 
+	SpriteBase::GetInstance()->ShaderDraw();
+
 	if (fadeSprite) fadeSprite->Draw();
 
 }
