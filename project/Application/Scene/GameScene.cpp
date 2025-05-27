@@ -315,15 +315,19 @@ void GameScene::Update() {
 	}
 	if (input->TriggerKey(DIK_4))
 	{
-		Audio::GetInstance()->SoundStopWave("sekiranun");
+		Audio::GetInstance()->Stop("sekiranun");
 	}
 	if (input->TriggerKey(DIK_5))
 	{
-		Audio::GetInstance()->SetVolumeWave("sekiranun", 1.0f);
+		Audio::GetInstance()->SetVolume("sekiranun", 1.0f);
 	}
 	if (input->TriggerKey(DIK_6))
 	{
-		Audio::GetInstance()->SetVolumeWave("sekiranun", 0.2f);
+		Audio::GetInstance()->SetVolume("sekiranun", 0.2f);
+	}
+	if (input->TriggerKey(DIK_7))
+	{
+		Audio::GetInstance()->Pause("sekiranun");
 	}
 
 	player->Update();

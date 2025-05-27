@@ -25,8 +25,8 @@ struct SoundData {
 	BYTE* pBuffer;
 	// バッファのサイズ
 	unsigned int bufferSize;
-	// ファイルの名前
-	std::string filename;
+	// ファイル
+	std::string filePath;
 	// ファイルの再生時間
 	int playTime;
 	// 音量
@@ -68,28 +68,34 @@ public:
 	// 終了処理
 	void Finalize();
 
-	// 音声読み込み
+	// wave読み込み
 	bool LoadWave(const std::string filePath, const std::string soundName, const float volume = 1.0f);
 
-	// mp3再生
+	// mp3読み込み
 	bool LoadMP3(const std::string filePath, const std::string soundName, const float volume = 1.0f);
 
 	// 音量設定
-	void SetVolumeWave(const std::string soundName, const float volume);
+	void SetVolume(const std::string soundName, const float volume);
 
 	// 主音量設定
-	void SetMasterVolume( const float volume);
+	void SetMasterVolume(const float volume);
 
 	// 音声再生
 	void Play(const std::string soundName, const bool loop = false);
 
-	void PlayMp3(const bool loop = false, const float volume = 1.0f);
+	//void PlayMp3(const bool loop = false, const float volume = 1.0f);
 
 	// 全ての音声停止
-	void SoundStopWaveAll();
+	void StopAll();
 
 	// 音声停止
-	void SoundStopWave(const std::string soundName);
+	void Stop(const std::string soundName);
+
+	// 一時停止
+	void Pause(const std::string soundName);
+
+	// 一時停止した音声の再開
+	void Resume(const std::string soundName);
 
 	// 音声データ解放
 	void SoundUnload(const std::string soundName);

@@ -73,7 +73,7 @@ bool Audio::LoadWave(const std::string filePath, const std::string soundName, co
 	// 登録する音声が重複していたらfalseでreturn
 	for (auto it = soundMap.begin(); it != soundMap.end(); ++it)
 	{
-		if (it->second.filename == filePath)
+		if (it->second.filePath == filePath)
 		{
 			Log("this file loaded\n");
 			return false;
@@ -158,7 +158,7 @@ bool Audio::LoadWave(const std::string filePath, const std::string soundName, co
 	soundData.wfex = format.fmt;
 	soundData.pBuffer = reinterpret_cast<BYTE*>(pBuffer);
 	soundData.bufferSize = data.size;
-	soundData.filename = filePath;
+	soundData.filePath = filePath;
 	soundData.playTime = time;
 	soundData.volume = vol;
 
@@ -211,35 +211,35 @@ void Audio::Play(const std::string soundName, const bool loop) {
 	assert(audioList.size() < maxSourceVoiceCount);
 }
 
-void Audio::PlayMp3(const bool loop, const float volume) {
-	HRESULT result;
-	// 波形フォーマットをもとにSourceVoiceの生成
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &mp3waveFormat);
-	assert(SUCCEEDED(result));
-	// バッファの設定
-	XAUDIO2_BUFFER buffer = {};
-	buffer.AudioBytes = static_cast<UINT32>(mp3AudioData.size());
-	buffer.pAudioData = mp3AudioData.data();
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-
-	// ループ設定
-	if (loop) {
-		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-	}
-
-	// バッファの登録
-	HRESULT hr = pSourceVoice->SubmitSourceBuffer(&buffer);
-	if (FAILED(hr)) {
-		return;
-	}
-
-	// ボリュームの設定
-	pSourceVoice->SetVolume(volume);
-
-	// 再生開始
-	pSourceVoice->Start();
-}
+//void Audio::PlayMp3(const bool loop, const float volume) {
+//	HRESULT result;
+//	// 波形フォーマットをもとにSourceVoiceの生成
+//	IXAudio2SourceVoice* pSourceVoice = nullptr;
+//	result = xAudio2->CreateSourceVoice(&pSourceVoice, &mp3waveFormat);
+//	assert(SUCCEEDED(result));
+//	// バッファの設定
+//	XAUDIO2_BUFFER buffer = {};
+//	buffer.AudioBytes = static_cast<UINT32>(mp3AudioData.size());
+//	buffer.pAudioData = mp3AudioData.data();
+//	buffer.Flags = XAUDIO2_END_OF_STREAM;
+//
+//	// ループ設定
+//	if (loop) {
+//		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+//	}
+//
+//	// バッファの登録
+//	HRESULT hr = pSourceVoice->SubmitSourceBuffer(&buffer);
+//	if (FAILED(hr)) {
+//		return;
+//	}
+//
+//	// ボリュームの設定
+//	pSourceVoice->SetVolume(volume);
+//
+//	// 再生開始
+//	pSourceVoice->Start();
+//}
 
 bool Audio::LoadMP3(const std::string filePath, const std::string soundName, const float volume) {
 	// 登録する名前が重複していたらfalseでreturn
@@ -251,7 +251,7 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 	// 登録する音声が重複していたらfalseでreturn
 	for (auto it = soundMap.begin(); it != soundMap.end(); ++it)
 	{
-		if (it->second.filename == filePath)
+		if (it->second.filePath == filePath)
 		{
 			Log("this file loaded\n");
 			return false;
@@ -375,46 +375,27 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 			continue;
 		}
 
-		//int time = bufferSize / pWaveFormat->nAvgBytesPerSec;
-	
 
 		// データをコピー
 		size_t offset = mp3AudioData.size();
 		mp3AudioData.resize(offset + bufferSize);
 		memcpy(mp3AudioData.data() + offset, audioBuffer, bufferSize);
-		/*soundData.bufferSize += bufferSize;
-		soundData.pBuffer = audioBuffer;
-		soundData.filename = filePath;
-		soundData.volume = vol;*/
-		//soundData.playTime = time;
-		// 
-		// 
-		 // データをコピー
-
-		  // データをコピー
-		//offset += bufferSize;
-		//memcpy(soundData.pBuffer, audioBuffer, bufferSize);
-		/*if (!collect)
-		{
-			buf = audioBuffer;
-			collect = true;
-		}*/
-
-		//soundMap[soundName] = soundData;
-
+		
 		// バッファのロックを解除
 		mediaBuffer->Unlock();
 	}
 
+	// 再生時間を計算する
 	int time = static_cast<int>(mp3AudioData.size() / pWaveFormat->nAvgBytesPerSec);
 	CoTaskMemFree(pWaveFormat);
-	// 0.0f ~ 1.0fにclampする
+	// 音量を0.0f ~ 1.0fにclampする
 	float vol = std::clamp(volume, 0.0f, 1.0f);
+
 	SoundData soundData;
 	soundData.wfex = mp3waveFormat;
 	soundData.bufferSize = static_cast<UINT32>(mp3AudioData.size());
 	soundData.pBuffer = mp3AudioData.data();
-	soundData.filename = filePath;
+	soundData.filePath = filePath;
 	soundData.volume = vol;
 	soundData.playTime = time;
 
@@ -423,13 +404,13 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 	return true;
 }
 
-void Audio::SetVolumeWave(const std::string soundName, const float volume) {
+void Audio::SetVolume(const std::string soundName, const float volume) {
 	// 0.0f ~ 1.0fにclampする
 	float vol = std::clamp(volume, 0.0f, 1.0f);
 	soundMap[soundName].volume = vol;
 	for (AudioList list : audioList)
 	{
-		if (list.soundData.filename == soundMap[soundName].filename)
+		if (list.soundData.filePath == soundMap[soundName].filePath)
 		{
 			list.sourceVoice->SetVolume(soundMap[soundName].volume);
 			return;
@@ -444,7 +425,7 @@ void Audio::SetMasterVolume(const float volume){
 }
 
 // 全ての音声停止
-void Audio::SoundStopWaveAll() {
+void Audio::StopAll() {
 	// listに登録されているaudioSourceの全てを音声停止してlistをclearする
 	for (AudioList list : audioList)
 	{
@@ -455,14 +436,14 @@ void Audio::SoundStopWaveAll() {
 }
 
 // 音声停止
-void Audio::SoundStopWave(const std::string soundName) {
+void Audio::Stop(const std::string soundName) {
 	// listに登録されているaudioSourceの中から指定されたsoundDataのfilenameに一致するもの全てを音声停止して一致するものをlistからremoveする
 	uint32_t index = 0;
 	uint32_t eraseList[maxSourceVoiceCount] = { 0 };
 	uint32_t eraseNum = 0;
 	for (AudioList list : audioList)
 	{
-		if (list.soundData.filename == soundMap[soundName].filename)
+		if (list.soundData.filePath == soundMap[soundName].filePath)
 		{
 			list.sourceVoice->Stop();
 			list.sourceVoice->DestroyVoice();
@@ -477,6 +458,28 @@ void Audio::SoundStopWave(const std::string soundName) {
 		eraseList[i + 1] -= i + 1;
 	}
 }
+
+void Audio::Pause(const std::string soundName) {
+	for (AudioList list : audioList)
+	{
+		if (list.soundData.filePath == soundMap[soundName].filePath)
+		{
+			list.sourceVoice->Stop();
+		}
+	}
+}
+
+void Audio::Resume(const std::string soundName) {
+	for (AudioList list : audioList)
+	{
+		if (list.soundData.filePath == soundMap[soundName].filePath)
+		{
+			list.sourceVoice->Start();
+		}
+	}
+}
+
+
 
 void Audio::Update() {
 	// audioListのサイズが0なら早期return
