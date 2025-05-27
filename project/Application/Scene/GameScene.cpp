@@ -18,7 +18,7 @@ void GameScene::Initialize() {
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 
 	input = Input::GetInstance();
-	//input->ShowMouseCursor(showCursor);
+	input->ShowMouseCursor(showCursor);
 
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 
@@ -72,7 +72,7 @@ void GameScene::Initialize() {
 	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
 
-	soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+	//soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
 	isPaused = false;
 	//ポーズUIの背景
@@ -109,17 +109,133 @@ void GameScene::Initialize() {
 	//fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
 
 
-	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/star.png");
+
+	for (int i = 0; i < 3; ++i) {
+		Sprite* icon = new Sprite();
+		icon->Initialize("Resources/Sprite/star.png");
+		icon->SetScale({ 32.0f, 32.0f });
+		icon->SetAnchorPoint({ 0.0f, 0.0f });
+		starIcons.push_back(icon);
+	}
+
 
 }
+
+void GameScene::PauseUpdate()
+{
+	input->Update();
+
+	input->ShowMouseCursor(true);
+
+	// --- カーソルによるUI選択 ---
+	hoveredPauseButton = nullptr;
+	if (resumeButton.InCursor()) hoveredPauseButton = &resumeButton;
+	else if (restartButton.InCursor()) hoveredPauseButton = &restartButton;
+	else if (returnToTitleButton.InCursor()) hoveredPauseButton = &returnToTitleButton;
+
+	// 点滅タイマーリセット（カーソルが移動したとき）
+	if (hoveredPauseButton != prevHoveredPauseButton) {
+		pauseBlinkTimer = 0.0f;
+		prevHoveredPauseButton = hoveredPauseButton;
+	}
+
+	// 点滅アニメーション進行
+	pauseBlinkTimer += 1.0f / 60.0f;
+	float blinkAlpha = 0.5f + 0.5f * sinf(pauseBlinkTimer * 3.14f);
+
+	// 十字キー操作（カーソルが使われていないとき）
+	if (!hoveredPauseButton) {
+		prevPauseSelectedIndex = pauseSelectedIndex;
+
+		if (!pauseInputLocked) {
+			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
+				pauseSelectedIndex = (pauseSelectedIndex + 1) % pauseButtonCount;
+				pauseInputLocked = true;
+			}
+			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
+				pauseSelectedIndex = (pauseSelectedIndex - 1 + pauseButtonCount) % pauseButtonCount;
+				pauseInputLocked = true;
+			}
+		}
+		else {
+			if (!input->TriggerXButton(DPad::Up) && !input->TriggerXButton(DPad::Down)) {
+				pauseInputLocked = false;
+			}
+		}
+
+		if (pauseSelectedIndex != prevPauseSelectedIndex) {
+			pauseBlinkTimer = 0.0f;
+		}
+	}
+
+	// 全ボタン透明度初期化
+	resumeButton.SetSpriteAlpha(1.0f);
+	restartButton.SetSpriteAlpha(1.0f);
+	returnToTitleButton.SetSpriteAlpha(1.0f);
+
+	// 点滅：カーソルが優先
+	if (hoveredPauseButton) {
+		hoveredPauseButton->SetSpriteAlpha(blinkAlpha);
+	}
+	else {
+		switch (pauseSelectedIndex) {
+		case 0: resumeButton.SetSpriteAlpha(blinkAlpha); break;
+		case 1: restartButton.SetSpriteAlpha(blinkAlpha); break;
+		case 2: returnToTitleButton.SetSpriteAlpha(blinkAlpha); break;
+		}
+	}
+
+	// 決定：Enter / Aボタン
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+		if (hoveredPauseButton) {
+			if (hoveredPauseButton == &resumeButton) {
+				isPaused = false;
+				input->ShowMouseCursor(false);
+				return;
+			}
+			else if (hoveredPauseButton == &restartButton) {
+				goToRestart = true;
+				isPaused = false;
+				return;
+			}
+			else if (hoveredPauseButton == &returnToTitleButton) {
+				goToTitle = true;
+				return;
+			}
+		}
+		else {
+			switch (pauseSelectedIndex) {
+			case 0: isPaused = false; input->ShowMouseCursor(false); return;
+			case 1: goToRestart = true; isPaused = false; return;
+			case 2: goToTitle = true; return;
+			}
+		}
+	}
+
+	// マウスクリック決定（OnButton）
+	if (resumeButton.OnButton()) {
+		isPaused = false;
+		input->ShowMouseCursor(false);
+		return;
+	}
+	if (restartButton.OnButton()) {
+		goToRestart = true;
+		isPaused = false;
+		return;
+	}
+	if (returnToTitleButton.OnButton()) {
+		goToTitle = true;
+		return;
+	}
+}
+
 
 void GameScene::Update() {
 
 	Vector2 posM2 = input->GetWindowMousePos2();
 
 	Vector3 posM3 = input->GetWindowMousePos3();
-
-	//#ifdef _DEBUGState
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
@@ -146,54 +262,6 @@ void GameScene::Update() {
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();
 
-	//#endif _DEBUGState
-
-		/*if (input->TriggerKey(DIK_ESCAPE))
-		{
-			finished = true;
-		}*/
-		/*const float speed = 0.7f;
-		Vector3 velocity(0.0f, 0.0f, speed);
-		velocity = TransformNormal(velocity, camera->GetWorldMatrix());
-		if (input->PushKey(DIK_W)) {
-			cameraTransform.translate += velocity;
-		}
-		if (input->PushKey(DIK_S)) {
-			cameraTransform.translate -= velocity;
-		}
-		velocity = { speed, 0.0f, 0.0f };
-		velocity = TransformNormal(velocity, camera->GetWorldMatrix());
-		if (input->PushKey(DIK_A)) {
-			cameraTransform.translate -= velocity;
-		}
-		if (input->PushKey(DIK_D)) {
-			cameraTransform.translate += velocity;
-		}
-		if (input->PushKey(DIK_SPACE)) {
-			cameraTransform.translate.y += 1.0f;
-		}
-		if (input->PushKey(DIK_LSHIFT)) {
-			cameraTransform.translate.y -= 1.0f;
-		}
-		if (input->PushKey(DIK_LEFT)) {
-			cameraTransform.rotate.y -= 0.03f;
-		}
-		if (input->PushKey(DIK_RIGHT)) {
-			cameraTransform.rotate.y += 0.03f;
-		}
-		if (input->PushKey(DIK_UP)) {
-			cameraTransform.rotate.x -= 0.03f;
-		}
-		if (input->PushKey(DIK_DOWN)) {
-			cameraTransform.rotate.x += 0.03f;
-		}
-		if (input->PushKey(DIK_Q)) {
-			cameraTransform.rotate.z -= 0.01f;
-		}
-		if (input->PushKey(DIK_E)) {
-			cameraTransform.rotate.z += 0.01f;
-
-		}*/
 
 
 	//if (isFadingIn) {
@@ -205,7 +273,7 @@ void GameScene::Update() {
 	//	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
 	//}
 
-		// ポーズ切り替え
+	// ポーズ切り替え
 	if (input->PushKey(DIK_ESCAPE)) {
 		if (tabReleased) {
 			isPaused = !isPaused;
@@ -220,56 +288,7 @@ void GameScene::Update() {
 	// ポーズ中の処理
 	if (isPaused) {
 
-		// ボタンの alpha を設定
-		UI* hoveredButton = nullptr;
-		// どのボタンにカーソルが当たっているか取得
-		if (resumeButton.InCursor()) {
-			hoveredButton = &resumeButton;
-		}
-		else if (restartButton.InCursor()) {
-			hoveredButton = &restartButton;
-		}
-		else if (returnToTitleButton.InCursor()) {
-			hoveredButton = &returnToTitleButton;
-
-		}
-
-		// 前回と違うボタンに乗ったらタイマーリセット
-		if (hoveredButton != prevHoveredButton) {
-			blinkTimer = 0.0f;
-			prevHoveredButton = hoveredButton;  // 更新
-		}
-
-		// 毎フレーム進める 1/60秒
-		blinkTimer += 1.0f / 60.0f;
-		// アルファ値を 0.5 ～ 1.0 の範囲（周期 2秒）
-		float alpha = 0.5f + 0.5f * sinf(blinkTimer * 3.14f);
-
-		resumeButton.SetSpriteAlpha(1.0f);
-		restartButton.SetSpriteAlpha(1.0f);
-		returnToTitleButton.SetSpriteAlpha(1.0f);
-
-		input->ShowMouseCursor(true);
-
-// 対象ボタンだけ点滅
-		if (hoveredButton) {
-			hoveredButton->SetSpriteAlpha(alpha);
-		}
-
-		if (resumeButton.OnButton()) {
-			isPaused = false;
-			input->ShowMouseCursor(false);
-		}
-		if (restartButton.OnButton()) {
-			goToRestart = true;
-			isPaused = false;
-			Update();
-		}
-		if (returnToTitleButton.OnButton()) {
-			goToTitle = true;
-		}
-
-		
+		PauseUpdate(); // ポーズ中のUI更新
 
 		return;  // ゲーム本体の更新を止める
 	}
@@ -280,33 +299,18 @@ void GameScene::Update() {
 		showCursor = !showCursor;
 		input->ShowMouseCursor(showCursor);
 	}
-	/*if (input->TriggerKey(DIK_0))
-	{
-		button->SetSprite("Resources/Sprite/button.png");
-	}
-	if (input->TriggerKey(DIK_1))
-	{
-		button->SetSprite("Resources/Sprite/endButton.png");
-	}
-	if (input->TriggerKey(DIK_2))
-	{
-		Transform ta = button->GetTransform();
-		ta.scale.x += 5.0f;
-		ta.scale.y += 5.0f;
-		button->SetTransform(ta);
-	}*/
 
-	if (input->TriggerKey(DIK_2))
-	{
-		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
-	}
-	input->Update();
+
+	//if (input->TriggerKey(DIK_2))
+	//{
+	//	Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
+	//}
 
 	player->Update();
-	camera->Update();
 
-	//camera->SetTranslate(cameraTransform.translate);
-	//camera->SetRotate(cameraTransform.rotate);
+
+	camera = player->GetCamera();
+	camera->Update();
 	object3d->SetTransform(modelTransform);
 	object3d->SetEnableLighting(enableLighting);
 	object3d->Update();
@@ -335,6 +339,7 @@ void GameScene::Update() {
 	lightSwitch->Update();
 	player->SetSwitchFlag(lightSwitch->GetFlag());
 
+	input->Update();
 
 	float di = Light::GetInstance()->GetIntensityDirectionalLight();
 	di += 0.001f;
@@ -355,10 +360,9 @@ void GameScene::Update() {
 		}
 	}
 
-
-
-
 }
+
+
 
 void GameScene::Draw() {
 
@@ -396,9 +400,31 @@ void GameScene::Draw() {
 		returnToTitleButton.Draw();
 	}
 
-	///*if (fadeSprite) fadeSprite->Draw();*/
+
+	// ポーズ中のカーソル位置に応じたボタンの描画
+	if (fadeSprite) fadeSprite->Draw();
+
+
+	// 星アイコンの描画（星が取得された場合のみ）
+	if (starResultManager) {
+		int collectedCount = 0;
+		for (Star* s : starResultManager->GetStars()) {
+			if (s->IsCollected() && collectedCount < (int)starIcons.size()) {
+				float x = 1280.0f - 40.0f - (collectedCount * 36.0f);
+				float y = 20.0f;
+				starIcons[collectedCount]->SetPosition({ x, y });
+				starIcons[collectedCount]->Update();
+				starIcons[collectedCount]->Draw();
+				++collectedCount;
+			}
+		}
+	}
+
+
 
 }
+
+
 
 void GameScene::Finalize() {
 
@@ -424,4 +450,10 @@ void GameScene::Finalize() {
 		delete pauseBg;
 		pauseBg = nullptr;
 	}
+
+	for (Sprite* s : starIcons) {
+		delete s;
+	}
+	starIcons.clear();
+
 }

@@ -100,8 +100,8 @@ const AABB WinApp::GetWindowAABB() const {
 		return none;
 	}
 	AABB result = {
-		{rt.left, rt.top},
-		{rt.right, rt.bottom}
+		{static_cast<float>(rt.left), static_cast<float>(rt.top)},
+		{static_cast<float>(rt.right), static_cast<float>(rt.bottom)}
 	};
 
 	return result;

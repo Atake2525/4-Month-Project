@@ -192,6 +192,7 @@ void MyGame::Update() {
 		}
 		break;
 	}
+	Audio::GetInstance()->Update();
 }
 
 

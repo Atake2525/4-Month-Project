@@ -57,9 +57,12 @@ void Player::Initialize(Camera* camera)
 
 	// 追加したクラス
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "Player.obj");
+
 	
-	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
+
+	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+
 
 	object3d_ = new Object3d();
 	object3d_->Initialize();
@@ -122,76 +125,22 @@ void Player::Update()
 	//camera_->SetTranslate(cameraTransform_.translate);
 	//camera_->SetRotate(cameraTransform_.rotate);
 
-	object3d_->SetTransform(drawModel);
+	/*object3d_->SetTransform(drawModel);
 	object3d_->SetRotateInDegree(drawModel.rotate);
 	object3d_->SetColor(modelColor_);
 	object3d_->SetEnableLighting(modelEnableLighting_);
-	object3d_->Update();
+	object3d_->Update();*/
 
 
 	drawModel.translate = modelTransform_.translate;
+	//drawModel.rotate.y = modelTransform_.rotate.y;
 
-	object3d_->SetTranslate(drawModel.translate);
+	/*object3d_->SetTranslate(drawModel.translate);*/
+	object3d_->SetTransform(drawModel);
 	object3d_->Update();
 
 
-	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, modelTransform_.translate);
-
-	/*object3d_->SetTransform(modelTransform_);
-	object3d_->Update();
-
-	Matrix4x4 cameraWorldMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
-
-	Matrix4x4 mathMatrix = Multiply(object3d_->GetWorldMatrix(), cameraWorldMatrix);
-
-	camera_->SetParent(worldMatrix);
-
-	Vector3 position = { mathMatrix.m[3][0], mathMatrix.m[3][1], mathMatrix.m[3][2] };*/
-
-	// AABBの更新
-	cameraAABB.min = firstCameraAABB.min + cameraTransform_.translate;
-	cameraAABB.max = firstCameraAABB.max + cameraTransform_.translate;
-
-	//cameraTransform_.translate = camera_->GetTransform().translate;
-
-	// cameraWorldMatrixの生成
-	//Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
-
-	// TransformNormalの計算でcameraTransformにカメラの位置を代入
-	// プレイヤーのTransformが向いている方向からcameraOffset分を足す
-	Vector3 normalizeCamera = TransformNormal(cameraOffset, worldMatrix);
-	// カメラをプレイヤーの位置に合わせる
-	cameraTransform_.translate = normalizeCamera + modelTransform_.translate;
-	// 前回の座標と照合して移動量を計算  std::abs(絶対値)
-	cameraVelocity.x = std::abs(cameraTransform_.translate.x) - std::abs(cameraVelocityPre.x);
-	cameraVelocity.y = std::abs(cameraTransform_.translate.y) - std::abs(cameraVelocityPre.y);
-	cameraVelocity.z = std::abs(cameraTransform_.translate.z) - std::abs(cameraVelocityPre.z);
-	cameraVelocity.x *= -1;
-	cameraVelocity.z *= -1;
-
-
-	// カメラの衝突判定を更新
-	UpdateCameraCollision();
-
-
-	// 高度制限clamp
-	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
-
-	// カメラのworldMatrixを更新
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
-
-	// 高度制限が発生しているときは平行移動のみカメラとparentする
-	if (cameraTransform_.translate.y >= 1.0f && cameraTransform_.translate.y <= modelTransform_.translate.y + 21.0f)
-	{
-		camera_->SetParent(cameraMatrix);
-	}
-	else
-	{
-		camera_->SetTranslateParent(cameraMatrix);
-	}
-
-	// 前回フレームのカメラの位置を格納(CameraVelocity計算のため)
-	cameraVelocityPre = cameraTransform_.translate;
+	
 
 	//camera_->SetTranslate(cameraTransform_.translate);
 	
@@ -372,6 +321,48 @@ void Player::Rotate()
 	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
 	//-0.1f 0.9f cameraRotate
 	//0.2f 16.0f cameraTransfrom
+
+	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, modelTransform_.translate);
+
+	// AABBの更新
+	cameraAABB.min = firstCameraAABB.min + cameraTransform_.translate;
+	cameraAABB.max = firstCameraAABB.max + cameraTransform_.translate;
+
+	// TransformNormalの計算でcameraTransformにカメラの位置を代入
+	// プレイヤーのTransformが向いている方向からcameraOffset分を足す
+	Vector3 normalizeCamera = TransformNormal(cameraOffset, worldMatrix);
+	// カメラをプレイヤーの位置に合わせる
+	cameraTransform_.translate = normalizeCamera + modelTransform_.translate;
+	// 前回の座標と照合して移動量を計算  std::abs(絶対値)
+	cameraVelocity.x = std::abs(cameraTransform_.translate.x) - std::abs(cameraVelocityPre.x);
+	cameraVelocity.y = std::abs(cameraTransform_.translate.y) - std::abs(cameraVelocityPre.y);
+	cameraVelocity.z = std::abs(cameraTransform_.translate.z) - std::abs(cameraVelocityPre.z);
+	cameraVelocity.x *= -1;
+	cameraVelocity.z *= -1;
+
+
+	// カメラの衝突判定を更新
+	UpdateCameraCollision();
+
+
+	// 高度制限clamp
+	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
+
+	// カメラのworldMatrixを更新
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+
+	// 高度制限が発生しているときは平行移動のみカメラとparentする
+	if (cameraTransform_.translate.y >= 1.0f && cameraTransform_.translate.y <= modelTransform_.translate.y + 21.0f)
+	{
+		camera_->SetParent(cameraMatrix);
+	}
+	else
+	{
+		camera_->SetTranslateParent(cameraMatrix);
+	}
+
+	// 前回フレームのカメラの位置を格納(CameraVelocity計算のため)
+	cameraVelocityPre = cameraTransform_.translate;
 }
 
 void Player::Jump()
@@ -687,15 +678,6 @@ void Player::UpdateCameraCollision() {
 	if (collision->GetCollisionListSize() > 0)
 	{
 
-		// cameraOffsetの要素の割合を計算する
-		//Vector3 cameraRate = { 0.0f, std::abs(cameraOffset.y) / std::abs(cameraOffset.z), std::abs(cameraOffset.z) / std::abs(cameraOffset.y) };
-
-		//cameraOffset.z -= 0.1f;
-		//cameraOffset.z = std::clamp(cameraOffset.z, -20.0f, 0.0f);
-		//cameraOffset.y = cameraOffset.z * cameraRate.y * -1.0f;
-
-		// 衝突判定をするためのもの
-		//cameraOffset += collision->UpdateCollisionY(cameraAABB, cameraVelocity.y);
 		collision->GetLenXZVelocity(cameraVelocity);
 		LenXZ len = collision->GetLenXZ();
 
@@ -715,18 +697,18 @@ void Player::UpdateCameraCollision() {
 
 
 		// 衝突判定処理
-		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset);
+		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset, defaultCameraOffset);
 		// 初期のカメラオフセットからの判定処理も行っておく
-		Vector3 defOff = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, defaultCameraOffset);
+		Vector3 defOff = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, defaultCameraOffset, defaultCameraOffset);
 		// offの値とcameraOffsetの値が違えばeasingを使用してoffの値に置換する
-		if ((off.y != cameraOffset.y || off.z != cameraOffset.z) && !cameraZoomIn)
+		if ( off.z != cameraOffset.z && !cameraZoomIn)
 		{
 			cameraZoomIn = true;
 			cameraZoomOut = false;
 			cameraEasingTime = 0.0f;
 			beforCameraOffset = off;
 		}
-		else if ((off.y != defOff.y || off.z != defOff.z ) && !cameraZoomOut)
+		else if (off.z != defOff.z && !cameraZoomOut)
 		{
 			cameraZoomOut = true;
 			cameraZoomIn = false;
@@ -764,13 +746,13 @@ void Player::UpdateCameraCollision() {
 		ImGui::Checkbox("X", &X);
 		ImGui::Checkbox("Z", &Z);
 		ImGui::DragFloat3("cameraOffset", &cameraOffset.x, 0.1f);
-		ImGui::DragFloat3("cameraCollision", &off.x);
+		ImGui::DragFloat3("off", &off.x);
+		ImGui::DragFloat3("defOff", &defOff.x);
+		ImGui::DragFloat3("beforCamOff", &beforCameraOffset.x);
 		ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x);
 		ImGui::DragFloat3("cameraMin", &cameraAABB.min.x);
 		ImGui::DragFloat3("cameraMax", &cameraAABB.max.x);
 		ImGui::DragFloat("easingTime", &cameraEasingTime);
-		ImGui::DragFloat3("defOff", &defOff.x);
-		ImGui::DragFloat3("beforCamOff", &beforCameraOffset.x);
 		ImGui::End();
 	}
 }
@@ -796,6 +778,7 @@ bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 
 void Player::EffectBorn()
 {
+
 	for (int i = 0; i < 25; i++) {
 		/*生成*/
 		JampEffect* effect = new JampEffect();
@@ -815,6 +798,7 @@ void Player::EffectBorn()
 		effect->Intialize(position, velocity);
 		effects_.push_back(effect);
 	}
-}
+
+
 
 

@@ -179,14 +179,14 @@ Vector3 PlayerCollision::UpdateCollisionZ(const AABB& playerAABB, const float& p
 	return result;
 }
 
-Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset) {
+Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AABB& playerAABB, const Vector3& cameraVelocity, const Vector3& cameraOffset, const Vector3& defaultCameraOffset) {
 	Vector3 result = cameraOffset;
 
 
 	// cameraOffsetをNormalize(正規化)しておく
 	Vector3 normalCameraOffset = Normalize(cameraOffset);
 	// cameraOffsetの要素の割合を計算する
-	Vector3 cameraRate = { 0.0f, std::abs(10.0f) / std::abs(-20.0f), std::abs(-20.0f) / std::abs(10.0f) };
+	Vector3 cameraRate = { 0.0f, std::abs(defaultCameraOffset.y) / std::abs(defaultCameraOffset.z), std::abs(defaultCameraOffset.z) / std::abs(defaultCameraOffset.y) };
 	// プレイヤーとカメラの距離を計算
 	// AABBではなく中心座標からの距離が欲しいので中心座標を計算する
 	Vector3 plCenterPos = CenterAABB(playerAABB);
@@ -208,6 +208,8 @@ Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AAB
 	sphere.radius = 2.0f;
 
 	float plcamDist = Distance(plCenterPos, camCenterPos);
+
+	std::vector<float> distList;
 
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
@@ -258,18 +260,32 @@ Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AAB
 			//result.z = closestPoint.z;
 
 		}
-		result.x = std::max(result.x, cameraOffset.x);
-		result.y = std::max(result.y, cameraOffset.y);
-		result.z = std::clamp(result.z, cameraOffset.z, -2.0f);
-		// 判定対象からプレイヤーまでの距離を求める
-		result.y = result.z * cameraRate.y * -1.0f;
 
-		if (CollisionAABB(cameraAABB, collisionPlate.aabb))
+		// 複数のオブジェクトに接触しているときに対処するため一時的にlistに格納する
+		if (IsCollision(collisionPlate.aabb, segment) || IsCollision(collisionPlate.aabb, sphere))
 		{
-			return result;
+			distList.push_back(result.z);
 		}
 
 	}
+
+	// よりプレイヤーから近い距離のresultを使用する
+	//float resultDist = 20.0f;
+	for (float dist : distList)
+	{
+		if (result.z < dist)
+		{
+			result.z = dist;
+		}
+	}
+	distList.clear();
+
+	result.x = std::max(result.x, cameraOffset.x);
+	result.y = std::max(result.y, cameraOffset.y);
+	result.z = std::clamp(result.z, cameraOffset.z, -2.0f);
+	// 判定対象からプレイヤーまでの距離を求める
+	result.y = result.z * cameraRate.y * -1.0f;
+
 	return result;
 }
 
