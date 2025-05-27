@@ -101,12 +101,12 @@ void GameScene::Initialize() {
 	escHintSprite->Update();
 
 	//フェードアウト用スプライトの初期化
-	fadeSprite = new Sprite();
-	fadeSprite->Initialize("Resources/black1x1.png");
-	fadeSprite->SetPosition({ 0.0f, 0.0f });
-	fadeSprite->SetScale({ 1280.0f, 720.0f });
-	fadeSprite->SetAnchorPoint({ 0.0f, 0.0f });
-	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
+	//fadeSprite = new Sprite();
+	//fadeSprite->Initialize("Resources/black1x1.png");
+	//fadeSprite->SetPosition({ 0.0f, 0.0f });
+	//fadeSprite->SetScale({ 1280.0f, 720.0f });
+	//fadeSprite->SetAnchorPoint({ 0.0f, 0.0f });
+	//fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
 
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/star.png");
@@ -264,14 +264,14 @@ void GameScene::Update() {
 
 
 
-	if (isFadingIn) {
-		fadeAlpha -= 1.0f / (60.0f * 3.0f); // 3秒で明るく
-		if (fadeAlpha <= 0.0f) {
-			fadeAlpha = 0.0f;
-			isFadingIn = false;
-		}
-		fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
-	}
+	//if (isFadingIn) {
+	//	fadeAlpha -= 1.0f / (60.0f * 3.0f); // 3秒で明るく
+	//	if (fadeAlpha <= 0.0f) {
+	//		fadeAlpha = 0.0f;
+	//		isFadingIn = false;
+	//	}
+	//	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
+	//}
 
 	// ポーズ切り替え
 	if (input->PushKey(DIK_ESCAPE)) {
@@ -400,8 +400,10 @@ void GameScene::Draw() {
 		returnToTitleButton.Draw();
 	}
 
+
 	// ポーズ中のカーソル位置に応じたボタンの描画
 	if (fadeSprite) fadeSprite->Draw();
+
 
 	// 星アイコンの描画（星が取得された場合のみ）
 	if (starResultManager) {
