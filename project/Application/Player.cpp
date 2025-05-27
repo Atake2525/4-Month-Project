@@ -783,7 +783,7 @@ void Player::EffectBorn()
 		/*生成*/
 		JampEffect* effect = new JampEffect();
 		/*位置*/
-		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f};
+		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
 
 		Vector3 velocity = {
 			distrubution(randomEngine),               // X方向ランダム
@@ -798,6 +798,7 @@ void Player::EffectBorn()
 		effect->Intialize(position, velocity);
 		effects_.push_back(effect);
 	}
+}
 
 
 
