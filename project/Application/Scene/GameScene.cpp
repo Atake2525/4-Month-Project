@@ -72,7 +72,9 @@ void GameScene::Initialize() {
 	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
 
-	soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+	Audio::GetInstance()->LoadWave("Resources/Alarm01.wav", "Alart", 0.4f);
+	Audio::GetInstance()->LoadWave("Resources/Alarm01.wav", "Al", 0.4f);
+	Audio::GetInstance()->LoadMP3("Resources/sekiranun.mp3", "sekiranun", 1.0f);
 
 	isPaused = false;
 	//ポーズUIの背景
@@ -109,7 +111,7 @@ void GameScene::Initialize() {
 	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
 
 
-	 soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+	 //soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
 }
 
@@ -292,18 +294,44 @@ void GameScene::Update() {
 	if (input->TriggerKey(DIK_1))
 	{
 		button->SetSprite("Resources/Sprite/endButton.png");
-	}
-	if (input->TriggerKey(DIK_2))
-	{
-		Transform ta = button->GetTransform();
-		ta.scale.x += 5.0f;
-		ta.scale.y += 5.0f;
-		button->SetTransform(ta);
 	}*/
+	//if (input->TriggerKey(DIK_2))
+	//{
+	//	/*Transform ta = button->GetTransform();
+	//	ta.scale.x += 5.0f;
+	//	ta.scale.y += 5.0f;
+	//	button->SetTransform(ta);*/
+	//	Audio::GetInstance()->SoundPlayWave(soundData);
+	//}
 
 	if (input->TriggerKey(DIK_2))
 	{
-		Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
+		Audio::GetInstance()->Play("Alart", true);
+	}
+	if (input->TriggerKey(DIK_3))
+	{
+		Audio::GetInstance()->Play("sekiranun", true);
+		//Audio::GetInstance()->PlayMp3(true);
+	}
+	if (input->TriggerKey(DIK_4))
+	{
+		Audio::GetInstance()->Stop("sekiranun");
+	}
+	if (input->TriggerKey(DIK_5))
+	{
+		Audio::GetInstance()->SetVolume("sekiranun", 1.0f);
+	}
+	if (input->TriggerKey(DIK_6))
+	{
+		Audio::GetInstance()->SetVolume("sekiranun", 0.2f);
+	}
+	if (input->TriggerKey(DIK_7))
+	{
+		Audio::GetInstance()->Pause("sekiranun");
+	}
+	if (input->TriggerKey(DIK_8))
+	{
+		Audio::GetInstance()->SoundUnload("sekiranun");
 	}
 
 	player->Update();
@@ -358,7 +386,6 @@ void GameScene::Update() {
 			// TODO: ここで音やエフェクトなど入れても良い
 		}
 	}
-
 
 
 	input->Update();
