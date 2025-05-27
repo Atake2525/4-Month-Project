@@ -25,6 +25,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg
 #include "Setting.h"
 #include "GameScene.h"
 #include "GameClear.h"
+#include "starResult.h"
 
 #pragma once
 
@@ -44,6 +45,7 @@ public:
 
 	// ループ終了
 	bool RoopOut() override { return finished; }
+	
 
 	// ↑までシーンの作成に必須
 
@@ -73,4 +75,5 @@ private:
 	};
 	Scene currentScene = Scene::Title; // 初期シーンはTitle
 
+	int Result = 0;
 };

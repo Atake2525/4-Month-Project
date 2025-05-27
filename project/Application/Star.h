@@ -31,4 +31,5 @@ private:
     AABB aabb_;
 
     bool isCollected_ = false; // 星を取得したかどうかのフラグ
+
 };

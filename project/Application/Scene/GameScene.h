@@ -49,7 +49,7 @@ public:
 	bool ShouldRestart() const { return goToRestart; }
 	bool ShouldReturnToTitle() const { return goToTitle; }
 
-
+	int StarResult() const { return Result; }
 private:
 	Object3d* object3d = nullptr;
 
@@ -110,5 +110,8 @@ private:
 	Sprite* fadeSprite = nullptr;
 
 	float fadeAlpha = 1.0f;
+
+	//クリア時に星の取得情報を送るよう
+	int Result = 0;
 };
 

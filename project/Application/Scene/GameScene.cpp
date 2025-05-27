@@ -45,7 +45,7 @@ void GameScene::Initialize() {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ 12.0f,12.0f,10.0f });
+	goal->Initialize({ 12.0f,12.0f,0.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
@@ -71,6 +71,8 @@ void GameScene::Initialize() {
 	restartButton.CreateButton({ 540, 320 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
 	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
+	//クリア時に星の取得情報を送るよう
+	Result = 0;
 
 	soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
@@ -351,6 +353,7 @@ void GameScene::Update() {
 	for (Star* s : starResultManager->GetStars()) {
 		if (!s->IsCollected() && s->OnCollision(player->StarObject3d())) {
 			s->Collect(); // 取得済みにする
+			Result++;
 			// TODO: ここで音やエフェクトなど入れても良い
 		}
 	}
