@@ -287,11 +287,24 @@ void Player::Rotate()
 	cameraAABB.min = firstCameraAABB.min + cameraTransform_.translate;
 	cameraAABB.max = firstCameraAABB.max + cameraTransform_.translate;
 
+	defaultCameraAABB.min = firstCameraAABB.min + defaultCameraTransform.translate;
+	defaultCameraAABB.max = firstCameraAABB.max + defaultCameraTransform.translate;
+
 	// TransformNormalの計算でcameraTransformにカメラの位置を代入
 	// プレイヤーのTransformが向いている方向からcameraOffset分を足す
 	Vector3 normalizeCamera = TransformNormal(cameraOffset, worldMatrix);
+	Vector3 normalizeDefaultCamera = TransformNormal(defaultCameraOffset, worldMatrix);
 	// カメラをプレイヤーの位置に合わせる
 	cameraTransform_.translate = normalizeCamera + modelTransform_.translate;
+	defaultCameraTransform.translate = normalizeDefaultCamera + modelTransform_.translate;
+
+	// 前回の座標と照合して移動量を計算  std::abs(絶対値)
+	defaultCameraVelocity.x = std::abs(defaultCameraTransform.translate.x) - std::abs(defaultCameraVelocityPre.x);
+	defaultCameraVelocity.y = std::abs(defaultCameraTransform.translate.y) - std::abs(defaultCameraVelocityPre.y);
+	defaultCameraVelocity.z = std::abs(defaultCameraTransform.translate.z) - std::abs(defaultCameraVelocityPre.z);
+	defaultCameraVelocity.x *= -1;
+	defaultCameraVelocity.z *= -1;
+
 	// 前回の座標と照合して移動量を計算  std::abs(絶対値)
 	cameraVelocity.x = std::abs(cameraTransform_.translate.x) - std::abs(cameraVelocityPre.x);
 	cameraVelocity.y = std::abs(cameraTransform_.translate.y) - std::abs(cameraVelocityPre.y);
@@ -307,8 +320,13 @@ void Player::Rotate()
 	// 高度制限clamp
 	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
 
+	// 高度制限clamp
+	defaultCameraTransform.translate.y = std::clamp(defaultCameraTransform.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
+
 	// カメラのworldMatrixを更新
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+	// カメラのworldMatrixを更新
+	Matrix4x4 defaultCameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, defaultCameraTransform.translate);
 
 	// 高度制限が発生しているときは平行移動のみカメラとparentする
 	if (cameraTransform_.translate.y >= 1.0f && cameraTransform_.translate.y <= modelTransform_.translate.y + 21.0f)
@@ -322,6 +340,9 @@ void Player::Rotate()
 
 	// 前回フレームのカメラの位置を格納(CameraVelocity計算のため)
 	cameraVelocityPre = cameraTransform_.translate;
+
+	// 前回フレームのカメラの位置を格納(CameraVelocity計算のため)
+	defaultCameraVelocityPre = defaultCameraTransform.translate;
 }
 
 void Player::Jump()
@@ -652,16 +673,16 @@ void Player::UpdateCameraCollision() {
 		// 衝突判定処理
 		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset, defaultCameraOffset);
 		// 初期のカメラオフセットからの判定処理も行っておく
-		Vector3 defOff = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, defaultCameraOffset, defaultCameraOffset);
+		Vector3 defOff = collision->UpdateCameraCollision(defaultCameraAABB, object3d_->GetAABB(), defaultCameraVelocity, defaultCameraOffset, defaultCameraOffset);
 		// offの値とcameraOffsetの値が違えばeasingを使用してoffの値に置換する
-		if ( off.z != cameraOffset.z && !cameraZoomIn)
+		if ( off.z != cameraOffset.z && !cameraZoomIn && !cameraZoomOut)
 		{
 			cameraZoomIn = true;
 			cameraZoomOut = false;
 			cameraEasingTime = 0.0f;
 			beforCameraOffset = off;
 		}
-		else if (off.z - 1.0f >= defOff.z && !cameraZoomOut)
+		else if (off.z >= defOff.z && !cameraZoomOut && !cameraZoomIn)
 		{
 			cameraZoomOut = true;
 			cameraZoomIn = false;
@@ -672,10 +693,10 @@ void Player::UpdateCameraCollision() {
 		{
 			Vector3 camOff = cameraOffset;
 			cameraEasingTime++;
-			float time = cameraEasingTime / 60 / 0.8f;
+			float time = cameraEasingTime / 60 / 1.8f;
 			cameraOffset = easeInOut(time, camOff, off);
 			// イージングの終了処理
-			if (time > 0.8f)
+			if (time > 1.0f)
 			{
 				cameraZoomIn = false;
 				cameraEasingTime = 0.0f;
@@ -685,10 +706,10 @@ void Player::UpdateCameraCollision() {
 		{
 			Vector3 camOff = cameraOffset;
 			cameraEasingTime++;
-			float time = cameraEasingTime / 60 / 2.0f;
+			float time = cameraEasingTime / 60 / 3.4f;
 			cameraOffset = easeInOut(time, camOff, defOff);
 			// ズームアウトは少し長く
-			if (time > 2.0f)
+			if (time > 1.0f)
 			{
 				cameraZoomOut = false;
 				cameraEasingTime = 0.0f;

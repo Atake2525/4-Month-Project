@@ -164,6 +164,11 @@ private: // メンバ変数
 	AABB cameraAABB;
 	AABB firstCameraAABB;
 
+	AABB defaultCameraAABB;
+	Transform defaultCameraTransform;
+	Vector3 defaultCameraVelocityPre = { 0.0f, 0.0f, 0.0f };
+	Vector3 defaultCameraVelocity = { 0.0f, 0.0f, 0.0f };
+
 	Vector3 cameraVelocityPre = { 0.0f, 0.0f, 0.0f };
 	Vector3 cameraVelocity = { 0.0f, 0.0f, 0.0f };
 
