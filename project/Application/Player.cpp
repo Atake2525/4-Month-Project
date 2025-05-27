@@ -129,9 +129,9 @@ void Player::Update()
 
 
 	drawModel.translate = modelTransform_.translate;
-	//drawModel.rotate.y = modelTransform_.rotate.y;
+	drawModel.rotate.y = modelTransform_.rotate.y - SwapRadian(90.0f);
 
-
+	object3d_->SetRotate(drawModel.rotate + prot);
 
 	object3d_->SetTranslate(drawModel.translate);
 
@@ -212,11 +212,11 @@ void Player::Move()
 		}
 		if (input_->PushKey(DIK_A)) {
 			move.x = -speed;
-			plRotateDegree = std::numbers::pi_v<float> * 3.0f / 4.0f;
+			plRotateDegree = -std::numbers::pi_v<float> / 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			move.x = speed;
-			plRotateDegree = std::numbers::pi_v<float> / 4.0f;
+			plRotateDegree = std::numbers::pi_v<float> / 2.0f;
 		}
 	}
 	velocity.z = -move.y;
@@ -232,9 +232,9 @@ void Player::Move()
 
 	// プレイヤーの移動に応じてモデルを回転させる
 	Vector3 modelRotate;
-	modelRotate.y = SwapDegree(modelTransform_.rotate.y);
+	modelRotate.y = SwapRadian(modelTransform_.rotate.y);
 
-	float rotateRadian = plRotateDegree - modelTransform_.rotate.y;
+	float rotateRadian = plRotateDegree - modelRotate.y;
 
 	rotateRadian = std::fmod(rotateRadian, std::numbers::pi_v<float> * 2);
 	rotateRadian = std::fmod(rotateRadian, std::numbers::pi_v<float> * -2);
@@ -248,10 +248,11 @@ void Player::Move()
 		rotateRadian = rotateRadian + std::numbers::pi_v<float> *2;
 	}
 
-
+	prot = rotateRadian * -1.0f;
 
 	ImGui::Begin("rotateDegree");
 	ImGui::DragFloat("roate", &rotateRadian);
+	ImGui::DragFloat("pRot", &prot);
 	ImGui::End();
 
 	modelTransform_.translate += velocity * speed;
@@ -660,7 +661,7 @@ void Player::UpdateCameraCollision() {
 			cameraEasingTime = 0.0f;
 			beforCameraOffset = off;
 		}
-		else if (off.z != defOff.z && !cameraZoomOut)
+		else if (off.z - 1.0f >= defOff.z && !cameraZoomOut)
 		{
 			cameraZoomOut = true;
 			cameraZoomIn = false;
@@ -673,6 +674,7 @@ void Player::UpdateCameraCollision() {
 			cameraEasingTime++;
 			float time = cameraEasingTime / 60 / 0.8f;
 			cameraOffset = easeInOut(time, camOff, off);
+			// イージングの終了処理
 			if (time > 0.8f)
 			{
 				cameraZoomIn = false;
@@ -685,6 +687,7 @@ void Player::UpdateCameraCollision() {
 			cameraEasingTime++;
 			float time = cameraEasingTime / 60 / 2.0f;
 			cameraOffset = easeInOut(time, camOff, defOff);
+			// ズームアウトは少し長く
 			if (time > 2.0f)
 			{
 				cameraZoomOut = false;

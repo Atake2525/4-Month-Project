@@ -197,7 +197,7 @@ Vector3 PlayerCollision::UpdateCameraCollision(const AABB& cameraAABB, const AAB
 	origin.z = camCenterPos.z - 5.0f;
 	origin.y = camCenterPos.z * cameraRate.y * -1.0f;
 
-	Vector3 diff = plCenterPos - camCenterPos;
+	Vector3 diff = camCenterPos - plCenterPos;
 	Segment segment = {
 		.origin = camCenterPos + cameraVelocity,
 		.diff = diff,

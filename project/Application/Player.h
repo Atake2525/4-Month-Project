@@ -177,5 +177,7 @@ private: // メンバ変数
 	// プレイヤーの回転に必要な変数
 	float plRotateDegree = 0.0f;
 
+	float prot = 0.0f;
+
 };
 
