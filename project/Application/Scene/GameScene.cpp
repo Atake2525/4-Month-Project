@@ -329,6 +329,10 @@ void GameScene::Update() {
 	{
 		Audio::GetInstance()->Pause("sekiranun");
 	}
+	if (input->TriggerKey(DIK_8))
+	{
+		Audio::GetInstance()->SoundUnload("sekiranun");
+	}
 
 	player->Update();
 	camera->Update();

@@ -100,6 +100,8 @@ public:
 	// 音声データ解放
 	void SoundUnload(const std::string soundName);
 
+	void Unload(SoundData* soundData);
+
 private:
 
 	// 最大SRV数(最大テクスチャ枚数)

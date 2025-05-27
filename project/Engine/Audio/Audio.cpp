@@ -68,7 +68,7 @@ bool Audio::LoadWave(const std::string filePath, const std::string soundName, co
 	if (soundMap.contains(soundName))
 	{
 		return false;
-		Log("this name already registered");
+		Log("this name already registered/n");
 	}
 	// 登録する音声が重複していたらfalseでreturn
 	for (auto it = soundMap.begin(); it != soundMap.end(); ++it)
@@ -246,7 +246,7 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 	if (soundMap.contains(soundName))
 	{
 		return false;
-		Log("this name already registered");
+		Log("this name already registered\n");
 	}
 	// 登録する音声が重複していたらfalseでreturn
 	for (auto it = soundMap.begin(); it != soundMap.end(); ++it)
@@ -508,9 +508,16 @@ void Audio::Update() {
 // 音声データ解放
 void Audio::SoundUnload(const std::string soundName) {
 	// バッファのメモリを解放
-	delete soundMap[soundName].pBuffer;
+	//delete[] soundMap[soundName].pBuffer;
 
-	soundMap[soundName].pBuffer = 0;
-	soundMap[soundName].bufferSize = 0;
-	soundMap[soundName].wfex = {};
+	soundMap.erase(soundName);
+	Log("sound unloaded\n");
+}
+
+void Audio::Unload(SoundData* soundData) {
+	// バッファのメモリを解放
+	delete[] soundData->pBuffer;
+
+	soundData->pBuffer = 0;
+	soundData->bufferSize = 0;
 }
