@@ -6,6 +6,10 @@
 #include <vector>
 
 #include "UI.h"
+#include "Camera.h"
+#include "Object3d.h"
+#include "ModelManager.h"
+
 
 class Title
 {
@@ -31,6 +35,8 @@ public:
 	bool IsRuleSelected() const { return goToRule; }
 
 private:
+	Camera* camera = nullptr;
+
 	Sprite* titleSprite = nullptr;
 	Input* input = nullptr;
 	bool finished = false;
@@ -63,6 +69,10 @@ private:
 	int prevSelectedIndex = -1;
 	int buttonCount = 4;   // ボタン数
 	bool inputLocked = false; // キーの連続押し防止
+
+	Object3d* ghostObj = nullptr;
+	Vector3 ghostPos = { 0.0f, 3.0f, 0.0f };
+	float floatTime = 0.0f;
 
 
 };

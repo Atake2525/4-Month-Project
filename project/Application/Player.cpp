@@ -61,9 +61,6 @@ void Player::Initialize(Camera* camera)
 	
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
 
-	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
-
-
 	object3d_ = new Object3d();
 	object3d_->Initialize();
 	object3d_->SetModel("Player.obj");
@@ -783,7 +780,7 @@ void Player::EffectBorn()
 		/*生成*/
 		JampEffect* effect = new JampEffect();
 		/*位置*/
-		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f};
+		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
 
 		Vector3 velocity = {
 			distrubution(randomEngine),               // X方向ランダム
@@ -798,6 +795,7 @@ void Player::EffectBorn()
 		effect->Intialize(position, velocity);
 		effects_.push_back(effect);
 	}
+}
 
 
 
