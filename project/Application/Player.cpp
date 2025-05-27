@@ -129,9 +129,9 @@ void Player::Update()
 
 
 	drawModel.translate = modelTransform_.translate;
-	drawModel.rotate.y = modelTransform_.rotate.y - SwapRadian(90.0f);
+	drawModel.rotate.y = SwapDegree(modelTransform_.rotate.y - SwapRadian(90.0f));
 
-	object3d_->SetRotate(drawModel.rotate + prot);
+	object3d_->SetRotateInDegree({ 0.0f, prot + drawModel.rotate.y, 0.0f });
 
 	object3d_->SetTranslate(drawModel.translate);
 
@@ -229,29 +229,14 @@ void Player::Move()
 	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, rot, modelTransform_.translate);
 	velocity = TransformNormal(velocity, worldMatrix);
 
-
+	//plRotateDegree = SwapDegree(plRotateDegree);
 	// プレイヤーの移動に応じてモデルを回転させる
 	Vector3 modelRotate;
-	modelRotate.y = SwapRadian(modelTransform_.rotate.y);
+	modelRotate.y = SwapDegree(modelTransform_.rotate.y) + SwapDegree(plRotateDegree);
 
-	float rotateRadian = plRotateDegree - modelRotate.y;
-
-	rotateRadian = std::fmod(rotateRadian, std::numbers::pi_v<float> * 2);
-	rotateRadian = std::fmod(rotateRadian, std::numbers::pi_v<float> * -2);
-
-	if (rotateRadian > 0.0f)
-	{
-		rotateRadian = rotateRadian - std::numbers::pi_v<float> *2;
-	}
-	else if (rotateRadian <= 0.0f)
-	{
-		rotateRadian = rotateRadian + std::numbers::pi_v<float> *2;
-	}
-
-	prot = rotateRadian * -1.0f;
+	prot = SwapDegree(plRotateDegree);
 
 	ImGui::Begin("rotateDegree");
-	ImGui::DragFloat("roate", &rotateRadian);
 	ImGui::DragFloat("pRot", &prot);
 	ImGui::End();
 
