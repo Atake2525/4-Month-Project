@@ -795,7 +795,7 @@ void Player::EffectBorn()
 		velocity = velocity * (0.5f + 1.5f * randomFloat(randomEngine));
 
 		/*初期化*/
-		effect->Intialize(position, velocity);
+		effect->Intialize(position, velocity,modelTransform_.rotate);
 		effects_.push_back(effect);
 	}
 }

@@ -5,13 +5,13 @@
 
 
 
-void JampEffect::Intialize(Vector3 position, Vector3 velocity)
+void JampEffect::Intialize(Vector3 position, Vector3 velocity, Vector3 rotate)
 {
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "effectParticle.obj");
 	position_ = position;
 	velocity_ = velocity;
-	
+	rotarion_ = rotate;
 	model_= new Object3d();
 	model_->Initialize();
 	model_->SetModel("effectParticle.obj");
