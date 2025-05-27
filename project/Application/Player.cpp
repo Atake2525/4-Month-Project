@@ -129,9 +129,9 @@ void Player::Update()
 
 
 	drawModel.translate = modelTransform_.translate;
-	drawModel.rotate.y = SwapDegree(modelTransform_.rotate.y - SwapRadian(90.0f));
+	drawModel.rotate.y = prot;
 
-	object3d_->SetRotateInDegree({ 0.0f, prot + drawModel.rotate.y, 0.0f });
+	object3d_->SetRotate({ 0.0f, prot, 0.0f });
 
 	object3d_->SetTranslate(drawModel.translate);
 
@@ -212,7 +212,7 @@ void Player::Move()
 		}
 		if (input_->PushKey(DIK_A)) {
 			move.x = -speed;
-			plRotateDegree = -std::numbers::pi_v<float> / 2.0f;
+			plRotateDegree = std::numbers::pi_v<float> * 3.0f / 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			move.x = speed;
@@ -231,14 +231,7 @@ void Player::Move()
 
 	//plRotateDegree = SwapDegree(plRotateDegree);
 	// プレイヤーの移動に応じてモデルを回転させる
-	Vector3 modelRotate;
-	modelRotate.y = SwapDegree(modelTransform_.rotate.y) + SwapDegree(plRotateDegree);
 
-	prot = SwapDegree(plRotateDegree);
-
-	ImGui::Begin("rotateDegree");
-	ImGui::DragFloat("pRot", &prot);
-	ImGui::End();
 
 	modelTransform_.translate += velocity * speed;
 
@@ -265,6 +258,24 @@ void Player::Rotate()
 	//cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 0.2f, 16.0f);
 	//-0.1f 0.9f cameraRotate
 	//0.2f 16.0f cameraTransfrom
+
+	prot = plRotateDegree + modelTransform_.rotate.y;
+
+	float rotp;
+	if (plRotateDegree > std::numbers::pi_v<float>)
+	{
+		rotp = SwapDegree(std::fmod(-plRotateDegree, std::numbers::pi_v<float>));
+	}
+	else
+	{
+		rotp = SwapDegree(std::fmod(plRotateDegree, 2 * std::numbers::pi_v<float>));
+	}
+	rotp += SwapDegree(std::fmod(prot, std::numbers::pi_v<float>));
+	ImGui::Begin("rotateDegree");
+	ImGui::DragFloat("pRot", &rotp);
+	ImGui::End();
+
+
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, modelTransform_.translate);
 
