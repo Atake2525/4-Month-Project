@@ -21,7 +21,7 @@ void Title::Initialize() {
 	ghostObj->SetScale({ 0.5f, 0.5f, 0.5f });
 	ghostObj->SetCamera(camera);
 
-	ghostPos = { 0.0f, 5.0f, 5.0f };
+	ghostPos = { 0.0f, 1.0f, 5.0f };
 	ghostObj->SetTranslate(ghostPos);
 	ghostObj->Update();
 
@@ -56,10 +56,16 @@ void Title::Update() {
 	camera->Update();
 
 	// ふわふわアニメーション
-	floatTime += 1.0f / 60.0f;
-	ghostPos.y = 1.0f + sinf(floatTime * 2.0f) * 0.3f;
+	floatTime += 1.0f / 30.0f;
+
+	ghostPos.y = -0.5f + sinf(floatTime * 2.0f) * 0.1f;
+	ghostPos.x = sinf(floatTime * 0.5f) * 0.2f;
+
 	ghostObj->SetTranslate(ghostPos);
+
 	ghostObj->Update();
+
+
 
 
 	// --- フェードアウト中 ---
