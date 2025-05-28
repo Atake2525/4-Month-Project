@@ -129,7 +129,7 @@ void Player::Update()
 
 
 	drawModel.translate = modelTransform_.translate;
-	//drawModel.rotate.y = prot;
+	drawModel.rotate.y = prot;
 
 	object3d_->SetRotate({ 0.0f, drawModel.rotate.y, 0.0f });
 
@@ -258,7 +258,7 @@ void Player::Move()
 	if (rotateEasing)
 	{
 		rotateFrame += 1.0f / 60.0f / rotateEndFrame;
-		drawModel.rotate.y = easeInOut(rotateFrame, startRotate, startRotate + SwapRadian(rotp));
+		//drawModel.rotate.y = easeInOut(rotateFrame, startRotate, startRotate + SwapRadian(rotp));
 		if (rotateFrame > 1.0f)
 		{
 			rotateEasing = false;
