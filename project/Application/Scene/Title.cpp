@@ -226,8 +226,6 @@ void Title::Draw() {
 		fadeSprite->Draw();
 	}
 
-
-
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	// 3Dモデル
@@ -245,7 +243,6 @@ void Title::Finalize() {
 		delete ghostObj;
 		ghostObj = nullptr;
 	}
-
 	if (titleSprite) {
 		delete titleSprite;
 		titleSprite = nullptr;
