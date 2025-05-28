@@ -196,5 +196,7 @@ private: // メンバ変数
 	// 初期の回転角の格納
 	float startRotate = 0.0f;
 
+	float endRotate = 0.0f;
+
 };
 

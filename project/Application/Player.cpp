@@ -129,7 +129,7 @@ void Player::Update()
 
 
 	drawModel.translate = modelTransform_.translate;
-	drawModel.rotate.y = prot;
+	//drawModel.rotate.y = prot;
 
 	object3d_->SetRotate({ 0.0f, drawModel.rotate.y, 0.0f });
 
@@ -245,27 +245,31 @@ void Player::Move()
 	{
 		rotp = SwapDegree(std::fmod(plRotate, 2 * std::numbers::pi_v<float>));
 	}
+	float ro = SwapDegree(std::abs(drawModel.rotate.y) - std::abs(SwapRadian(rotp)));
+
 
 	if (modelTransform_.rotate.y != prot + modelTransform_.rotate.y && !rotateEasing)
 	{
 		rotateEasing = true;
 		rotateFrame = 0.0f;
-		startRotate = modelTransform_.rotate.y;
+		startRotate = drawModel.rotate.y;
+		//endRotate = modelTransform_
 	}
 	if (rotateEasing)
 	{
 		rotateFrame += 1.0f / 60.0f / rotateEndFrame;
-		modelTransform_.rotate.y = easeInOut(rotateFrame, startRotate, modelTransform_.rotate.y + prot);
+		drawModel.rotate.y = easeInOut(rotateFrame, startRotate, startRotate + SwapRadian(rotp));
 		if (rotateFrame > 1.0f)
 		{
 			rotateEasing = false;
 			rotateFrame = 0.0f;
-			prot = 0.0f;
+			rotp = 0.0f;
 		}
 	}
 
 	ImGui::Begin("rotateDegree");
-	ImGui::DragFloat("pRot", &rotp);
+	ImGui::DragFloat("rotp", &rotp);
+	ImGui::DragFloat("pRot", &ro);
 	ImGui::End();
 
 
