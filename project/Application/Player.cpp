@@ -5,7 +5,6 @@
 #include <algorithm>
 #include<random>
 
-
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -49,14 +48,18 @@ void Player::ClearLightBlockCollision() {
 
 void Player::Initialize(Camera* camera)
 {
+	isDead_ = false;
 	camera_ = camera;
 	//camera->SetTranslate({ 0.0f, 10.0f, -20.0f });
 	cameraTransform_ = camera->GetTransform();
 	cameraTransform_.translate = cameraOffset;
 	cameraOffset = defaultCameraOffset;
 
-	// 追加したクラス
-
+	// 追加したクラス(移動可能範囲のAABB)
+	worldBoarder_ = {
+		{-100.0f, -10.0f, -100.0f},
+		{100.0f, 100.0f, 100.0f}
+	};
 
 	
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
@@ -131,7 +134,6 @@ void Player::Update()
 
 	drawModel.translate = modelTransform_.translate;
 	//drawModel.rotate.y = modelTransform_.rotate.y;
-
 	/*object3d_->SetTranslate(drawModel.translate);*/
 	object3d_->SetTransform(drawModel);
 	object3d_->Update();
@@ -176,6 +178,12 @@ void Player::Update()
 		return false;
 		});
 
+
+	// 更新処理の最後に場外かの判定
+	if (!IsCollisionAABB(object3d_->GetAABB(), worldBoarder_))
+	{
+		isDead_ = true;
+	}
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
