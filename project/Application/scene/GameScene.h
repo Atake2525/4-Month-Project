@@ -26,7 +26,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(int stage);
 
 	/// <summary>
 	/// 終了処理
@@ -127,6 +127,6 @@ private:
 	Sprite* starIcon = nullptr;
 	std::vector<Sprite*> starIcons;  // 星のUIを最大3つ分持つ
 
-
+	int stage_ = 0;;
 };
 
