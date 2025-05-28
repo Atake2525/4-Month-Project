@@ -4,18 +4,14 @@
 #include "Object3dBase.h"
 
 void Title::Initialize() {
-
-	camera = new Camera();
-
 	input = Input::GetInstance();
 	input->ShowMouseCursor(true);
-
-	Object3dBase::GetInstance()->SetDefaultCamera(camera);
-
 
 	// -------------------------
 	// お化け初期化
 	// -------------------------
+
+	camera = new Camera();
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
 
@@ -218,26 +214,24 @@ void Title::Update() {
 void Title::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
-
-
 	// スプライト
-	titleSprite->Draw();
+	if (titleSprite) titleSprite->Draw();
 	gameStartButton.Draw();
 	settingButton.Draw();
 	ruleButton.Draw();
 	finishButton.Draw();
-
-	Object3dBase::GetInstance()->ShaderDraw();
-	// 3Dモデル
-	ghostObj->Draw();
-
 
 	// フェード
 	if (fadeSprite) {
 		fadeSprite->Draw();
 	}
 
+	Object3dBase::GetInstance()->ShaderDraw();
 
+	// 3Dモデル
+	if (ghostObj) {
+		ghostObj->Draw();
+	}
 
 
 
@@ -245,14 +239,14 @@ void Title::Draw() {
 
 void Title::Finalize() {
 
-
-	delete ghostObj;
-	ghostObj = nullptr;
-
-
-	delete titleSprite;
-	titleSprite = nullptr;
-
+	if (ghostObj) {
+		delete ghostObj;
+		ghostObj = nullptr;
+	}
+	if (titleSprite) {
+		delete titleSprite;
+		titleSprite = nullptr;
+	}
 	if (fadeSprite) {
 		delete fadeSprite;
 		fadeSprite = nullptr;
