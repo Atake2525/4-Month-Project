@@ -67,9 +67,9 @@ void GameScene::Initialize() {
 	//clearSprite->Initialize("Resources/Sprite/clearShift.png");
 	//Vector3(0.0f, 0.0f, 0.0f)
 
-	resumeButton.CreateButton({ 540, 250 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
-	restartButton.CreateButton({ 540, 320 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
-	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
+	resumeButton.CreateButton({ 540, 230 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
+	restartButton.CreateButton({ 540, 300 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
+	returnToTitleButton.CreateButton({ 540, 370 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
 
 	//soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
@@ -273,16 +273,20 @@ void GameScene::Update() {
 	//	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
 	//}
 
-	// ポーズ切り替え
-	if (input->PushKey(DIK_ESCAPE)) {
-		if (tabReleased) {
-			isPaused = !isPaused;
-			tabReleased = false;  // 押された直後に反応したらフラグを下げる
-		}
-	}
-	else {
-		// TABが離されたらフラグを戻す
-		tabReleased = true;
+	if (input->TriggerKey(DIK_ESCAPE)) {
+		isPaused = !isPaused;
+		tabReleased = false;
+
+		// カーソルの表示状態をポーズに応じて変更
+		input->ShowMouseCursor(isPaused);
+
+		// 入力状態の初期化（ポーズ解除後に誤動作しないように）
+		pauseInputLocked = false;
+		pauseSelectedIndex = 0;
+		prevPauseSelectedIndex = -1;
+		hoveredPauseButton = nullptr;
+		prevHoveredPauseButton = nullptr;
+		pauseBlinkTimer = 0.0f;
 	}
 
 	// ポーズ中の処理

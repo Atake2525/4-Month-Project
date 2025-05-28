@@ -19,7 +19,7 @@ void Setting::Update()
 	input->Update();
 
 	// SPACEキーでタイトル終了
-	if (input->TriggerKey(DIK_SPACE)) {
+	if (input->TriggerKey(DIK_RETURN)) {
 		finished = true;
 	}
 }

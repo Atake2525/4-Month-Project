@@ -61,9 +61,6 @@ void Player::Initialize(Camera* camera)
 	
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
 
-	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
-
-
 	object3d_ = new Object3d();
 	object3d_->Initialize();
 	object3d_->SetModel("Player.obj");
