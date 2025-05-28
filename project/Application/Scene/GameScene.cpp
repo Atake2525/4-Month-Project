@@ -7,9 +7,9 @@
 #include "externels/imgui/imgui_impl_win32.h"
 
 
-void GameScene::Initialize() {
+void GameScene::Initialize(int stage) {
+	stage_ = stage;
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
@@ -24,7 +24,20 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("01Stage.obj");
+
+	if (stage_ == 1) {
+		object3d->SetModel("01Stage.obj");
+	}
+	else if (stage_ == 2) {
+		object3d->SetModel("Stage2.obj");
+	}
+	else if (stage_ == 3) {
+		object3d->SetModel("01Stage.obj");
+	}
+	else
+		if (stage_ == 4) {
+		object3d->SetModel("Stage2.obj");
+	}
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -333,7 +346,7 @@ void GameScene::Update() {
 			showCursor = false;
 			isGoal = false;
 			Light::GetInstance()->SetIntensityDirectionalLight(0.0f);
-			Initialize();
+			Initialize(stage_);
 		}
 	}
 	lightSwitch->Update();

@@ -30,6 +30,9 @@ void MyGame::Initialize() {
 	Input::GetInstance()->Initialize();
 	Input::GetInstance()->ShowMouseCursor(true);
 
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage2", "Stage2.obj", true);
+
 	//// ↓---- シーンの初期化 ----↓ ////
 
 	 // タイトルシーンの初期化
@@ -46,11 +49,15 @@ void MyGame::Initialize() {
 
 	// ゲームシーンの初期化
 	gameScene = new GameScene();
-	gameScene->Initialize();
+	gameScene->Initialize(stage);
 
 	// ゲームクリアシーンの初期化
 	gameClear = new GameClear();
 	gameClear->Initialize();
+
+	//ステージセレクト
+	stageSelect = new StageSelect();
+	stageSelect->Initialize();
 
 	//// ↑---- シーンの初期化 ----↑ ////
 }
@@ -75,15 +82,15 @@ void MyGame::Update() {
 		if (title->isFinished()) {
 
 			if (title->IsGameStartSelected()) {
-				// タイトル終了 → ゲーム開始
+				// タイトル終了 → ステージセレクト
 				title->Finalize();
 				delete title;
 				title = nullptr;
 
-				gameScene = new GameScene();
-				gameScene->Initialize();
-				gameScene->Update();
-				currentScene = Scene::Game;
+				stageSelect = new StageSelect();
+				stageSelect->Initialize();
+				stageSelect->Update();
+				currentScene = Scene::Select;
 			}
 			else if (title->IsRuleSelected()) {
 				// タイトル終了 → ルール説明へ
@@ -124,7 +131,48 @@ void MyGame::Update() {
 			currentScene = Scene::Title;
 		}
 		break;
+	case Scene::Select:
+		stageSelect->Update();
 
+		if (stageSelect->IsGameStartSelected()) {
+			//ゲーム開始
+
+			if (stageSelect->SelectStageNumber() == 0) {
+				stage = 1;
+			}
+			if (stageSelect->SelectStageNumber() == 1) {
+				stage = 2;
+			}
+			if (stageSelect->SelectStageNumber() == 2) {
+				stage = 3;
+			}
+			if (stageSelect->SelectStageNumber() == 3) {
+				stage = 4;
+			}
+			stageSelect->Finalize();
+			delete stageSelect;
+			stageSelect = nullptr;
+
+			gameScene = new GameScene();
+			gameScene->Initialize(stage);
+			gameScene->Update();
+			currentScene = Scene::Game;
+
+		}
+
+		else if (stageSelect->IsTitleSelected()) {
+			//タイトルに戻る
+			stageSelect->Finalize();
+			delete stageSelect;
+			stageSelect = nullptr;
+
+			title = new Title();
+			title->Initialize();
+			title->Update();
+			currentScene = Scene::Title;
+		}
+		
+		break;
 	case Scene::Game:
 		gameScene->Update();
 
@@ -134,7 +182,7 @@ void MyGame::Update() {
 			delete gameScene;
 			//gameScene = nullptr;
 			gameScene = new GameScene();
-			gameScene->Initialize();
+			gameScene->Initialize(stage);
 			gameScene -> Update();  // ゲームシーンの更新を行う
 			break;  // 他の処理をせず終了
 		}
@@ -143,10 +191,10 @@ void MyGame::Update() {
 			delete gameScene;
 			gameScene = nullptr;
 
-			title = new Title();
-			title->Initialize();
-			title->Update();
-			currentScene = Scene::Title;
+			stageSelect = new StageSelect();
+			stageSelect->Initialize();
+			stageSelect->Update();
+			currentScene = Scene::Select;
 		}
 		else if (gameScene->isFinished()) {
 			// ゲーム終了 → クリア
@@ -169,10 +217,10 @@ void MyGame::Update() {
 			delete gameClear;
 			gameClear = nullptr;
 
-			title = new Title();
-			title->Initialize();
-			title->Update();
-			currentScene = Scene::Title;
+			stageSelect = new StageSelect();
+			stageSelect->Initialize();
+			stageSelect->Update();
+			currentScene = Scene::Select;
 		}
 		break;
 
@@ -214,6 +262,9 @@ void MyGame::Draw() {
 		break;
 	case Scene::Setting:
 		setting->Draw();
+		break;
+	case Scene::Select:
+		stageSelect->Draw();
 		break;
 		// ゲームシーンの描画
 	case Scene::Game:
