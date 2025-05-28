@@ -18,12 +18,13 @@ void Title::Initialize() {
 	ghostObj = new Object3d();
 	ghostObj->Initialize();
 	ghostObj->SetModel("Player.obj");
-	ghostObj->SetScale({ 0.2f, 0.2f, 0.2f });
+	ghostObj->SetScale({ 0.5f, 0.5f, 0.5f });
 	ghostObj->SetCamera(camera);
 
-	ghostPos = { -1.5f, 1.0f, 5.0f };
+	ghostPos = { 0.0f, 5.0f, 5.0f };
 	ghostObj->SetTranslate(ghostPos);
 	ghostObj->Update();
+
 
 
 	// -------------------------
@@ -52,6 +53,7 @@ void Title::Initialize() {
 
 void Title::Update() {
 	input->Update();
+	camera->Update();
 
 	// ふわふわアニメーション
 	floatTime += 1.0f / 60.0f;
