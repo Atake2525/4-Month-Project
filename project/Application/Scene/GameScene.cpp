@@ -33,7 +33,7 @@ void GameScene::Initialize(int stage) {
 		object3d->SetModel("stage03.obj");
 	}
 	else if (stage_ == 2) {
-		object3d->SetModel("Stage2.obj");
+		object3d->SetModel("stageTriangle.obj");
 	}
 	else if (stage_ == 3) {
 		object3d->SetModel("01Stage.obj");
@@ -58,7 +58,7 @@ void GameScene::Initialize(int stage) {
 		player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	}
 	else if (stage_ == 2) {
-		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+		player->AddStageCollision("Resources/Model/collision/stageNotTriangle", "stage.obj");
 	}
 	else if (stage_ == 3) {
 		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
@@ -75,7 +75,7 @@ void GameScene::Initialize(int stage) {
 		player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 	}
 	else if (stage_ == 2) {
-		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision/stageNotTriangle", "stageLight.obj");
 	}
 	else if (stage_ == 3) {
 		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
@@ -99,7 +99,7 @@ void GameScene::Initialize(int stage) {
 		goalPos = { -10.0f,8.0f,10.0f };
 	}
 	if (stage_ == 2) {
-		goalPos = { 1.0f,8.0f,1.0f };
+		goalPos = { -4.4f,8.0f,-5.0f };
 	}
 	if (stage_ == 3) {
 		goalPos = { -10.0f,8.0f,10.0f };
@@ -120,7 +120,7 @@ void GameScene::Initialize(int stage) {
 		lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	}
 	else if (stage_ == 2) {
-		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/stageTriangle", "stageTriangleLight.obj");
 	}
 	else if (stage_ == 3) {
 		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
@@ -145,7 +145,7 @@ void GameScene::Initialize(int stage) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{4.0f, 1.0f, 4.0f}
+		{5.0f, 0.5f, -1.0f}
 		};
 	}
 	if (stage_ == 3) {
