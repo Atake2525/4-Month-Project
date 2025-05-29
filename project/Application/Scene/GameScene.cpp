@@ -66,13 +66,13 @@ void GameScene::Initialize(int stage) {
 		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 	}
 	else if (stage_ == 2) {
-		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
 	}
 	else if (stage_ == 3) {
 		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 	}
 	else if (stage_ == 4) {
-		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
 	}
 
 	button = new UI();
@@ -84,20 +84,20 @@ void GameScene::Initialize(int stage) {
 	goal->Initialize({ -10.0f,8.0f,10.0f });
 
 	starResultManager = new starResult();
-	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+	starResultManager->Initialize(stage_); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
 	if (stage_ == 1) {
 		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	}
 	else if (stage_ == 2) {
-		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
 	}
 	else if (stage_ == 3) {
 		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	}
 	else if (stage_ == 4) {
-		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
 	}
 
 	//switch
