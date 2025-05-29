@@ -391,6 +391,8 @@ void GameScene::Draw() {
 		returnToTitleButton.Draw();
 	}
 
+	SpriteBase::GetInstance()->ShaderDraw();
+
 
 	// ポーズ中のカーソル位置に応じたボタンの描画
 	if (fadeSprite) fadeSprite->Draw();
