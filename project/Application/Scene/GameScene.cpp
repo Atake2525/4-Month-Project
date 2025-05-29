@@ -82,7 +82,7 @@ void GameScene::Initialize(int stage) {
 
 	resumeButton.CreateButton({ 540, 250 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
 	restartButton.CreateButton({ 540, 320 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
-	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
+	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Select.png");
 
 
 	//soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
