@@ -98,6 +98,9 @@ public: // メンバ関数
 
 	 void EffectBorn();
 
+	 // 場外判定で追加した関数
+	 const bool IsDead() const { return isDead_; }
+
 private:
 
 	void Move();
@@ -164,6 +167,11 @@ private: // メンバ変数
 	AABB cameraAABB;
 	AABB firstCameraAABB;
 
+	AABB defaultCameraAABB;
+	Transform defaultCameraTransform;
+	Vector3 defaultCameraVelocityPre = { 0.0f, 0.0f, 0.0f };
+	Vector3 defaultCameraVelocity = { 0.0f, 0.0f, 0.0f };
+
 	Vector3 cameraVelocityPre = { 0.0f, 0.0f, 0.0f };
 	Vector3 cameraVelocity = { 0.0f, 0.0f, 0.0f };
 
@@ -175,5 +183,29 @@ private: // メンバ変数
 	std::list<JampEffect*>effects_;
 	bool effectFlag = false;
 	float effectTimer;
+
+	// プレイヤーの回転に必要な変数
+	float plRotate = 0.0f;
+
+	float prot = 0.0f;
+
+	// 回転イージングのフラグ
+	bool rotateEasing = false;
+
+	// 回転イージングのフレーム
+	float rotateFrame = 0.0f;
+
+	// 回転イージングの終了フレーム
+	const float rotateEndFrame = 0.4f;
+
+	// 初期の回転角の格納
+	float startRotate = 0.0f;
+
+	float endRotate = 0.0f;
+
+	// 場外判定
+	bool isDead_ = false;
+	// 場外を判定する座標
+	AABB worldBoarder_;
 };
 

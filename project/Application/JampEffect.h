@@ -9,7 +9,7 @@
 class JampEffect
 {
 public:
-	void Intialize(Vector3 position,Vector3 velocity);
+	void Intialize(Vector3 position,Vector3 velocity,Vector3 rotate);
 	void Update();
 	void Draw();
 	bool IsFinished() { return isFinished; };

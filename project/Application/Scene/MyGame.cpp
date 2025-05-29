@@ -50,7 +50,7 @@ void MyGame::Initialize() {
 
 	// ゲームクリアシーンの初期化
 	gameClear = new GameClear();
-	gameClear->Initialize();
+	gameClear->Initialize(Result);
 
 	//// ↑---- シーンの初期化 ----↑ ////
 }
@@ -112,8 +112,17 @@ void MyGame::Update() {
 	case Scene::Rule:
 		rule->Update();
 
-		if (rule->isFinished()) {
-			// ルール終了 → ゲーム開始
+		// リスタートが要求されている場合
+		if (rule->ShouldRestart()) {
+			rule->Finalize();
+			delete rule;
+			//gameScene = nullptr;
+			rule = new Rule();
+			rule->Initialize();
+			rule->Update();  // ゲームシーンの更新を行う
+			break;  // 他の処理をせず終了
+		}
+		else if (rule->ShouldReturnToTitle()) {
 			rule->Finalize();
 			delete rule;
 			rule = nullptr;
@@ -123,7 +132,31 @@ void MyGame::Update() {
 			title->Update();
 			currentScene = Scene::Title;
 		}
+		else if (rule->isFinished()) {
+			// ゲーム終了 → クリア
+			rule->Finalize();
+			delete rule;
+			rule = nullptr;
+
+			gameClear = new GameClear();
+			gameClear->Initialize(Result);
+			gameClear->Update();
+			currentScene = Scene::GameClear;
+		}
 		break;
+
+		//if (rule->isFinished()) {
+		//	// ルール終了 → ゲーム開始
+		//	rule->Finalize();
+		//	delete rule;
+		//	rule = nullptr;
+
+		//	title = new Title();
+		//	title->Initialize();
+		//	title->Update();
+		//	currentScene = Scene::Title;
+		//}
+		//break;
 
 	case Scene::Game:
 		gameScene->Update();
@@ -150,12 +183,13 @@ void MyGame::Update() {
 		}
 		else if (gameScene->isFinished()) {
 			// ゲーム終了 → クリア
+			Result = gameScene->StarResult();
 			gameScene->Finalize();
 			delete gameScene;
 			gameScene = nullptr;
 
 			gameClear = new GameClear();
-			gameClear->Initialize();
+			gameClear->Initialize(Result);
 			gameClear->Update();
 			currentScene = Scene::GameClear;
 		}

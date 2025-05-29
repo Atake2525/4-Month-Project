@@ -9,10 +9,14 @@
 
 void GameScene::Initialize() {
 
+
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
@@ -24,7 +28,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("01Stage.obj");
+	object3d->SetModel("stage03.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -35,9 +39,9 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	//player->AddStageCollision("Resources/Debug", "test.obj");
-	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -51,7 +55,7 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	//switch
 	// 
 	lightSwitch = new switchLight();
@@ -63,16 +67,18 @@ void GameScene::Initialize() {
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
-	//clearSprite = new Sprite();
-	//clearSprite->Initialize("Resources/Sprite/clearShift.png");
-	//Vector3(0.0f, 0.0f, 0.0f)
 
-	resumeButton.CreateButton({ 540, 250 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
-	restartButton.CreateButton({ 540, 320 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
-	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
+	resumeButton.CreateButton({ 540, 230 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
+	restartButton.CreateButton({ 540, 300 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
+	returnToTitleButton.CreateButton({ 540, 370 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
+
+
+	//クリア時に星の取得情報を送るよう
+	Result = 0;
 
 	//soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+
 
 	isPaused = false;
 	//ポーズUIの背景
@@ -99,14 +105,6 @@ void GameScene::Initialize() {
 	// スケール
 	escHintSprite->SetScale({ 100.0f, 100.0f });
 	escHintSprite->Update();
-
-	//フェードアウト用スプライトの初期化
-	//fadeSprite = new Sprite();
-	//fadeSprite->Initialize("Resources/black1x1.png");
-	//fadeSprite->SetPosition({ 0.0f, 0.0f });
-	//fadeSprite->SetScale({ 1280.0f, 720.0f });
-	//fadeSprite->SetAnchorPoint({ 0.0f, 0.0f });
-	//fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
 
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/star.png");
@@ -262,28 +260,22 @@ void GameScene::Update() {
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();
 
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
+		isPaused = !isPaused;
+		tabReleased = false;
 
+		// カーソルの表示状態をポーズに応じて変更
+		input->ShowMouseCursor(isPaused);
 
-	//if (isFadingIn) {
-	//	fadeAlpha -= 1.0f / (60.0f * 3.0f); // 3秒で明るく
-	//	if (fadeAlpha <= 0.0f) {
-	//		fadeAlpha = 0.0f;
-	//		isFadingIn = false;
-	//	}
-	//	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
-	//}
-
-	// ポーズ切り替え
-	if (input->PushKey(DIK_ESCAPE)) {
-		if (tabReleased) {
-			isPaused = !isPaused;
-			tabReleased = false;  // 押された直後に反応したらフラグを下げる
-		}
+		// 入力状態の初期化（ポーズ解除後に誤動作しないように）
+		pauseInputLocked = false;
+		pauseSelectedIndex = 0;
+		prevPauseSelectedIndex = -1;
+		hoveredPauseButton = nullptr;
+		prevHoveredPauseButton = nullptr;
+		pauseBlinkTimer = 0.0f;
 	}
-	else {
-		// TABが離されたらフラグを戻す
-		tabReleased = true;
-	}
+
 
 	// ポーズ中の処理
 	if (isPaused) {
@@ -300,13 +292,13 @@ void GameScene::Update() {
 		input->ShowMouseCursor(showCursor);
 	}
 
-
-	//if (input->TriggerKey(DIK_2))
-	//{
-	//	Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
-	//}
-
 	player->Update();
+
+	// プレイヤーが場外に出ていたらリスタート
+	if (player->IsDead())
+	{
+		goToRestart = true;
+	}
 
 
 	camera = player->GetCamera();
@@ -346,8 +338,6 @@ void GameScene::Update() {
 	di = std::clamp(di, 0.0f, 1.0f);
 	Light::GetInstance()->SetIntensityDirectionalLight(di);
 
-
-	//star->Update();
 	if (starResultManager) {
 		starResultManager->Update();  // プレイヤー情報を渡す player
 	}
@@ -356,6 +346,7 @@ void GameScene::Update() {
 	for (Star* s : starResultManager->GetStars()) {
 		if (!s->IsCollected() && s->OnCollision(player->StarObject3d())) {
 			s->Collect(); // 取得済みにする
+			Result++;
 			// TODO: ここで音やエフェクトなど入れても良い
 		}
 	}
@@ -399,6 +390,8 @@ void GameScene::Draw() {
 		restartButton.Draw();
 		returnToTitleButton.Draw();
 	}
+
+	SpriteBase::GetInstance()->ShaderDraw();
 
 
 	// ポーズ中のカーソル位置に応じたボタンの描画

@@ -103,6 +103,9 @@ Vector3 PlayerCollision::UpdateCollisionX(const AABB& playerAABB, const float& p
 Vector3 PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const float& playerVelocityY) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
 
+
+	// プレイヤーの中心座標を計算
+	Vector3 plCenterPos = CenterAABB(playerAABB);
 	// 壁の衝突判定
 	for (const auto& collisionPlate : collisionListPlate)
 	{
@@ -120,11 +123,12 @@ Vector3 PlayerCollision::UpdateCollisionY(const AABB& playerAABB, const float& p
 		{
 			continue;
 		}*/
+
 		// 衝突判定をAABBとAABBでとる
 		if (CollisionAABB(playerAABB, collisionPlate.aabb))
 		{
 			//　壁の向いている方向からプレイヤーがどれくらい移動すればよいかを出す
-			if (collisionPlate.normal.y == 1.0f && playerVelocityY < 0.0f)
+			if (collisionPlate.normal.y == 1.0f && plCenterPos.y > collisionPlate.aabb.min.y && playerVelocityY < 0.0f)
 			{
 				float moveAmount = collisionPlate.aabb.max.y - playerAABB.min.y;
 				result.y = moveAmount - 0.01f;

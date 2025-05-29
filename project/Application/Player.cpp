@@ -5,7 +5,6 @@
 #include <algorithm>
 #include<random>
 
-
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -49,20 +48,21 @@ void Player::ClearLightBlockCollision() {
 
 void Player::Initialize(Camera* camera)
 {
+	isDead_ = false;
 	camera_ = camera;
 	//camera->SetTranslate({ 0.0f, 10.0f, -20.0f });
 	cameraTransform_ = camera->GetTransform();
 	cameraTransform_.translate = cameraOffset;
 	cameraOffset = defaultCameraOffset;
 
-	// 追加したクラス
-
+	// 追加したクラス(移動可能範囲のAABB)
+	worldBoarder_ = {
+		{-100.0f, -10.0f, -100.0f},
+		{100.0f, 100.0f, 100.0f}
+	};
 
 	
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
-
-	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
-
 
 	object3d_ = new Object3d();
 	object3d_->Initialize();
@@ -133,10 +133,15 @@ void Player::Update()
 
 
 	drawModel.translate = modelTransform_.translate;
-	//drawModel.rotate.y = modelTransform_.rotate.y;
+	drawModel.rotate.y = prot;
 
+	object3d_->SetRotate({ 0.0f, drawModel.rotate.y, 0.0f });
+
+	object3d_->SetTranslate(drawModel.translate);
+
+	//object3d_->SetTransform(drawModel);
+	//drawModel.rotate.y = modelTransform_.rotate.y;
 	/*object3d_->SetTranslate(drawModel.translate);*/
-	object3d_->SetTransform(drawModel);
 	object3d_->Update();
 
 
@@ -144,13 +149,13 @@ void Player::Update()
 
 	//camera_->SetTranslate(cameraTransform_.translate);
 	
-	
+	if (onGround_) {
 		if (input_->TriggerKey(DIK_SPACE)) {
 			//effect
 			effectFlag = true;
 			effectTimer = 5;
 		}
-	
+	}
 	if (effectFlag) {
 		/*位置*/
 		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
@@ -179,6 +184,12 @@ void Player::Update()
 		return false;
 		});
 
+
+	// 更新処理の最後に場外かの判定
+	if (!IsCollisionAABB(object3d_->GetAABB(), worldBoarder_))
+	{
+		isDead_ = true;
+	}
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
@@ -229,7 +240,7 @@ void Player::Move()
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
 	if (input_->IsMoveLeftJoyStick()) {
-		move = input_->GetLeftJoyStickPos2();
+		move = input_->GetLeftJoyStickPos2(200.0f);
 	}
 	if (move.x >= 0.5f) {
 		move.x = 0.5f;
@@ -244,18 +255,24 @@ void Player::Move()
 	else if (move.y <= -0.5f) {
 		move.y = -0.5f;
 	}
+	// コントローラー用
+	plRotate = std::atan2(move.x, move.y);
 	if (input_->IsMoveLeftJoyStick() == false) {
 		if (input_->PushKey(DIK_W)) {
 			move.y = -speed;
+			plRotate = 0.0f;
 		}
 		if (input_->PushKey(DIK_S)) {
 			move.y = speed;
+			plRotate = std::numbers::pi_v<float>;
 		}
 		if (input_->PushKey(DIK_A)) {
 			move.x = -speed;
+			plRotate = std::numbers::pi_v<float> * 3.0f / 2.0f;
 		}
 		if (input_->PushKey(DIK_D)) {
 			move.x = speed;
+			plRotate = std::numbers::pi_v<float> / 2.0f;
 		}
 	}
 	velocity.z = -move.y;
@@ -267,36 +284,50 @@ void Player::Move()
 	rot.x = 0.0f;
 	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, rot, modelTransform_.translate);
 	velocity = TransformNormal(velocity, worldMatrix);
-	//velocity = TransformNormal(velocity, camera_->GetWorldMatrix());
-	//velocity.y = 0;
 
-	/*if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Front && velocity.x < 0.0f)
+	//plRotateDegree = SwapDegree(plRotateDegree);
+	// プレイヤーの移動に応じてモデルを回転させる
+
+	prot = plRotate + modelTransform_.rotate.y;
+
+	float rotp;
+	if (plRotate > std::numbers::pi_v<float>)
 	{
-		velocity.x = 0.0f;
+		rotp = SwapDegree(std::fmod(-plRotate, std::numbers::pi_v<float>));
 	}
-	else if (collision->IsColX(object3d_->GetAABB(), velocity.x, speed) == ColNormal::Back && velocity.x > 0.0f)
+	else
 	{
-		velocity.x = 0.0f;
+		rotp = SwapDegree(std::fmod(plRotate, 2 * std::numbers::pi_v<float>));
 	}
-	if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Front && velocity.z < 0.0f)
+	float ro = SwapDegree(std::abs(drawModel.rotate.y) - std::abs(SwapRadian(rotp)));
+
+
+	if (modelTransform_.rotate.y != prot + modelTransform_.rotate.y && !rotateEasing)
 	{
-		velocity.z = 0.0f;
+		rotateEasing = true;
+		rotateFrame = 0.0f;
+		startRotate = drawModel.rotate.y;
+		//endRotate = modelTransform_
 	}
-	else if (collision->IsColZ(object3d_->GetAABB(), velocity.z, speed) == ColNormal::Back && velocity.z > 0.0f)
+	if (rotateEasing)
 	{
-		velocity.z = 0.0f;
-	}*/
+		rotateFrame += 1.0f / 60.0f / rotateEndFrame;
+		//drawModel.rotate.y = easeInOut(rotateFrame, startRotate, startRotate + SwapRadian(rotp));
+		if (rotateFrame > 1.0f)
+		{
+			rotateEasing = false;
+			rotateFrame = 0.0f;
+			rotp = 0.0f;
+		}
+	}
+
+	ImGui::Begin("rotateDegree");
+	ImGui::DragFloat("rotp", &rotp);
+	ImGui::DragFloat("pRot", &ro);
+	ImGui::End();
+
 
 	modelTransform_.translate += velocity * speed;
-
-	/*offSet = TransformNormal(offSet,
-		Multiply(Multiply(
-			MakeRotateXMatrix(modelTransform_.rotate.x),
-			MakeRotateYMatrix(modelTransform_.rotate.y)),
-			MakeRotateZMatrix(modelTransform_.rotate.z)
-		));*/
-
-	//cameraTransform_.translate = modelTransform_.translate + offSet;
 
 
 }
@@ -305,8 +336,8 @@ void Player::Rotate()
 {
 	
 	if (input_->IsMoveRightJoyStick()) {
-		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
-		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3(200.0f).x, -0.05f, 0.05f);
+		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3(200.0f).y, -0.05f, 0.05f);
 		//cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
 		//cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
@@ -322,17 +353,32 @@ void Player::Rotate()
 	//-0.1f 0.9f cameraRotate
 	//0.2f 16.0f cameraTransfrom
 
+
+
 	Matrix4x4 worldMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, modelTransform_.translate);
 
 	// AABBの更新
 	cameraAABB.min = firstCameraAABB.min + cameraTransform_.translate;
 	cameraAABB.max = firstCameraAABB.max + cameraTransform_.translate;
 
+	defaultCameraAABB.min = firstCameraAABB.min + defaultCameraTransform.translate;
+	defaultCameraAABB.max = firstCameraAABB.max + defaultCameraTransform.translate;
+
 	// TransformNormalの計算でcameraTransformにカメラの位置を代入
 	// プレイヤーのTransformが向いている方向からcameraOffset分を足す
 	Vector3 normalizeCamera = TransformNormal(cameraOffset, worldMatrix);
+	Vector3 normalizeDefaultCamera = TransformNormal(defaultCameraOffset, worldMatrix);
 	// カメラをプレイヤーの位置に合わせる
 	cameraTransform_.translate = normalizeCamera + modelTransform_.translate;
+	defaultCameraTransform.translate = normalizeDefaultCamera + modelTransform_.translate;
+
+	// 前回の座標と照合して移動量を計算  std::abs(絶対値)
+	defaultCameraVelocity.x = std::abs(defaultCameraTransform.translate.x) - std::abs(defaultCameraVelocityPre.x);
+	defaultCameraVelocity.y = std::abs(defaultCameraTransform.translate.y) - std::abs(defaultCameraVelocityPre.y);
+	defaultCameraVelocity.z = std::abs(defaultCameraTransform.translate.z) - std::abs(defaultCameraVelocityPre.z);
+	defaultCameraVelocity.x *= -1;
+	defaultCameraVelocity.z *= -1;
+
 	// 前回の座標と照合して移動量を計算  std::abs(絶対値)
 	cameraVelocity.x = std::abs(cameraTransform_.translate.x) - std::abs(cameraVelocityPre.x);
 	cameraVelocity.y = std::abs(cameraTransform_.translate.y) - std::abs(cameraVelocityPre.y);
@@ -346,10 +392,15 @@ void Player::Rotate()
 
 
 	// 高度制限clamp
-	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
+	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, modelTransform_.translate.y - 1.0f, modelTransform_.translate.y + 21.0f);
+
+	// 高度制限clamp
+	defaultCameraTransform.translate.y = std::clamp(defaultCameraTransform.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
 
 	// カメラのworldMatrixを更新
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
+	// カメラのworldMatrixを更新
+	Matrix4x4 defaultCameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, defaultCameraTransform.translate);
 
 	// 高度制限が発生しているときは平行移動のみカメラとparentする
 	if (cameraTransform_.translate.y >= 1.0f && cameraTransform_.translate.y <= modelTransform_.translate.y + 21.0f)
@@ -363,6 +414,9 @@ void Player::Rotate()
 
 	// 前回フレームのカメラの位置を格納(CameraVelocity計算のため)
 	cameraVelocityPre = cameraTransform_.translate;
+
+	// 前回フレームのカメラの位置を格納(CameraVelocity計算のため)
+	defaultCameraVelocityPre = defaultCameraTransform.translate;
 }
 
 void Player::Jump()
@@ -699,16 +753,16 @@ void Player::UpdateCameraCollision() {
 		// 衝突判定処理
 		Vector3 off = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, cameraOffset, defaultCameraOffset);
 		// 初期のカメラオフセットからの判定処理も行っておく
-		Vector3 defOff = collision->UpdateCameraCollision(cameraAABB, object3d_->GetAABB(), cameraVelocity, defaultCameraOffset, defaultCameraOffset);
+		Vector3 defOff = collision->UpdateCameraCollision(defaultCameraAABB, object3d_->GetAABB(), defaultCameraVelocity, defaultCameraOffset, defaultCameraOffset);
 		// offの値とcameraOffsetの値が違えばeasingを使用してoffの値に置換する
-		if ( off.z != cameraOffset.z && !cameraZoomIn)
+		if ( off.z != cameraOffset.z && !cameraZoomIn && !cameraZoomOut)
 		{
 			cameraZoomIn = true;
 			cameraZoomOut = false;
 			cameraEasingTime = 0.0f;
 			beforCameraOffset = off;
 		}
-		else if (off.z != defOff.z && !cameraZoomOut)
+		else if (off.z >= defOff.z && !cameraZoomOut && !cameraZoomIn)
 		{
 			cameraZoomOut = true;
 			cameraZoomIn = false;
@@ -719,9 +773,10 @@ void Player::UpdateCameraCollision() {
 		{
 			Vector3 camOff = cameraOffset;
 			cameraEasingTime++;
-			float time = cameraEasingTime / 60 / 0.8f;
+			float time = cameraEasingTime / 60 / 1.8f;
 			cameraOffset = easeInOut(time, camOff, off);
-			if (time > 0.8f)
+			// イージングの終了処理
+			if (time > 1.0f)
 			{
 				cameraZoomIn = false;
 				cameraEasingTime = 0.0f;
@@ -731,9 +786,10 @@ void Player::UpdateCameraCollision() {
 		{
 			Vector3 camOff = cameraOffset;
 			cameraEasingTime++;
-			float time = cameraEasingTime / 60 / 2.0f;
+			float time = cameraEasingTime / 60 / 3.4f;
 			cameraOffset = easeInOut(time, camOff, defOff);
-			if (time > 2.0f)
+			// ズームアウトは少し長く
+			if (time > 1.0f)
 			{
 				cameraZoomOut = false;
 				cameraEasingTime = 0.0f;
@@ -795,7 +851,7 @@ void Player::EffectBorn()
 		velocity = velocity * (0.5f + 1.5f * randomFloat(randomEngine));
 
 		/*初期化*/
-		effect->Intialize(position, velocity);
+		effect->Intialize(position, velocity,modelTransform_.rotate);
 		effects_.push_back(effect);
 	}
 }
