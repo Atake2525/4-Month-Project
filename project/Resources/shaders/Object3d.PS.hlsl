@@ -124,7 +124,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         float32_t3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * cos * gPointLight.intensity * factor;
         
         // 鏡面反射                                                                                      ↓ 物体の鏡面反射の色。ここでは白にしている materialで設定できたりすると良い
-        float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * specularPowPointLight * gPointLight.specularColor;
+        float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * specularPowPointLight * gPointLight.specularColor.rgb;
         
         // SpotLight
          // 拡散反射

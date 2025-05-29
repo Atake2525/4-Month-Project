@@ -5,7 +5,6 @@
 #include <algorithm>
 #include<random>
 
-
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -49,14 +48,18 @@ void Player::ClearLightBlockCollision() {
 
 void Player::Initialize(Camera* camera)
 {
+	isDead_ = false;
 	camera_ = camera;
 	//camera->SetTranslate({ 0.0f, 10.0f, -20.0f });
 	cameraTransform_ = camera->GetTransform();
 	cameraTransform_.translate = cameraOffset;
 	cameraOffset = defaultCameraOffset;
 
-	// 追加したクラス
-
+	// 追加したクラス(移動可能範囲のAABB)
+	worldBoarder_ = {
+		{-100.0f, -10.0f, -100.0f},
+		{100.0f, 100.0f, 100.0f}
+	};
 
 	
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Player", "Player.obj");
@@ -131,7 +134,6 @@ void Player::Update()
 
 	drawModel.translate = modelTransform_.translate;
 	//drawModel.rotate.y = modelTransform_.rotate.y;
-
 	/*object3d_->SetTranslate(drawModel.translate);*/
 	object3d_->SetTransform(drawModel);
 	object3d_->Update();
@@ -141,13 +143,13 @@ void Player::Update()
 
 	//camera_->SetTranslate(cameraTransform_.translate);
 	
-	
+	if (onGround_) {
 		if (input_->TriggerKey(DIK_SPACE)) {
 			//effect
 			effectFlag = true;
 			effectTimer = 5;
 		}
-	
+	}
 	if (effectFlag) {
 		/*位置*/
 		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
@@ -176,6 +178,12 @@ void Player::Update()
 		return false;
 		});
 
+
+	// 更新処理の最後に場外かの判定
+	if (!IsCollisionAABB(object3d_->GetAABB(), worldBoarder_))
+	{
+		isDead_ = true;
+	}
 
 	ImGui::Begin("State");
 	if (ImGui::TreeNode("PlayerCamera")) {
@@ -226,7 +234,7 @@ void Player::Move()
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
 	if (input_->IsMoveLeftJoyStick()) {
-		move = input_->GetLeftJoyStickPos2();
+		move = input_->GetLeftJoyStickPos2(200.0f);
 	}
 	if (move.x >= 0.5f) {
 		move.x = 0.5f;
@@ -302,8 +310,8 @@ void Player::Rotate()
 {
 	
 	if (input_->IsMoveRightJoyStick()) {
-		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
-		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3(200.0f).x, -0.05f, 0.05f);
+		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3(200.0f).y, -0.05f, 0.05f);
 		//cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
 		//cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
@@ -343,7 +351,7 @@ void Player::Rotate()
 
 
 	// 高度制限clamp
-	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
+	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, modelTransform_.translate.y - 1.0f, modelTransform_.translate.y + 21.0f);
 
 	// カメラのworldMatrixを更新
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);

@@ -9,8 +9,15 @@
 
 void GameScene::Initialize() {
 
+
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
 	
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
+	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
+
+	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+
+
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 
@@ -21,7 +28,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("01Stage.obj");
+	object3d->SetModel("stage03.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -32,9 +39,9 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	//player->AddStageCollision("Resources/Debug", "test.obj");
-	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -48,7 +55,7 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	//switch
 	// 
 	lightSwitch = new switchLight();
@@ -64,6 +71,14 @@ void GameScene::Initialize() {
 	resumeButton.CreateButton({ 540, 230 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
 	restartButton.CreateButton({ 540, 300 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
 	returnToTitleButton.CreateButton({ 540, 370 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
+
+
+
+	//クリア時に星の取得情報を送るよう
+	Result = 0;
+
+	//soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
+
 
 	isPaused = false;
 	//ポーズUIの背景
@@ -279,6 +294,13 @@ void GameScene::Update() {
 
 	player->Update();
 
+	// プレイヤーが場外に出ていたらリスタート
+	if (player->IsDead())
+	{
+		goToRestart = true;
+	}
+
+
 	camera = player->GetCamera();
 	camera->Update();
 	object3d->SetTransform(modelTransform);
@@ -324,6 +346,7 @@ void GameScene::Update() {
 	for (Star* s : starResultManager->GetStars()) {
 		if (!s->IsCollected() && s->OnCollision(player->StarObject3d())) {
 			s->Collect(); // 取得済みにする
+			Result++;
 			// TODO: ここで音やエフェクトなど入れても良い
 		}
 	}

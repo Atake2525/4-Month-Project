@@ -38,7 +38,6 @@ void starResult::Update() {
     for (Star* star : stars_) {
         star->Update();
     }
-
   
 
 }

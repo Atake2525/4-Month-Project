@@ -98,6 +98,9 @@ public: // メンバ関数
 
 	 void EffectBorn();
 
+	 // 場外判定で追加した関数
+	 const bool IsDead() const { return isDead_; }
+
 private:
 
 	void Move();
@@ -175,5 +178,10 @@ private: // メンバ変数
 	std::list<JampEffect*>effects_;
 	bool effectFlag = false;
 	float effectTimer;
+
+	// 場外判定
+	bool isDead_ = false;
+	// 場外を判定する座標
+	AABB worldBoarder_;
 };
 
