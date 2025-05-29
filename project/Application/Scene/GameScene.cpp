@@ -81,7 +81,21 @@ void GameScene::Initialize(int stage) {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -10.0f,8.0f,10.0f });
+	Vector3 goalPos = { 0.0f,0.0f,0.0f };
+	if (stage_ == 1) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+	if (stage_ == 2) {
+		goalPos = { 1.0f,8.0f,1.0f };
+	}
+	if (stage_ == 3) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+	if (stage_ == 4) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+
+	goal->Initialize(goalPos);
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(stage_); //{ 0.0f,0.0f,0.0f },
