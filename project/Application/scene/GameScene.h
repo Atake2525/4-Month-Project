@@ -52,6 +52,7 @@ public:
 	//ポーズ画面の表示
 	void PauseUpdate();
 
+	int StarResult() const { return Result; }
 private:
 	Object3d* object3d = nullptr;
 
@@ -128,5 +129,9 @@ private:
 	std::vector<Sprite*> starIcons;  // 星のUIを最大3つ分持つ
 
 
+	float fadeAlpha = 1.0f;
+
+	//クリア時に星の取得情報を送るよう
+	int Result = 0;
 };
 
