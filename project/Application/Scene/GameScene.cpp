@@ -311,7 +311,11 @@ void GameScene::Update() {
 	//}
 
 	player->Update();
-
+	// プレイヤーが場外に出ていたらリスタート
+	if (player->IsDead())
+	{
+		goToRestart = true;
+	}
 
 	camera = player->GetCamera();
 	camera->Update();
