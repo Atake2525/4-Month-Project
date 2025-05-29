@@ -580,62 +580,71 @@ bool Input::PushButton(Controller button) {
 			if (button == result)
 			{
 				return true;
-				break;
 			}
+				break;
 		case 1:
 			result = Controller::B;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 2:
 			result = Controller::X;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 3:
 			result = Controller::Y;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 4:
 			result = Controller::LB;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 5:
 			result = Controller::RB;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 6:
 			result = Controller::View;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 7:
 			result = Controller::Menu;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 8:
 			result = Controller::LeftStick;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 9:
 			result = Controller::RightStick;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		}
 	}
 	Vector3 joystick = GetLeftJoyStickPos3();
@@ -672,64 +681,34 @@ bool Input::TriggerButton(Controller button) {
 		{
 		case 0:
 			result = Controller::A;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 1:
 			result = Controller::B;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 2:
 			result = Controller::X;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 3:
 			result = Controller::Y;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 4:
 			result = Controller::LB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 5:
 			result = Controller::RB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 6:
 			result = Controller::View;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 7:
 			result = Controller::Menu;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 8:
 			result = Controller::LeftStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 9:
 			result = Controller::RightStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
@@ -744,64 +723,34 @@ bool Input::TriggerButton(Controller button) {
 		{
 		case 0:
 			resultPre = Controller::A;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 1:
 			resultPre = Controller::B;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 2:
 			resultPre = Controller::X;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 3:
 			resultPre = Controller::Y;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 4:
 			resultPre = Controller::LB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 5:
 			resultPre = Controller::RB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 6:
 			resultPre = Controller::View;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 7:
 			resultPre = Controller::Menu;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 8:
 			resultPre = Controller::LeftStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 9:
 			resultPre = Controller::RightStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
@@ -854,64 +803,34 @@ bool Input::ReturnButton(Controller button) {
 		{
 		case 0:
 			result = Controller::A;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 1:
 			result = Controller::B;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 2:
 			result = Controller::X;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 3:
 			result = Controller::Y;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 4:
 			result = Controller::LB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 5:
 			result = Controller::RB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 6:
 			result = Controller::View;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 7:
 			result = Controller::Menu;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 8:
 			result = Controller::LeftStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 9:
 			result = Controller::RightStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
@@ -926,64 +845,34 @@ bool Input::ReturnButton(Controller button) {
 		{
 		case 0:
 			resultPre = Controller::A;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 1:
 			resultPre = Controller::B;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 2:
 			resultPre = Controller::X;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 3:
 			resultPre = Controller::Y;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 4:
 			resultPre = Controller::LB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 5:
 			resultPre = Controller::RB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 6:
 			resultPre = Controller::View;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 7:
 			resultPre = Controller::Menu;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 8:
 			resultPre = Controller::LeftStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 9:
 			resultPre = Controller::RightStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
