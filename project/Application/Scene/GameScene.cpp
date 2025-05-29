@@ -9,7 +9,7 @@
 
 void GameScene::Initialize() {
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("01Stage.obj");
+	object3d->SetModel("stage03.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -35,9 +35,9 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	//player->AddStageCollision("Resources/Debug", "test.obj");
-	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -51,7 +51,7 @@ void GameScene::Initialize() {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	//switch
 	// 
 	lightSwitch = new switchLight();
