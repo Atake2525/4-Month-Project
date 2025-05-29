@@ -96,7 +96,7 @@ void GameScene::Initialize(int stage) {
 	//ゴールの位置
 	//
 	if (stage_ == 1) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { -7.0f, 5.0f,0.0f };
 	}
 	if (stage_ == 2) {
 		goalPos = { 1.0f,8.0f,1.0f };
@@ -138,7 +138,7 @@ void GameScene::Initialize(int stage) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{8.0f, 2.2f, 11.0f}
 		};
 	}
 	if (stage_ == 2) {
