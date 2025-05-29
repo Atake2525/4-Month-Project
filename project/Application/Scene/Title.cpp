@@ -27,6 +27,8 @@ void Title::Initialize() {
 	ghostObj->SetScale({ 0.5f, 0.5f, 0.5f });
 	ghostObj->SetCamera(camera);
 
+	ghostObj->SetRotate({ 0.0f, 3.14f, 0.0f });
+
 	ghostPos = { 0.0f, 1.0f, 5.0f };
 	ghostObj->SetTranslate(ghostPos);
 	ghostObj->Update();
@@ -52,12 +54,34 @@ void Title::Initialize() {
 	fadeSprite->SetScale({ 1280.0f, 720.0f });
 	fadeSprite->SetAnchorPoint({ 0.0f, 0.0f });
 	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, 0.0f });
+
+	// -------------------------
+	// タイトルブロック初期化
+	// -------------------------
+	ModelManager::GetInstance()->LoadModel("Resources/Model/title", "title.obj");
+	// Initialize()
+	titleBlockObj = new Object3d();
+	titleBlockObj->Initialize();
+	titleBlockObj->SetModel("title.obj");
+	titleBlockObj->SetCamera(camera);
+
+	blockTransform.scale = { 2.0f, 1.0f, 2.0f };
+	blockTransform.translate = { 0.0f, -2.0f, 5.0f };
+	blockTransform.rotate = { 0.0f, 0.0f, 0.0f };
+	titleBlockObj->SetTransform(blockTransform);
+	titleBlockObj->Update();
+
+
+
+
 }
 
 
 void Title::Update() {
 	input->Update();
 	camera->Update();
+
+	titleBlockObj->Update();
 
 	// ふわふわアニメーション
 	floatTime += 1.0f / 30.0f;
@@ -243,6 +267,15 @@ void Title::Draw() {
 	SpriteBase::GetInstance()->ShaderDraw();
 	// スプライト
 	if (titleSprite) titleSprite->Draw();
+
+	Object3dBase::GetInstance()->ShaderDraw();
+	// タイトルブロック
+	if (titleBlockObj) titleBlockObj->Draw();
+
+	if (ghostObj) {
+		ghostObj->Draw();
+	}
+
 	gameStartButton.Draw();
 	settingButton.Draw();
 	ruleButton.Draw();
@@ -253,12 +286,6 @@ void Title::Draw() {
 		fadeSprite->Draw();
 	}
 
-	Object3dBase::GetInstance()->ShaderDraw();
-
-	// 3Dモデル
-	if (ghostObj) {
-		ghostObj->Draw();
-	}
 
 
 
@@ -266,14 +293,18 @@ void Title::Draw() {
 
 void Title::Finalize() {
 
-	if (ghostObj) {
-		delete ghostObj;
-		ghostObj = nullptr;
-	}
-	if (titleSprite) {
-		delete titleSprite;
-		titleSprite = nullptr;
-	}
+
+	delete ghostObj;
+	ghostObj = nullptr;
+
+
+	delete titleBlockObj;
+	titleBlockObj = nullptr;
+
+
+	delete titleSprite;
+	titleSprite = nullptr;
+
 	if (fadeSprite) {
 		delete fadeSprite;
 		fadeSprite = nullptr;

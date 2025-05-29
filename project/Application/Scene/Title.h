@@ -74,6 +74,7 @@ private:
 	Vector3 ghostPos = { 0.0f, 3.0f, 0.0f };
 	float floatTime = 0.0f;
 
-
+	Object3d* titleBlockObj = nullptr;
+	Transform blockTransform{};
 
 };
