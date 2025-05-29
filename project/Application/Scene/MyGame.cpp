@@ -30,6 +30,7 @@ void MyGame::Initialize() {
 	Input::GetInstance()->Initialize();
 	Input::GetInstance()->ShowMouseCursor(true);
 
+	//ステージの読み込み
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage2", "Stage2.obj", true);
 

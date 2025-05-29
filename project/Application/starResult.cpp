@@ -17,6 +17,7 @@ void starResult::Initialize(int stage) {
         {0,0,0},
     };
 
+    //ステージごとの星の位置
     Vector3 stage_[] = {
         {5.0f, 1.0f, 1.0f},
         {7.0f, 1.0f, 5.0f},
@@ -37,6 +38,7 @@ void starResult::Initialize(int stage) {
         {1.0f, 1.0f, 9.0f},
         {1.0f, 1.0f, 2.0f}
     };
+
     // 3つの星を配置
     if (stage == 1) {
         for (int i = 0; i < 3; i++) {

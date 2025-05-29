@@ -25,6 +25,8 @@ void GameScene::Initialize(int stage) {
 	object3d = new Object3d();
 	object3d->Initialize();
 
+	//ステージ指定
+	//
 	if (stage_ == 1) {
 		object3d->SetModel("01Stage.obj");
 	}
@@ -34,8 +36,7 @@ void GameScene::Initialize(int stage) {
 	else if (stage_ == 3) {
 		object3d->SetModel("01Stage.obj");
 	}
-	else
-		if (stage_ == 4) {
+	else if (stage_ == 4) {
 		object3d->SetModel("Stage2.obj");
 	}
 
@@ -48,6 +49,9 @@ void GameScene::Initialize(int stage) {
 
 	player = new Player();
 	player->Initialize(camera);
+
+	//ステージとプレイヤーの当たり判定
+	//
 	if (stage_ == 1) {
 		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
 	}
@@ -62,6 +66,9 @@ void GameScene::Initialize(int stage) {
 	}
 
 	//player->AddStageCollision("Resources/Debug", "test.obj");
+	// 
+	//ライトブロックとプレイヤーの当たり判定
+	//
 	if (stage_ == 1) {
 		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 	}
@@ -82,6 +89,9 @@ void GameScene::Initialize(int stage) {
 
 	goal = new Goal();
 	Vector3 goalPos = { 0.0f,0.0f,0.0f };
+
+	//ゴールの位置
+	//
 	if (stage_ == 1) {
 		goalPos = { -10.0f,8.0f,10.0f };
 	}
@@ -101,6 +111,8 @@ void GameScene::Initialize(int stage) {
 	starResultManager->Initialize(stage_); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
+	//ライトブロックの指定
+	//
 	if (stage_ == 1) {
 		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	}
@@ -117,6 +129,8 @@ void GameScene::Initialize(int stage) {
 	//switch
 	// 
 	lightSwitch = new switchLight();
+	//スイッチの位置
+	//
 	if (stage_ == 1) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
@@ -145,6 +159,7 @@ void GameScene::Initialize(int stage) {
 		{0.0f, 0.5f, 4.0f}
 		};
 	}
+
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
