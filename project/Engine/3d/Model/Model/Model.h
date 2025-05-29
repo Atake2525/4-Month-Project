@@ -66,13 +66,19 @@ public:
 	const std::vector<VertexData>& GetVertices() const { return modelData.vertices; }
 
 	// Setter(Color)
-	void SetColor(const Vector4& color) { materialData->color = color; }
+	void SetColor(const Vector4& color) { 
+		materialData->color = color; 
+	}
 	// Setter(EnableLighting)
-	void SetEnableLighting(const bool& enableLighting) { materialData->enableLighting = enableLighting; }
+	void SetEnableLighting(const bool& enableLighting) {
+		materialData->enableLighting = enableLighting; 
+	}
 	// Setter(SpecularColor)
 	//void SetSpecularColor(const Vector3& specularColor) { materialData->specularColor = specularColor; }
 	// Setter(Shininess)
 	void SetShininess(const float& shininess) { materialData->shininess = shininess; }
+
+	void DebugMode(bool debugMode) { useWireFrameTexture = debugMode; }
 
 private:
 
@@ -104,6 +110,9 @@ private:
 
 	// VertexBufferViewを作成する(値を設定するだけ)
 	void CreateVertexBufferView();
+
+	bool useWireFrameTexture;
+	uint32_t whiteTextureIndex;
 public:
 
 	Model() = default;
