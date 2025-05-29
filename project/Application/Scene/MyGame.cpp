@@ -139,7 +139,7 @@ void MyGame::Update() {
 			rule = nullptr;
 
 			gameClear = new GameClear();
-			gameClear->Initialize();
+			gameClear->Initialize(Result);
 			gameClear->Update();
 			currentScene = Scene::GameClear;
 		}
