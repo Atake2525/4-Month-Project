@@ -27,6 +27,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg
 #include "GameClear.h"
 #include "starResult.h"
 
+#include "StageSelect.h"
 #pragma once
 
 class MyGame : public FrameWork {
@@ -65,15 +66,19 @@ private:
 	Setting* setting = nullptr;
 	GameScene* gameScene = nullptr;
 	GameClear* gameClear = nullptr;
+	StageSelect* stageSelect = nullptr;
 
 	enum class Scene {
 		Title,
 		Rule,
 		Setting,
+		Select,
 		Game,
 		GameClear,
 	};
 	Scene currentScene = Scene::Title; // 初期シーンはTitle
 
 	int Result = 0;
+	int stage;
+
 };

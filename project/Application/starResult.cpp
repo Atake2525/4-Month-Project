@@ -9,14 +9,58 @@ starResult::~starResult() {
     stars_.clear();
 }
 
-void starResult::Initialize() { 
+void starResult::Initialize(int stage) { 
+
+    Vector3 positions[] = {
+        {0,0,0},
+        {0,0,0},
+        {0,0,0},
+    };
+
+    //ステージごとの星の位置
+    Vector3 stage_[] = {
+        {5.0f, 1.0f, 1.0f},
+        {7.0f, 1.0f, 5.0f},
+        {9.0f, 1.0f, 8.0f}
+    };
+    Vector3 stage2_[] = {
+        {0.0f, 1.0f, 4.0f},
+        {1.0f, 1.0f, 9.0f},
+        {1.0f, 1.0f, 2.0f}
+    };
+    Vector3 stage3_[] = {
+        {0.0f, 1.0f, 4.0f},
+        {1.0f, 1.0f, 9.0f},
+        {1.0f, 1.0f, 2.0f}
+    };
+    Vector3 stage4_[] = {
+        {0.0f, 1.0f, 4.0f},
+        {1.0f, 1.0f, 9.0f},
+        {1.0f, 1.0f, 2.0f}
+    };
 
     // 3つの星を配置
-    Vector3 positions[] = {
-        {11.0f, 2.0f, 0.5f},
- {0.0f, 1.0f, 20.0f},
- {0.0f, 1.0f, 11.0f}
-    };
+    if (stage == 1) {
+        for (int i = 0; i < 3; i++) {
+            positions[i] = stage_[i];
+        }
+    }
+    if (stage == 2) {
+        for (int i = 0; i < 3; i++) {
+            positions[i] = stage2_[i];
+        }
+    }
+    if (stage == 3) {
+        for (int i = 0; i < 3; i++) {
+            positions[i] = stage3_[i];
+        }
+    }
+    if (stage == 4) {
+        for (int i = 0; i < 3; i++) {
+            positions[i] = stage4_[i];
+        }
+    }
+    
 
     for (const auto& pos : positions) {
         Star* newStar = new Star();

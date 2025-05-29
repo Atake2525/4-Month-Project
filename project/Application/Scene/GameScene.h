@@ -26,7 +26,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(int stage);
 
 	/// <summary>
 	/// 終了処理
@@ -132,5 +132,6 @@ private:
 
 	//クリア時に星の取得情報を送るよう
 	int Result = 0;
+	int stage_ = 0;;
 };
 

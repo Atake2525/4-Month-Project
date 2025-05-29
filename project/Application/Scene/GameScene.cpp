@@ -6,7 +6,9 @@
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
-void GameScene::Initialize() {
+
+void GameScene::Initialize(int stage) {
+	stage_ = stage;
 
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
@@ -27,6 +29,21 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
+
+	//ステージ指定
+	//
+	if (stage_ == 1) {
+		object3d->SetModel("01Stage.obj");
+	}
+	else if (stage_ == 2) {
+		object3d->SetModel("Stage2.obj");
+	}
+	else if (stage_ == 3) {
+		object3d->SetModel("01Stage.obj");
+	}
+	else if (stage_ == 4) {
+		object3d->SetModel("Stage2.obj");
+	}
 	object3d->SetModel("stage03.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
@@ -38,8 +55,39 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
+
+	//ステージとプレイヤーの当たり判定
+	//
+	if (stage_ == 1) {
+		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	}
+	else if (stage_ == 2) {
+		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+	}
+	else if (stage_ == 3) {
+		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	}
+	else if (stage_ == 4) {
+		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+	}
+
 	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	//player->AddStageCollision("Resources/Debug", "test.obj");
+	// 
+	//ライトブロックとプレイヤーの当たり判定
+	//
+	if (stage_ == 1) {
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	}
+	else if (stage_ == 2) {
+		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+	}
+	else if (stage_ == 3) {
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	}
+	else if (stage_ == 4) {
+		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+	}
 	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 
 	button = new UI();
@@ -48,21 +96,79 @@ void GameScene::Initialize() {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -7.0f, 5.0f,0.0f });
+	Vector3 goalPos = { 0.0f,0.0f,0.0f };
+
+	//ゴールの位置
+	//
+	if (stage_ == 1) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+	if (stage_ == 2) {
+		goalPos = { 1.0f,8.0f,1.0f };
+	}
+	if (stage_ == 3) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+	if (stage_ == 4) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+
+	goal->Initialize(goalPos);
 
 	starResultManager = new starResult();
-	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+	starResultManager->Initialize(stage_); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
+	//ライトブロックの指定
+	//
+	if (stage_ == 1) {
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	}
+	else if (stage_ == 2) {
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+	}
+	else if (stage_ == 3) {
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	}
+	else if (stage_ == 4) {
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+	}
+
 	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	//switch
 	// 
 	lightSwitch = new switchLight();
-	switchTransform = {
-		  {1.0f, 1.0f, 1.0f},
-	{0.0f, 0.0f, 0.0f},
-	{8.0f, 2.2f, 11.0f}
-	};
+	//スイッチの位置
+	//
+	if (stage_ == 1) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.5f, 4.0f}
+		};
+	}
+	if (stage_ == 2) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{4.0f, 1.0f, 4.0f}
+		};
+	}
+	if (stage_ == 3) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.5f, 4.0f}
+		};
+	}
+	if (stage_ == 4) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.5f, 4.0f}
+		};
+	}
+
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
@@ -72,6 +178,9 @@ void GameScene::Initialize() {
 	returnToTitleButton.CreateButton({ 540, 370 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
 
+	resumeButton.CreateButton({ 540, 250 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
+	restartButton.CreateButton({ 540, 320 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
+	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Select.png");
 
 	//クリア時に星の取得情報を送るよう
 	Result = 0;
@@ -324,7 +433,7 @@ void GameScene::Update() {
 			showCursor = false;
 			isGoal = false;
 			Light::GetInstance()->SetIntensityDirectionalLight(0.0f);
-			Initialize();
+			Initialize(stage_);
 		}
 	}
 	lightSwitch->Update();
