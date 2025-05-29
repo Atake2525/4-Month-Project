@@ -144,12 +144,13 @@ void Player::Update()
 
 	//camera_->SetTranslate(cameraTransform_.translate);
 	
-	
+	if (onGround_) {
 		if (input_->TriggerKey(DIK_SPACE)) {
 			//effect
 			effectFlag = true;
 			effectTimer = 5;
 		}
+	}
 	
 	if (effectFlag) {
 		/*位置*/
