@@ -80,7 +80,7 @@ void Player::Initialize(Camera* camera)
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });*/
 
 	input_ = Input::GetInstance();
-	Audio::GetInstance()->LoadMP3("Resources/Sound/Jump.mp3", "jump", 1.0f);
+	Audio::GetInstance()->LoadWave("Resources/Sound/jump.wav", "jump", 1.0f);
 	//camera
 	//cameraTransform_.translate = camera->GetTranslate();
 	//cameraTransform_.rotate = camera->GetRotate();

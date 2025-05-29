@@ -22,7 +22,7 @@ void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase*
 	switchTransform = transform;
 	input_ = input;
 	player_ = player;
-	Audio::GetInstance()->LoadMP3("Resources/Sound/switch.mp3", "switch", 1.0f);
+	Audio::GetInstance()->LoadWave("Resources/Sound/switch2.wav", "switch", 1.0f);
 
 
 
