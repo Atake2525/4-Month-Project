@@ -47,21 +47,33 @@ void GameScene::Initialize(int stage) {
 	cameraTransform.scale = { 1.0f, 1.0f, 1.0f };
 
 	player = new Player();
+
 	if (stage_ == 1) {
 		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
 	}
-	if (stage_ == 2) {
+	else if (stage_ == 2) {
 		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
 	}
-	if (stage_ == 3) {
+	else if (stage_ == 3) {
 		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
 	}
-	if (stage_ == 4) {
+	else if (stage_ == 4) {
 		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
 	}
 
 	//player->AddStageCollision("Resources/Debug", "test.obj");
-	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	if (stage_ == 1) {
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	}
+	else if (stage_ == 2) {
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	}
+	else if (stage_ == 3) {
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	}
+	else if (stage_ == 4) {
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	}
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -75,7 +87,19 @@ void GameScene::Initialize(int stage) {
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	if (stage_ == 1) {
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	}
+	else if (stage_ == 2) {
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	}
+	else if (stage_ == 3) {
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	}
+	else if (stage_ == 4) {
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	}
+
 	//switch
 	// 
 	lightSwitch = new switchLight();
