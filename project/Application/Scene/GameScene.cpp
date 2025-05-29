@@ -10,10 +10,7 @@
 void GameScene::Initialize(int stage) {
 	stage_ = stage;
 
-
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
 	
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
@@ -33,7 +30,7 @@ void GameScene::Initialize(int stage) {
 	//ステージ指定
 	//
 	if (stage_ == 1) {
-		object3d->SetModel("01Stage.obj");
+		object3d->SetModel("stage03.obj");
 	}
 	else if (stage_ == 2) {
 		object3d->SetModel("Stage2.obj");
@@ -44,7 +41,6 @@ void GameScene::Initialize(int stage) {
 	else if (stage_ == 4) {
 		object3d->SetModel("Stage2.obj");
 	}
-	object3d->SetModel("stage03.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -59,7 +55,7 @@ void GameScene::Initialize(int stage) {
 	//ステージとプレイヤーの当たり判定
 	//
 	if (stage_ == 1) {
-		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+		player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	}
 	else if (stage_ == 2) {
 		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
@@ -71,13 +67,12 @@ void GameScene::Initialize(int stage) {
 		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
 	}
 
-	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	//player->AddStageCollision("Resources/Debug", "test.obj");
 	// 
 	//ライトブロックとプレイヤーの当たり判定
 	//
 	if (stage_ == 1) {
-		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 	}
 	else if (stage_ == 2) {
 		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
@@ -88,7 +83,7 @@ void GameScene::Initialize(int stage) {
 	else if (stage_ == 4) {
 		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
 	}
-	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
+
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -122,7 +117,7 @@ void GameScene::Initialize(int stage) {
 	//ライトブロックの指定
 	//
 	if (stage_ == 1) {
-		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	}
 	else if (stage_ == 2) {
 		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
@@ -134,7 +129,6 @@ void GameScene::Initialize(int stage) {
 		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
 	}
 
-	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	//switch
 	// 
 	lightSwitch = new switchLight();

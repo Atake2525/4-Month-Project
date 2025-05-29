@@ -38,6 +38,12 @@ void starResult::Initialize(int stage) {
         {1.0f, 1.0f, 9.0f},
         {1.0f, 1.0f, 2.0f}
     };
+    //チュートリアル
+    Vector3 stage5_[] = {
+       {0.0f, 1.0f, 4.0f},
+       {1.0f, 1.0f, 9.0f},
+       {1.0f, 1.0f, 2.0f}
+    };
 
     // 3つの星を配置
     if (stage == 1) {
@@ -60,7 +66,12 @@ void starResult::Initialize(int stage) {
             positions[i] = stage4_[i];
         }
     }
-    
+    //チュートリアル
+    if (stage == 5) {
+        for (int i = 0; i < 3; i++) {
+            positions[i] = stage4_[i];
+        }
+    }
 
     for (const auto& pos : positions) {
         Star* newStar = new Star();
