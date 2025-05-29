@@ -5,18 +5,22 @@
 
 
 
-void JampEffect::Intialize(Vector3 position, Vector3 velocity, const std::string& directoryPath, const std::string& filename)
+void JampEffect::Intialize(Vector3 position, Vector3 velocity, Vector3 rotate)
 {
+
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "effectParticle.obj");
 	position_ = position;
 	velocity_ = velocity;
-	color = { 1.0f,1.0f,1.0f ,1.0f};
+	rotarion_ = rotate;
+	model_= new Object3d();
 	model_->Initialize();
-	model_->SetModel(directoryPath, filename);
+	model_->SetModel("effectParticle.obj");
+
+	color = { 1.0f,1.0f,1.0f ,1.0f };
 }
 
 void JampEffect::Update()
 {
-	position_ += velocity_;
 	
 	if (isFinished) {
 		return;
@@ -26,11 +30,17 @@ void JampEffect::Update()
 		counter_ = kDuration;
 		isFinished = true;
 	}
+
+	position_ -= velocity_;
+
 	color.w = std::clamp(1.0f - counter_ / kDuration, 0.0f, 1.0f);
+	scale_ = { 5.0f,5.0f,5.0f };
+
 	model_->SetColor(color);
 	model_->SetTranslate(position_);
 	model_->SetRotate(rotarion_);
 	model_->SetScale(scale_);
+	model_->Update();
 }
 
 void JampEffect::Draw()

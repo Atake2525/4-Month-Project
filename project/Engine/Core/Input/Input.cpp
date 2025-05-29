@@ -278,44 +278,46 @@ Vector3 Input::GetMouseVel3() {
 	return result;
 }
 
-Vector2 Input::GetLeftJoyStickPos2() {
+Vector2 Input::GetLeftJoyStickPos2(const float deadZone) {
+	// スティックの無効範囲とデッドゾーンを考慮してresultと返す
 	Vector2 result = { 0.0f, 0.0f };
-	if (gamePadState.lX < -unresponsiveRange)
+	if (gamePadState.lX < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
-	else if (gamePadState.lX > unresponsiveRange)
+	else if (gamePadState.lX > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
 
-	if (gamePadState.lY < -unresponsiveRange)
+	if (gamePadState.lY < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
 	}
-	else if (gamePadState.lY > unresponsiveRange)
+	else if (gamePadState.lY > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
 	}
 	return result;
 }
 
-Vector3 Input::GetLeftJoyStickPos3() {
+Vector3 Input::GetLeftJoyStickPos3(const float deadZone) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
-	if (gamePadState.lX < -unresponsiveRange)
+	// スティックの無効範囲とデッドゾーンを考慮してresultと返す
+	if (gamePadState.lX < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
-	else if (gamePadState.lX > unresponsiveRange)
+	else if (gamePadState.lX > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
 
-	if (gamePadState.lY < -unresponsiveRange)
+	if (gamePadState.lY < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
-	} 
-	else if (gamePadState.lY > unresponsiveRange)
+	}
+	else if (gamePadState.lY > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
 	}
@@ -331,44 +333,45 @@ Vector3 Input::GetLeftJoyStickPos3() {
 	return result;
 }
 
-Vector2 Input::GetRightJoyStickPos2() {
+Vector2 Input::GetRightJoyStickPos2(const float deadZone) {
 	Vector2 result = { 0.0f, 0.0f };
-	if (gamePadState.lRx < -unresponsiveRange)
+	// スティックの無効範囲とデッドゾーンを考慮してresultと返す
+	if (gamePadState.lRx < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
-	else if (gamePadState.lRx > unresponsiveRange)
+	else if (gamePadState.lRx > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
 
-	if (gamePadState.lRy < -unresponsiveRange)
+	if (gamePadState.lRy < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
-	else if (gamePadState.lRy > unresponsiveRange)
+	else if (gamePadState.lRy > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
 	return result;
 }
 
-Vector3 Input::GetRightJoyStickPos3() {
+Vector3 Input::GetRightJoyStickPos3(const float deadZone) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
-	if (gamePadState.lRx < -unresponsiveRange)
+	if (gamePadState.lRx < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
-	else if (gamePadState.lRx > unresponsiveRange)
+	else if (gamePadState.lRx > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
 
-	if (gamePadState.lRy < -unresponsiveRange)
+	if (gamePadState.lRy < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
-	else if (gamePadState.lRy > unresponsiveRange)
+	else if (gamePadState.lRy > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
@@ -580,65 +583,74 @@ bool Input::PushButton(Controller button) {
 			if (button == result)
 			{
 				return true;
-				break;
 			}
+				break;
 		case 1:
 			result = Controller::B;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 2:
 			result = Controller::X;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 3:
 			result = Controller::Y;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 4:
 			result = Controller::LB;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 5:
 			result = Controller::RB;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 6:
 			result = Controller::View;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 7:
 			result = Controller::Menu;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 8:
 			result = Controller::LeftStick;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		case 9:
 			result = Controller::RightStick;
 			if (button == result)
 			{
 				return true;
 			}
+			break;
 		}
 	}
-	Vector3 joystick = GetLeftJoyStickPos3();
+	Vector3 joystick = GetLeftJoyStickPos3(0.0f);
 	if (joystick.z < 0)
 	{
 		result = Controller::RT;
@@ -672,64 +684,34 @@ bool Input::TriggerButton(Controller button) {
 		{
 		case 0:
 			result = Controller::A;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 1:
 			result = Controller::B;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 2:
 			result = Controller::X;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 3:
 			result = Controller::Y;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 4:
 			result = Controller::LB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 5:
 			result = Controller::RB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 6:
 			result = Controller::View;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 7:
 			result = Controller::Menu;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 8:
 			result = Controller::LeftStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 9:
 			result = Controller::RightStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
@@ -744,64 +726,34 @@ bool Input::TriggerButton(Controller button) {
 		{
 		case 0:
 			resultPre = Controller::A;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 1:
 			resultPre = Controller::B;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 2:
 			resultPre = Controller::X;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 3:
 			resultPre = Controller::Y;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 4:
 			resultPre = Controller::LB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 5:
 			resultPre = Controller::RB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 6:
 			resultPre = Controller::View;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 7:
 			resultPre = Controller::Menu;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 8:
 			resultPre = Controller::LeftStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 9:
 			resultPre = Controller::RightStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
@@ -810,7 +762,7 @@ bool Input::TriggerButton(Controller button) {
 		return true;
 	}
 
-	Vector3 joystick = GetLeftJoyStickPos3();
+	Vector3 joystick = GetLeftJoyStickPos3(0.0f);
 	float joystickPre = 0.0f;
 	if (gamePadStatePre.lZ < -unresponsiveRange)
 	{
@@ -854,64 +806,34 @@ bool Input::ReturnButton(Controller button) {
 		{
 		case 0:
 			result = Controller::A;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 1:
 			result = Controller::B;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 2:
 			result = Controller::X;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 3:
 			result = Controller::Y;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 4:
 			result = Controller::LB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 5:
 			result = Controller::RB;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 6:
 			result = Controller::View;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 7:
 			result = Controller::Menu;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 8:
 			result = Controller::LeftStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		case 9:
 			result = Controller::RightStick;
-			if (button == result)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
@@ -926,64 +848,34 @@ bool Input::ReturnButton(Controller button) {
 		{
 		case 0:
 			resultPre = Controller::A;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 1:
 			resultPre = Controller::B;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 2:
 			resultPre = Controller::X;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 3:
 			resultPre = Controller::Y;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 4:
 			resultPre = Controller::LB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 5:
 			resultPre = Controller::RB;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 6:
 			resultPre = Controller::View;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 7:
 			resultPre = Controller::Menu;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 8:
 			resultPre = Controller::LeftStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		case 9:
 			resultPre = Controller::RightStick;
-			if (button == resultPre)
-			{
-				break;
-			}
+			break;
 		}
 	}
 
@@ -992,7 +884,7 @@ bool Input::ReturnButton(Controller button) {
 		return true;
 	}
 
-	Vector3 joystick = GetLeftJoyStickPos3();
+	Vector3 joystick = GetLeftJoyStickPos3(0.0f);
 	float joystickPre = 0.0f;
 	if (gamePadStatePre.lZ < -unresponsiveRange)
 	{
