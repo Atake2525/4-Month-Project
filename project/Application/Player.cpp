@@ -343,7 +343,7 @@ void Player::Rotate()
 
 
 	// 高度制限clamp
-	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, 1.0f, modelTransform_.translate.y + 21.0f);
+	cameraTransform_.translate.y = std::clamp(cameraTransform_.translate.y, modelTransform_.translate.y - 1.0f, modelTransform_.translate.y + 21.0f);
 
 	// カメラのworldMatrixを更新
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(modelTransform_.scale, modelTransform_.rotate, cameraTransform_.translate);
