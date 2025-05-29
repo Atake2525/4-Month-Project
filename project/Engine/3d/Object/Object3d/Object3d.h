@@ -154,9 +154,9 @@ public:
 	// Setter(Rotate Degree)
 	void SetRotateInDegree(const Vector3& rotate);
 	// Setter(Color)
-	void SetColor(const Vector4& color);
+	void SetColor(const Vector4 color);
 	// Setter(EnableLighting)
-	void SetEnableLighting(const bool& enableLighting);
+	void SetEnableLighting(const bool enableLighting);
 	// Setter(specularColor)
 	//void SetSpecularColor(const Vector3& specularColor);
 	// Setter(shininess)
@@ -165,7 +165,8 @@ public:
 	void SetAxisAngle(const Vector3& rotate) { axisAngle = Normalize(rotate); }
 	// 任意軸回転の回転量を設定
 	void SetQuaternionAngle(const float& angle) { rotateQuaternionMatrix = MakeRotateAxisAngle(axisAngle, angle); }
-
+	// デバッグ(ワイヤーフレーム)用にテクスチャをwhite1x1に変更
+	void DebugMode(const bool debugMode);
 
 public:
 	// 衝突チェック(AABBとAABB)
