@@ -102,9 +102,9 @@ void switchLight::Update()
 			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		}
 	}
-	ImGui::Begin("SwitchDist");
-	ImGui::DragFloat("Dist", &dist, 0.1f);
-	ImGui::End();
+	//ImGui::Begin("SwitchDist");
+	//ImGui::DragFloat("Dist", &dist, 0.1f);
+	//ImGui::End();
 
 	switchModel->Update();
 

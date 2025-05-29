@@ -6,7 +6,6 @@
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
-
 void GameScene::Initialize() {
 
 
@@ -49,7 +48,7 @@ void GameScene::Initialize() {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -10.0f,8.0f,10.0f });
+	goal->Initialize({ -7.0f, 5.0f,0.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
@@ -60,9 +59,9 @@ void GameScene::Initialize() {
 	// 
 	lightSwitch = new switchLight();
 	switchTransform = {
-		{1.0f, 1.0f, 1.0f},
-		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		  {1.0f, 1.0f, 1.0f},
+	{0.0f, 0.0f, 0.0f},
+	{8.0f, 2.2f, 11.0f}
 	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
@@ -235,7 +234,7 @@ void GameScene::Update() {
 
 	Vector3 posM3 = input->GetWindowMousePos3();
 
-	ImGui::Begin("State");
+	/*ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform.translate.x, 0.1f);
 		ImGui::DragFloat3("Rotate", &cameraTransform.rotate.x, 0.1f);
@@ -258,7 +257,7 @@ void GameScene::Update() {
 
 	ImGui::DragFloat2("M2", &posM2.x, 0.1f);
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
-	ImGui::End();
+	ImGui::End();*/
 
 	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
 		isPaused = !isPaused;

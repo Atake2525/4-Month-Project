@@ -113,9 +113,9 @@ const bool UI::InCursor() const {
 	{
 		return true;
 	}
-	ImGui::Begin("Button");
-	ImGui::DragFloat2("mousePos", &mousePosAABB.min.x, 0.1f);
-	ImGui::End();
+	//ImGui::Begin("Button");
+	//ImGui::DragFloat2("mousePos", &mousePosAABB.min.x, 0.1f);
+	//ImGui::End();
 
 	return false;
 }
