@@ -166,7 +166,7 @@ void Title::Update() {
 	// --- Enterキー / Aボタンによる決定処理 ---
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
 
-		Audio::GetInstance()->Play("click",true); // クリック音再生
+		Audio::GetInstance()->Play("click"); // クリック音再生
 
 		if (hoveredButton) {
 			// カーソルが乗っているUIを決定
