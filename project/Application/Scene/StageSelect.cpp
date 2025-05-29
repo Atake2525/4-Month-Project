@@ -6,15 +6,15 @@ void StageSelect::Initialize() {
 	input->ShowMouseCursor(true);
 
 	//背景
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/gameUI/BG.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/gameUI/SelectBG.png");
 	StageSelectSprite = new Sprite();
-	StageSelectSprite->Initialize("Resources/Sprite/gameUI/BG.png");
+	StageSelectSprite->Initialize("Resources/Sprite/gameUI/SelectBG.png");
 
 	//UIボタン
-	stageSelct.CreateButton({ 200,200 }, Origin::Center, "Resources/Sprite/number/1.png");
-	stageSelct2.CreateButton({ 400,200 }, Origin::Center, "Resources/Sprite/number/2.png");
-	stageSelct3.CreateButton({ 200,400 }, Origin::Center, "Resources/Sprite/number/3.png");
-	stageSelct4.CreateButton({ 400,400 }, Origin::Center, "Resources/Sprite/number/4.png");
+	stageSelct.CreateButton({ 350,200 }, Origin::Center, "Resources/Sprite/number/1.png");
+	stageSelct2.CreateButton({ 800,200 }, Origin::Center, "Resources/Sprite/number/2.png");
+	stageSelct3.CreateButton({ 350,450 }, Origin::Center, "Resources/Sprite/number/3.png");
+	stageSelct4.CreateButton({ 800,450}, Origin::Center, "Resources/Sprite/number/4.png");
 	titleButton.CreateButton({ 50,50 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
 	// 黒フェードスプライト
