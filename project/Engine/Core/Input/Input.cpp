@@ -278,44 +278,46 @@ Vector3 Input::GetMouseVel3() {
 	return result;
 }
 
-Vector2 Input::GetLeftJoyStickPos2() {
+Vector2 Input::GetLeftJoyStickPos2(const float deadZone) {
+	// スティックの無効範囲とデッドゾーンを考慮してresultと返す
 	Vector2 result = { 0.0f, 0.0f };
-	if (gamePadState.lX < -unresponsiveRange)
+	if (gamePadState.lX < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
-	else if (gamePadState.lX > unresponsiveRange)
+	else if (gamePadState.lX > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
 
-	if (gamePadState.lY < -unresponsiveRange)
+	if (gamePadState.lY < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
 	}
-	else if (gamePadState.lY > unresponsiveRange)
+	else if (gamePadState.lY > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
 	}
 	return result;
 }
 
-Vector3 Input::GetLeftJoyStickPos3() {
+Vector3 Input::GetLeftJoyStickPos3(const float deadZone) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
-	if (gamePadState.lX < -unresponsiveRange)
+	// スティックの無効範囲とデッドゾーンを考慮してresultと返す
+	if (gamePadState.lX < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
-	else if (gamePadState.lX > unresponsiveRange)
+	else if (gamePadState.lX > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lX);
 	}
 
-	if (gamePadState.lY < -unresponsiveRange)
+	if (gamePadState.lY < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
-	} 
-	else if (gamePadState.lY > unresponsiveRange)
+	}
+	else if (gamePadState.lY > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lY);
 	}
@@ -331,44 +333,45 @@ Vector3 Input::GetLeftJoyStickPos3() {
 	return result;
 }
 
-Vector2 Input::GetRightJoyStickPos2() {
+Vector2 Input::GetRightJoyStickPos2(const float deadZone) {
 	Vector2 result = { 0.0f, 0.0f };
-	if (gamePadState.lRx < -unresponsiveRange)
+	// スティックの無効範囲とデッドゾーンを考慮してresultと返す
+	if (gamePadState.lRx < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
-	else if (gamePadState.lRx > unresponsiveRange)
+	else if (gamePadState.lRx > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
 
-	if (gamePadState.lRy < -unresponsiveRange)
+	if (gamePadState.lRy < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
-	else if (gamePadState.lRy > unresponsiveRange)
+	else if (gamePadState.lRy > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
 	return result;
 }
 
-Vector3 Input::GetRightJoyStickPos3() {
+Vector3 Input::GetRightJoyStickPos3(const float deadZone) {
 	Vector3 result = { 0.0f, 0.0f, 0.0f };
-	if (gamePadState.lRx < -unresponsiveRange)
+	if (gamePadState.lRx < -unresponsiveRange - deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
-	else if (gamePadState.lRx > unresponsiveRange)
+	else if (gamePadState.lRx > unresponsiveRange + deadZone)
 	{
 		result.x = static_cast<float>(gamePadState.lRx);
 	}
 
-	if (gamePadState.lRy < -unresponsiveRange)
+	if (gamePadState.lRy < -unresponsiveRange - deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
-	else if (gamePadState.lRy > unresponsiveRange)
+	else if (gamePadState.lRy > unresponsiveRange + deadZone)
 	{
 		result.y = static_cast<float>(gamePadState.lRy);
 	}
@@ -647,7 +650,7 @@ bool Input::PushButton(Controller button) {
 			break;
 		}
 	}
-	Vector3 joystick = GetLeftJoyStickPos3();
+	Vector3 joystick = GetLeftJoyStickPos3(0.0f);
 	if (joystick.z < 0)
 	{
 		result = Controller::RT;
@@ -759,7 +762,7 @@ bool Input::TriggerButton(Controller button) {
 		return true;
 	}
 
-	Vector3 joystick = GetLeftJoyStickPos3();
+	Vector3 joystick = GetLeftJoyStickPos3(0.0f);
 	float joystickPre = 0.0f;
 	if (gamePadStatePre.lZ < -unresponsiveRange)
 	{
@@ -881,7 +884,7 @@ bool Input::ReturnButton(Controller button) {
 		return true;
 	}
 
-	Vector3 joystick = GetLeftJoyStickPos3();
+	Vector3 joystick = GetLeftJoyStickPos3(0.0f);
 	float joystickPre = 0.0f;
 	if (gamePadStatePre.lZ < -unresponsiveRange)
 	{
