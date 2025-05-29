@@ -22,7 +22,7 @@ void switchLight::Initialize(Transform transform/*, Camera* camera, DirectXBase*
 	switchTransform = transform;
 	input_ = input;
 	player_ = player;
-	Audio::GetInstance()->LoadMP3("Resources/Sound/switch.mp3", audio, 1.0f);
+	Audio::GetInstance()->LoadMP3("Resources/Sound/switch.mp3", "switch", 1.0f);
 
 
 
@@ -54,7 +54,7 @@ void switchLight::Update()
 			switchFlag = true;
 			changeFlag = false;
 			timer2_ = 0;
-			Audio::GetInstance()->Play(audio);
+			Audio::GetInstance()->Play("switch");
 		}
 	}
 	else {
@@ -63,7 +63,7 @@ void switchLight::Update()
 			switchFlag = false;
 			changeFlag = true;
 			Timer_ = 0;
-			Audio::GetInstance()->Play(audio);
+			Audio::GetInstance()->Play("switch");
 		}
 		//}
 	}

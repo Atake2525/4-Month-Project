@@ -55,6 +55,6 @@ private:
 	/*演出*/
 	float Timer_ = 0;
 	float timer2_ = 0;
-	const std::string audio;
+	
 
 };

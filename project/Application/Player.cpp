@@ -80,7 +80,7 @@ void Player::Initialize(Camera* camera)
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });*/
 
 	input_ = Input::GetInstance();
-	Audio::GetInstance()->LoadMP3("Resources/Sound/Jump.mp3", audio, 1.0f);
+	Audio::GetInstance()->LoadMP3("Resources/Sound/Jump.mp3", "jump", 1.0f);
 	//camera
 	//cameraTransform_.translate = camera->GetTranslate();
 	//cameraTransform_.rotate = camera->GetRotate();
@@ -427,7 +427,7 @@ void Player::Jump()
 		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
-			Audio::GetInstance()->Play(audio);
+			Audio::GetInstance()->Play("jump");
 		}
 		
 		

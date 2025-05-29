@@ -209,7 +209,6 @@ private: // メンバ変数
 	// 場外を判定する座標
 	AABB worldBoarder_;
 
-	//こうかおん
-	const std::string audio;
+	
 };
 
