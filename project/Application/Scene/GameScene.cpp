@@ -47,8 +47,19 @@ void GameScene::Initialize(int stage) {
 	cameraTransform.scale = { 1.0f, 1.0f, 1.0f };
 
 	player = new Player();
-	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	if (stage_ == 1) {
+		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	}
+	if (stage_ == 2) {
+		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+	}
+	if (stage_ == 3) {
+		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	}
+	if (stage_ == 4) {
+		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+	}
+
 	//player->AddStageCollision("Resources/Debug", "test.obj");
 	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 
