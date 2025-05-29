@@ -8,7 +8,7 @@
 
 void Rule::Initialize()
 {
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/yamada_stage", "stage_yamada.obj", true);
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
@@ -20,7 +20,7 @@ void Rule::Initialize()
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("01Stage.obj"); //ステージobj
+	object3d->SetModel("stage_yamada.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -214,16 +214,20 @@ void Rule::PauseUpdate()
 
 void Rule::Update() {
 	
-	// ポーズ切り替え
-	if (input->PushKey(DIK_ESCAPE)) {
-		if (tabReleased) {
-			isPaused = !isPaused;
-			tabReleased = false;  // 押された直後に反応したらフラグを下げる
-		}
-	}
-	else {
-		// TABが離されたらフラグを戻す
-		tabReleased = true;
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
+		isPaused = !isPaused;
+		tabReleased = false;
+
+		// カーソルの表示状態をポーズに応じて変更
+		input->ShowMouseCursor(isPaused);
+
+		// 入力状態の初期化（ポーズ解除後に誤動作しないように）
+		pauseInputLocked = false;
+		pauseSelectedIndex = 0;
+		prevPauseSelectedIndex = -1;
+		hoveredPauseButton = nullptr;
+		prevHoveredPauseButton = nullptr;
+		pauseBlinkTimer = 0.0f;
 	}
 
 	// ポーズ中の処理
@@ -297,10 +301,10 @@ void Rule::Update() {
 	}
 
 
-	//ENTERでタイトルへ戻る
-	if (input->TriggerKey(DIK_RETURN)) {
-		finished = true;
-	}
+	////ENTERでタイトルへ戻る
+	//if (input->TriggerKey(DIK_RETURN)) {
+	//	finished = true;
+	//}
 }
 
 void Rule::Draw() {

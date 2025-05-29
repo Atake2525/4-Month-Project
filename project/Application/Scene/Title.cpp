@@ -2,10 +2,16 @@
 #include "TextureManager.h"
 #include <dinput.h>
 #include "Object3dBase.h"
+#include "Audio.h"
 
 void Title::Initialize() {
 	input = Input::GetInstance();
 	input->ShowMouseCursor(true);
+
+	// クリック音読み込み
+	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+
+
 
 	// -------------------------
 	// お化け初期化
@@ -21,11 +27,11 @@ void Title::Initialize() {
 	ghostObj->SetScale({ 0.5f, 0.5f, 0.5f });
 	ghostObj->SetCamera(camera);
 
+	ghostObj->SetRotate({ 0.0f, 3.14f, 0.0f });
+
 	ghostPos = { 0.0f, 1.0f, 5.0f };
 	ghostObj->SetTranslate(ghostPos);
 	ghostObj->Update();
-
-
 
 	// -------------------------
 	// タイトル画像とボタン
@@ -48,12 +54,34 @@ void Title::Initialize() {
 	fadeSprite->SetScale({ 1280.0f, 720.0f });
 	fadeSprite->SetAnchorPoint({ 0.0f, 0.0f });
 	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, 0.0f });
+
+	// -------------------------
+	// タイトルブロック初期化
+	// -------------------------
+	ModelManager::GetInstance()->LoadModel("Resources/Model/title", "title.obj");
+	// Initialize()
+	titleBlockObj = new Object3d();
+	titleBlockObj->Initialize();
+	titleBlockObj->SetModel("title.obj");
+	titleBlockObj->SetCamera(camera);
+
+	blockTransform.scale = { 2.0f, 1.0f, 2.0f };
+	blockTransform.translate = { 0.0f, -2.0f, 5.0f };
+	blockTransform.rotate = { 0.0f, 0.0f, 0.0f };
+	titleBlockObj->SetTransform(blockTransform);
+	titleBlockObj->Update();
+
+
+
+
 }
 
 
 void Title::Update() {
 	input->Update();
 	camera->Update();
+
+	titleBlockObj->Update();
 
 	// ふわふわアニメーション
 	floatTime += 1.0f / 30.0f;
@@ -64,8 +92,6 @@ void Title::Update() {
 	ghostObj->SetTranslate(ghostPos);
 
 	ghostObj->Update();
-
-
 
 
 	// --- フェードアウト中 ---
@@ -98,9 +124,10 @@ void Title::Update() {
 
 	// --- 十字キー／コントローラー操作（カーソルがないときだけ） ---
 	if (!hoveredButton) {
-		prevSelectedIndex = selectedIndex;  // 前回の選択を保存
+		prevSelectedIndex = selectedIndex;
 
 		if (!inputLocked) {
+			// 十字キー
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
 				selectedIndex = (selectedIndex + 1) % buttonCount;
 				inputLocked = true;
@@ -109,9 +136,22 @@ void Title::Update() {
 				selectedIndex = (selectedIndex - 1 + buttonCount) % buttonCount;
 				inputLocked = true;
 			}
+
+			// 左右キー
+			else if (input->TriggerKey(DIK_LEFT) || input->TriggerXButton(DPad::Left) ||
+				input->TriggerKey(DIK_RIGHT) || input->TriggerXButton(DPad::Right)) {
+				if (selectedIndex == 0) { selectedIndex = 2; }       // ゲーム → チュートリアル
+				else if (selectedIndex == 2) { selectedIndex = 0; }   // チュートリアル → ゲーム
+				else if (selectedIndex == 1) { selectedIndex = 3; }   // 設定 → 終了
+				else if (selectedIndex == 3) { selectedIndex = 1; }   // 終了 → 設定
+				inputLocked = true;
+			}
 		}
 		else {
-			if (!input->TriggerXButton(DPad::Up) && !input->TriggerXButton(DPad::Down)) {
+			if (!input->TriggerXButton(DPad::Up) &&
+				!input->TriggerXButton(DPad::Down) &&
+				!input->TriggerXButton(DPad::Left) &&
+				!input->TriggerXButton(DPad::Right)) {
 				inputLocked = false;
 			}
 		}
@@ -124,6 +164,9 @@ void Title::Update() {
 
 	// --- Enterキー / Aボタンによる決定処理 ---
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+
+		Audio::GetInstance()->Play("click"); // クリック音再生
+
 		if (hoveredButton) {
 			// カーソルが乗っているUIを決定
 			if (hoveredButton == &gameStartButton) {
@@ -224,6 +267,15 @@ void Title::Draw() {
 	SpriteBase::GetInstance()->ShaderDraw();
 	// スプライト
 	if (titleSprite) titleSprite->Draw();
+
+	Object3dBase::GetInstance()->ShaderDraw();
+	// タイトルブロック
+	if (titleBlockObj) titleBlockObj->Draw();
+
+	if (ghostObj) {
+		ghostObj->Draw();
+	}
+
 	gameStartButton.Draw();
 	settingButton.Draw();
 	ruleButton.Draw();
@@ -234,12 +286,6 @@ void Title::Draw() {
 		fadeSprite->Draw();
 	}
 
-	Object3dBase::GetInstance()->ShaderDraw();
-
-	// 3Dモデル
-	if (ghostObj) {
-		ghostObj->Draw();
-	}
 
 
 
@@ -247,14 +293,18 @@ void Title::Draw() {
 
 void Title::Finalize() {
 
-	if (ghostObj) {
-		delete ghostObj;
-		ghostObj = nullptr;
-	}
-	if (titleSprite) {
-		delete titleSprite;
-		titleSprite = nullptr;
-	}
+
+	delete ghostObj;
+	ghostObj = nullptr;
+
+
+	delete titleBlockObj;
+	titleBlockObj = nullptr;
+
+
+	delete titleSprite;
+	titleSprite = nullptr;
+
 	if (fadeSprite) {
 		delete fadeSprite;
 		fadeSprite = nullptr;
