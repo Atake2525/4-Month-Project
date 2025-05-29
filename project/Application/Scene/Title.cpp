@@ -13,9 +13,6 @@ void Title::Initialize() {
 
 
 
-
-
-
 	// -------------------------
 	// お化け初期化
 	// -------------------------
@@ -103,9 +100,10 @@ void Title::Update() {
 
 	// --- 十字キー／コントローラー操作（カーソルがないときだけ） ---
 	if (!hoveredButton) {
-		prevSelectedIndex = selectedIndex;  // 前回の選択を保存
+		prevSelectedIndex = selectedIndex;
 
 		if (!inputLocked) {
+			// 十字キー
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
 				selectedIndex = (selectedIndex + 1) % buttonCount;
 				inputLocked = true;
@@ -114,9 +112,22 @@ void Title::Update() {
 				selectedIndex = (selectedIndex - 1 + buttonCount) % buttonCount;
 				inputLocked = true;
 			}
+
+			// 左右キー
+			else if (input->TriggerKey(DIK_LEFT) || input->TriggerXButton(DPad::Left) ||
+				input->TriggerKey(DIK_RIGHT) || input->TriggerXButton(DPad::Right)) {
+				if (selectedIndex == 0) { selectedIndex = 2; }       // ゲーム → チュートリアル
+				else if (selectedIndex == 2) { selectedIndex = 0; }   // チュートリアル → ゲーム
+				else if (selectedIndex == 1) { selectedIndex = 3; }   // 設定 → 終了
+				else if (selectedIndex == 3) { selectedIndex = 1; }   // 終了 → 設定
+				inputLocked = true;
+			}
 		}
 		else {
-			if (!input->TriggerXButton(DPad::Up) && !input->TriggerXButton(DPad::Down)) {
+			if (!input->TriggerXButton(DPad::Up) &&
+				!input->TriggerXButton(DPad::Down) &&
+				!input->TriggerXButton(DPad::Left) &&
+				!input->TriggerXButton(DPad::Right)) {
 				inputLocked = false;
 			}
 		}
@@ -129,9 +140,9 @@ void Title::Update() {
 
 	// --- Enterキー / Aボタンによる決定処理 ---
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
-		
+
 		Audio::GetInstance()->Play("click"); // クリック音再生
-		
+
 		if (hoveredButton) {
 			// カーソルが乗っているUIを決定
 			if (hoveredButton == &gameStartButton) {
