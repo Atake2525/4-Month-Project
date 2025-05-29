@@ -77,10 +77,10 @@ void Rule::Initialize()
 	pauseBg->Update();
 
 	// テクスチャ読み込み（ESCアイコン）
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/setting.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/set.png");
 	// スプライト生成
 	escHintSprite = new Sprite();
-	escHintSprite->Initialize("Resources/Sprite/scene/setting.png");
+	escHintSprite->Initialize("Resources/Sprite/scene/set.png");
 	// 原点
 	escHintSprite->SetAnchorPoint({ 0.0f, 0.0f });
 	// 位置
@@ -173,7 +173,7 @@ void Rule::PauseUpdate()
 	}
 
 	// 決定：Enter / Aボタン
-	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
 		if (hoveredPauseButton) {
 			if (hoveredPauseButton == &resumeButton) {
 				isPaused = false;
@@ -225,14 +225,14 @@ void Rule::Update() {
 		// スプライトの更新
 		targetSprite->Update();
 
-		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
 			targetStart = false;
 			input->ShowMouseCursor(false);
 		}
 
 	}
 
-	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Menu)) {
 		isPaused = !isPaused;
 		tabReleased = false;
 

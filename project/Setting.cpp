@@ -19,7 +19,7 @@ void Setting::Update()
 	input->Update();
 
 	// SPACEキーでタイトル終了
-	if (input->TriggerKey(DIK_RETURN)) {
+	if (input->TriggerKey(DIK_RETURN)|| input->TriggerButton(Controller::Y)) {
 		finished = true;
 	}
 }

@@ -50,7 +50,7 @@ void switchLight::Update()
 	//if (IsCollisionAABB(player_->GetAABB(), GetAAbb())) {
 		//falseの時におしたらtrueになる
 	if (!switchFlag) {
-		if (input_->TriggerKey(DIK_RETURN) && dist < distance) {
+		if ((input_->TriggerKey(DIK_RETURN) || input_->TriggerButton(Controller::X)) && dist < distance) {
 			switchFlag = true;
 			changeFlag = false;
 			timer2_ = 0;
@@ -58,7 +58,7 @@ void switchLight::Update()
 	}
 	else {
 
-		if (input_->TriggerKey(DIK_RETURN) && dist < distance) {
+		if ((input_->TriggerKey(DIK_RETURN) || input_->TriggerButton(Controller::X)) && dist < distance) {
 			switchFlag = false;
 			changeFlag = true;
 			Timer_ = 0;
