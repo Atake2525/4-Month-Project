@@ -129,7 +129,6 @@ private:
 	std::vector<Sprite*> starIcons;  // 星のUIを最大3つ分持つ
 
 
-	float fadeAlpha = 1.0f;
 
 	//クリア時に星の取得情報を送るよう
 	int Result = 0;
