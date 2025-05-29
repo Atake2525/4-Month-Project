@@ -226,7 +226,7 @@ void Player::Move()
 	Vector3 offSet = { 0.0f,10.0f,-20.0f };
 
 	if (input_->IsMoveLeftJoyStick()) {
-		move = input_->GetLeftJoyStickPos2();
+		move = input_->GetLeftJoyStickPos2(200.0f);
 	}
 	if (move.x >= 0.5f) {
 		move.x = 0.5f;
@@ -302,8 +302,8 @@ void Player::Rotate()
 {
 	
 	if (input_->IsMoveRightJoyStick()) {
-		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
-		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
+		modelTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3(200.0f).x, -0.05f, 0.05f);
+		modelTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3(200.0f).y, -0.05f, 0.05f);
 		//cameraTransform_.rotate.y += std::clamp(input_->GetRightJoyStickPos3().x, -0.05f, 0.05f);
 		//cameraTransform_.rotate.x += std::clamp(input_->GetRightJoyStickPos3().y, -0.05f, 0.05f);
 	}
