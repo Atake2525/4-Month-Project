@@ -20,6 +20,7 @@ void MyGame::Initialize() {
 	ModelBase::GetInstance()->Initialize(directxBase);
 
 	TextureManager::GetInstance()->Initialize(directxBase);
+	TextureManager::GetInstance()->LoadTexture("Resources/Debug/white1x1.png");
 
 	ModelManager::GetInstance()->Initialize(directxBase);
 
