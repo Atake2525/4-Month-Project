@@ -2,10 +2,19 @@
 #include "TextureManager.h"
 #include <dinput.h>
 #include "Object3dBase.h"
+#include "Audio.h"
 
 void Title::Initialize() {
 	input = Input::GetInstance();
 	input->ShowMouseCursor(true);
+
+	// クリック音読み込み
+	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+
+
+
+
+
 
 	// -------------------------
 	// お化け初期化
@@ -24,8 +33,6 @@ void Title::Initialize() {
 	ghostPos = { 0.0f, 1.0f, 5.0f };
 	ghostObj->SetTranslate(ghostPos);
 	ghostObj->Update();
-
-
 
 	// -------------------------
 	// タイトル画像とボタン
@@ -64,8 +71,6 @@ void Title::Update() {
 	ghostObj->SetTranslate(ghostPos);
 
 	ghostObj->Update();
-
-
 
 
 	// --- フェードアウト中 ---
@@ -124,6 +129,9 @@ void Title::Update() {
 
 	// --- Enterキー / Aボタンによる決定処理 ---
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+		
+		Audio::GetInstance()->Play("click"); // クリック音再生
+		
 		if (hoveredButton) {
 			// カーソルが乗っているUIを決定
 			if (hoveredButton == &gameStartButton) {

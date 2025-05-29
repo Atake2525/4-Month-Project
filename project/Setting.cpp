@@ -9,9 +9,9 @@ void Setting::Initialize()
 
 	// テクスチャ読み込み
 	//TextureManager::GetInstance()->LoadTexture("Resources/Sprite/setting.png");
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/setting.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/set.png");
 	settingSprite = new Sprite();
-	settingSprite->Initialize("Resources/Sprite/scene/setting.png");
+	settingSprite->Initialize("Resources/Sprite/scene/set.png");
 }
 
 void Setting::Update()

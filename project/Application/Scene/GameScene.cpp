@@ -10,10 +10,7 @@
 void GameScene::Initialize() {
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
-	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
-
-	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
-
+	
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 
@@ -63,16 +60,10 @@ void GameScene::Initialize() {
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
-	//clearSprite = new Sprite();
-	//clearSprite->Initialize("Resources/Sprite/clearShift.png");
-	//Vector3(0.0f, 0.0f, 0.0f)
 
 	resumeButton.CreateButton({ 540, 230 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
 	restartButton.CreateButton({ 540, 300 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
 	returnToTitleButton.CreateButton({ 540, 370 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
-
-
-	//soundData = Audio::GetInstance()->SoundLoadWave("Resources/Alarm01.wav");
 
 	isPaused = false;
 	//ポーズUIの背景
@@ -99,14 +90,6 @@ void GameScene::Initialize() {
 	// スケール
 	escHintSprite->SetScale({ 100.0f, 100.0f });
 	escHintSprite->Update();
-
-	//フェードアウト用スプライトの初期化
-	//fadeSprite = new Sprite();
-	//fadeSprite->Initialize("Resources/black1x1.png");
-	//fadeSprite->SetPosition({ 0.0f, 0.0f });
-	//fadeSprite->SetScale({ 1280.0f, 720.0f });
-	//fadeSprite->SetAnchorPoint({ 0.0f, 0.0f });
-	//fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha }); // 最初は真っ暗
 
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/star.png");
@@ -262,18 +245,7 @@ void GameScene::Update() {
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();
 
-
-
-	//if (isFadingIn) {
-	//	fadeAlpha -= 1.0f / (60.0f * 3.0f); // 3秒で明るく
-	//	if (fadeAlpha <= 0.0f) {
-	//		fadeAlpha = 0.0f;
-	//		isFadingIn = false;
-	//	}
-	//	fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
-	//}
-
-	if (input->TriggerKey(DIK_ESCAPE)) {
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
 		isPaused = !isPaused;
 		tabReleased = false;
 
@@ -288,6 +260,7 @@ void GameScene::Update() {
 		prevHoveredPauseButton = nullptr;
 		pauseBlinkTimer = 0.0f;
 	}
+
 
 	// ポーズ中の処理
 	if (isPaused) {
@@ -304,14 +277,7 @@ void GameScene::Update() {
 		input->ShowMouseCursor(showCursor);
 	}
 
-
-	//if (input->TriggerKey(DIK_2))
-	//{
-	//	Audio::GetInstance()->SoundPlayWave(soundData, 0.4f);
-	//}
-
 	player->Update();
-
 
 	camera = player->GetCamera();
 	camera->Update();
@@ -350,8 +316,6 @@ void GameScene::Update() {
 	di = std::clamp(di, 0.0f, 1.0f);
 	Light::GetInstance()->SetIntensityDirectionalLight(di);
 
-
-	//star->Update();
 	if (starResultManager) {
 		starResultManager->Update();  // プレイヤー情報を渡す player
 	}
