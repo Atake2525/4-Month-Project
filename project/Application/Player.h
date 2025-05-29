@@ -96,7 +96,10 @@ public: // メンバ関数
 	 Object3d* StarObject3d() { return object3d_; }
 	 bool IsCollisionAABB(const AABB& a, const AABB& b);
 
-	 void EffectBorn(Vector3 position);
+	 void EffectBorn();
+
+	 // 場外判定で追加した関数
+	 const bool IsDead() const { return isDead_; }
 
 private:
 
@@ -178,6 +181,8 @@ private: // メンバ変数
 	float cameraEasingTime = 0.0f;
 	//ジャンプエフェクトクラス
 	std::list<JampEffect*>effects_;
+	bool effectFlag = false;
+	float effectTimer;
 
 	// プレイヤーの回転に必要な変数
 	float plRotate = 0.0f;
@@ -198,5 +203,9 @@ private: // メンバ変数
 
 	float endRotate = 0.0f;
 
+	// 場外判定
+	bool isDead_ = false;
+	// 場外を判定する座標
+	AABB worldBoarder_;
 };
 

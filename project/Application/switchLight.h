@@ -37,6 +37,7 @@ private:
 	Transform switchTransform;
 	/*オンオフのフラグ*/
 	bool switchFlag;
+	bool changeFlag;
 
 	/*切り替えるために（仮）*/
 	Input* input_;
@@ -49,5 +50,9 @@ private:
 
 	// スイッチが反応するプレイヤーの最大距離
 	float distance = 8.0f;
+
+	/*演出*/
+	float Timer_ = 0;
+	float timer2_ = 0;
 
 };

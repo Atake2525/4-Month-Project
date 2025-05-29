@@ -52,7 +52,7 @@ public:
 	/// ボタンにカーソルが合わせられているかどうか
 	/// </summary>
 	/// <returns>衝突判定のbool</returns>
-	const bool& InCursor() const;
+	const bool InCursor() const;
 
 	void SetTransform(const Transform& transform) { sprite->SetTransform(transform); }
 

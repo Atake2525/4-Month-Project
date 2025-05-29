@@ -7,7 +7,7 @@ class GameClear
 {
 public:
 	// 初期化
-	void Initialize();
+	void Initialize(int result);
 
 	// 更新
 	void Update();
@@ -23,8 +23,11 @@ public:
 
 private:
 	Sprite* clearSprite = nullptr;
+	Sprite* starSprite = nullptr;
+	Sprite* starSprite2 = nullptr;
+	Sprite* starSprite3 = nullptr;
 	Input* input = nullptr;
 	bool finished = false;
-
+	int starResult = 0;
 };
 
