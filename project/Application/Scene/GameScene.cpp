@@ -117,11 +117,34 @@ void GameScene::Initialize(int stage) {
 	//switch
 	// 
 	lightSwitch = new switchLight();
-	switchTransform = {
+	if (stage_ == 1) {
+		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
 		{0.0f, 0.5f, 4.0f}
-	};
+		};
+	}
+	if (stage_ == 2) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{4.0f, 1.0f, 4.0f}
+		};
+	}
+	if (stage_ == 3) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.5f, 4.0f}
+		};
+	}
+	if (stage_ == 4) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.5f, 4.0f}
+		};
+	}
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
