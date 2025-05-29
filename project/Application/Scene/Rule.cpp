@@ -15,7 +15,7 @@ void Rule::Initialize()
 
 	input = Input::GetInstance();
 	input->ShowMouseCursor(showCursor);
-	
+
 	Object3dBase::GetInstance()->SetDefaultCamera(camera);
 
 	object3d = new Object3d();
@@ -48,7 +48,7 @@ void Rule::Initialize()
 	lightBlock = new LightBlock();
 	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	//switch
-	
+
 	lightSwitch = new switchLight();
 	switchTransform = {
 		{1.0f, 1.0f, 1.0f},
@@ -99,6 +99,11 @@ void Rule::Initialize()
 		starIcons.push_back(icon);
 	}
 
+	// チュートリアル開始スプライトの初期化
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/target.png");
+	targetSprite = new Sprite();
+	targetSprite->Initialize("Resources/Sprite/scene/target.png");
+	targetSprite->Update();
 
 
 }
@@ -213,7 +218,20 @@ void Rule::PauseUpdate()
 
 
 void Rule::Update() {
-	
+
+	// チュートリアルスプライト
+	if (targetStart) {
+		input->Update();
+		// スプライトの更新
+		targetSprite->Update();
+
+		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+			targetStart = false;
+			input->ShowMouseCursor(false);
+		}
+
+	}
+
 	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
 		isPaused = !isPaused;
 		tabReleased = false;
@@ -260,7 +278,7 @@ void Rule::Update() {
 
 	goal->Update();
 
-	
+
 	// ゴールの当たり判定 ステージセレクトへ飛ぶ。　
 	if (!isGoal && goal->OnCollision(player->GoalObject3d())) {
 		isGoal = true;
@@ -310,6 +328,14 @@ void Rule::Update() {
 void Rule::Draw() {
 
 	SpriteBase::GetInstance()->ShaderDraw();
+
+	if (targetStart && targetSprite) {
+		targetSprite->Draw();
+		return;
+	}
+
+
+
 
 	Object3dBase::GetInstance()->ShaderDraw();
 
@@ -394,4 +420,12 @@ void Rule::Finalize() {
 		delete s;
 	}
 	starIcons.clear();
+
+	if (targetSprite) {
+		delete targetSprite;
+		targetSprite = nullptr;
+	}
+
+
+
 }

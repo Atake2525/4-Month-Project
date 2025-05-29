@@ -40,10 +40,10 @@ void Title::Initialize() {
 	titleSprite = new Sprite();
 	titleSprite->Initialize("Resources/Sprite/scene/title.png");
 
-	gameStartButton.CreateButton({ 200, 350 }, Origin::Center, "Resources/Sprite/titleUI/startButton.png");
-	settingButton.CreateButton({ 200, 550 }, Origin::Center, "Resources/Sprite/titleUI/settingButton.png");
-	ruleButton.CreateButton({ 900, 350 }, Origin::Center, "Resources/Sprite/titleUI/tyu-to.png");
-	finishButton.CreateButton({ 900, 550 }, Origin::Center, "Resources/Sprite/titleUI/finish.png");
+	gameStartButton.CreateButton({ 150, 350 }, Origin::Center, "Resources/Sprite/titleUI/serect.png");
+	settingButton.CreateButton({ 130, 550 }, Origin::Center, "Resources/Sprite/titleUI/settingButton.png");
+	ruleButton.CreateButton({ 880, 350 }, Origin::Center, "Resources/Sprite/titleUI/tyu-to.png");
+	finishButton.CreateButton({ 880, 550 }, Origin::Center, "Resources/Sprite/titleUI/finish.png");
 
 	// -------------------------
 	// フェードスプライト

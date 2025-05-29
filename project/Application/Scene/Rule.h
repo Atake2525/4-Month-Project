@@ -117,5 +117,9 @@ private:
 	Sprite* starIcon = nullptr;
 	std::vector<Sprite*> starIcons;  // 星のUIを最大3つ分持つ
 
+	// チュートリアル開始前演出
+	bool targetStart = true;
+	Sprite* targetSprite = nullptr;
+
 
 };
