@@ -399,6 +399,9 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 	soundData.volume = vol;
 	soundData.playTime = time;
 
+	mp3waveFormat = {};
+	mp3AudioData.clear();
+
 	soundMap[soundName] = soundData;
 
 	return true;
