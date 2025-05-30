@@ -10,7 +10,8 @@ void Title::Initialize() {
 
 	// クリック音読み込み
 	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
-
+	// bgm読み込み
+	Audio::GetInstance()->LoadMP3("Resources/Sound/scene/goast.mp3", "goast", 1.0f); // 音量1.0f
 
 
 
@@ -73,14 +74,18 @@ void Title::Initialize() {
 	titleBlockObj->Update();
 
 
+	Audio::GetInstance()->Play("goast", true); // ループ再生
 
 
 }
 
 
 void Title::Update() {
+
+
 	input->Update();
 	camera->Update();
+
 
 	titleBlockObj->Update();
 
@@ -130,10 +135,12 @@ void Title::Update() {
 		if (!inputLocked) {
 			// 十字キー
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				selectedIndex = (selectedIndex + 1) % buttonCount;
 				inputLocked = true;
 			}
 			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				selectedIndex = (selectedIndex - 1 + buttonCount) % buttonCount;
 				inputLocked = true;
 			}
@@ -141,6 +148,7 @@ void Title::Update() {
 			// 左右キー
 			else if (input->TriggerKey(DIK_LEFT) || input->TriggerXButton(DPad::Left) ||
 				input->TriggerKey(DIK_RIGHT) || input->TriggerXButton(DPad::Right)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				if (selectedIndex == 0) { selectedIndex = 2; }       // ゲーム → チュートリアル
 				else if (selectedIndex == 2) { selectedIndex = 0; }   // チュートリアル → ゲーム
 				else if (selectedIndex == 1) { selectedIndex = 3; }   // 設定 → 終了
@@ -217,6 +225,7 @@ void Title::Update() {
 
 	// --- マウスクリックでも遷移対応 ---
 	if (gameStartButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		goToGame = true;
 		isFadingOut = true;
 		fadeAlpha = 0.0f;
@@ -224,14 +233,17 @@ void Title::Update() {
 		return;
 	}
 	if (settingButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		goToSetting = true;
 		finished = true;
 	}
 	if (ruleButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		goToRule = true;
 		finished = true;
 	}
 	if (finishButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		PostQuitMessage(0);
 		return;
 	}
@@ -293,6 +305,9 @@ void Title::Draw() {
 }
 
 void Title::Finalize() {
+
+
+	Audio::GetInstance()->Stop("goast");
 
 
 	delete ghostObj;
