@@ -144,7 +144,7 @@ bool Audio::LoadWave(const std::string filePath, const std::string soundName, co
 	char* pBuffer = new char[data.size];
 	file.read(pBuffer, data.size);
 
-	int time = data.size / format.fmt.nAvgBytesPerSec;
+	float time = static_cast<float>(data.size) / static_cast<float>(format.fmt.nAvgBytesPerSec);
 
 	// Waveファイルを閉じる
 	file.close();
@@ -386,7 +386,7 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 	}
 
 	// 再生時間を計算する
-	int time = static_cast<int>(mp3AudioData.size() / pWaveFormat->nAvgBytesPerSec);
+	float time = static_cast<float>(mp3AudioData.size()) / static_cast<float>(pWaveFormat->nAvgBytesPerSec);
 	CoTaskMemFree(pWaveFormat);
 	// 音量を0.0f ~ 1.0fにclampする
 	float vol = std::clamp(volume, 0.0f, 1.0f);
