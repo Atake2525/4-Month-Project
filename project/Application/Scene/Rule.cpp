@@ -48,7 +48,7 @@ void Rule::Initialize()
 	goal->Initialize({ -10.0f,8.0f,10.0f });
 
 	starResultManager = new starResult();
-	starResultManager->Initialize();
+	starResultManager->Initialize(5);
 	//==BLOCK===
 	lightBlock = new LightBlock();
 	lightBlock->Initialize("Resources/Model/obj/Stage4", "stage4_lightBlock.obj");

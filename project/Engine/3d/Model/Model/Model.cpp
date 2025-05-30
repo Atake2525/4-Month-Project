@@ -42,6 +42,9 @@ void Model::Initialize(std::string directoryPath, std::string filename, bool ena
 	materialData->shininess = 70.0f;
 	materialData->specularColor = {1.0f, 1.0f, 1.0f};
 
+	useWireFrameTexture = false;
+	whiteTextureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath("Resources/Debug/white1x1.png");
+
 }
 
 void Model::Draw() {
@@ -58,7 +61,14 @@ void Model::Draw() {
 		// ModelTerrain
 		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView.at(i)); // VBVを設定
 
-		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelData.material.at(i).textureIndex));
+		if (useWireFrameTexture)
+		{
+			ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(whiteTextureIndex));
+		}
+		else
+		{
+			ModelBase::GetInstance()->GetDxBase()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelData.material.at(i).textureIndex));
+		}
 
 		ModelBase::GetInstance()->GetDxBase()->GetCommandList()->DrawInstanced(UINT(modelData.matVertexData.at(i).vertices.size()), 1, 0, 0);
 	}

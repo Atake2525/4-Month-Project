@@ -9,15 +9,17 @@
 #include "externels/imgui/imgui_impl_win32.h"
 
 
-void GameScene::Initialize() {
+void GameScene::Initialize(int stage) {
+	stage_ = stage;
+
 
 	// クリック音読み込み
 	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
 
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+
 	
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
 
 	//TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
@@ -33,7 +35,21 @@ void GameScene::Initialize() {
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("stage03.obj");
+
+	//ステージ指定
+	//
+	if (stage_ == 1) {
+		object3d->SetModel("stage03.obj");
+	}
+	else if (stage_ == 2) {
+		object3d->SetModel("stageTriangle.obj");
+	}
+	else if (stage_ == 3) {
+		object3d->SetModel("01Stage.obj");
+	}
+	else if (stage_ == 4) {
+		object3d->SetModel("Stage2.obj");
+	}
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -44,9 +60,39 @@ void GameScene::Initialize() {
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
+
+	//ステージとプレイヤーの当たり判定
+	//
+	if (stage_ == 1) {
+		player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
+	}
+	else if (stage_ == 2) {
+		player->AddStageCollision("Resources/Model/collision/stageNotTriangle", "stage.obj");
+	}
+	else if (stage_ == 3) {
+		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+	}
+	else if (stage_ == 4) {
+		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+	}
+
 	//player->AddStageCollision("Resources/Debug", "test.obj");
-	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
+	// 
+	//ライトブロックとプレイヤーの当たり判定
+	//
+	if (stage_ == 1) {
+		player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
+	}
+	else if (stage_ == 2) {
+		player->AddLightBlockCollision("Resources/Model/collision/stageNotTriangle", "stageLight.obj");
+	}
+	else if (stage_ == 3) {
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	}
+	else if (stage_ == 4) {
+		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+	}
+
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -54,21 +100,78 @@ void GameScene::Initialize() {
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -10.0f,8.0f,10.0f });
+	Vector3 goalPos = { 0.0f,0.0f,0.0f };
+
+	//ゴールの位置
+	//
+	if (stage_ == 1) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+	if (stage_ == 2) {
+		goalPos = { -4.4f,8.0f,-5.0f };
+	}
+	if (stage_ == 3) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+	if (stage_ == 4) {
+		goalPos = { -10.0f,8.0f,10.0f };
+	}
+
+	goal->Initialize(goalPos);
 
 	starResultManager = new starResult();
-	starResultManager->Initialize(); //{ 0.0f,0.0f,0.0f },
+	starResultManager->Initialize(stage_); //{ 0.0f,0.0f,0.0f },
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
+	//ライトブロックの指定
+	//
+	if (stage_ == 1) {
+		lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
+	}
+	else if (stage_ == 2) {
+		lightBlock->Initialize("Resources/Model/obj/stageTriangle", "stageTriangleLight.obj");
+	}
+	else if (stage_ == 3) {
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	}
+	else if (stage_ == 4) {
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+	}
+
 	//switch
 	// 
 	lightSwitch = new switchLight();
-	switchTransform = {
+	//スイッチの位置
+	//
+	if (stage_ == 1) {
+		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
 		{0.0f, 0.5f, 4.0f}
-	};
+		};
+	}
+	if (stage_ == 2) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{5.0f, 0.5f, -1.0f}
+		};
+	}
+	if (stage_ == 3) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.5f, 4.0f}
+		};
+	}
+	if (stage_ == 4) {
+		switchTransform = {
+		{1.0f, 1.0f, 1.0f},
+		{0.0f, 0.0f, 0.0f},
+		{0.0f, 0.5f, 4.0f}
+		};
+	}
+
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
 	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/clearShift.png");
@@ -78,6 +181,9 @@ void GameScene::Initialize() {
 	returnToTitleButton.CreateButton({ 540, 370 }, Origin::Center, "Resources/Sprite/gameUI/Gametitle.png");
 
 
+	resumeButton.CreateButton({ 540, 250 }, Origin::Center, "Resources/Sprite/gameUI/resume.png");
+	restartButton.CreateButton({ 540, 320 }, Origin::Center, "Resources/Sprite/gameUI/restart.png");
+	returnToTitleButton.CreateButton({ 540, 390 }, Origin::Center, "Resources/Sprite/gameUI/Select.png");
 
 	//クリア時に星の取得情報を送るよう
 	Result = 0;
@@ -248,7 +354,7 @@ void GameScene::Update() {
 
 	Vector3 posM3 = input->GetWindowMousePos3();
 
-	ImGui::Begin("State");
+	/*ImGui::Begin("State");
 	if (ImGui::TreeNode("Camera")) {
 		ImGui::DragFloat3("Tranlate", &cameraTransform.translate.x, 0.1f);
 		ImGui::DragFloat3("Rotate", &cameraTransform.rotate.x, 0.1f);
@@ -271,7 +377,7 @@ void GameScene::Update() {
 
 	ImGui::DragFloat2("M2", &posM2.x, 0.1f);
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
-	ImGui::End();
+	ImGui::End();*/
 
 	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
 		Audio::GetInstance()->Play("click"); // クリック音再生
@@ -340,7 +446,7 @@ void GameScene::Update() {
 			showCursor = false;
 			isGoal = false;
 			Light::GetInstance()->SetIntensityDirectionalLight(0.0f);
-			Initialize();
+			Initialize(stage_);
 		}
 	}
 	lightSwitch->Update();

@@ -7,6 +7,7 @@
 #include"Input.h"
 #include"AABB.h"
 #include"Transform.h"
+#include"Audio.h"
 
 #include <wrl.h>
 #include <d3d12.h>
@@ -54,5 +55,6 @@ private:
 	/*演出*/
 	float Timer_ = 0;
 	float timer2_ = 0;
+	
 
 };

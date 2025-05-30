@@ -80,7 +80,7 @@ void Player::Initialize(Camera* camera)
 	collision->AddCollision(AABB{ {-12.0f, 0.0f, 24.0f}, {12.0f, 10.0f, 24.0f} }, Vector3{ 0.0f, 0.0f, -1.0f });*/
 
 	input_ = Input::GetInstance();
-
+	Audio::GetInstance()->LoadMP3("Resources/Sound/Jump.mp3", "jump", 1.0f);
 	//camera
 	//cameraTransform_.translate = camera->GetTranslate();
 	//cameraTransform_.rotate = camera->GetRotate();
@@ -191,28 +191,28 @@ void Player::Update()
 		isDead_ = true;
 	}
 
-	ImGui::Begin("State");
-	if (ImGui::TreeNode("PlayerCamera")) {
-		ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
-		ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.1f);
-		ImGui::DragFloat3("Scale", &cameraTransform_.scale.x, 0.1f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("PlayerModel")) {
-		ImGui::DragFloat3("Tranlate", &modelTransform_.translate.x, 0.1f);
-		ImGui::DragFloat3("Rotate", &modelTransform_.rotate.x, 0.1f);
-		ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("PlayerDrawModel")) {
-		ImGui::DragFloat3("Tranlate", &drawModel.translate.x, 0.1f);
-		ImGui::DragFloat3("Rotate", &drawModel.rotate.x, 0.1f);
-		ImGui::DragFloat3("Scale", &drawModel.scale.x, 0.1f);
-		ImGui::TreePop();
-		
-	}
-	ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x, 0.1f);
-	ImGui::End();
+	//ImGui::Begin("State");
+	//if (ImGui::TreeNode("PlayerCamera")) {
+	//	ImGui::DragFloat3("Tranlate", &cameraTransform_.translate.x, 0.1f);
+	//	ImGui::DragFloat3("Rotate", &cameraTransform_.rotate.x, 0.1f);
+	//	ImGui::DragFloat3("Scale", &cameraTransform_.scale.x, 0.1f);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("PlayerModel")) {
+	//	ImGui::DragFloat3("Tranlate", &modelTransform_.translate.x, 0.1f);
+	//	ImGui::DragFloat3("Rotate", &modelTransform_.rotate.x, 0.1f);
+	//	ImGui::DragFloat3("Scale", &modelTransform_.scale.x, 0.1f);
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("PlayerDrawModel")) {
+	//	ImGui::DragFloat3("Tranlate", &drawModel.translate.x, 0.1f);
+	//	ImGui::DragFloat3("Rotate", &drawModel.rotate.x, 0.1f);
+	//	ImGui::DragFloat3("Scale", &drawModel.scale.x, 0.1f);
+	//	ImGui::TreePop();
+	//	
+	//}
+	//ImGui::DragFloat3("cameraVelocity", &cameraVelocity.x, 0.1f);
+	//ImGui::End();
 
 }
 
@@ -321,10 +321,10 @@ void Player::Move()
 		}
 	}
 
-	ImGui::Begin("rotateDegree");
-	ImGui::DragFloat("rotp", &rotp);
-	ImGui::DragFloat("pRot", &ro);
-	ImGui::End();
+	//ImGui::Begin("rotateDegree");
+	//ImGui::DragFloat("rotp", &rotp);
+	//ImGui::DragFloat("pRot", &ro);
+	//ImGui::End();
 
 
 	modelTransform_.translate += velocity * speed;
@@ -427,7 +427,7 @@ void Player::Jump()
 		if (input_->PushKey(DIK_SPACE) || input_->PushButton(Controller::A)) {
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
-			
+			Audio::GetInstance()->Play("jump");
 		}
 		
 		
@@ -614,10 +614,10 @@ void Player::UpdateStageCollision() {
 		{
 			onGround_ = false;
 		}
-		ImGui::Begin("Len");
+		/*ImGui::Begin("Len");
 		ImGui::Checkbox("X", &X);
 		ImGui::Checkbox("Z", &Z);
-		ImGui::End();
+		ImGui::End();*/
 	}
 }
 
@@ -798,7 +798,7 @@ void Player::UpdateCameraCollision() {
 
 		//cameraOffset += off;
 
-		ImGui::Begin("CameraLen");
+	/*	ImGui::Begin("CameraLen");
 		ImGui::Checkbox("X", &X);
 		ImGui::Checkbox("Z", &Z);
 		ImGui::DragFloat3("cameraOffset", &cameraOffset.x, 0.1f);
@@ -809,7 +809,7 @@ void Player::UpdateCameraCollision() {
 		ImGui::DragFloat3("cameraMin", &cameraAABB.min.x);
 		ImGui::DragFloat3("cameraMax", &cameraAABB.max.x);
 		ImGui::DragFloat("easingTime", &cameraEasingTime);
-		ImGui::End();
+		ImGui::End();*/
 	}
 }
 

@@ -11,6 +11,7 @@
 #include "WinApp.h"
 #include "PlayerCollision.h"
 #include"JampEffect.h"
+#include"Audio.h"
 
 #include"LightBlock.h"
 // 衝突判定で追加
@@ -207,5 +208,7 @@ private: // メンバ変数
 	bool isDead_ = false;
 	// 場外を判定する座標
 	AABB worldBoarder_;
+
+	
 };
 

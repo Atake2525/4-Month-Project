@@ -173,7 +173,7 @@ void Object3d::SetModel(const std::string& directoryPath, const std::string& fil
 	CreateAABB();
 }
 
-void Object3d::SetColor(const Vector4& color) { 
+void Object3d::SetColor(const Vector4 color) { 
 	model_->SetColor(color); 
 }
 
@@ -185,7 +185,7 @@ const bool Object3d::GetEnableLighting() const {
 	return model_->GetEnableLighting();
 }
 
-void Object3d::SetEnableLighting(const bool& enableLighting) { 
+void Object3d::SetEnableLighting(const bool enableLighting) { 
 	model_->SetEnableLighting(enableLighting);
 }
 
@@ -231,6 +231,13 @@ void Object3d::CreateAABB() {
 		first.max.x = std::max(first.max.x, vertices.position.x);
 		first.max.y = std::max(first.max.y, vertices.position.y);
 		first.max.z = std::max(first.max.z, vertices.position.z);
+	}
+}
+
+void Object3d::DebugMode(const bool debugMode) {
+	if (model_)
+	{
+		model_->DebugMode(debugMode);
 	}
 }
 

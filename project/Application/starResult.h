@@ -8,7 +8,7 @@ class starResult {
 public:
 	~starResult();
 
-	void Initialize();
+	void Initialize(int stage);
 	void Update();
 	void Draw();
 
@@ -20,4 +20,5 @@ private:
 	std::vector<Star*> stars_;  // 星のリスト
 	DirectXBase* directX_;
 
+	
 };

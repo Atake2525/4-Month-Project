@@ -110,6 +110,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\LightBlock.cpp" />
     <ClCompile Include="Application\Player.cpp" />
     <ClCompile Include="Application\PlayerCollision.cpp" />
+    <ClCompile Include="Application\Scene\StageSelect.cpp" />
     <ClCompile Include="Application\switchLight.cpp" />
     <ClCompile Include="Engine\UI\UI.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
@@ -157,6 +158,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\LightBlock.h" />
     <ClInclude Include="Application\Player.h" />
     <ClInclude Include="Application\PlayerCollision.h" />
+    <ClInclude Include="Application\Scene\StageSelect.h" />
     <ClInclude Include="Application\switchLight.h" />
     <ClInclude Include="Engine\Math\Segment.h" />
     <ClInclude Include="Engine\UI\UI.h" />
