@@ -36,8 +36,8 @@ void Rule::Initialize()
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/obj/Stage4", "stage4_collision.obj");
-	player->AddLightBlockCollision("Resources/Model/obj/Stage4", "stage4_collision.obj");
+	player->AddStageCollision("Resources/Model/obj/yamada_stage", "stage4_collision.obj");
+	player->AddLightBlockCollision("Resources/Model/obj/yamada_stage", "stage4_collision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -51,7 +51,7 @@ void Rule::Initialize()
 	starResultManager->Initialize(5);
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage4", "stage4_lightBlock.obj");
+	lightBlock->Initialize("Resources/Model/obj/yamada_stage", "stage4_lightBlock.obj");
 	//switch
 
 	lightSwitch = new switchLight();

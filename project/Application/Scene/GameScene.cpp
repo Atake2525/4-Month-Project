@@ -48,7 +48,7 @@ void GameScene::Initialize(int stage) {
 		object3d->SetModel("01Stage.obj");
 	}
 	else if (stage_ == 4) {
-		object3d->SetModel("Stage2.obj");
+		object3d->SetModel("stage4.obj");
 	}
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
@@ -73,7 +73,7 @@ void GameScene::Initialize(int stage) {
 		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
 	}
 	else if (stage_ == 4) {
-		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+		player->AddStageCollision("Resources/Model/obj/Stage4", "stage4Collision.obj");
 	}
 
 	//player->AddStageCollision("Resources/Debug", "test.obj");
@@ -90,7 +90,7 @@ void GameScene::Initialize(int stage) {
 		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 	}
 	else if (stage_ == 4) {
-		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/obj/Stage4", "stage4lightCollision.obj");
 	}
 
 
@@ -114,7 +114,7 @@ void GameScene::Initialize(int stage) {
 		goalPos = { -10.0f,8.0f,10.0f };
 	}
 	if (stage_ == 4) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { 5.0f,8.0f,13.0f };
 	}
 
 	goal->Initialize(goalPos);
@@ -135,7 +135,7 @@ void GameScene::Initialize(int stage) {
 		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	}
 	else if (stage_ == 4) {
-		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage4", "stage4light.obj");
 	}
 
 	//switch
@@ -354,31 +354,7 @@ void GameScene::Update() {
 
 	Vector3 posM3 = input->GetWindowMousePos3();
 
-	/*ImGui::Begin("State");
-	if (ImGui::TreeNode("Camera")) {
-		ImGui::DragFloat3("Tranlate", &cameraTransform.translate.x, 0.1f);
-		ImGui::DragFloat3("Rotate", &cameraTransform.rotate.x, 0.1f);
-		ImGui::DragFloat3("Scale", &cameraTransform.scale.x, 0.1f);
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("Model")) {
-		ImGui::DragFloat3("Tranlate", &modelTransform.translate.x, 0.1f);
-		ImGui::DragFloat3("Rotate", &modelTransform.rotate.x, 0.1f);
-		ImGui::DragFloat3("Scale", &modelTransform.scale.x, 0.1f);
-		if (ImGui::TreeNode("AABB")) {
-			ImGui::DragFloat3("Min", &aabb.min.x, 0.1f);
-			ImGui::DragFloat3("Max", &aabb.max.x, 0.1f);
-
-			ImGui::TreePop();
-		}
-		ImGui::Checkbox("EnableLihting", &enableLighting);
-		ImGui::TreePop();
-	}
-
-	ImGui::DragFloat2("M2", &posM2.x, 0.1f);
-	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
-	ImGui::End();*/
-
+	
 	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
 		Audio::GetInstance()->Play("click"); // クリック音再生
 		isPaused = !isPaused;
