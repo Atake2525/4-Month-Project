@@ -45,7 +45,7 @@ void GameScene::Initialize(int stage) {
 		object3d->SetModel("stageTriangle.obj");
 	}
 	else if (stage_ == 3) {
-		object3d->SetModel("01Stage.obj");
+		object3d->SetModel("01Stage.obj"); Stage2.obj
 	}
 	else if (stage_ == 4) {
 		object3d->SetModel("Stage2.obj");
@@ -70,10 +70,10 @@ void GameScene::Initialize(int stage) {
 		player->AddStageCollision("Resources/Model/collision/stageNotTriangle", "stage.obj");
 	}
 	else if (stage_ == 3) {
-		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj"); 
 	}
 	else if (stage_ == 4) {
-		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
 	}
 
 	//player->AddStageCollision("Resources/Debug", "test.obj");
@@ -87,10 +87,10 @@ void GameScene::Initialize(int stage) {
 		player->AddLightBlockCollision("Resources/Model/collision/stageNotTriangle", "stageLight.obj");
 	}
 	else if (stage_ == 3) {
-		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj"); 
 	}
 	else if (stage_ == 4) {
-		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
 	}
 
 
@@ -132,12 +132,12 @@ void GameScene::Initialize(int stage) {
 		lightBlock->Initialize("Resources/Model/obj/stageTriangle", "stageTriangleLight.obj");
 	}
 	else if (stage_ == 3) {
-		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage", "Stage2LightBlock.obj");
 	}
 	else if (stage_ == 4) {
-		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "proStageLightBlock.obj");
 	}
-
+	proStageLightBlock.obj
 	//switch
 	// 
 	lightSwitch = new switchLight();
