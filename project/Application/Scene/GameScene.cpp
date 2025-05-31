@@ -45,10 +45,10 @@ void GameScene::Initialize(int stage) {
 		object3d->SetModel("stageTriangle.obj");
 	}
 	else if (stage_ == 3) {
-		object3d->SetModel("01Stage.obj"); Stage2.obj
+		object3d->SetModel("Stage2.obj"); 
 	}
 	else if (stage_ == 4) {
-		object3d->SetModel("Stage2.obj");
+		object3d->SetModel("01Stage.obj");
 	}
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
@@ -132,12 +132,12 @@ void GameScene::Initialize(int stage) {
 		lightBlock->Initialize("Resources/Model/obj/stageTriangle", "stageTriangleLight.obj");
 	}
 	else if (stage_ == 3) {
-		lightBlock->Initialize("Resources/Model/obj/Stage", "Stage2LightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
 	}
 	else if (stage_ == 4) {
-		lightBlock->Initialize("Resources/Model/obj/Stage2", "proStageLightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
 	}
-	proStageLightBlock.obj
+
 	//switch
 	// 
 	lightSwitch = new switchLight();
