@@ -193,6 +193,7 @@ void StageSelect::Update() {
     }
     if (stageSelct4.OnButton()) {
         goToStage = true;
+        buttonCount = 3;
         isFadingOut = true;
         fadeAlpha = 0.0f;
         fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -200,7 +201,6 @@ void StageSelect::Update() {
     }
     if (titleButton.OnButton()) {
         goToTitle = true;
-        buttonCount = 3;
         isFadingOut = true;
         fadeAlpha = 0.0f;
         fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });

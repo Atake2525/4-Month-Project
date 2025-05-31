@@ -163,13 +163,13 @@ void MyGame::Update() {
 			if (stageSelect->SelectStageNumber() == 0) {
 				stage = 1;
 			}
-			if (stageSelect->SelectStageNumber() == 1) {
+			else if (stageSelect->SelectStageNumber() == 1) {
 				stage = 2;
 			}
-			if (stageSelect->SelectStageNumber() == 2) {
+			else if (stageSelect->SelectStageNumber() == 2) {
 				stage = 3;
 			}
-			if (stageSelect->SelectStageNumber() == 3) {
+			else if (stageSelect->SelectStageNumber() == 3) {
 				stage = 4;
 			}
 			stageSelect->Finalize();
