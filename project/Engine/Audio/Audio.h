@@ -28,7 +28,7 @@ struct SoundData {
 	// ファイル
 	std::string filePath;
 	// ファイルの再生時間
-	int playTime;
+	float playTime;
 	// 音量
 	float volume;
 };

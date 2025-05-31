@@ -2,13 +2,18 @@
 #include "Light.h"
 #include <algorithm>
 
+#include "Audio.h"
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
 void Rule::Initialize()
 {
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/yamada_stage", "stage_yamada.obj", true);
+	// クリック音読み込み
+	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage4", "stage4.obj", true);
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
@@ -20,7 +25,7 @@ void Rule::Initialize()
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("stage_yamada.obj");
+	object3d->SetModel("stage4.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -31,8 +36,8 @@ void Rule::Initialize()
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
-	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	player->AddStageCollision("Resources/Model/obj/Stage4", "stage4_collision.obj");
+	player->AddLightBlockCollision("Resources/Model/obj/Stage4", "stage4_collision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -46,7 +51,7 @@ void Rule::Initialize()
 	starResultManager->Initialize(5);
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	lightBlock->Initialize("Resources/Model/obj/Stage4", "stage4_lightBlock.obj");
 	//switch
 
 	lightSwitch = new switchLight();
@@ -77,10 +82,10 @@ void Rule::Initialize()
 	pauseBg->Update();
 
 	// テクスチャ読み込み（ESCアイコン）
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/setting.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/set.png");
 	// スプライト生成
 	escHintSprite = new Sprite();
-	escHintSprite->Initialize("Resources/Sprite/scene/setting.png");
+	escHintSprite->Initialize("Resources/Sprite/scene/set.png");
 	// 原点
 	escHintSprite->SetAnchorPoint({ 0.0f, 0.0f });
 	// 位置
@@ -136,16 +141,19 @@ void Rule::PauseUpdate()
 
 		if (!pauseInputLocked) {
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				pauseSelectedIndex = (pauseSelectedIndex + 1) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				pauseSelectedIndex = (pauseSelectedIndex - 1 + pauseButtonCount) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 		}
 		else {
 			if (!input->TriggerXButton(DPad::Up) && !input->TriggerXButton(DPad::Down)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				pauseInputLocked = false;
 			}
 		}
@@ -173,7 +181,8 @@ void Rule::PauseUpdate()
 	}
 
 	// 決定：Enter / Aボタン
-	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		if (hoveredPauseButton) {
 			if (hoveredPauseButton == &resumeButton) {
 				isPaused = false;
@@ -201,16 +210,19 @@ void Rule::PauseUpdate()
 
 	// マウスクリック決定（OnButton）
 	if (resumeButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		isPaused = false;
 		input->ShowMouseCursor(false);
 		return;
 	}
 	if (restartButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		goToRestart = true;
 		isPaused = false;
 		return;
 	}
 	if (returnToTitleButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		goToTitle = true;
 		return;
 	}
@@ -225,14 +237,16 @@ void Rule::Update() {
 		// スプライトの更新
 		targetSprite->Update();
 
-		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
+			Audio::GetInstance()->Play("click"); // クリック音再生
 			targetStart = false;
 			input->ShowMouseCursor(false);
 		}
 
 	}
 
-	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Menu)) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		isPaused = !isPaused;
 		tabReleased = false;
 
