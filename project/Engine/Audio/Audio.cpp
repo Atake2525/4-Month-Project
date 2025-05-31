@@ -48,6 +48,7 @@ void Audio::Finalize() {
 	}
 	audioList.clear();
 	soundMap.clear();
+	mp3AudioData.clear();
 	delete instance;
 	instance = nullptr;
 }
@@ -145,6 +146,10 @@ bool Audio::LoadWave(const std::string filePath, const std::string soundName, co
 	file.read(pBuffer, data.size);
 
 	int time = data.size / format.fmt.nAvgBytesPerSec;
+	if (time <= 0)
+	{
+		time = 1;
+	}
 
 	// Waveファイルを閉じる
 	file.close();
@@ -325,7 +330,8 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 		return false;
 	}
 
-	
+	// WAVEフォーマット
+	//WAVEFORMATEX mp3waveFormat;
 
 	// WAVEフォーマットをコピー
 	memcpy(&mp3waveFormat, pWaveFormat, sizeof(WAVEFORMATEX));
@@ -335,8 +341,9 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 	CoTaskMemFree(pWaveFormat);*/
 
 	// オーディオデータの読み込み
-	//audioData.clear();
+	//mp3AudioData.clear();
 
+	SoundData soundData;
 
 	while (true) {
 		// サンプルの読み込み
@@ -377,9 +384,9 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 
 
 		// データをコピー
-		size_t offset = mp3AudioData.size();
-		mp3AudioData.resize(offset + bufferSize);
-		memcpy(mp3AudioData.data() + offset, audioBuffer, bufferSize);
+		size_t offset = mp3AudioData[soundName].size();
+		mp3AudioData[soundName].resize(offset + bufferSize);
+		memcpy(mp3AudioData[soundName].data() + offset, audioBuffer, bufferSize);
 		
 		// バッファのロックを解除
 		mediaBuffer->Unlock();
@@ -387,23 +394,28 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 
 	// 再生時間を計算する
 	int time = static_cast<int>(mp3AudioData.size() / pWaveFormat->nAvgBytesPerSec);
+	if (time <= 0)
+	{
+		time = 1;
+	}
 	CoTaskMemFree(pWaveFormat);
 	// 音量を0.0f ~ 1.0fにclampする
 	float vol = std::clamp(volume, 0.0f, 1.0f);
 
-	SoundData soundData;
 	soundData.wfex = mp3waveFormat;
-	soundData.bufferSize = static_cast<UINT32>(mp3AudioData.size());
-	soundData.pBuffer = mp3AudioData.data();
+	soundData.bufferSize = static_cast<UINT32>(mp3AudioData[soundName].size());
+	soundData.pBuffer = mp3AudioData[soundName].data();
 	soundData.filePath = filePath;
 	soundData.volume = vol;
 	soundData.playTime = time;
 
-	mp3waveFormat = {};
-	mp3AudioData.clear();
+	/*mp3AudioData.clear(); */
 
 	soundMap[soundName] = soundData;
 
+	Log("Audio load");
+
+	mp3waveFormat = {};
 	return true;
 }
 
@@ -514,6 +526,7 @@ void Audio::SoundUnload(const std::string soundName) {
 	//delete[] soundMap[soundName].pBuffer;
 
 	soundMap.erase(soundName);
+	mp3AudioData.erase(soundName);
 	Log("sound unloaded\n");
 }
 

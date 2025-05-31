@@ -116,7 +116,7 @@ private:
 	std::map<std::string, SoundData> soundMap;
 
 	// オーディオデータ
-	std::vector<BYTE> mp3AudioData;
+	std::map<std::string, std::vector<BYTE>> mp3AudioData;
 	// WAVEフォーマット
 	WAVEFORMATEX mp3waveFormat;
 
