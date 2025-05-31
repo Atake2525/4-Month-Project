@@ -189,6 +189,7 @@ void Player::Update()
 	if (!IsCollisionAABB(object3d_->GetAABB(), worldBoarder_))
 	{
 		isDead_ = true;
+		JumpVelocity = 0.0f;
 	}
 
 	//ImGui::Begin("State");
