@@ -111,7 +111,7 @@ void GameScene::Initialize(int stage) {
 		goalPos = { -4.4f,8.0f,-5.0f };
 	}
 	if (stage_ == 3) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { 12.0f,16.0f,-13.5f };
 	}
 	if (stage_ == 4) {
 		goalPos = { -10.0f,8.0f,10.0f };
@@ -161,7 +161,7 @@ void GameScene::Initialize(int stage) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{12.0f,16.0f,13.5f}
 		};
 	}
 	if (stage_ == 4) {
