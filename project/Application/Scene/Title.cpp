@@ -234,21 +234,24 @@ void Title::Update() {
 		fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
 		return;
 	}
-	if (settingButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+	else if (settingButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // ★ここ追加
 		goToSetting = true;
 		finished = true;
+		return; 
 	}
-	if (ruleButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+	else if (ruleButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // ★ここ追加
 		goToRule = true;
 		finished = true;
+		return; 
 	}
-	if (finishButton.OnButton()) {
+	else if (finishButton.OnButton()) {
 		Audio::GetInstance()->Play("click"); // クリック音再生
 		PostQuitMessage(0);
 		return;
 	}
+
 
 	// --- 全ボタン透明度初期化 ---
 	gameStartButton.SetSpriteAlpha(1.0f);

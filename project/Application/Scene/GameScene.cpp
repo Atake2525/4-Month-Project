@@ -240,7 +240,6 @@ void GameScene::Initialize(int stage) {
 void GameScene::PauseUpdate()
 {
 	input->Update();
-
 	input->ShowMouseCursor(true);
 
 	// --- カーソルによるUI選択 ---
@@ -249,7 +248,7 @@ void GameScene::PauseUpdate()
 	else if (restartButton.InCursor()) hoveredPauseButton = &restartButton;
 	else if (returnToTitleButton.InCursor()) hoveredPauseButton = &returnToTitleButton;
 
-	// 点滅タイマーリセット（カーソルが移動したとき）
+	// 点滅タイマーリセット
 	if (hoveredPauseButton != prevHoveredPauseButton) {
 		pauseBlinkTimer = 0.0f;
 		prevHoveredPauseButton = hoveredPauseButton;
@@ -259,25 +258,24 @@ void GameScene::PauseUpdate()
 	pauseBlinkTimer += 1.0f / 60.0f;
 	float blinkAlpha = 0.5f + 0.5f * sinf(pauseBlinkTimer * 3.14f);
 
-	// 十字キー操作（カーソルが使われていないとき）
+	// 十字キー操作
 	if (!hoveredPauseButton) {
 		prevPauseSelectedIndex = pauseSelectedIndex;
 
 		if (!pauseInputLocked) {
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
-				Audio::GetInstance()->Play("click"); // クリック音再生
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex + 1) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
-				Audio::GetInstance()->Play("click"); // クリック音再生
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex - 1 + pauseButtonCount) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 		}
 		else {
 			if (!input->TriggerXButton(DPad::Up) && !input->TriggerXButton(DPad::Down)) {
-				Audio::GetInstance()->Play("click"); // クリック音再生
 				pauseInputLocked = false;
 			}
 		}
@@ -292,7 +290,7 @@ void GameScene::PauseUpdate()
 	restartButton.SetSpriteAlpha(1.0f);
 	returnToTitleButton.SetSpriteAlpha(1.0f);
 
-	// 点滅：カーソルが優先
+	// 点滅
 	if (hoveredPauseButton) {
 		hoveredPauseButton->SetSpriteAlpha(blinkAlpha);
 	}
@@ -304,54 +302,63 @@ void GameScene::PauseUpdate()
 		}
 	}
 
+
+	// 
+	bool playClick = false;
+=======
 	// 決定：Enter / Aボタン
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
 		Audio::GetInstance()->Play("click"); // クリック音再生
 
+
+	// キー/ボタンによる決定
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+		playClick = true;
 		if (hoveredPauseButton) {
 			if (hoveredPauseButton == &resumeButton) {
 				isPaused = false;
 				input->ShowMouseCursor(false);
-				return;
 			}
 			else if (hoveredPauseButton == &restartButton) {
 				goToRestart = true;
 				isPaused = false;
-				return;
 			}
 			else if (hoveredPauseButton == &returnToTitleButton) {
 				goToTitle = true;
-				return;
 			}
 		}
 		else {
 			switch (pauseSelectedIndex) {
-			case 0: isPaused = false; input->ShowMouseCursor(false); return;
-			case 1: goToRestart = true; isPaused = false; return;
-			case 2: goToTitle = true; return;
+			case 0: isPaused = false; input->ShowMouseCursor(false); break;
+			case 1: goToRestart = true; isPaused = false; break;
+			case 2: goToTitle = true; break;
 			}
 		}
 	}
 
-	// マウスクリック決定（OnButton）
+	// マウスクリック決定
 	if (resumeButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+		playClick = true;
 		isPaused = false;
 		input->ShowMouseCursor(false);
-		return;
 	}
 	if (restartButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+		playClick = true;
 		goToRestart = true;
 		isPaused = false;
-		return;
 	}
 	if (returnToTitleButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+		playClick = true;
 		goToTitle = true;
+	}
+
+	// 最後にクリック音をまとめて1回だけ再生
+	if (playClick) {
+		Audio::GetInstance()->Play("click");
 		return;
 	}
 }
+
 
 
 void GameScene::Update() {
