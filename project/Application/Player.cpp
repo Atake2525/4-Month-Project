@@ -723,6 +723,10 @@ void Player::UpdateLightCollision() {
 			onGround_ = true;
 			collisionLightBlock = true;
 		}
+		else if (!lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && collisionLightBlock)
+			{
+				onGround_ = false;
+			}
 
 	}
 	else if (lightCollision->GetCollisionListSize() > 0 && !switchFlag)

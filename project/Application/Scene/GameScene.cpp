@@ -12,9 +12,10 @@
 void GameScene::Initialize(int stage) {
 	stage_ = stage;
 
+	Audio::GetInstance()->LoadMP3("Resources/Sound/Good_Morning_Sunshine.mp3","stageBGM", 1.0f);
 
 	// クリック音読み込み
-	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+	//Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
 
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
@@ -105,7 +106,7 @@ void GameScene::Initialize(int stage) {
 	//ゴールの位置
 	//
 	if (stage_ == 1) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { -7.0f,5.0f,00.0f };
 	}
 	if (stage_ == 2) {
 		goalPos = { -4.4f,8.0f,-5.0f };
@@ -145,9 +146,9 @@ void GameScene::Initialize(int stage) {
 	//
 	if (stage_ == 1) {
 		switchTransform = {
-		{1.0f, 1.0f, 1.0f},
-		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+			{1.0f, 1.0f, 1.0f},
+			{0.0f, 0.0f, 0.0f},
+			{8.0f, 2.2f, 11.0f}
 		};
 	}
 	if (stage_ == 2) {
@@ -228,7 +229,7 @@ void GameScene::Initialize(int stage) {
 		starIcons.push_back(icon);
 	}
 
-
+	Audio::GetInstance()->Play("stageBGM", true);
 }
 
 void GameScene::PauseUpdate()
@@ -440,6 +441,8 @@ void GameScene::Update() {
 	}
 	if (isGoal) {
 		finished = true;
+		Audio::GetInstance()->StopAll();
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		if (input->TriggerKey(DIK_LSHIFT) || input->TriggerButton(Controller::Menu))
 		{
 			Finalize();
@@ -542,7 +545,7 @@ void GameScene::Draw() {
 
 void GameScene::Finalize() {
 
-	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+	Audio::GetInstance()->StopAll();
 
 	delete camera;
 
