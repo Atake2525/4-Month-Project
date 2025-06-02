@@ -85,11 +85,12 @@ void StageSelect::Update() {
     }
 
     // --- Enterキー / Aボタンによる決定処理 ---
-    if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+    if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
         if (hoveredButton) {
             // カーソルが乗っているUIを決定
             if (hoveredButton == &stageSelct) {
 
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -98,6 +99,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &stageSelct2) {
                
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -106,6 +108,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &stageSelct3) {
                
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -114,6 +117,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &stageSelct4) {
                
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -122,6 +126,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &titleButton) {
 
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -135,30 +140,35 @@ void StageSelect::Update() {
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 0;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 1:
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 1;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 2:
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 2;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 3:
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 3;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 4:
                 goToTitle = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 4;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
 
@@ -193,6 +203,7 @@ void StageSelect::Update() {
     }
     if (stageSelct4.OnButton()) {
         goToStage = true;
+        buttonCount = 3;
         isFadingOut = true;
         fadeAlpha = 0.0f;
         fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -200,7 +211,6 @@ void StageSelect::Update() {
     }
     if (titleButton.OnButton()) {
         goToTitle = true;
-        buttonCount = 3;
         isFadingOut = true;
         fadeAlpha = 0.0f;
         fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });

@@ -2,16 +2,24 @@
 #include "Light.h"
 #include <algorithm>
 
+#include "Audio.h"
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
 
 void Rule::Initialize()
 {
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/yamada_stage", "stage_yamada.obj", true);
+	Audio::GetInstance()->Play("stageBGM", true);
+
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
+
+	sky = new Object3d();
+	sky->Initialize();
+	sky->SetModel("Resources/Model/obj", "sky.obj", false);
 
 	input = Input::GetInstance();
 	input->ShowMouseCursor(showCursor);
@@ -20,7 +28,7 @@ void Rule::Initialize()
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("stage_yamada.obj");
+	object3d->SetModel("stage03.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -31,8 +39,8 @@ void Rule::Initialize()
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
-	player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
+	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -40,20 +48,20 @@ void Rule::Initialize()
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -10.0f,8.0f,10.0f });
+	goal->Initialize({ 0.0f, 0.2f, 20.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(5);
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	//switch
 
 	lightSwitch = new switchLight();
 	switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{8.0f, 2.2f, 11.0f}
 	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
@@ -77,10 +85,10 @@ void Rule::Initialize()
 	pauseBg->Update();
 
 	// テクスチャ読み込み（ESCアイコン）
-	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/setting.png");
+	TextureManager::GetInstance()->LoadTexture("Resources/Sprite/scene/set.png");
 	// スプライト生成
 	escHintSprite = new Sprite();
-	escHintSprite->Initialize("Resources/Sprite/scene/setting.png");
+	escHintSprite->Initialize("Resources/Sprite/scene/set.png");
 	// 原点
 	escHintSprite->SetAnchorPoint({ 0.0f, 0.0f });
 	// 位置
@@ -114,32 +122,34 @@ void Rule::PauseUpdate()
 
 	input->ShowMouseCursor(true);
 
-	// --- カーソルによるUI選択 ---
 	hoveredPauseButton = nullptr;
 	if (resumeButton.InCursor()) hoveredPauseButton = &resumeButton;
 	else if (restartButton.InCursor()) hoveredPauseButton = &restartButton;
 	else if (returnToTitleButton.InCursor()) hoveredPauseButton = &returnToTitleButton;
 
-	// 点滅タイマーリセット（カーソルが移動したとき）
+	// 点滅タイマーリセット
 	if (hoveredPauseButton != prevHoveredPauseButton) {
 		pauseBlinkTimer = 0.0f;
 		prevHoveredPauseButton = hoveredPauseButton;
+		//Audio::GetInstance()->Play("click"); 
 	}
 
 	// 点滅アニメーション進行
 	pauseBlinkTimer += 1.0f / 60.0f;
 	float blinkAlpha = 0.5f + 0.5f * sinf(pauseBlinkTimer * 3.14f);
 
-	// 十字キー操作（カーソルが使われていないとき）
+	// 十字キー操作
 	if (!hoveredPauseButton) {
 		prevPauseSelectedIndex = pauseSelectedIndex;
 
 		if (!pauseInputLocked) {
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex + 1) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex - 1 + pauseButtonCount) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
@@ -155,12 +165,12 @@ void Rule::PauseUpdate()
 		}
 	}
 
-	// 全ボタン透明度初期化
+	// 全ボタン透明度
 	resumeButton.SetSpriteAlpha(1.0f);
 	restartButton.SetSpriteAlpha(1.0f);
 	returnToTitleButton.SetSpriteAlpha(1.0f);
 
-	// 点滅：カーソルが優先
+	// 点滅
 	if (hoveredPauseButton) {
 		hoveredPauseButton->SetSpriteAlpha(blinkAlpha);
 	}
@@ -172,49 +182,56 @@ void Rule::PauseUpdate()
 		}
 	}
 
-	// 決定：Enter / Aボタン
-	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+	// 決定
+	bool playClick = false;
+
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
+		playClick = true;
 		if (hoveredPauseButton) {
 			if (hoveredPauseButton == &resumeButton) {
 				isPaused = false;
 				input->ShowMouseCursor(false);
-				return;
 			}
 			else if (hoveredPauseButton == &restartButton) {
 				goToRestart = true;
 				isPaused = false;
-				return;
 			}
 			else if (hoveredPauseButton == &returnToTitleButton) {
 				goToTitle = true;
-				return;
 			}
 		}
 		else {
 			switch (pauseSelectedIndex) {
-			case 0: isPaused = false; input->ShowMouseCursor(false); return;
-			case 1: goToRestart = true; isPaused = false; return;
-			case 2: goToTitle = true; return;
+			case 0: isPaused = false; input->ShowMouseCursor(false); break;
+			case 1: goToRestart = true; isPaused = false; break;
+			case 2: goToTitle = true; break;
 			}
 		}
 	}
 
-	// マウスクリック決定（OnButton）
+	// マウスクリックによる決定
 	if (resumeButton.OnButton()) {
+		playClick = true;
 		isPaused = false;
 		input->ShowMouseCursor(false);
-		return;
 	}
 	if (restartButton.OnButton()) {
+		playClick = true;
 		goToRestart = true;
 		isPaused = false;
-		return;
 	}
 	if (returnToTitleButton.OnButton()) {
+		playClick = true;
 		goToTitle = true;
+	}
+
+	// 音の再生は最後にまとめて1回
+	if (playClick) {
+		Audio::GetInstance()->Play("click");
 		return;
 	}
 }
+
 
 
 void Rule::Update() {
@@ -225,14 +242,16 @@ void Rule::Update() {
 		// スプライトの更新
 		targetSprite->Update();
 
-		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
+			Audio::GetInstance()->Play("click"); // クリック音再生
 			targetStart = false;
 			input->ShowMouseCursor(false);
 		}
 
 	}
 
-	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Menu)) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		isPaused = !isPaused;
 		tabReleased = false;
 
@@ -264,6 +283,12 @@ void Rule::Update() {
 	}
 
 	player->Update();
+	// プレイヤーが場外に出ていたらリスタート
+	if (player->IsDead())
+	{
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+		goToRestart = true;
+	}
 
 
 	camera = player->GetCamera();
@@ -318,7 +343,7 @@ void Rule::Update() {
 		}
 	}
 
-
+	sky->Update();
 	////ENTERでタイトルへ戻る
 	//if (input->TriggerKey(DIK_RETURN)) {
 	//	finished = true;
@@ -340,6 +365,8 @@ void Rule::Draw() {
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
+
+	sky->Draw();
 
 	player->Draw();
 
@@ -376,7 +403,6 @@ void Rule::Draw() {
 
 	// 星アイコンの描画（星が取得された場合のみ）
 	if (starResultManager) {
-		int collectedCount = 0;
 		for (Star* s : starResultManager->GetStars()) {
 			if (s->IsCollected() && collectedCount < (int)starIcons.size()) {
 				float x = 1280.0f - 40.0f - (collectedCount * 36.0f);
@@ -393,9 +419,15 @@ void Rule::Draw() {
 }
 
 void Rule::Finalize() {
+	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+
+	Audio::GetInstance()->StopAll();
+
 	delete camera;
 
 	delete object3d;
+
+	delete sky;
 
 	delete sprite;
 

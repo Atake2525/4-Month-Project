@@ -11,9 +11,9 @@
 
 std::random_device seedGenerator;
 std::mt19937 randomEngine(seedGenerator());
-std::uniform_real_distribution<float> distrubution(-0.3f, 0.3f);
+std::uniform_real_distribution<float> distrubution(-0.15f, 0.15f);
 std::uniform_real_distribution<float> posdistrubution(-1.0f, 1.0f);
-std::uniform_real_distribution<float> randomFloat(0.0f, 1.0f);
+std::uniform_real_distribution<float> randomFloat(0.0f, 0.2f);
 
 Player::Player()
 {
@@ -54,6 +54,7 @@ void Player::Initialize(Camera* camera)
 	cameraTransform_ = camera->GetTransform();
 	cameraTransform_.translate = cameraOffset;
 	cameraOffset = defaultCameraOffset;
+	camera_->SetFarClipDistance(1000.0f);
 
 	// 追加したクラス(移動可能範囲のAABB)
 	worldBoarder_ = {
@@ -149,13 +150,13 @@ void Player::Update()
 
 	//camera_->SetTranslate(cameraTransform_.translate);
 	
-	if (onGround_) {
-		if (input_->TriggerKey(DIK_SPACE)) {
-			//effect
-			effectFlag = true;
-			effectTimer = 5;
-		}
-	}
+	//if (onGround_) {
+	//	if (input_->TriggerKey(DIK_SPACE)) {
+	//		//effect
+	//		effectFlag = true;
+	//		effectTimer = 5;
+	//	}
+	//}
 	if (effectFlag) {
 		/*位置*/
 		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
@@ -189,6 +190,7 @@ void Player::Update()
 	if (!IsCollisionAABB(object3d_->GetAABB(), worldBoarder_))
 	{
 		isDead_ = true;
+		JumpVelocity = 0.0f;
 	}
 
 	//ImGui::Begin("State");
@@ -256,7 +258,7 @@ void Player::Move()
 		move.y = -0.5f;
 	}
 	// コントローラー用
-	plRotate = std::atan2(move.x, move.y);
+	plRotate = std::atan2(move.x, move.y * -1.0f);
 	if (input_->IsMoveLeftJoyStick() == false) {
 		if (input_->PushKey(DIK_W)) {
 			move.y = -speed;
@@ -428,6 +430,9 @@ void Player::Jump()
 			JumpVelocity += kJumpAcceleration / 60.0f;
 			onGround_ = false;
 			Audio::GetInstance()->Play("jump");
+			//effect
+			effectFlag = true;
+			effectTimer = 5;
 		}
 		
 		
@@ -720,11 +725,17 @@ void Player::UpdateLightCollision() {
 			collisionLightBlock = true;
 		}
 		else if (!lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && collisionLightBlock)
+			{
+				onGround_ = false;
+			}
+
+	}
+	else if (lightCollision->GetCollisionListSize() > 0 && !switchFlag)
+	{
+		if (onGround_ && !lightCollision->IsColYUpside(object3d_->GetAABB(), JumpVelocity) && collisionLightBlock)
 		{
 			onGround_ = false;
 		}
-
-
 	}
 }
 
@@ -835,11 +846,11 @@ bool Player::IsCollisionAABB(const AABB& a, const AABB& b) {
 void Player::EffectBorn()
 {
 
-	for (int i = 0; i < 25; i++) {
+	for (int i = 0; i < 5; i++) {
 		/*生成*/
 		JampEffect* effect = new JampEffect();
 		/*位置*/
-		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 2.0f , modelTransform_.translate.z + 0.5f };
+		Vector3 position = { modelTransform_.translate.x + posdistrubution(randomEngine) ,modelTransform_.translate.y - 1.0f , modelTransform_.translate.z + 0.5f };
 
 		Vector3 velocity = {
 			distrubution(randomEngine),               // X方向ランダム

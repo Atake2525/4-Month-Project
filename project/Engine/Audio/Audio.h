@@ -28,7 +28,7 @@ struct SoundData {
 	// ファイル
 	std::string filePath;
 	// ファイルの再生時間
-	int playTime;
+	float playTime;
 	// 音量
 	float volume;
 };
@@ -116,7 +116,7 @@ private:
 	std::map<std::string, SoundData> soundMap;
 
 	// オーディオデータ
-	std::vector<BYTE> mp3AudioData;
+	std::map<std::string, std::vector<BYTE>> mp3AudioData;
 	// WAVEフォーマット
 	WAVEFORMATEX mp3waveFormat;
 

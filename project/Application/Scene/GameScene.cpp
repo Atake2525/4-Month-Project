@@ -2,6 +2,8 @@
 #include "Light.h"
 #include <algorithm>
 
+#include "Audio.h"
+
 #include "externels/imgui/imgui.h"
 #include "externels/imgui/imgui_impl_dx12.h"
 #include "externels/imgui/imgui_impl_win32.h"
@@ -9,6 +11,15 @@
 
 void GameScene::Initialize(int stage) {
 	stage_ = stage;
+
+	Audio::GetInstance()->LoadMP3("Resources/Sound/Good_Morning_Sunshine.mp3","stageBGM", 1.0f);
+
+	// クリック音読み込み
+	//Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+
+
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "sky.obj", false);
 
 	
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
@@ -27,19 +38,23 @@ void GameScene::Initialize(int stage) {
 	object3d = new Object3d();
 	object3d->Initialize();
 
+	sky = new Object3d();
+	sky->Initialize();
+	sky->SetModel("sky.obj");
+
 	//ステージ指定
 	//
 	if (stage_ == 1) {
 		object3d->SetModel("stage03.obj");
 	}
 	else if (stage_ == 2) {
-		object3d->SetModel("Stage2.obj");
+		object3d->SetModel("stageTriangle.obj");
 	}
 	else if (stage_ == 3) {
-		object3d->SetModel("01Stage.obj");
+		object3d->SetModel("Stage2.obj"); 
 	}
 	else if (stage_ == 4) {
-		object3d->SetModel("Stage2.obj");
+		object3d->SetModel("stage4.obj");
 	}
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
@@ -58,13 +73,13 @@ void GameScene::Initialize(int stage) {
 		player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
 	}
 	else if (stage_ == 2) {
-		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+		player->AddStageCollision("Resources/Model/collision/stageNotTriangle", "stage.obj");
 	}
 	else if (stage_ == 3) {
-		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj"); 
 	}
 	else if (stage_ == 4) {
-		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj");
+		player->AddStageCollision("Resources/Model/obj/Stage4", "stage4Collison.obj");
 	}
 
 	//player->AddStageCollision("Resources/Debug", "test.obj");
@@ -75,13 +90,13 @@ void GameScene::Initialize(int stage) {
 		player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 	}
 	else if (stage_ == 2) {
-		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision/stageNotTriangle", "stageLight.obj");
 	}
 	else if (stage_ == 3) {
-		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj"); 
 	}
 	else if (stage_ == 4) {
-		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/obj/Stage4", "stage4lightCollision.obj");
 	}
 
 
@@ -96,16 +111,16 @@ void GameScene::Initialize(int stage) {
 	//ゴールの位置
 	//
 	if (stage_ == 1) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { -7.0f,5.0f,00.0f };
 	}
 	if (stage_ == 2) {
-		goalPos = { 1.0f,8.0f,1.0f };
+		goalPos = { -4.4f,8.0f,-5.0f };
 	}
 	if (stage_ == 3) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { 12.0f,16.0f,-13.5f };
 	}
 	if (stage_ == 4) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { 4.0f,25.0f,-5.0f };
 	}
 
 	goal->Initialize(goalPos);
@@ -120,13 +135,13 @@ void GameScene::Initialize(int stage) {
 		lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	}
 	else if (stage_ == 2) {
-		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/stageTriangle", "stageTriangleLight.obj");
 	}
 	else if (stage_ == 3) {
-		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
 	}
 	else if (stage_ == 4) {
-		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage4", "stage4light.obj");
 	}
 
 	//switch
@@ -136,30 +151,30 @@ void GameScene::Initialize(int stage) {
 	//
 	if (stage_ == 1) {
 		switchTransform = {
-		{1.0f, 1.0f, 1.0f},
-		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+			{1.0f, 1.0f, 1.0f},
+			{0.0f, 0.0f, 0.0f},
+			{8.0f, 2.2f, 11.0f}
 		};
 	}
 	if (stage_ == 2) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{4.0f, 1.0f, 4.0f}
+		{5.0f, 0.5f, -1.0f}
 		};
 	}
 	if (stage_ == 3) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{12.0f,16.0f,13.5f}
 		};
 	}
 	if (stage_ == 4) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{-47.5f,10.0f, 18.0f}
 		};
 	}
 
@@ -219,13 +234,12 @@ void GameScene::Initialize(int stage) {
 		starIcons.push_back(icon);
 	}
 
-
+	Audio::GetInstance()->Play("stageBGM", true);
 }
 
 void GameScene::PauseUpdate()
 {
 	input->Update();
-
 	input->ShowMouseCursor(true);
 
 	// --- カーソルによるUI選択 ---
@@ -234,7 +248,7 @@ void GameScene::PauseUpdate()
 	else if (restartButton.InCursor()) hoveredPauseButton = &restartButton;
 	else if (returnToTitleButton.InCursor()) hoveredPauseButton = &returnToTitleButton;
 
-	// 点滅タイマーリセット（カーソルが移動したとき）
+	// 点滅タイマーリセット
 	if (hoveredPauseButton != prevHoveredPauseButton) {
 		pauseBlinkTimer = 0.0f;
 		prevHoveredPauseButton = hoveredPauseButton;
@@ -244,16 +258,18 @@ void GameScene::PauseUpdate()
 	pauseBlinkTimer += 1.0f / 60.0f;
 	float blinkAlpha = 0.5f + 0.5f * sinf(pauseBlinkTimer * 3.14f);
 
-	// 十字キー操作（カーソルが使われていないとき）
+	// 十字キー操作
 	if (!hoveredPauseButton) {
 		prevPauseSelectedIndex = pauseSelectedIndex;
 
 		if (!pauseInputLocked) {
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex + 1) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex - 1 + pauseButtonCount) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
@@ -274,7 +290,7 @@ void GameScene::PauseUpdate()
 	restartButton.SetSpriteAlpha(1.0f);
 	returnToTitleButton.SetSpriteAlpha(1.0f);
 
-	// 点滅：カーソルが優先
+	// 点滅
 	if (hoveredPauseButton) {
 		hoveredPauseButton->SetSpriteAlpha(blinkAlpha);
 	}
@@ -286,47 +302,60 @@ void GameScene::PauseUpdate()
 		}
 	}
 
-	// 決定：Enter / Aボタン
-	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
-		if (hoveredPauseButton) {
-			if (hoveredPauseButton == &resumeButton) {
-				isPaused = false;
-				input->ShowMouseCursor(false);
-				return;
-			}
-			else if (hoveredPauseButton == &restartButton) {
-				goToRestart = true;
-				isPaused = false;
-				return;
-			}
-			else if (hoveredPauseButton == &returnToTitleButton) {
-				goToTitle = true;
-				return;
-			}
-		}
-		else {
-			switch (pauseSelectedIndex) {
-			case 0: isPaused = false; input->ShowMouseCursor(false); return;
-			case 1: goToRestart = true; isPaused = false; return;
-			case 2: goToTitle = true; return;
-			}
-		}
-	}
 
-	// マウスクリック決定（OnButton）
-	if (resumeButton.OnButton()) {
-		isPaused = false;
-		input->ShowMouseCursor(false);
-		return;
-	}
-	if (restartButton.OnButton()) {
-		goToRestart = true;
-		isPaused = false;
-		return;
-	}
-	if (returnToTitleButton.OnButton()) {
-		goToTitle = true;
-		return;
+	// 
+	bool playClick = false;
+	// 決定：Enter / Aボタン
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
+
+
+		// キー/ボタンによる決定
+		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+			playClick = true;
+			if (hoveredPauseButton) {
+				if (hoveredPauseButton == &resumeButton) {
+					isPaused = false;
+					input->ShowMouseCursor(false);
+				}
+				else if (hoveredPauseButton == &restartButton) {
+					goToRestart = true;
+					isPaused = false;
+				}
+				else if (hoveredPauseButton == &returnToTitleButton) {
+					goToTitle = true;
+				}
+			}
+			else {
+				switch (pauseSelectedIndex) {
+				case 0: isPaused = false; input->ShowMouseCursor(false); break;
+				case 1: goToRestart = true; isPaused = false; break;
+				case 2: goToTitle = true; break;
+				}
+			}
+		}
+
+		// マウスクリック決定
+		if (resumeButton.OnButton()) {
+			playClick = true;
+			isPaused = false;
+			input->ShowMouseCursor(false);
+		}
+		if (restartButton.OnButton()) {
+			playClick = true;
+			goToRestart = true;
+			isPaused = false;
+		}
+		if (returnToTitleButton.OnButton()) {
+			playClick = true;
+			goToTitle = true;
+		}
+
+		// 最後にクリック音をまとめて1回だけ再生
+		if (playClick) {
+			Audio::GetInstance()->Play("click");
+			return;
+		}
 	}
 }
 
@@ -362,7 +391,8 @@ void GameScene::Update() {
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();*/
 
-	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Menu)) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		isPaused = !isPaused;
 		tabReleased = false;
 
@@ -381,24 +411,30 @@ void GameScene::Update() {
 
 	// ポーズ中の処理
 	if (isPaused) {
-
+		Audio::GetInstance()->SetVolume("stageBGM", 0.5f);
 		PauseUpdate(); // ポーズ中のUI更新
 
 		return;  // ゲーム本体の更新を止める
 	}
-
-
-	if (input->TriggerKey(DIK_LCONTROL))
+	else
 	{
-		showCursor = !showCursor;
-		input->ShowMouseCursor(showCursor);
+		Audio::GetInstance()->SetVolume("stageBGM", 1.0f);
 	}
+
+
+	//if (input->TriggerKey(DIK_LCONTROL))
+	//{
+	//	Audio::GetInstance()->Play("click"); // クリック音再生
+	//	showCursor = !showCursor;
+	//	input->ShowMouseCursor(showCursor);
+	//}
 
 	player->Update();
 
 	// プレイヤーが場外に出ていたらリスタート
 	if (player->IsDead())
 	{
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		goToRestart = true;
 	}
 
@@ -421,6 +457,8 @@ void GameScene::Update() {
 	}
 	if (isGoal) {
 		finished = true;
+		Audio::GetInstance()->StopAll();
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		if (input->TriggerKey(DIK_LSHIFT) || input->TriggerButton(Controller::Menu))
 		{
 			Finalize();
@@ -453,6 +491,8 @@ void GameScene::Update() {
 		}
 	}
 
+	sky->Update();
+
 }
 
 
@@ -464,6 +504,8 @@ void GameScene::Draw() {
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
+
+	sky->Draw();
 
 	player->Draw();
 
@@ -523,9 +565,15 @@ void GameScene::Draw() {
 
 void GameScene::Finalize() {
 
+	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+
+	Audio::GetInstance()->StopAll();
+
 	delete camera;
 
 	delete object3d;
+	
+	delete sky;
 
 	delete sprite;
 

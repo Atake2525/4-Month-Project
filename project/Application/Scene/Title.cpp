@@ -10,7 +10,9 @@ void Title::Initialize() {
 	input->ShowMouseCursor(true);
 
 	// クリック音読み込み
-	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+	Audio::GetInstance()->LoadMP3("Resources/Sound/click.mp3", "click", 0.8f); // 音量1.0f
+	// bgm読み込み
+	Audio::GetInstance()->LoadMP3("Resources/Sound/scene/goast.mp3", "goast", 1.0f); // 音量1.0f
 
 
 
@@ -73,14 +75,18 @@ void Title::Initialize() {
 	titleBlockObj->Update();
 
 
+	Audio::GetInstance()->Play("goast", true); // ループ再生
 
 
 }
 
 
 void Title::Update() {
+
+
 	input->Update();
 	camera->Update();
+
 
 	titleBlockObj->Update();
 
@@ -97,7 +103,7 @@ void Title::Update() {
 
 	// --- フェードアウト中 ---
 	if (isFadingOut) {
-		fadeAlpha += 1.0f / (60.0f * 3.0f);
+		fadeAlpha += 1.0f / (60.0f*0.8f);
 		if (fadeAlpha >= 1.0f) {
 			fadeAlpha = 1.0f;
 			finished = true;
@@ -117,6 +123,7 @@ void Title::Update() {
 	if (hoveredButton != prevHoveredButton) {
 		blinkTimer = 0.0f;
 		prevHoveredButton = hoveredButton;
+		//Audio::GetInstance()->Play("click"); // クリック音再生
 	}
 
 	// --- 点滅アニメーション更新 ---
@@ -130,10 +137,12 @@ void Title::Update() {
 		if (!inputLocked) {
 			// 十字キー
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				selectedIndex = (selectedIndex + 1) % buttonCount;
 				inputLocked = true;
 			}
 			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				selectedIndex = (selectedIndex - 1 + buttonCount) % buttonCount;
 				inputLocked = true;
 			}
@@ -141,6 +150,7 @@ void Title::Update() {
 			// 左右キー
 			else if (input->TriggerKey(DIK_LEFT) || input->TriggerXButton(DPad::Left) ||
 				input->TriggerKey(DIK_RIGHT) || input->TriggerXButton(DPad::Right)) {
+				Audio::GetInstance()->Play("click"); // クリック音再生
 				if (selectedIndex == 0) { selectedIndex = 2; }       // ゲーム → チュートリアル
 				else if (selectedIndex == 2) { selectedIndex = 0; }   // チュートリアル → ゲーム
 				else if (selectedIndex == 1) { selectedIndex = 3; }   // 設定 → 終了
@@ -164,7 +174,7 @@ void Title::Update() {
 	}
 
 	// --- Enterキー / Aボタンによる決定処理 ---
-	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
 
 		Audio::GetInstance()->Play("click"); // クリック音再生
 
@@ -217,24 +227,31 @@ void Title::Update() {
 
 	// --- マウスクリックでも遷移対応 ---
 	if (gameStartButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		goToGame = true;
 		isFadingOut = true;
 		fadeAlpha = 0.0f;
 		fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
 		return;
 	}
-	if (settingButton.OnButton()) {
+	else if (settingButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // ★ここ追加
 		goToSetting = true;
 		finished = true;
+		return; 
 	}
-	if (ruleButton.OnButton()) {
+	else if (ruleButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // ★ここ追加
 		goToRule = true;
 		finished = true;
+		return; 
 	}
-	if (finishButton.OnButton()) {
+	else if (finishButton.OnButton()) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
 		PostQuitMessage(0);
 		return;
 	}
+
 
 	// --- 全ボタン透明度初期化 ---
 	gameStartButton.SetSpriteAlpha(1.0f);
@@ -293,6 +310,9 @@ void Title::Draw() {
 }
 
 void Title::Finalize() {
+
+
+	Audio::GetInstance()->StopAll();
 
 
 	delete ghostObj;

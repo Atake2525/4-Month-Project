@@ -34,24 +34,30 @@ void MyGame::Initialize() {
 	//ステージの読み込み
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage2", "Stage2.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/stageTriangle", "stageTriangle.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage4", "stage4.obj", true);
 	//// ↓---- シーンの初期化 ----↓ ////
-
-	 // タイトルシーンの初期化
-	title = new Title();
-	title->Initialize();
 
 	// ルールシーンの初期化
 	rule = new Rule();
 	rule->Initialize();
+	rule->Finalize();
+	delete rule;
+	rule = nullptr;
 
 	// 設定シーンの初期化
 	setting = new Setting();
 	setting->Initialize();
+	setting->Finalize();
+	delete setting;
+	setting = nullptr;
 
 	// ゲームシーンの初期化
 	gameScene = new GameScene();
 	gameScene->Initialize(stage);
+	gameScene->Finalize();
+	delete gameScene;
+	gameScene = nullptr;
 
 	// ゲームクリアシーンの初期化
 	gameClear = new GameClear();
@@ -60,6 +66,10 @@ void MyGame::Initialize() {
 	//ステージセレクト
 	stageSelect = new StageSelect();
 	stageSelect->Initialize();
+
+	// タイトルシーンの初期化
+	title = new Title();
+	title->Initialize();
 
 	//// ↑---- シーンの初期化 ----↑ ////
 }
@@ -143,6 +153,7 @@ void MyGame::Update() {
 		}
 		else if (rule->isFinished()) {
 			// ゲーム終了 → クリア
+			Result = rule->StarResult();
 			rule->Finalize();
 			delete rule;
 			rule = nullptr;
@@ -162,13 +173,13 @@ void MyGame::Update() {
 			if (stageSelect->SelectStageNumber() == 0) {
 				stage = 1;
 			}
-			if (stageSelect->SelectStageNumber() == 1) {
+			else if (stageSelect->SelectStageNumber() == 1) {
 				stage = 2;
 			}
-			if (stageSelect->SelectStageNumber() == 2) {
+			else if (stageSelect->SelectStageNumber() == 2) {
 				stage = 3;
 			}
-			if (stageSelect->SelectStageNumber() == 3) {
+			else if (stageSelect->SelectStageNumber() == 3) {
 				stage = 4;
 			}
 			stageSelect->Finalize();
@@ -320,27 +331,6 @@ void MyGame::Draw() {
 
 void MyGame::Finalize() {
 
-	WinApp::GetInstance()->Finalize();
-
-	directxBase->Finalize();
-	delete directxBase;
-
-	SpriteBase::GetInstance()->Finalize();
-
-	Object3dBase::GetInstance()->Finalize();
-
-	WireFrameObjectBase::GetInstance()->Finalize();
-
-	ModelBase::GetInstance()->Finalize();
-
-	TextureManager::GetInstance()->Finalize();
-
-	ModelManager::GetInstance()->Finalize();
-
-	Light::GetInstance()->Finalize();
-
-	Input::GetInstance()->Finalize();
-
 	//// ↓---- シーンの解放 ----↓ ////
 
 	// タイトルシーンの解放
@@ -370,6 +360,27 @@ void MyGame::Finalize() {
 	}
 
 	//// ↑---- シーンの解放 ----↑ ////
+
+	WinApp::GetInstance()->Finalize();
+
+	directxBase->Finalize();
+	delete directxBase;
+
+	SpriteBase::GetInstance()->Finalize();
+
+	Object3dBase::GetInstance()->Finalize();
+
+	WireFrameObjectBase::GetInstance()->Finalize();
+
+	ModelBase::GetInstance()->Finalize();
+
+	TextureManager::GetInstance()->Finalize();
+
+	ModelManager::GetInstance()->Finalize();
+
+	Light::GetInstance()->Finalize();
+
+	Input::GetInstance()->Finalize();
 
 	FrameWork::Finalize();
 }

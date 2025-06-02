@@ -56,6 +56,8 @@ public:
 private:
 	Object3d* object3d = nullptr;
 
+	Object3d* sky = nullptr;
+
 	Sprite* sprite = nullptr;
 
 	Camera* camera = nullptr;
