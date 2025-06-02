@@ -128,7 +128,7 @@ void Rule::PauseUpdate()
 	if (hoveredPauseButton != prevHoveredPauseButton) {
 		pauseBlinkTimer = 0.0f;
 		prevHoveredPauseButton = hoveredPauseButton;
-		//Audio::GetInstance()->Play("click"); // クリック音再生
+		//Audio::GetInstance()->Play("click"); // カーソル移動時の音
 	}
 
 	// 点滅アニメーション進行
@@ -141,19 +141,18 @@ void Rule::PauseUpdate()
 
 		if (!pauseInputLocked) {
 			if (input->TriggerKey(DIK_DOWN) || input->TriggerXButton(DPad::Down)) {
-				Audio::GetInstance()->Play("click"); // クリック音再生
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex + 1) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 			else if (input->TriggerKey(DIK_UP) || input->TriggerXButton(DPad::Up)) {
-				Audio::GetInstance()->Play("click"); // クリック音再生
+				Audio::GetInstance()->Play("click");
 				pauseSelectedIndex = (pauseSelectedIndex - 1 + pauseButtonCount) % pauseButtonCount;
 				pauseInputLocked = true;
 			}
 		}
 		else {
 			if (!input->TriggerXButton(DPad::Up) && !input->TriggerXButton(DPad::Down)) {
-				Audio::GetInstance()->Play("click"); // クリック音再生
 				pauseInputLocked = false;
 			}
 		}
@@ -181,52 +180,55 @@ void Rule::PauseUpdate()
 	}
 
 	// 決定：Enter / Aボタン
+	bool playClick = false;
+
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+		playClick = true;
 		if (hoveredPauseButton) {
 			if (hoveredPauseButton == &resumeButton) {
 				isPaused = false;
 				input->ShowMouseCursor(false);
-				return;
 			}
 			else if (hoveredPauseButton == &restartButton) {
 				goToRestart = true;
 				isPaused = false;
-				return;
 			}
 			else if (hoveredPauseButton == &returnToTitleButton) {
 				goToTitle = true;
-				return;
 			}
 		}
 		else {
 			switch (pauseSelectedIndex) {
-			case 0: isPaused = false; input->ShowMouseCursor(false); return;
-			case 1: goToRestart = true; isPaused = false; return;
-			case 2: goToTitle = true; return;
+			case 0: isPaused = false; input->ShowMouseCursor(false); break;
+			case 1: goToRestart = true; isPaused = false; break;
+			case 2: goToTitle = true; break;
 			}
 		}
 	}
 
-	// マウスクリック決定（OnButton）
+	// マウスクリックによる決定
 	if (resumeButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+		playClick = true;
 		isPaused = false;
 		input->ShowMouseCursor(false);
-		return;
 	}
 	if (restartButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+		playClick = true;
 		goToRestart = true;
 		isPaused = false;
-		return;
 	}
 	if (returnToTitleButton.OnButton()) {
-		Audio::GetInstance()->Play("click"); // クリック音再生
+		playClick = true;
 		goToTitle = true;
+	}
+
+	// 音の再生は最後にまとめて1回
+	if (playClick) {
+		Audio::GetInstance()->Play("click");
 		return;
 	}
 }
+
 
 
 void Rule::Update() {
