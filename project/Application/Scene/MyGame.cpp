@@ -321,27 +321,6 @@ void MyGame::Draw() {
 
 void MyGame::Finalize() {
 
-	WinApp::GetInstance()->Finalize();
-
-	directxBase->Finalize();
-	delete directxBase;
-
-	SpriteBase::GetInstance()->Finalize();
-
-	Object3dBase::GetInstance()->Finalize();
-
-	WireFrameObjectBase::GetInstance()->Finalize();
-
-	ModelBase::GetInstance()->Finalize();
-
-	TextureManager::GetInstance()->Finalize();
-
-	ModelManager::GetInstance()->Finalize();
-
-	Light::GetInstance()->Finalize();
-
-	Input::GetInstance()->Finalize();
-
 	//// ↓---- シーンの解放 ----↓ ////
 
 	// タイトルシーンの解放
@@ -371,6 +350,27 @@ void MyGame::Finalize() {
 	}
 
 	//// ↑---- シーンの解放 ----↑ ////
+
+	WinApp::GetInstance()->Finalize();
+
+	directxBase->Finalize();
+	delete directxBase;
+
+	SpriteBase::GetInstance()->Finalize();
+
+	Object3dBase::GetInstance()->Finalize();
+
+	WireFrameObjectBase::GetInstance()->Finalize();
+
+	ModelBase::GetInstance()->Finalize();
+
+	TextureManager::GetInstance()->Finalize();
+
+	ModelManager::GetInstance()->Finalize();
+
+	Light::GetInstance()->Finalize();
+
+	Input::GetInstance()->Finalize();
 
 	FrameWork::Finalize();
 }
