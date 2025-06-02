@@ -10,7 +10,7 @@ void Title::Initialize() {
 	input->ShowMouseCursor(true);
 
 	// クリック音読み込み
-	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+	Audio::GetInstance()->LoadMP3("Resources/Sound/click.mp3", "click", 1.0f); // 音量1.0f
 	// bgm読み込み
 	Audio::GetInstance()->LoadMP3("Resources/Sound/scene/goast.mp3", "goast", 1.0f); // 音量1.0f
 
@@ -123,6 +123,7 @@ void Title::Update() {
 	if (hoveredButton != prevHoveredButton) {
 		blinkTimer = 0.0f;
 		prevHoveredButton = hoveredButton;
+		//Audio::GetInstance()->Play("click"); // クリック音再生
 	}
 
 	// --- 点滅アニメーション更新 ---
@@ -308,7 +309,7 @@ void Title::Draw() {
 void Title::Finalize() {
 
 
-	Audio::GetInstance()->Stop("goast");
+	Audio::GetInstance()->StopAll();
 
 
 	delete ghostObj;

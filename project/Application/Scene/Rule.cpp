@@ -10,8 +10,7 @@
 
 void Rule::Initialize()
 {
-	// クリック音読み込み
-	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
+	Audio::GetInstance()->Play("stageBGM", true);
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
 
@@ -129,6 +128,7 @@ void Rule::PauseUpdate()
 	if (hoveredPauseButton != prevHoveredPauseButton) {
 		pauseBlinkTimer = 0.0f;
 		prevHoveredPauseButton = hoveredPauseButton;
+		//Audio::GetInstance()->Play("click"); // クリック音再生
 	}
 
 	// 点滅アニメーション進行
@@ -408,6 +408,8 @@ void Rule::Draw() {
 
 void Rule::Finalize() {
 	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+
+	Audio::GetInstance()->StopAll();
 
 	delete camera;
 

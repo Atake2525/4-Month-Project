@@ -7,9 +7,7 @@ void Setting::Initialize()
 {
 
 	// クリック音読み込み
-	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
 	// bgm読み込み
-	Audio::GetInstance()->LoadMP3("Resources/Sound/scene/goast.mp3", "goast", 1.0f); // 音量1.0f
 
 	input = Input::GetInstance();
 	input->ShowMouseCursor(true);
@@ -46,6 +44,8 @@ void Setting::Draw()
 
 void Setting::Finalize()
 {
+	Audio::GetInstance()->StopAll();
+
 	if (settingSprite) {
 		delete settingSprite;
 		settingSprite = nullptr;

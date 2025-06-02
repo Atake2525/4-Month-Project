@@ -413,7 +413,7 @@ bool Audio::LoadMP3(const std::string filePath, const std::string soundName, con
 
 	soundMap[soundName] = soundData;
 
-	Log("Audio load");
+	Log("Audio load\n");
 
 	mp3waveFormat = {};
 	return true;

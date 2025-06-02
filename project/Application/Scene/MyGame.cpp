@@ -38,21 +38,26 @@ void MyGame::Initialize() {
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage4", "stage4.obj", true);
 	//// ↓---- シーンの初期化 ----↓ ////
 
-	 // タイトルシーンの初期化
-	title = new Title();
-	title->Initialize();
-
 	// ルールシーンの初期化
 	rule = new Rule();
 	rule->Initialize();
+	rule->Finalize();
+	delete rule;
+	rule = nullptr;
 
 	// 設定シーンの初期化
 	setting = new Setting();
 	setting->Initialize();
+	setting->Finalize();
+	delete setting;
+	setting = nullptr;
 
 	// ゲームシーンの初期化
 	gameScene = new GameScene();
 	gameScene->Initialize(stage);
+	gameScene->Finalize();
+	delete gameScene;
+	gameScene = nullptr;
 
 	// ゲームクリアシーンの初期化
 	gameClear = new GameClear();
@@ -61,6 +66,10 @@ void MyGame::Initialize() {
 	//ステージセレクト
 	stageSelect = new StageSelect();
 	stageSelect->Initialize();
+
+	// タイトルシーンの初期化
+	title = new Title();
+	title->Initialize();
 
 	//// ↑---- シーンの初期化 ----↑ ////
 }
@@ -321,27 +330,6 @@ void MyGame::Draw() {
 
 void MyGame::Finalize() {
 
-	WinApp::GetInstance()->Finalize();
-
-	directxBase->Finalize();
-	delete directxBase;
-
-	SpriteBase::GetInstance()->Finalize();
-
-	Object3dBase::GetInstance()->Finalize();
-
-	WireFrameObjectBase::GetInstance()->Finalize();
-
-	ModelBase::GetInstance()->Finalize();
-
-	TextureManager::GetInstance()->Finalize();
-
-	ModelManager::GetInstance()->Finalize();
-
-	Light::GetInstance()->Finalize();
-
-	Input::GetInstance()->Finalize();
-
 	//// ↓---- シーンの解放 ----↓ ////
 
 	// タイトルシーンの解放
@@ -371,6 +359,27 @@ void MyGame::Finalize() {
 	}
 
 	//// ↑---- シーンの解放 ----↑ ////
+
+	WinApp::GetInstance()->Finalize();
+
+	directxBase->Finalize();
+	delete directxBase;
+
+	SpriteBase::GetInstance()->Finalize();
+
+	Object3dBase::GetInstance()->Finalize();
+
+	WireFrameObjectBase::GetInstance()->Finalize();
+
+	ModelBase::GetInstance()->Finalize();
+
+	TextureManager::GetInstance()->Finalize();
+
+	ModelManager::GetInstance()->Finalize();
+
+	Light::GetInstance()->Finalize();
+
+	Input::GetInstance()->Finalize();
 
 	FrameWork::Finalize();
 }
