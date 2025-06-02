@@ -400,25 +400,30 @@ void GameScene::Update() {
 
 	// ポーズ中の処理
 	if (isPaused) {
-
+		Audio::GetInstance()->SetVolume("stageBGM", 0.5f);
 		PauseUpdate(); // ポーズ中のUI更新
 
 		return;  // ゲーム本体の更新を止める
 	}
-
-
-	if (input->TriggerKey(DIK_LCONTROL))
+	else
 	{
-		Audio::GetInstance()->Play("click"); // クリック音再生
-		showCursor = !showCursor;
-		input->ShowMouseCursor(showCursor);
+		Audio::GetInstance()->SetVolume("stageBGM", 1.0f);
 	}
+
+
+	//if (input->TriggerKey(DIK_LCONTROL))
+	//{
+	//	Audio::GetInstance()->Play("click"); // クリック音再生
+	//	showCursor = !showCursor;
+	//	input->ShowMouseCursor(showCursor);
+	//}
 
 	player->Update();
 
 	// プレイヤーが場外に出ていたらリスタート
 	if (player->IsDead())
 	{
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		goToRestart = true;
 	}
 
@@ -544,6 +549,8 @@ void GameScene::Draw() {
 
 
 void GameScene::Finalize() {
+
+	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 
 	Audio::GetInstance()->StopAll();
 

@@ -44,7 +44,7 @@ void Rule::Initialize()
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -10.0f,8.0f,10.0f });
+	goal->Initialize({ -7.0f, 5.0f,0.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(5);
@@ -57,7 +57,7 @@ void Rule::Initialize()
 	switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{8.0f, 2.2f, 11.0f}
 	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
@@ -278,6 +278,12 @@ void Rule::Update() {
 	}
 
 	player->Update();
+	// プレイヤーが場外に出ていたらリスタート
+	if (player->IsDead())
+	{
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+		goToRestart = true;
+	}
 
 
 	camera = player->GetCamera();
