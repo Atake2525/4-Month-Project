@@ -44,7 +44,7 @@ void Rule::Initialize()
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -10.0f,8.0f,10.0f });
+	goal->Initialize({ 0.0f, 0.2f, 20.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(5);
@@ -57,7 +57,7 @@ void Rule::Initialize()
 	switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{8.0f, 2.2f, 11.0f}
 	};
 	lightSwitch->Initialize(switchTransform/*, camera, directxBase*/, input, player);
 
@@ -390,7 +390,6 @@ void Rule::Draw() {
 
 	// 星アイコンの描画（星が取得された場合のみ）
 	if (starResultManager) {
-		int collectedCount = 0;
 		for (Star* s : starResultManager->GetStars()) {
 			if (s->IsCollected() && collectedCount < (int)starIcons.size()) {
 				float x = 1280.0f - 40.0f - (collectedCount * 36.0f);

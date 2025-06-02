@@ -153,6 +153,7 @@ void MyGame::Update() {
 		}
 		else if (rule->isFinished()) {
 			// ゲーム終了 → クリア
+			Result = rule->StarResult();
 			rule->Finalize();
 			delete rule;
 			rule = nullptr;
