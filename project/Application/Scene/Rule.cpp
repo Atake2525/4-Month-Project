@@ -13,7 +13,7 @@ void Rule::Initialize()
 	// クリック音読み込み
 	Audio::GetInstance()->LoadMP3("Resources/Sound/mouse/click.mp3", "click", 1.0f); // 音量1.0f
 
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage4", "stage4.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
 
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
@@ -25,7 +25,7 @@ void Rule::Initialize()
 
 	object3d = new Object3d();
 	object3d->Initialize();
-	object3d->SetModel("stage4.obj");
+	object3d->SetModel("stage03.obj");
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
 
@@ -36,8 +36,8 @@ void Rule::Initialize()
 
 	player = new Player();
 	player->Initialize(camera);
-	player->AddStageCollision("Resources/Model/obj/Stage4", "stage4_collision.obj");
-	player->AddLightBlockCollision("Resources/Model/obj/Stage4", "stage4_collision.obj");
+	player->AddStageCollision("Resources/Model/collision/Stage03", "stage03Collision.obj");
+	player->AddLightBlockCollision("Resources/Model/collision/Stage03", "stage03LightCollision.obj");
 
 	button = new UI();
 	button->CreateButton({ 0.0f, 0.0f }, Origin::LeftTop, "Resources/Sprite/clearShift.png");
@@ -51,7 +51,7 @@ void Rule::Initialize()
 	starResultManager->Initialize(5);
 	//==BLOCK===
 	lightBlock = new LightBlock();
-	lightBlock->Initialize("Resources/Model/obj/Stage4", "stage4_lightBlock.obj");
+	lightBlock->Initialize("Resources/Model/obj/Stage3", "stage03Light.obj");
 	//switch
 
 	lightSwitch = new switchLight();

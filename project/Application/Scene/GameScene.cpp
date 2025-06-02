@@ -48,7 +48,7 @@ void GameScene::Initialize(int stage) {
 		object3d->SetModel("Stage2.obj"); 
 	}
 	else if (stage_ == 4) {
-		object3d->SetModel("01Stage.obj");
+		object3d->SetModel("stage4.obj");
 	}
 
 	Light::GetInstance()->SetSpecularColorDirectionalLight({ 0.0f, 0.0f, 0.0f });
@@ -73,7 +73,7 @@ void GameScene::Initialize(int stage) {
 		player->AddStageCollision("Resources/Model/collision", "Stage2Collision.obj"); 
 	}
 	else if (stage_ == 4) {
-		player->AddStageCollision("Resources/Model/collision", "01StageCollision.obj");
+		player->AddStageCollision("Resources/Model/obj/Stage4", "stage4Collison.obj");
 	}
 
 	//player->AddStageCollision("Resources/Debug", "test.obj");
@@ -90,7 +90,7 @@ void GameScene::Initialize(int stage) {
 		player->AddLightBlockCollision("Resources/Model/collision", "Stage2LightCollision.obj"); 
 	}
 	else if (stage_ == 4) {
-		player->AddLightBlockCollision("Resources/Model/collision", "proStageLightCollision.obj");
+		player->AddLightBlockCollision("Resources/Model/obj/Stage4", "stage4lightCollision.obj");
 	}
 
 
@@ -114,7 +114,7 @@ void GameScene::Initialize(int stage) {
 		goalPos = { 12.0f,16.0f,-13.5f };
 	}
 	if (stage_ == 4) {
-		goalPos = { -10.0f,8.0f,10.0f };
+		goalPos = { 4.0f,25.0f,-5.0f };
 	}
 
 	goal->Initialize(goalPos);
@@ -135,7 +135,7 @@ void GameScene::Initialize(int stage) {
 		lightBlock->Initialize("Resources/Model/obj/Stage2", "Stage2LightBlock.obj");
 	}
 	else if (stage_ == 4) {
-		lightBlock->Initialize("Resources/Model/obj/Stage", "proStageLightBlock.obj");
+		lightBlock->Initialize("Resources/Model/obj/Stage4", "stage4light.obj");
 	}
 
 	//switch
@@ -168,7 +168,7 @@ void GameScene::Initialize(int stage) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{0.0f, 0.5f, 4.0f}
+		{-10.0f, 0.5f, -7.0f}
 		};
 	}
 
