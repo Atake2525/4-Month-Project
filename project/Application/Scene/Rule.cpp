@@ -407,6 +407,8 @@ void Rule::Draw() {
 }
 
 void Rule::Finalize() {
+	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+
 	delete camera;
 
 	delete object3d;
