@@ -35,7 +35,7 @@ void starResult::Initialize(int stage) {
     };
     Vector3 stage4_[] = {
         {-5.0f, 20.0f, 20.0f},
-        {5.0f, 13.0f, 10.0f},
+        {5.0f, 13.0f, 8.0f},
         {-3.0f,16.0f, -13.0f}
     };
     //チュートリアル

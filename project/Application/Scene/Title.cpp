@@ -103,7 +103,7 @@ void Title::Update() {
 
 	// --- フェードアウト中 ---
 	if (isFadingOut) {
-		fadeAlpha += 1.0f / (60.0f * 3.0f);
+		fadeAlpha += 1.0f / (60.0f*0.8f);
 		if (fadeAlpha >= 1.0f) {
 			fadeAlpha = 1.0f;
 			finished = true;
