@@ -90,6 +90,7 @@ void StageSelect::Update() {
             // カーソルが乗っているUIを決定
             if (hoveredButton == &stageSelct) {
 
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -98,6 +99,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &stageSelct2) {
                
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -106,6 +108,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &stageSelct3) {
                
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -114,6 +117,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &stageSelct4) {
                
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
@@ -122,6 +126,7 @@ void StageSelect::Update() {
             }
             else if (hoveredButton == &titleButton) {
 
+                goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
