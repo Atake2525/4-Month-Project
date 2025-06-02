@@ -50,7 +50,7 @@ void MyGame::Initialize() {
 
 	// ゲームクリアシーンの初期化
 	gameClear = new GameClear();
-	gameClear->Initialize();
+	gameClear->Initialize(Result);
 
 	//// ↑---- シーンの初期化 ----↑ ////
 }
@@ -150,12 +150,13 @@ void MyGame::Update() {
 		}
 		else if (gameScene->isFinished()) {
 			// ゲーム終了 → クリア
+			Result = gameScene->StarResult();
 			gameScene->Finalize();
 			delete gameScene;
 			gameScene = nullptr;
 
 			gameClear = new GameClear();
-			gameClear->Initialize();
+			gameClear->Initialize(Result);
 			gameClear->Update();
 			currentScene = Scene::GameClear;
 		}
@@ -192,6 +193,7 @@ void MyGame::Update() {
 		}
 		break;
 	}
+	Audio::GetInstance()->Update();
 }
 
 

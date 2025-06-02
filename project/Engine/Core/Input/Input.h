@@ -140,16 +140,16 @@ public:
 	void ShowMouseCursor(bool flag);
 
 	// ジョイスティック左の傾きを取得(Vector2)
-	Vector2 GetLeftJoyStickPos2();
+	Vector2 GetLeftJoyStickPos2(const float deadZone);
 
 	// ジョイスティック左の傾きを取得(Vector3)
-	Vector3 GetLeftJoyStickPos3();
+	Vector3 GetLeftJoyStickPos3(const float deadZone);
 
 	// ジョイスティック右の傾きを取得(Vector2)
-	Vector2 GetRightJoyStickPos2();
+	Vector2 GetRightJoyStickPos2(const float deadZone);
 
 	// ジョイスティック右の傾きを取得(Vector3)
-	Vector3 GetRightJoyStickPos3();
+	Vector3 GetRightJoyStickPos3(const float deadZone);
 
 	bool IsMoveLeftJoyStick();
 

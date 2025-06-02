@@ -52,18 +52,56 @@ void switchLight::Update()
 	if (!switchFlag) {
 		if (input_->TriggerKey(DIK_1) && dist < distance) {
 			switchFlag = true;
-			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
+			changeFlag = false;
+			timer2_ = 0;
 		}
 	}
 	else {
 
 		if (input_->TriggerKey(DIK_1) && dist < distance) {
 			switchFlag = false;
-			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+			changeFlag = true;
+			Timer_ = 0;
 		}
 		//}
 	}
+	if (switchFlag) {
+		Timer_++;
+		if (Timer_ >= 0.0f && 10.0f > Timer_) {
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
+		}
+		if (Timer_ > 10.0f && Timer_ < 20.0f) {
+			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+		}
+		if (Timer_ >= 20.0f && 30.0f >= Timer_) {
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
+		}
+		if (Timer_ > 30.0f && Timer_ < 40.0f) {
+			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+		}
+		if (Timer_ >= 40.0f) {
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
+		}
+	}
 
+	if (changeFlag) {
+		timer2_++;
+		if (timer2_ >= 0.0f && 10.0f > timer2_) {
+			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.f, 1.0f });
+		}
+		if (timer2_ > 10.0f && timer2_ < 20.0f) {
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
+		}
+		if (timer2_ >= 20.0f && 30.0f >= timer2_) {
+			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+		}
+		if (timer2_ > 30.0f && timer2_ < 40.0f) {
+			Light::GetInstance()->SetColorDirectionalLight({ 0.0f, 0.1f, 0.6f, 1.0f });
+		}
+		if (timer2_ >= 40.0f) {
+			Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+		}
+	}
 	ImGui::Begin("SwitchDist");
 	ImGui::DragFloat("Dist", &dist, 0.1f);
 	ImGui::End();

@@ -278,8 +278,8 @@ void DirectXBase::InitializeFence() {
 
 void DirectXBase::InitializeViewPortRect() {
 	// クライアント領域の合図と一緒にして画面全体に表示
-	viewPort.Width = WinApp::GetInstance()->GetkClientWidth();
-	viewPort.Height = WinApp::GetInstance()->GetkClientHeight();
+	viewPort.Width = static_cast<FLOAT>(WinApp::GetInstance()->GetkClientWidth());
+	viewPort.Height = static_cast<FLOAT>(WinApp::GetInstance()->GetkClientHeight());
 	viewPort.TopLeftX = 0;
 	viewPort.TopLeftY = 0;
 	viewPort.MinDepth = 0.0f;
