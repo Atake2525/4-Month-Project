@@ -243,7 +243,7 @@ void GameScene::PauseUpdate()
 	else if (restartButton.InCursor()) hoveredPauseButton = &restartButton;
 	else if (returnToTitleButton.InCursor()) hoveredPauseButton = &returnToTitleButton;
 
-	// 点滅タイマーリセット（カーソルが移動したとき）
+	// 点滅タイマーリセット
 	if (hoveredPauseButton != prevHoveredPauseButton) {
 		pauseBlinkTimer = 0.0f;
 		prevHoveredPauseButton = hoveredPauseButton;
@@ -253,7 +253,7 @@ void GameScene::PauseUpdate()
 	pauseBlinkTimer += 1.0f / 60.0f;
 	float blinkAlpha = 0.5f + 0.5f * sinf(pauseBlinkTimer * 3.14f);
 
-	// 十字キー操作（カーソルが使われていないとき）
+	// 十字キー操作
 	if (!hoveredPauseButton) {
 		prevPauseSelectedIndex = pauseSelectedIndex;
 
@@ -285,7 +285,7 @@ void GameScene::PauseUpdate()
 	restartButton.SetSpriteAlpha(1.0f);
 	returnToTitleButton.SetSpriteAlpha(1.0f);
 
-	// 点滅：カーソルが優先
+	// 点滅
 	if (hoveredPauseButton) {
 		hoveredPauseButton->SetSpriteAlpha(blinkAlpha);
 	}
@@ -297,7 +297,7 @@ void GameScene::PauseUpdate()
 		}
 	}
 
-	// ==== クリック決定時に1回だけ音を鳴らす ====
+	// 
 	bool playClick = false;
 
 	// キー/ボタンによる決定
@@ -325,7 +325,7 @@ void GameScene::PauseUpdate()
 		}
 	}
 
-	// マウスクリック決定（OnButton）
+	// マウスクリック決定
 	if (resumeButton.OnButton()) {
 		playClick = true;
 		isPaused = false;

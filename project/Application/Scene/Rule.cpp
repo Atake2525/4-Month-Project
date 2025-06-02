@@ -118,24 +118,23 @@ void Rule::PauseUpdate()
 
 	input->ShowMouseCursor(true);
 
-	// --- カーソルによるUI選択 ---
 	hoveredPauseButton = nullptr;
 	if (resumeButton.InCursor()) hoveredPauseButton = &resumeButton;
 	else if (restartButton.InCursor()) hoveredPauseButton = &restartButton;
 	else if (returnToTitleButton.InCursor()) hoveredPauseButton = &returnToTitleButton;
 
-	// 点滅タイマーリセット（カーソルが移動したとき）
+	// 点滅タイマーリセット
 	if (hoveredPauseButton != prevHoveredPauseButton) {
 		pauseBlinkTimer = 0.0f;
 		prevHoveredPauseButton = hoveredPauseButton;
-		//Audio::GetInstance()->Play("click"); // カーソル移動時の音
+		//Audio::GetInstance()->Play("click"); 
 	}
 
 	// 点滅アニメーション進行
 	pauseBlinkTimer += 1.0f / 60.0f;
 	float blinkAlpha = 0.5f + 0.5f * sinf(pauseBlinkTimer * 3.14f);
 
-	// 十字キー操作（カーソルが使われていないとき）
+	// 十字キー操作
 	if (!hoveredPauseButton) {
 		prevPauseSelectedIndex = pauseSelectedIndex;
 
@@ -162,12 +161,12 @@ void Rule::PauseUpdate()
 		}
 	}
 
-	// 全ボタン透明度初期化
+	// 全ボタン透明度
 	resumeButton.SetSpriteAlpha(1.0f);
 	restartButton.SetSpriteAlpha(1.0f);
 	returnToTitleButton.SetSpriteAlpha(1.0f);
 
-	// 点滅：カーソルが優先
+	// 点滅
 	if (hoveredPauseButton) {
 		hoveredPauseButton->SetSpriteAlpha(blinkAlpha);
 	}
@@ -179,7 +178,7 @@ void Rule::PauseUpdate()
 		}
 	}
 
-	// 決定：Enter / Aボタン
+	// 決定
 	bool playClick = false;
 
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
