@@ -202,7 +202,7 @@ void Player::Move()
 		move.y = -0.5f;
 	}
 	// コントローラー用
-	plRotate = std::atan2(move.x, move.y);
+	plRotate = std::atan2(move.x, move.y * -1.0f);
 	if (input_->IsMoveLeftJoyStick() == false) {
 		if (input_->PushKey(DIK_W)) {
 			move.y = -speed;
