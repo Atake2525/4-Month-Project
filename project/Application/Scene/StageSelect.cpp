@@ -135,30 +135,35 @@ void StageSelect::Update() {
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 0;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 1:
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 1;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 2:
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 2;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 3:
                 goToStage = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 3;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
             case 4:
                 goToTitle = true;
                 isFadingOut = true;
                 fadeAlpha = 0.0f;
+                buttonCount = 4;
                 fadeSprite->SetColor({ 0.0f, 0.0f, 0.0f, fadeAlpha });
                 return;
 
