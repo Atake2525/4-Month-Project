@@ -35,7 +35,7 @@ void MyGame::Initialize() {
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage2", "Stage2.obj", true);
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/stageTriangle", "stageTriangle.obj", true);
-	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage3", "stage03.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage4", "stage4.obj", true);
 	//// ↓---- シーンの初期化 ----↓ ////
 
 	 // タイトルシーンの初期化
