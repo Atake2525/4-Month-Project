@@ -305,60 +305,59 @@ void GameScene::PauseUpdate()
 
 	// 
 	bool playClick = false;
-=======
 	// 決定：Enter / Aボタン
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
 		Audio::GetInstance()->Play("click"); // クリック音再生
 
 
-	// キー/ボタンによる決定
-	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
-		playClick = true;
-		if (hoveredPauseButton) {
-			if (hoveredPauseButton == &resumeButton) {
-				isPaused = false;
-				input->ShowMouseCursor(false);
+		// キー/ボタンによる決定
+		if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
+			playClick = true;
+			if (hoveredPauseButton) {
+				if (hoveredPauseButton == &resumeButton) {
+					isPaused = false;
+					input->ShowMouseCursor(false);
+				}
+				else if (hoveredPauseButton == &restartButton) {
+					goToRestart = true;
+					isPaused = false;
+				}
+				else if (hoveredPauseButton == &returnToTitleButton) {
+					goToTitle = true;
+				}
 			}
-			else if (hoveredPauseButton == &restartButton) {
-				goToRestart = true;
-				isPaused = false;
-			}
-			else if (hoveredPauseButton == &returnToTitleButton) {
-				goToTitle = true;
+			else {
+				switch (pauseSelectedIndex) {
+				case 0: isPaused = false; input->ShowMouseCursor(false); break;
+				case 1: goToRestart = true; isPaused = false; break;
+				case 2: goToTitle = true; break;
+				}
 			}
 		}
-		else {
-			switch (pauseSelectedIndex) {
-			case 0: isPaused = false; input->ShowMouseCursor(false); break;
-			case 1: goToRestart = true; isPaused = false; break;
-			case 2: goToTitle = true; break;
-			}
+
+		// マウスクリック決定
+		if (resumeButton.OnButton()) {
+			playClick = true;
+			isPaused = false;
+			input->ShowMouseCursor(false);
 		}
-	}
+		if (restartButton.OnButton()) {
+			playClick = true;
+			goToRestart = true;
+			isPaused = false;
+		}
+		if (returnToTitleButton.OnButton()) {
+			playClick = true;
+			goToTitle = true;
+		}
 
-	// マウスクリック決定
-	if (resumeButton.OnButton()) {
-		playClick = true;
-		isPaused = false;
-		input->ShowMouseCursor(false);
-	}
-	if (restartButton.OnButton()) {
-		playClick = true;
-		goToRestart = true;
-		isPaused = false;
-	}
-	if (returnToTitleButton.OnButton()) {
-		playClick = true;
-		goToTitle = true;
-	}
-
-	// 最後にクリック音をまとめて1回だけ再生
-	if (playClick) {
-		Audio::GetInstance()->Play("click");
-		return;
+		// 最後にクリック音をまとめて1回だけ再生
+		if (playClick) {
+			Audio::GetInstance()->Play("click");
+			return;
+		}
 	}
 }
-
 
 
 void GameScene::Update() {
