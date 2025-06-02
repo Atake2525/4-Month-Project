@@ -42,6 +42,8 @@ public:
 	//ポーズ画面の表示
 	void PauseUpdate();
 
+	int StarResult() const { return collectedCount; }
+
 private:
 	Object3d* object3d = nullptr;
 
@@ -121,5 +123,6 @@ private:
 	bool targetStart = true;
 	Sprite* targetSprite = nullptr;
 
+	int collectedCount = 0;
 
 };

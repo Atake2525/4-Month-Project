@@ -40,9 +40,9 @@ void starResult::Initialize(int stage) {
     };
     //チュートリアル
     Vector3 stage5_[] = {
-       {0.0f, 1.0f, 4.0f},
-       {1.0f, 1.0f, 9.0f},
-       {1.0f, 1.0f, 2.0f}
+       {-7.0f, 6.0f, 0.0f},
+       {0.0f, 1.0f, 11.0f},
+       {11.0f, 2.0f, 0.5f}
     };
 
     // 3つの星を配置
@@ -69,7 +69,7 @@ void starResult::Initialize(int stage) {
     //チュートリアル
     if (stage == 5) {
         for (int i = 0; i < 3; i++) {
-            positions[i] = stage4_[i];
+            positions[i] = stage5_[i];
         }
     }
 

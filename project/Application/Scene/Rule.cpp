@@ -44,7 +44,7 @@ void Rule::Initialize()
 	modelTransform = object3d->GetTransform();
 
 	goal = new Goal();
-	goal->Initialize({ -7.0f, 5.0f,0.0f });
+	goal->Initialize({ 0.0f, 0.2f, 20.0f });
 
 	starResultManager = new starResult();
 	starResultManager->Initialize(5);
@@ -396,7 +396,6 @@ void Rule::Draw() {
 
 	// 星アイコンの描画（星が取得された場合のみ）
 	if (starResultManager) {
-		int collectedCount = 0;
 		for (Star* s : starResultManager->GetStars()) {
 			if (s->IsCollected() && collectedCount < (int)starIcons.size()) {
 				float x = 1280.0f - 40.0f - (collectedCount * 36.0f);
