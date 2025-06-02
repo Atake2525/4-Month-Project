@@ -542,6 +542,8 @@ void GameScene::Draw() {
 
 void GameScene::Finalize() {
 
+	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+
 	delete camera;
 
 	delete object3d;
