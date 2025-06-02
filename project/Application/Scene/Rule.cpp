@@ -278,6 +278,12 @@ void Rule::Update() {
 	}
 
 	player->Update();
+	// プレイヤーが場外に出ていたらリスタート
+	if (player->IsDead())
+	{
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+		goToRestart = true;
+	}
 
 
 	camera = player->GetCamera();
