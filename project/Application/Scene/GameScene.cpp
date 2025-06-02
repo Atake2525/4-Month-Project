@@ -168,7 +168,7 @@ void GameScene::Initialize(int stage) {
 		switchTransform = {
 		{1.0f, 1.0f, 1.0f},
 		{0.0f, 0.0f, 0.0f},
-		{-10.0f, 0.5f, -7.0f}
+		{-47.510.0f, 18.0f}
 		};
 	}
 
