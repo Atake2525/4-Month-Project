@@ -54,6 +54,7 @@ void Player::Initialize(Camera* camera)
 	cameraTransform_ = camera->GetTransform();
 	cameraTransform_.translate = cameraOffset;
 	cameraOffset = defaultCameraOffset;
+	camera_->SetFarClipDistance(1000.0f);
 
 	// 追加したクラス(移動可能範囲のAABB)
 	worldBoarder_ = {
