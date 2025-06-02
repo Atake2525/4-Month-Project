@@ -19,6 +19,7 @@ void GameScene::Initialize(int stage) {
 
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "sky.obj", false);
 
 	
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
@@ -36,6 +37,10 @@ void GameScene::Initialize(int stage) {
 
 	object3d = new Object3d();
 	object3d->Initialize();
+
+	sky = new Object3d();
+	sky->Initialize();
+	sky->SetModel("sky.obj");
 
 	//ステージ指定
 	//
@@ -480,6 +485,8 @@ void GameScene::Update() {
 		}
 	}
 
+	sky->Update();
+
 }
 
 
@@ -491,6 +498,8 @@ void GameScene::Draw() {
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
+
+	sky->Draw();
 
 	player->Draw();
 
@@ -557,6 +566,8 @@ void GameScene::Finalize() {
 	delete camera;
 
 	delete object3d;
+	
+	delete sky;
 
 	delete sprite;
 

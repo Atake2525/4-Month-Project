@@ -17,6 +17,10 @@ void Rule::Initialize()
 	camera = new Camera();
 	camera->SetRotate(Vector3(0.36f, 0.0f, 0.0f));
 
+	sky = new Object3d();
+	sky->Initialize();
+	sky->SetModel("Resources/Model/obj", "sky.obj", false);
+
 	input = Input::GetInstance();
 	input->ShowMouseCursor(showCursor);
 
@@ -338,7 +342,7 @@ void Rule::Update() {
 		}
 	}
 
-
+	sky->Update();
 	////ENTERでタイトルへ戻る
 	//if (input->TriggerKey(DIK_RETURN)) {
 	//	finished = true;
@@ -360,6 +364,8 @@ void Rule::Draw() {
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
+
+	sky->Draw();
 
 	player->Draw();
 
@@ -419,6 +425,8 @@ void Rule::Finalize() {
 	delete camera;
 
 	delete object3d;
+
+	delete sky;
 
 	delete sprite;
 
