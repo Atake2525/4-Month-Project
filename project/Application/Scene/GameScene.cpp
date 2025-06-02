@@ -19,6 +19,7 @@ void GameScene::Initialize(int stage) {
 
 
 	ModelManager::GetInstance()->LoadModel("Resources/Model/obj/Stage", "01Stage.obj", true);
+	ModelManager::GetInstance()->LoadModel("Resources/Model/obj", "sky.obj", false);
 
 	
 	//ModelManager::GetInstance()->LoadModel("Resources/Debug", "test.obj", true);
@@ -36,6 +37,10 @@ void GameScene::Initialize(int stage) {
 
 	object3d = new Object3d();
 	object3d->Initialize();
+
+	sky = new Object3d();
+	sky->Initialize();
+	sky->SetModel("sky.obj");
 
 	//ステージ指定
 	//
@@ -297,8 +302,14 @@ void GameScene::PauseUpdate()
 		}
 	}
 
+
 	// 
 	bool playClick = false;
+=======
+	// 決定：Enter / Aボタン
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::Y)) {
+		Audio::GetInstance()->Play("click"); // クリック音再生
+
 
 	// キー/ボタンによる決定
 	if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(Controller::A)) {
@@ -381,7 +392,7 @@ void GameScene::Update() {
 	ImGui::DragFloat3("M3", &posM3.x, 0.1f);
 	ImGui::End();*/
 
-	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Y)) {
+	if (input->TriggerKey(DIK_ESCAPE) || input->TriggerButton(Controller::Menu)) {
 		Audio::GetInstance()->Play("click"); // クリック音再生
 		isPaused = !isPaused;
 		tabReleased = false;
@@ -401,25 +412,30 @@ void GameScene::Update() {
 
 	// ポーズ中の処理
 	if (isPaused) {
-
+		Audio::GetInstance()->SetVolume("stageBGM", 0.5f);
 		PauseUpdate(); // ポーズ中のUI更新
 
 		return;  // ゲーム本体の更新を止める
 	}
-
-
-	if (input->TriggerKey(DIK_LCONTROL))
+	else
 	{
-		Audio::GetInstance()->Play("click"); // クリック音再生
-		showCursor = !showCursor;
-		input->ShowMouseCursor(showCursor);
+		Audio::GetInstance()->SetVolume("stageBGM", 1.0f);
 	}
+
+
+	//if (input->TriggerKey(DIK_LCONTROL))
+	//{
+	//	Audio::GetInstance()->Play("click"); // クリック音再生
+	//	showCursor = !showCursor;
+	//	input->ShowMouseCursor(showCursor);
+	//}
 
 	player->Update();
 
 	// プレイヤーが場外に出ていたらリスタート
 	if (player->IsDead())
 	{
+		Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
 		goToRestart = true;
 	}
 
@@ -476,6 +492,8 @@ void GameScene::Update() {
 		}
 	}
 
+	sky->Update();
+
 }
 
 
@@ -487,6 +505,8 @@ void GameScene::Draw() {
 	Object3dBase::GetInstance()->ShaderDraw();
 
 	object3d->Draw();
+
+	sky->Draw();
 
 	player->Draw();
 
@@ -546,11 +566,15 @@ void GameScene::Draw() {
 
 void GameScene::Finalize() {
 
+	Light::GetInstance()->SetColorDirectionalLight({ 1.0f, 1.0f, 1.0f, 1.0f });
+
 	Audio::GetInstance()->StopAll();
 
 	delete camera;
 
 	delete object3d;
+	
+	delete sky;
 
 	delete sprite;
 

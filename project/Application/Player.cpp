@@ -54,6 +54,7 @@ void Player::Initialize(Camera* camera)
 	cameraTransform_ = camera->GetTransform();
 	cameraTransform_.translate = cameraOffset;
 	cameraOffset = defaultCameraOffset;
+	camera_->SetFarClipDistance(1000.0f);
 
 	// 追加したクラス(移動可能範囲のAABB)
 	worldBoarder_ = {
@@ -257,7 +258,7 @@ void Player::Move()
 		move.y = -0.5f;
 	}
 	// コントローラー用
-	plRotate = std::atan2(move.x, move.y);
+	plRotate = std::atan2(move.x, move.y * -1.0f);
 	if (input_->IsMoveLeftJoyStick() == false) {
 		if (input_->PushKey(DIK_W)) {
 			move.y = -speed;

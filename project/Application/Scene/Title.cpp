@@ -10,7 +10,7 @@ void Title::Initialize() {
 	input->ShowMouseCursor(true);
 
 	// クリック音読み込み
-	Audio::GetInstance()->LoadMP3("Resources/Sound/click.mp3", "click", 1.0f); // 音量1.0f
+	Audio::GetInstance()->LoadMP3("Resources/Sound/click.mp3", "click", 0.8f); // 音量1.0f
 	// bgm読み込み
 	Audio::GetInstance()->LoadMP3("Resources/Sound/scene/goast.mp3", "goast", 1.0f); // 音量1.0f
 
